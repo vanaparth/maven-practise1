@@ -11,9 +11,10 @@ import com.apple.cds.messaging.client.Delivery;
 import com.apple.cds.messaging.client.DeliveryHandler;
 import com.apple.cds.messaging.client.Serializer;
 import com.apple.cds.messaging.client.events.AbstractConsumerServiceEventListener;
+import com.apple.cds.messaging.client.events.Event;
+import com.apple.cds.messaging.client.events.EventId;
 import com.apple.cds.messaging.client.exception.ServiceException;
 import com.apple.iossystems.logging.pubsub.LogEventSerializer;
-import com.apple.iossystems.logging.pubsub.LoggingSubscriberServiceBase;
 import com.apple.iossystems.smp.domain.event.SMPEventConstants;
 import com.apple.iossystems.smp.reporting.data.IReporterDataReport;
 import com.apple.iossystems.smp.reporting.data.SMPDataReport;
@@ -198,6 +199,25 @@ public class EventSubscriberServiceIReporter<LogEvent> extends EventSubscriberSe
     public void setupAndStart() throws Exception
     {
         setMonitor(OperationalAnalyticsManager.getInstance().getOperationalAnalytics());
+
+        AbstractConsumerServiceEventListener listener = new AbstractConsumerServiceEventListener<com.apple.iossystems.logging.pubsub.LogEvent>() {
+
+            @Override
+            public void onEvent(EventId.ConsumerEventId eventId, Event<com.apple.iossystems.logging.pubsub.LogEvent> event) {
+                LOGGER.info("Caught Consumer Event " + eventId.getName());
+                LOGGER.info(event);
+            }
+
+            @Override
+            public void onEvent(EventId.ServiceEventId eventId, Event<com.apple.iossystems.logging.pubsub.LogEvent> event) {
+                LOGGER.info("Caught Service Event " + eventId.getName());
+                LOGGER.info(event);
+            }
+
+        };
+
+        subscriber.setEventListener(listener);
+
         start();
     }
 

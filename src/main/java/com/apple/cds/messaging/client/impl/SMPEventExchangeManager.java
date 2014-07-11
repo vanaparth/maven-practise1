@@ -35,7 +35,6 @@ public class SMPEventExchangeManager
         }
     }
 
-    // Use start to create and start the SMPExchangeManager
     private static SMPEventExchangeManager getInstance()
     {
         return new SMPEventExchangeManager();
@@ -50,14 +49,11 @@ public class SMPEventExchangeManager
     {
         List<SMPEventExchange> exchanges = new ArrayList<SMPEventExchange>();
 
-        // For now, create one exchange with one queue
         SMPEventExchange exchange = SMPEventExchange.getInstance(SMPReportingApplicationConfiguration.getSMPEventsExchangeName());
         exchange.register(SMPEventExchangeQueue.getInstance(SMPReportingApplicationConfiguration.getLogLevelEventName()));
 
-        // Register the exchange
         exchanges.add(exchange);
 
-        // Create the PubSub exchanges
         createPubSubExchanges(exchanges);
     }
 
@@ -92,8 +88,6 @@ public class SMPEventExchangeManager
         return "*.*.*.*.*." + queueName;
     }
 
-    // TODO: a way of determining which subscriber to add to which exchange queue
-    // Here, we can add more types of subscribers like an email report subscriber
     private void registerSMPEventSubscriber(SMPEventExchangeQueue exchangeQueue)
     {
         eventSubscribers.add(EventSubscriberServiceFactory.newIReporterSubscriber(exchangeQueue.getName()));

@@ -19,7 +19,6 @@ public class ReportsPublisherIReporter implements ReportsPublisher
 {
     private static final Logger LOGGER = Logger.getLogger(ReportsPublisherIReporter.class);
 
-    // Need a default configuration to start with
     private IReporterConfiguration configuration = IReporterConfiguration.Builder.getInstance().build();
 
     private SMPDataReportsBuffer reportsBuffer = SMPDataReportsBuffer.getInstance();

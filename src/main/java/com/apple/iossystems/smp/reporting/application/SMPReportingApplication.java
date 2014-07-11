@@ -20,7 +20,6 @@ public class SMPReportingApplication
         return new SMPReportingApplication();
     }
 
-    // Call this to start the application. It will check if it is configured to start
     public static void start()
     {
         if (SMPReportingApplicationConfiguration.smpReportingApplicationEnabled())

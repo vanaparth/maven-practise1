@@ -19,7 +19,6 @@ public class SMPDataReportsBuffer
         return new SMPDataReportsBuffer();
     }
 
-    // A better way to do this without synchronizing? Assumes multiple event consumer threads will access this
     public synchronized void add(SMPDataReport report)
     {
         buffer.add(report);

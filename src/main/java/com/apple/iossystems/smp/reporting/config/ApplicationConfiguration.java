@@ -8,7 +8,6 @@ import com.apple.iossystems.logging.LogLevel;
  */
 public abstract class ApplicationConfiguration implements BaseConfiguration
 {
-    // Create Property manager for all to use. Accessible from SMPReportingApplicationConfiguration
     protected static final PropertyManager PROPERTY_MANAGER = PropertyManager.getInstance();
 
     // Property keys in SMPBroker.properties

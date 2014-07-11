@@ -129,7 +129,6 @@ public class IReporterDataReport implements SMPDataReport
         @SerializedName("txn")
         private List<DataReportOutput> reportsOutput = new ArrayList<DataReportOutput>();
 
-        // GSON needs a default constructor?
         private DataReportsJSON()
         {
         }
@@ -140,7 +139,6 @@ public class IReporterDataReport implements SMPDataReport
 
             for (SMPDataReport e : reports)
             {
-                // Convert to DataReportOutput for JSON formatting
                 DataReportOutput dataReportOutput = new DataReportOutput();
 
                 dataReportOutput.event = e.getEvent();

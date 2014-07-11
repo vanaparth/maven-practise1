@@ -49,7 +49,6 @@ public class HTTPClientReporterSMP implements HTTPClientReporter
         String queryString = (String) parameters.get(HTTPClientReporter.QUERY_STRING);
         String data = (String) parameters.get(HTTPClientReporter.DATA_KEY);
 
-        // Send the request
         return httpClient.postData(url, queryString, data, contentType, httpMethod, headers);
     }
 }

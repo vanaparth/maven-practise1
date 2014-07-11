@@ -33,9 +33,6 @@ public class IReporterConfiguration implements BaseConfiguration
 
     private static final Gson GSON = new GsonBuilder().create();
 
-    /**
-     * This is given to us directly
-     */
     private static final String CONFIGURATION_URL = DEFAULT_CONFIGURATION_URL;
 
     /**
@@ -119,9 +116,7 @@ public class IReporterConfiguration implements BaseConfiguration
 
     public static class Builder
     {
-        /**
-         * Set defaults ?
-         */
+
         private String publishURL = DEFAULT_PUBLISH_URL;
 
         private String publishKey = DEFAULT_PUBLISH_KEY;
@@ -193,7 +188,6 @@ public class IReporterConfiguration implements BaseConfiguration
             return new IReporterConfiguration(this);
         }
 
-        // TODO: check for non-initialized primitive variables e.g. int, boolean
         private void validate()
         {
             publishURL = (String) Utils.getValueWithDefault(publishURL, DEFAULT_PUBLISH_URL);
@@ -225,7 +219,6 @@ public class IReporterConfiguration implements BaseConfiguration
 
         private class IReporterConfigurationJSON
         {
-            // Set default values
             private EndPoint endpoint;
             private String method = "POST";
             private Header headers;
@@ -240,12 +233,10 @@ public class IReporterConfiguration implements BaseConfiguration
 
             private class EndPoint
             {
-                // Set default values
                 private String protocol = "https";
                 private String hostname = "e3.icloud.com";
                 private String uri = "/e3/rest/1/stockholm";
 
-                // GSON needs a default constructor?
                 private EndPoint()
                 {
                 }
@@ -264,7 +255,6 @@ public class IReporterConfiguration implements BaseConfiguration
                 @SerializedName("Content-Type")
                 private String contentType = DEFAULT_CONTENT_TYPE;
 
-                // GSON needs a default constructor?
                 private Header()
                 {
                 }

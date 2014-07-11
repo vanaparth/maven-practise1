@@ -18,7 +18,7 @@ public class SMPEventExchange
         this.name = name;
     }
 
-    public static SMPEventExchange newInstance(String name)
+    protected static SMPEventExchange getInstance(String name)
     {
         return new SMPEventExchange(name);
     }

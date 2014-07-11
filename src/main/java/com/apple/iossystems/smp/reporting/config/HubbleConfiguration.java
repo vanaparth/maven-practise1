@@ -9,7 +9,7 @@ public class HubbleConfiguration
     {
     }
 
-    public static HubbleConfiguration newInstance()
+    public static HubbleConfiguration getInstance()
     {
         return new HubbleConfiguration();
     }

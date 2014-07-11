@@ -14,7 +14,7 @@ public class IReporterDataReport implements SMPDataReport
 {
     private static final Gson GSON = new GsonBuilder().create();
 
-    //The event: Provision, Suspend, Resume, Delete
+    // The event: Provision, Suspend, Resume, Delete
     private final String event;
 
     // Event Timestamp
@@ -38,6 +38,31 @@ public class IReporterDataReport implements SMPDataReport
         location = builder.location;
     }
 
+    public String getEvent()
+    {
+        return event;
+    }
+
+    public String getTimestamp()
+    {
+        return timestamp;
+    }
+
+    public String getUser()
+    {
+        return user;
+    }
+
+    public String getFPAN()
+    {
+        return fpan;
+    }
+
+    public String getLocation()
+    {
+        return location;
+    }
+
     public static class Builder
     {
         private String event;
@@ -50,7 +75,7 @@ public class IReporterDataReport implements SMPDataReport
         {
         }
 
-        public static Builder newInstance()
+        public static Builder getInstance()
         {
             return new Builder();
         }
@@ -93,7 +118,7 @@ public class IReporterDataReport implements SMPDataReport
 
     public static String toJSON(List<SMPDataReport> reports)
     {
-        return GSON.toJson(new DataReportsJSON(reports));
+        return GSON.toJson(DataReportsJSON.create(reports));
     }
 
     private static class DataReportsJSON
@@ -109,28 +134,25 @@ public class IReporterDataReport implements SMPDataReport
         {
         }
 
-        private DataReportsJSON(List<SMPDataReport> reports)
+        private static DataReportsJSON create(List<SMPDataReport> reports)
         {
-            generateDataReportsOutput(reports);
-        }
+            DataReportsJSON dataReportsJSON = new DataReportsJSON();
 
-        private void generateDataReportsOutput(List<SMPDataReport> reports)
-        {
             for (SMPDataReport e : reports)
             {
-                IReporterDataReport e1 = (IReporterDataReport) e;
-
-                // Convert IReporterDataReport to DataReportOutput for JSON formatting
+                // Convert to DataReportOutput for JSON formatting
                 DataReportOutput dataReportOutput = new DataReportOutput();
 
-                dataReportOutput.event = e1.event;
-                dataReportOutput.timestamp = e1.timestamp;
-                dataReportOutput.user = e1.user;
-                dataReportOutput.fpan = e1.fpan;
-                dataReportOutput.location = e1.location;
+                dataReportOutput.event = e.getEvent();
+                dataReportOutput.timestamp = e.getTimestamp();
+                dataReportOutput.user = e.getUser();
+                dataReportOutput.fpan = e.getFPAN();
+                dataReportOutput.location = e.getLocation();
 
-                reportsOutput.add(dataReportOutput);
+                dataReportsJSON.reportsOutput.add(dataReportOutput);
             }
+
+            return dataReportsJSON;
         }
 
         private static class DataReportOutput

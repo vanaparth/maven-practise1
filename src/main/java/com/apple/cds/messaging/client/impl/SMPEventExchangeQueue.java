@@ -12,7 +12,7 @@ public class SMPEventExchangeQueue
         this.name = name;
     }
 
-    public static SMPEventExchangeQueue newInstance(String name)
+    protected static SMPEventExchangeQueue getInstance(String name)
     {
         return new SMPEventExchangeQueue(name);
     }

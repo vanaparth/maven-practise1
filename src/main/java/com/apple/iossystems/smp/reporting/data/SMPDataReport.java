@@ -1,10 +1,17 @@
 package com.apple.iossystems.smp.reporting.data;
 
-import java.util.Map;
-
 /**
  * @author Toch
  */
 public interface SMPDataReport
 {
+    public String getEvent();
+
+    public String getTimestamp();
+
+    public String getUser();
+
+    public String getFPAN();
+
+    public String getLocation();
 }

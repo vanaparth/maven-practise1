@@ -3,19 +3,10 @@ package com.apple.iossystems.smp.reporting.config;
 /**
  * @author Toch
  */
+// Does nothing for now
 public class ConfigurationFactory
 {
     private ConfigurationFactory()
     {
     }
-
-    /*public static BaseConfiguration newIReporterConfiguration()
-    {
-        return iReporterConfiguration.newInstance();
-    }
-
-    public static BaseConfiguration newHubbleConfiguration()
-    {
-        return HubbleConfiguration.newInstance();
-    }*/
 }

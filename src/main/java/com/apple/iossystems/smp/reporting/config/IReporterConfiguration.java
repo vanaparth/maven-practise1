@@ -140,7 +140,7 @@ public class IReporterConfiguration implements BaseConfiguration
         {
         }
 
-        public static Builder newInstance()
+        public static Builder getInstance()
         {
             return new Builder();
         }
@@ -208,9 +208,9 @@ public class IReporterConfiguration implements BaseConfiguration
 
         public static IReporterConfiguration fromJSON(String json)
         {
-            iReporterConfigurationJSON config = GSON.fromJson(json, iReporterConfigurationJSON.class);
+            IReporterConfigurationJSON config = GSON.fromJson(json, IReporterConfigurationJSON.class);
 
-            Builder builder = Builder.newInstance();
+            Builder builder = Builder.getInstance();
 
             builder.publishURL(config.endpoint.getURL()).
                     publishKey(config.headers.xLoadText).
@@ -223,7 +223,7 @@ public class IReporterConfiguration implements BaseConfiguration
             return builder.build();
         }
 
-        private class iReporterConfigurationJSON
+        private class IReporterConfigurationJSON
         {
             // Set default values
             private EndPoint endpoint;
@@ -234,7 +234,7 @@ public class IReporterConfiguration implements BaseConfiguration
             private int publishFrequencyInSeconds = DEFAULT_PUBLISH_FREQUENCY / 1000;
             private int configReloadFrequencyInMinutes = DEFAULT_CONFIGURATION_RELOAD_FREQUENCY / (60 * 1000);
 
-            private iReporterConfigurationJSON()
+            private IReporterConfigurationJSON()
             {
             }
 

@@ -7,9 +7,11 @@ import java.util.Set;
 /**
  * @author Toch
  */
-public class SMPEventExchange
+class SMPEventExchange
 {
     private String name;
+
+    private boolean active;
 
     private Set<SMPEventExchangeQueue> queues = new HashSet<SMPEventExchangeQueue>();
 
@@ -18,23 +20,33 @@ public class SMPEventExchange
         this.name = name;
     }
 
-    protected static SMPEventExchange getInstance(String name)
+    static SMPEventExchange getInstance(String name)
     {
         return new SMPEventExchange(name);
     }
 
-    public String getName()
+    String getName()
     {
         return name;
     }
 
-    public void register(SMPEventExchangeQueue queue)
+    void addQueue(SMPEventExchangeQueue queue)
     {
         queues.add(queue);
     }
 
-    public Iterator<SMPEventExchangeQueue> iterator()
+    Iterator<SMPEventExchangeQueue> iterator()
     {
         return queues.iterator();
+    }
+
+    boolean isActive()
+    {
+        return active;
+    }
+
+    void setActive(boolean value)
+    {
+        active = value;
     }
 }

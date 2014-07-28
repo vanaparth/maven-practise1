@@ -3,25 +3,38 @@ package com.apple.cds.messaging.client.impl;
 /**
  * @author Toch
  */
-public class SMPEventExchangeQueue
+class SMPEventExchangeQueue
 {
     private String name;
+
+    private boolean active;
 
     private SMPEventExchangeQueue(String name)
     {
         this.name = name;
     }
 
-    protected static SMPEventExchangeQueue getInstance(String name)
+    static SMPEventExchangeQueue getInstance(String name)
     {
         return new SMPEventExchangeQueue(name);
     }
 
-    public String getName()
+    String getName()
     {
         return name;
     }
 
+    boolean isActive()
+    {
+        return active;
+    }
+
+    void setActive(boolean value)
+    {
+        active = value;
+    }
+
+    @Override
     public boolean equals(Object o)
     {
         return (name.equals(((SMPEventExchangeQueue) o).name));

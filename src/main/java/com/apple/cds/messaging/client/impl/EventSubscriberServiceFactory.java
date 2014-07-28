@@ -3,10 +3,14 @@ package com.apple.cds.messaging.client.impl;
 /**
  * @author Toch
  */
-public class EventSubscriberServiceFactory
+class EventSubscriberServiceFactory
 {
-    public static EventSubscriberServiceIReporter newIReporterSubscriber(String queueName)
+    private EventSubscriberServiceFactory()
     {
-        return EventSubscriberServiceIReporter.getInstance(queueName);
+    }
+
+    static IReporterEventSubscriberService getIReporterEventSubscriberService(String queueName) throws Exception
+    {
+        return IReporterEventSubscriberService.getInstance(queueName);
     }
 }

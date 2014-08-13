@@ -1,8 +1,8 @@
 package com.apple.iossystems.smp.reporting.ireporter.publish;
 
-import com.apple.iossystems.smp.reporting.core.util.ValueSelector;
-import com.apple.iossystems.smp.reporting.ireporter.analytics.IReporterAnalytics;
-import com.apple.iossystems.smp.reporting.ireporter.analytics.IReporterMetric;
+import com.apple.iossystems.smp.reporting.core.analytics.Analytics;
+import com.apple.iossystems.smp.reporting.core.analytics.Metric;
+import com.apple.iossystems.smp.reporting.core.util.ValidValue;
 import com.apple.iossystems.smp.reporting.ireporter.configuration.IReporterConfigurationService;
 import com.apple.iossystems.smp.reporting.ireporter.configuration.ReportsConfigurationService;
 
@@ -11,12 +11,12 @@ import com.apple.iossystems.smp.reporting.ireporter.configuration.ReportsConfigu
  */
 class ReportsPublishService extends IReporterPublishService
 {
-    private ReportsPublishService(IReporterAnalytics analytics) throws Exception
+    private ReportsPublishService(Analytics analytics) throws Exception
     {
         super(analytics);
     }
 
-    static ReportsPublishService getInstance(IReporterAnalytics analytics) throws Exception
+    static ReportsPublishService getInstance(Analytics analytics) throws Exception
     {
         return new ReportsPublishService(analytics);
     }
@@ -30,7 +30,7 @@ class ReportsPublishService extends IReporterPublishService
     @Override
     boolean publishReady()
     {
-        int available = ValueSelector.getIntValueWithDefault(getAnalytics().getMetricStatistics(IReporterMetric.REPORTS_AVAILABLE_COUNT), 0);
+        int available = ValidValue.getIntValueWithDefault(getAnalytics().getMetric(Metric.REPORTS_AVAILABLE_COUNT), 0);
 
         return ((available >= getConfiguration().getMaxBatchSize()) || ((available > 0) && publishDelayExpired()));
     }
@@ -38,6 +38,6 @@ class ReportsPublishService extends IReporterPublishService
     @Override
     long getLastPublishTime()
     {
-        return ValueSelector.getLongValueWithDefault(getAnalytics().getMetricStatistics(IReporterMetric.REPORTS_PUBLISH_TIME), 0);
+        return ValidValue.getLongValueWithDefault(getAnalytics().getMetric(Metric.REPORTS_PUBLISH_TIME), 0);
     }
 }

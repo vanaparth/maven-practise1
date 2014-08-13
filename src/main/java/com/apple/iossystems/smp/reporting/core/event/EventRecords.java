@@ -6,17 +6,17 @@ import java.util.List;
 /**
  * @author Toch
  */
-public class EventRecordList
+public class EventRecords
 {
     private List<EventRecord> list = new ArrayList<EventRecord>();
 
-    private EventRecordList()
+    private EventRecords()
     {
     }
 
-    public static EventRecordList getInstance()
+    public static EventRecords getInstance()
     {
-        return new EventRecordList();
+        return new EventRecords();
     }
 
     public void add(EventRecord e)

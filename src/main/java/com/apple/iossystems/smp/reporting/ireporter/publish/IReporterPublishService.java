@@ -1,18 +1,15 @@
 package com.apple.iossystems.smp.reporting.ireporter.publish;
 
 import com.apple.iossystems.smp.StockholmHTTPResponse;
-import com.apple.iossystems.smp.reporting.core.http.HttpRequestParameter;
+import com.apple.iossystems.smp.reporting.core.analytics.Analytics;
+import com.apple.iossystems.smp.reporting.core.http.HttpRequest;
 import com.apple.iossystems.smp.reporting.core.http.HttpResponseAction;
 import com.apple.iossystems.smp.reporting.core.http.SMPHttpClient;
 import com.apple.iossystems.smp.reporting.core.timer.Timer;
-import com.apple.iossystems.smp.reporting.ireporter.analytics.IReporterAnalytics;
 import com.apple.iossystems.smp.reporting.ireporter.configuration.IReporterConfiguration;
 import com.apple.iossystems.smp.reporting.ireporter.configuration.IReporterConfigurationService;
 import com.apple.iossystems.smp.reporting.ireporter.http.IReporterResponseHandler;
 import org.apache.log4j.Logger;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Toch
@@ -25,9 +22,9 @@ abstract class IReporterPublishService
 
     private SMPHttpClient httpClient = SMPHttpClient.getInstance();
 
-    private IReporterAnalytics analytics;
+    private Analytics analytics;
 
-    IReporterPublishService(IReporterAnalytics analytics) throws Exception
+    IReporterPublishService(Analytics analytics) throws Exception
     {
         this.analytics = analytics;
     }
@@ -69,18 +66,11 @@ abstract class IReporterPublishService
         return success;
     }
 
-    private Map<HttpRequestParameter, Object> getHTTPRequest(String data)
+    private HttpRequest getHTTPRequest(String data)
     {
         IReporterConfiguration configuration = getConfiguration();
-        Map<HttpRequestParameter, Object> request = new HashMap<HttpRequestParameter, Object>();
 
-        request.put(HttpRequestParameter.HTTP_METHOD, "POST");
-        request.put(HttpRequestParameter.URL, configuration.getPublishURL());
-        request.put(HttpRequestParameter.CONTENT_TYPE, configuration.getContentType());
-        request.put(HttpRequestParameter.HEADERS, configuration.getRequestHeaders());
-        request.put(HttpRequestParameter.DATA, data);
-
-        return request;
+        return HttpRequest.getInstance(configuration.getPublishURL(), "POST", null, configuration.getContentType(), data, configuration.getRequestHeaders());
     }
 
     private boolean isRequestSuccessful(HttpResponseAction action)
@@ -98,12 +88,12 @@ abstract class IReporterPublishService
         return Timer.delayExpired(getLastPublishTime(), getConfiguration().getPublishFrequency());
     }
 
-    final boolean doPublish()
+    final boolean isAcceptingPublish()
     {
         return (publishEnabled() && publishReady());
     }
 
-    final IReporterAnalytics getAnalytics()
+    final Analytics getAnalytics()
     {
         return analytics;
     }

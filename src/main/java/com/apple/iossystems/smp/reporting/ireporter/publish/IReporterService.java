@@ -1,9 +1,9 @@
 package com.apple.iossystems.smp.reporting.ireporter.publish;
 
+import com.apple.iossystems.smp.reporting.core.analytics.Analytics;
+import com.apple.iossystems.smp.reporting.core.analytics.Metric;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
-import com.apple.iossystems.smp.reporting.core.event.EventRecordList;
-import com.apple.iossystems.smp.reporting.ireporter.analytics.IReporterAnalytics;
-import com.apple.iossystems.smp.reporting.ireporter.analytics.IReporterMetric;
+import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 import org.apache.log4j.Logger;
 
 /**
@@ -11,11 +11,11 @@ import org.apache.log4j.Logger;
  */
 public class IReporterService
 {
-    private static IReporterService INSTANCE = newInstance();
+    private static final IReporterService INSTANCE = newInstance();
 
-    private EventRecordList eventRecords = EventRecordList.getInstance();
+    private EventRecords eventRecords = EventRecords.getInstance();
 
-    private IReporterAnalytics analytics = IReporterAnalytics.getInstance();
+    private Analytics analytics = Analytics.getInstance();
 
     private IReporterPublishService reportsPublishService = ReportsPublishService.getInstance(analytics);
 
@@ -59,10 +59,10 @@ public class IReporterService
     {
         addEventRecord(eventRecord);
 
-        if (reportsPublishService.doPublish())
+        if (reportsPublishService.isAcceptingPublish())
         {
             publishTaskHandler.add(eventRecords);
-            eventRecords = EventRecordList.getInstance();
+            eventRecords = EventRecords.getInstance();
         }
     }
 
@@ -70,7 +70,7 @@ public class IReporterService
     {
         eventRecords.add(eventRecord);
 
-        analytics.updateMetricStatistics(IReporterMetric.REPORTS_AVAILABLE_COUNT, eventRecords.size());
+        analytics.setMetric(Metric.REPORTS_AVAILABLE_COUNT, String.valueOf(eventRecords.size()));
     }
 
     IReporterPublishService getReportsPublishService()
@@ -83,7 +83,7 @@ public class IReporterService
         return auditPublishService;
     }
 
-    IReporterAnalytics getAnalytics()
+    Analytics getAnalytics()
     {
         return analytics;
     }

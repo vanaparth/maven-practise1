@@ -177,7 +177,7 @@ public abstract class SMPEventSubscriberService<LogEvent> extends EventSubscribe
     }
 
     @Override
-    final void begin()
+    public final void begin()
     {
         try
         {

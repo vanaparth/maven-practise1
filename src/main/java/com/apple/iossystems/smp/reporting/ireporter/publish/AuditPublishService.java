@@ -1,8 +1,8 @@
 package com.apple.iossystems.smp.reporting.ireporter.publish;
 
-import com.apple.iossystems.smp.reporting.core.util.ValueSelector;
-import com.apple.iossystems.smp.reporting.ireporter.analytics.IReporterAnalytics;
-import com.apple.iossystems.smp.reporting.ireporter.analytics.IReporterMetric;
+import com.apple.iossystems.smp.reporting.core.analytics.Analytics;
+import com.apple.iossystems.smp.reporting.core.analytics.Metric;
+import com.apple.iossystems.smp.reporting.core.util.ValidValue;
 import com.apple.iossystems.smp.reporting.ireporter.configuration.AuditConfigurationService;
 import com.apple.iossystems.smp.reporting.ireporter.configuration.IReporterConfigurationService;
 
@@ -11,12 +11,12 @@ import com.apple.iossystems.smp.reporting.ireporter.configuration.IReporterConfi
  */
 class AuditPublishService extends IReporterPublishService
 {
-    private AuditPublishService(IReporterAnalytics analytics) throws Exception
+    private AuditPublishService(Analytics analytics) throws Exception
     {
         super(analytics);
     }
 
-    static AuditPublishService getInstance(IReporterAnalytics statistics) throws Exception
+    static AuditPublishService getInstance(Analytics statistics) throws Exception
     {
         return new AuditPublishService(statistics);
     }
@@ -36,6 +36,6 @@ class AuditPublishService extends IReporterPublishService
     @Override
     long getLastPublishTime()
     {
-        return ValueSelector.getLongValueWithDefault(getAnalytics().getMetricStatistics(IReporterMetric.AUDIT_PUBLISH_TIME), 0);
+        return ValidValue.getLongValueWithDefault(getAnalytics().getMetric(Metric.AUDIT_PUBLISH_TIME), 0);
     }
 }

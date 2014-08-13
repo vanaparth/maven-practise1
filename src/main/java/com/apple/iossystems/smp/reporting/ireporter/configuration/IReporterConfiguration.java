@@ -1,5 +1,6 @@
 package com.apple.iossystems.smp.reporting.ireporter.configuration;
 
+import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
 import com.google.gson.GsonBuilder;
 import com.google.gson.annotations.SerializedName;
 
@@ -12,30 +13,30 @@ import java.util.Map;
 public class IReporterConfiguration
 {
     // URLs
-    public static final String BASE_URL = "https://icloud4-e3.icloud.com";
+    public static final String BASE_URL = ApplicationConfigurationManager.getIReporterURL();
 
-    public static final String DEFAULT_REPORTS_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/stockholm";
+    public static final String DEFAULT_REPORTS_CONFIGURATION_URL = BASE_URL + ApplicationConfigurationManager.getIReporterReportsConfigurationURL();
 
-    public static final String DEFAULT_AUDIT_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/stockholm_audit";
+    public static final String DEFAULT_AUDIT_CONFIGURATION_URL = BASE_URL + ApplicationConfigurationManager.getIReporterAuditConfigurationURL();
 
-    public static final String DEFAULT_REPORTS_URL = BASE_URL + "/e3/rest/1/stockholm";
+    public static final String DEFAULT_REPORTS_URL = BASE_URL + ApplicationConfigurationManager.getIReporterReportsURL();
 
-    public static final String DEFAULT_AUDIT_URL = BASE_URL + "/e3/rest/1/stockholm_audit";
+    public static final String DEFAULT_AUDIT_URL = BASE_URL + ApplicationConfigurationManager.getIReporterAuditURL();
 
     // Other configuration settings
-    public static final String DEFAULT_PUBLISH_KEY = "QWERTYUIOPASDF12";
+    public static final String DEFAULT_PUBLISH_KEY = ApplicationConfigurationManager.getIReporterPublishKey();
 
-    public static final String DEFAULT_CONTENT_TYPE = "application/json";
+    public static final String DEFAULT_CONTENT_TYPE = ApplicationConfigurationManager.getIReporterContentType();
 
-    public static final boolean DEFAULT_PUBLISH_ENABLED = true;
+    public static final boolean DEFAULT_PUBLISH_ENABLED = ApplicationConfigurationManager.getIReporterPublishEnable();
 
-    public static final int DEFAULT_MAX_BATCH_SIZE = 100;
+    public static final int DEFAULT_MAX_BATCH_SIZE = ApplicationConfigurationManager.getIReporterMaxBatchSize();
 
     // Publish frequency in milliseconds
-    public static final int DEFAULT_PUBLISH_FREQUENCY = 2 * 60 * 1000;
+    public static final int DEFAULT_PUBLISH_FREQUENCY = ApplicationConfigurationManager.getIReporterPublishFrequency();
 
     // Configuration reload frequency in milliseconds
-    public static final int DEFAULT_CONFIGURATION_RELOAD_FREQUENCY = 60 * 60 * 1000;
+    public static final int DEFAULT_CONFIGURATION_RELOAD_FREQUENCY = ApplicationConfigurationManager.getIReporterConfigurationReloadFrequency();
 
 
     private final String publishURL;

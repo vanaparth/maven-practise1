@@ -1,10 +1,11 @@
 package com.apple.iossystems.smp.reporting.ireporter.publish;
 
+import com.apple.iossystems.smp.reporting.core.analytics.Metric;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
-import com.apple.iossystems.smp.reporting.core.event.EventRecordList;
-import com.apple.iossystems.smp.reporting.core.event.SMPEventRecordJsonBuilder;
-import com.apple.iossystems.smp.reporting.core.util.ValueSelector;
-import com.apple.iossystems.smp.reporting.ireporter.analytics.IReporterMetric;
+import com.apple.iossystems.smp.reporting.core.event.EventRecords;
+import com.apple.iossystems.smp.reporting.core.util.ValidValue;
+import com.apple.iossystems.smp.reporting.ireporter.json.IReporterJsonBuilder;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -16,7 +17,9 @@ import java.util.concurrent.LinkedBlockingQueue;
  */
 class PublishTaskHandler implements Runnable
 {
-    private BlockingQueue<EventRecordList> queue = new LinkedBlockingQueue<EventRecordList>();
+    private static final Logger LOGGER = Logger.getLogger(PublishTaskHandler.class);
+
+    private BlockingQueue<EventRecords> queue = new LinkedBlockingQueue<EventRecords>();
 
     private IReporterService iReporterService;
 
@@ -47,6 +50,7 @@ class PublishTaskHandler implements Runnable
         }
         catch (Exception e)
         {
+            LOGGER.error(e);
         }
     }
 
@@ -55,7 +59,7 @@ class PublishTaskHandler implements Runnable
         Executors.newSingleThreadExecutor().execute(this);
     }
 
-    void add(EventRecordList e)
+    void add(EventRecords e)
     {
         queue.offer(e);
     }
@@ -70,12 +74,12 @@ class PublishTaskHandler implements Runnable
 
     private boolean sendReports(List<EventRecord> list)
     {
-        boolean success = iReporterService.getReportsPublishService().sendRequest(SMPEventRecordJsonBuilder.toJson(list));
+        boolean success = iReporterService.getReportsPublishService().sendRequest(IReporterJsonBuilder.toJson(list));
 
         if (success)
         {
-            iReporterService.getAnalytics().updateMetricStatistics(IReporterMetric.REPORTS_PUBLISH_TIME, System.currentTimeMillis());
-            iReporterService.getAnalytics().updateMetricStatistics(IReporterMetric.REPORTS_SENT_COUNT, list.size());
+            iReporterService.getAnalytics().setMetric(Metric.REPORTS_PUBLISH_TIME, String.valueOf(System.currentTimeMillis()));
+            iReporterService.getAnalytics().setMetric(Metric.REPORTS_SENT_COUNT, String.valueOf(list.size()));
         }
 
         return success;
@@ -83,15 +87,15 @@ class PublishTaskHandler implements Runnable
 
     private boolean sendAudit()
     {
-        int sentCount = ValueSelector.getIntValueWithDefault(iReporterService.getAnalytics().getMetricStatistics(IReporterMetric.REPORTS_SENT_COUNT), 0);
+        int sentCount = ValidValue.getIntValueWithDefault(iReporterService.getAnalytics().getMetric(Metric.REPORTS_SENT_COUNT), 0);
 
-        IReporterAudit auditData = IReporterAudit.Builder.getInstance().sentCount(sentCount).failedCount(0).backlogCount(0).build();
+        IReporterAudit auditData = IReporterAudit.getBuilder().sentCount(sentCount).failedCount(0).backlogCount(0).build();
 
         boolean success = iReporterService.getAuditPublishService().sendRequest(auditData.toJson());
 
         if (success)
         {
-            iReporterService.getAnalytics().updateMetricStatistics(IReporterMetric.AUDIT_PUBLISH_TIME, System.currentTimeMillis());
+            iReporterService.getAnalytics().setMetric(Metric.AUDIT_PUBLISH_TIME, String.valueOf(System.currentTimeMillis()));
         }
 
         return success;

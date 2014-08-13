@@ -89,6 +89,6 @@ public class IReporterResponseHandler implements HttpResponseHandler
     {
         LOGGER.error("Unknown Response Code " + responseCode);
 
-        return HttpResponseAction.RETRY_PUBLISH;
+        return HttpResponseAction.RETRY;
     }
 }

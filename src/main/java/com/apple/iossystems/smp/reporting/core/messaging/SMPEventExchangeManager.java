@@ -1,6 +1,8 @@
-package com.apple.cds.messaging.client.impl;
+package com.apple.iossystems.smp.reporting.core.messaging;
 
-import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
+import com.apple.cds.messaging.client.impl.EventSubscriberService;
+import com.apple.cds.messaging.client.impl.PubSubUtil;
+import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
 import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
@@ -30,8 +32,8 @@ public class SMPEventExchangeManager
     {
         List<SMPEventExchange> exchanges = new ArrayList<SMPEventExchange>();
 
-        SMPEventExchange exchange = SMPEventExchange.getInstance(ApplicationConfiguration.SMP_EVENTS_EXCHANGE_VALUE);
-        exchange.addQueue(SMPEventExchangeQueue.getInstance(ApplicationConfiguration.LOG_LEVEL_EVENT_NAME));
+        SMPEventExchange exchange = SMPEventExchange.getInstance(ApplicationConfigurationManager.getSMPEventsExchangeName());
+        exchange.addQueue(SMPEventExchangeQueue.getInstance(ApplicationConfigurationManager.getLogLevelEventName()));
 
         exchanges.add(exchange);
 

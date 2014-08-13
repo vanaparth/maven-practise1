@@ -38,6 +38,11 @@ public class IReporterAudit
         return result;
     }
 
+    public static Builder getBuilder()
+    {
+        return new Builder();
+    }
+
     public static class Builder
     {
         private int sentCount;
@@ -46,11 +51,6 @@ public class IReporterAudit
 
         private Builder()
         {
-        }
-
-        public static Builder getInstance()
-        {
-            return new Builder();
         }
 
         public Builder sentCount(int val)

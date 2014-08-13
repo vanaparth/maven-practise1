@@ -1,12 +1,9 @@
 package com.apple.iossystems.smp.reporting.ireporter.configuration;
 
 import com.apple.iossystems.smp.StockholmHTTPResponse;
-import com.apple.iossystems.smp.reporting.core.http.HttpRequestParameter;
+import com.apple.iossystems.smp.reporting.core.http.HttpRequest;
 import com.apple.iossystems.smp.reporting.core.http.SMPHttpClient;
 import org.apache.log4j.Logger;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Toch
@@ -43,14 +40,7 @@ public class IReporterConfigurationFactory
     {
         try
         {
-            SMPHttpClient httpClient = SMPHttpClient.getInstance();
-
-            Map<HttpRequestParameter, Object> request = new HashMap<HttpRequestParameter, Object>();
-
-            request.put(HttpRequestParameter.HTTP_METHOD, "GET");
-            request.put(HttpRequestParameter.URL, configurationType.getConfigurationURL());
-
-            StockholmHTTPResponse response = httpClient.request(request);
+            StockholmHTTPResponse response = SMPHttpClient.getInstance().request(HttpRequest.getInstance(configurationType.getConfigurationURL(), "GET", null, null, null, null));
             String content = response.getContent();
 
             if (response.isSuccessful() && content != null)

@@ -1,4 +1,4 @@
-package com.apple.cds.messaging.client.impl;
+package com.apple.iossystems.smp.reporting.core.messaging;
 
 import java.util.HashSet;
 import java.util.Iterator;

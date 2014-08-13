@@ -1,56 +1,61 @@
 package com.apple.iossystems.smp.reporting.core.application;
 
-import com.apple.cds.messaging.client.impl.SMPEventExchangeManager;
-import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
+import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
+import com.apple.iossystems.smp.reporting.core.messaging.SMPEventExchangeManager;
 
 /**
  * @author Toch
  */
 public class SMPReportingApplication
 {
-    private static SMPReportingApplication INSTANCE = new SMPReportingApplication();
+    private static final SMPReportingApplication INSTANCE = new SMPReportingApplication();
 
-    private boolean isStarted = false;
+    private boolean started = false;
 
     private SMPReportingApplication()
     {
         setSystemProperties();
     }
 
-    public static SMPReportingApplication getInstance()
+    private static SMPReportingApplication getInstance()
     {
         return INSTANCE;
     }
 
     private void setSystemProperties()
     {
-        System.setProperty(ApplicationConfiguration.RABBIT_HOST_KEY, ApplicationConfiguration.KEYSTONE_RABBIT_HOST_VALUE);
-        System.setProperty(ApplicationConfiguration.RABBIT_PORT_KEY, ApplicationConfiguration.KEYSTONE_RABBIT_PORT_VALUE);
-        System.setProperty(ApplicationConfiguration.RABBIT_USER_KEY, ApplicationConfiguration.KEYSTONE_RABBIT_USER_VALUE);
-        System.setProperty(ApplicationConfiguration.RABBIT_PASS_KEY, ApplicationConfiguration.KEYSTONE_RABBIT_PASS_VALUE);
-        System.setProperty(ApplicationConfiguration.RABBIT_VHOST_KEY, ApplicationConfiguration.KEYSTONE_RABBIT_VHOST_VALUE);
-        System.setProperty(ApplicationConfiguration.RABBIT_CONSUMER_THREADS_KEY, ApplicationConfiguration.RABBIT_CONSUMER_THREADS_VALUE);
-        System.setProperty(ApplicationConfiguration.RABBIT_CONSUMER_THREADS_PREFETCH_COUNT_KEY, ApplicationConfiguration.RABBIT_CONSUMER_THREADS_PREFETCH_COUNT_VALUE);
-        System.setProperty(ApplicationConfiguration.SMP_EVENTS_PUBLISH_ENABLE_KEY, String.valueOf(ApplicationConfiguration.SMP_EVENTS_PUBLISH_ENABLE_VALUE));
+        System.setProperty(ApplicationConfigurationManager.getRabbitHostKey(), ApplicationConfigurationManager.getKeystoneRabbitHost());
+        System.setProperty(ApplicationConfigurationManager.getRabbitPortKey(), ApplicationConfigurationManager.getKeystoneRabbitPort());
+        System.setProperty(ApplicationConfigurationManager.getRabbitUserKey(), ApplicationConfigurationManager.getKeystoneRabbitUser());
+        System.setProperty(ApplicationConfigurationManager.getRabbitPassKey(), ApplicationConfigurationManager.getKeystoneRabbitPass());
+        System.setProperty(ApplicationConfigurationManager.getRabbitVHostKey(), ApplicationConfigurationManager.getKeystoneRabbitVHost());
+        System.setProperty(ApplicationConfigurationManager.getRabbitConsumerThreadsCountKey(), String.valueOf(ApplicationConfigurationManager.getRabbitConsumerThreadsCount()));
+        System.setProperty(ApplicationConfigurationManager.getRabbitConsumerThreadsPrefetchCountKey(), String.valueOf(ApplicationConfigurationManager.getRabbitConsumerThreadsPrefetchCount()));
+        System.setProperty(ApplicationConfigurationManager.getSMPEventsPublishEnableKey(), String.valueOf(ApplicationConfigurationManager.getSMPEventsPublishEnable()));
     }
 
     private boolean isEnabled()
     {
-        return ApplicationConfiguration.SMP_REPORTING_APPLICATION_ENABLE_VALUE;
+        return ApplicationConfigurationManager.getSMPReportingApplicationEnable();
     }
 
-    private synchronized void begin()
+    private synchronized void startApplication()
     {
-        if (isEnabled() && !isStarted)
+        if (isEnabled() && !started)
         {
-            SMPEventExchangeManager.getInstance().start();
+            startSMPEventExchangeManager();
 
-            isStarted = true;
+            started = true;
         }
+    }
+
+    private void startSMPEventExchangeManager()
+    {
+        SMPEventExchangeManager.getInstance().start();
     }
 
     public static void start()
     {
-        getInstance().begin();
+        getInstance().startApplication();
     }
 }

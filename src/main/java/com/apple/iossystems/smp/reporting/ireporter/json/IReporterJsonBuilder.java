@@ -1,5 +1,6 @@
-package com.apple.iossystems.smp.reporting.core.event;
+package com.apple.iossystems.smp.reporting.ireporter.json;
 
+import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.google.gson.JsonArray;
 import com.google.gson.JsonObject;
 
@@ -10,9 +11,9 @@ import java.util.Set;
 /**
  * @author Toch
  */
-public class SMPEventRecordJsonBuilder
+public class IReporterJsonBuilder
 {
-    private SMPEventRecordJsonBuilder()
+    private IReporterJsonBuilder()
     {
     }
 
@@ -42,11 +43,11 @@ public class SMPEventRecordJsonBuilder
     {
         JsonObject jsonObject = new JsonObject();
 
-        Set<Map.Entry<SMPEventAttribute, String>> mapEntrySet = ((SMPEventRecord) e).getFields().entrySet();
+        Set<Map.Entry<String, String>> entrySet = e.getData().entrySet();
 
-        for (Map.Entry<SMPEventAttribute, String> mapEntry : mapEntrySet)
+        for (Map.Entry<String, String> entry : entrySet)
         {
-            jsonObject.addProperty(mapEntry.getKey().getJsonKey(), mapEntry.getValue());
+            jsonObject.addProperty(entry.getKey(), entry.getValue());
         }
 
         return jsonObject;

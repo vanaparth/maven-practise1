@@ -7,7 +7,7 @@ public enum HttpResponseAction
 {
     NO_ACTION_SUCCESS,
     NO_ACTION_ERROR,
-    RETRY_PUBLISH,
+    RETRY,
     RELOAD_CONFIGURATION;
 
     private HttpResponseAction()

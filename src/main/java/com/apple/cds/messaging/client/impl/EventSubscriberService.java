@@ -5,9 +5,9 @@ import com.apple.iossystems.logging.pubsub.LoggingSubscriberServiceBase;
 /**
  * @author Toch
  */
-abstract class EventSubscriberService<LogEvent> extends LoggingSubscriberServiceBase<LogEvent>
+public abstract class EventSubscriberService<LogEvent> extends LoggingSubscriberServiceBase<LogEvent>
 {
-    abstract void begin();
+    public abstract void begin();
 
-    abstract void handleEvent(com.apple.iossystems.logging.pubsub.LogEvent logEvent);
+    public abstract void handleEvent(com.apple.iossystems.logging.pubsub.LogEvent logEvent);
 }

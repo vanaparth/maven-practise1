@@ -1,4 +1,4 @@
-package com.apple.cds.messaging.client.impl;
+package com.apple.iossystems.smp.reporting.core.messaging;
 
 /**
  * @author Toch
@@ -35,9 +35,19 @@ class SMPEventExchangeQueue
     }
 
     @Override
-    public boolean equals(Object o)
+    public boolean equals(Object object)
     {
-        return (name.equals(((SMPEventExchangeQueue) o).name));
+        if (this == object)
+        {
+            return true;
+        }
+
+        if (this instanceof SMPEventExchangeQueue)
+        {
+            return (name.equals(((SMPEventExchangeQueue) object).name));
+        }
+
+        return false;
     }
 
     @Override

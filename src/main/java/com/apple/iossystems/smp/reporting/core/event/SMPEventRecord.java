@@ -1,67 +1,52 @@
 package com.apple.iossystems.smp.reporting.core.event;
 
-import java.util.HashMap;
-import java.util.Map;
-import java.util.Set;
+import com.apple.iossystems.smp.reporting.core.geo.DeviceLocation;
+import com.apple.iossystems.smp.reporting.core.util.SecurityProvider;
 
 /**
  * @author Toch
  */
-public class SMPEventRecord implements EventRecord
+public class SMPEventRecord
 {
-    private Map<SMPEventAttribute, String> fields = new HashMap<SMPEventAttribute, String>();
-
-    private SMPEventRecord(Builder builder)
+    private SMPEventRecord()
     {
-        fields.putAll(builder.fields);
     }
 
-    public Map<SMPEventAttribute, String> getFields()
+    public static void completeBuild(EventRecord record)
     {
-        return fields;
+        setTimestamp(record);
+        setLocation(record);
+
+        setHash(record, EventAttribute.DEVICE_SERIAL_NUMBER);
+        setHash(record, EventAttribute.DPAN_ID);
+        setHash(record, EventAttribute.DSID);
+        setHash(record, EventAttribute.FPAN_ID);
     }
 
-    @Override
-    public String toString()
+    private static void setTimestamp(EventRecord record)
     {
-        StringBuffer strBuf = new StringBuffer();
-
-        Set<Map.Entry<SMPEventAttribute, String>> entrySet = fields.entrySet();
-
-        for (Map.Entry<SMPEventAttribute, String> entry : entrySet)
-        {
-            strBuf.append(entry.getKey()).append(":").append(entry.getValue()).append("\n");
-        }
-
-        return strBuf.toString();
+        record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(System.currentTimeMillis()));
     }
 
-    public static class Builder
+    private static void setLocation(EventRecord record)
     {
-        private Map<SMPEventAttribute, String> fields = new HashMap<SMPEventAttribute, String>();
+        String key = EventAttribute.DEVICE_LOCATION.key();
+        String value = record.getAttributeValue(key);
 
-        private Builder()
+        if (value != null)
         {
+            record.setAttributeValue(key, DeviceLocation.truncateCoordinates(DeviceLocation.getCoordinates(value)).getReverseString());
         }
+    }
 
-        public static Builder getInstance()
+    private static void setHash(EventRecord record, EventAttribute attribute)
+    {
+        String key = attribute.key();
+        String value = record.getAttributeValue(key);
+
+        if (value != null)
         {
-            return new Builder();
-        }
-
-        public Builder set(SMPEventAttribute key, String value)
-        {
-            if (value != null)
-            {
-                fields.put(key, value);
-            }
-
-            return this;
-        }
-
-        public SMPEventRecord build()
-        {
-            return new SMPEventRecord(this);
+            record.setAttributeValue(key, SecurityProvider.getHash(value));
         }
     }
 }

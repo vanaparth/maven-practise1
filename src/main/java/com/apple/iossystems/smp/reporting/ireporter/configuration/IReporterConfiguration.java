@@ -116,13 +116,24 @@ public class IReporterConfiguration
         return headers;
     }
 
+    public boolean isEquals(IReporterConfiguration configuration)
+    {
+        return ((publishURL.equalsIgnoreCase(configuration.publishURL)) &&
+                (publishKey.equalsIgnoreCase(configuration.publishKey)) &&
+                (contentType.equalsIgnoreCase(configuration.contentType)) &&
+                (publishEnabled == configuration.publishEnabled) &&
+                (maxBatchSize == configuration.maxBatchSize) &&
+                (publishFrequency == configuration.publishFrequency) &&
+                (configurationReloadFrequency == configuration.configurationReloadFrequency));
+    }
+
     public enum Type
     {
         REPORTS(DEFAULT_REPORTS_CONFIGURATION_URL, DEFAULT_REPORTS_URL),
         AUDIT(DEFAULT_AUDIT_CONFIGURATION_URL, DEFAULT_AUDIT_URL);
 
-        private String configurationURL;
-        private String publishURL;
+        private final String configurationURL;
+        private final String publishURL;
 
         private Type(String configurationURL, String publishURL)
         {
@@ -166,50 +177,77 @@ public class IReporterConfiguration
             return new Builder();
         }
 
-        public Builder publishURL(String val)
+        public Builder publishURL(String value)
         {
-            publishURL = val;
+            publishURL = value;
             return this;
         }
 
-        public Builder publishKey(String val)
+        public Builder publishKey(String value)
         {
-            publishKey = val;
+            publishKey = value;
             return this;
         }
 
-        public Builder contentType(String val)
+        public Builder contentType(String value)
         {
-            contentType = val;
+            contentType = value;
             return this;
         }
 
-        public Builder publishEnabled(boolean val)
+        public Builder publishEnabled(boolean value)
         {
-            publishEnabled = val;
+            publishEnabled = value;
             return this;
         }
 
-        public Builder maxBatchSize(int val)
+        public Builder maxBatchSize(int value)
         {
-            maxBatchSize = val;
+            maxBatchSize = value;
             return this;
         }
 
-        public Builder publishFrequency(int val)
+        public Builder publishFrequency(int value)
         {
-            publishFrequency = val;
+            publishFrequency = value;
             return this;
         }
 
-        public Builder configurationReloadFrequency(int val)
+        public Builder configurationReloadFrequency(int value)
         {
-            configurationReloadFrequency = val;
+            configurationReloadFrequency = value;
             return this;
+        }
+
+        private void validate()
+        {
+            int defaultMinBatchSize = 1;
+            int defaultMaxBatchSize = 1000;
+            int minPublishFrequency = 60 * 1000;
+            int maxPublishFrequency = 60 * 60 * 1000;
+            int minConfigurationReloadFrequency = 60 * 60 * 1000;
+            int maxConfigurationReloadFrequency = 24 * 60 * 60 * 1000;
+
+            if ((maxBatchSize < defaultMinBatchSize) || (maxBatchSize > defaultMaxBatchSize))
+            {
+                maxBatchSize = defaultMaxBatchSize;
+            }
+
+            if ((publishFrequency < minPublishFrequency) || (publishFrequency > maxPublishFrequency))
+            {
+                publishFrequency = maxPublishFrequency;
+            }
+
+            if ((configurationReloadFrequency < minConfigurationReloadFrequency) || (configurationReloadFrequency > maxConfigurationReloadFrequency))
+            {
+                configurationReloadFrequency = maxConfigurationReloadFrequency;
+            }
         }
 
         public IReporterConfiguration build()
         {
+            validate();
+
             return IReporterConfiguration.getInstance(this);
         }
 

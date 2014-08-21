@@ -49,6 +49,11 @@ public class EventRecord
         return data;
     }
 
+    public int size()
+    {
+        return data.size();
+    }
+
     @Override
     public String toString()
     {

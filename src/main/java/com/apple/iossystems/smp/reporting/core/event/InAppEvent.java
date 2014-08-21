@@ -96,6 +96,7 @@ public class InAppEvent
     {
         EventRecord record = EventRecord.getInstance();
 
+        record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(System.currentTimeMillis()));
         record.setAttributeValue(EventAttribute.APPLICATION_ID.key(), applicationId);
         record.setAttributeValue(EventAttribute.MERCHANT_ID.key(), merchantId);
         record.setAttributeValue(EventAttribute.TRANSACTION_AMOUNT.key(), String.valueOf(transactionAmount));

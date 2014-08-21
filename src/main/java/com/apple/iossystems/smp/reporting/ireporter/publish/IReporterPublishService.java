@@ -1,7 +1,6 @@
 package com.apple.iossystems.smp.reporting.ireporter.publish;
 
 import com.apple.iossystems.smp.StockholmHTTPResponse;
-import com.apple.iossystems.smp.reporting.core.analytics.Analytics;
 import com.apple.iossystems.smp.reporting.core.http.HttpRequest;
 import com.apple.iossystems.smp.reporting.core.http.HttpResponseAction;
 import com.apple.iossystems.smp.reporting.core.http.SMPHttpClient;
@@ -14,7 +13,7 @@ import org.apache.log4j.Logger;
 /**
  * @author Toch
  */
-abstract class IReporterPublishService
+public abstract class IReporterPublishService
 {
     private static final Logger LOGGER = Logger.getLogger(IReporterPublishService.class);
 
@@ -22,49 +21,13 @@ abstract class IReporterPublishService
 
     private SMPHttpClient httpClient = SMPHttpClient.getInstance();
 
-    private Analytics analytics;
+    private long lastRequestTime;
 
-    IReporterPublishService(Analytics analytics) throws Exception
+    IReporterPublishService() throws Exception
     {
-        this.analytics = analytics;
     }
 
-    abstract IReporterConfigurationService getConfigurationService();
-
-    abstract boolean publishReady();
-
-    abstract long getLastPublishTime();
-
-    final IReporterConfiguration getConfiguration()
-    {
-        return configurationService.getConfiguration();
-    }
-
-    final boolean sendRequest(String data)
-    {
-        int maxRetryCount = 3;
-        int retryCount = 0;
-
-        boolean success = false;
-
-        while ((!success) && (retryCount < maxRetryCount))
-        {
-            try
-            {
-                StockholmHTTPResponse response = httpClient.request(getHTTPRequest(data));
-
-                success = isRequestSuccessful(IReporterResponseHandler.getAction(response));
-            }
-            catch (Exception e)
-            {
-                LOGGER.error(e);
-            }
-
-            retryCount++;
-        }
-
-        return success;
-    }
+    public abstract IReporterConfigurationService getConfigurationService();
 
     private HttpRequest getHTTPRequest(String data)
     {
@@ -78,23 +41,41 @@ abstract class IReporterPublishService
         return (action.equals(HttpResponseAction.NO_ACTION_SUCCESS));
     }
 
-    private boolean publishEnabled()
+    public final IReporterConfiguration getConfiguration()
     {
-        return getConfiguration().isPublishEnabled();
+        return configurationService.getConfiguration();
     }
 
-    final boolean publishDelayExpired()
+    public final boolean isEnabled()
     {
-        return Timer.delayExpired(getLastPublishTime(), getConfiguration().getPublishFrequency());
+        return (getConfiguration().isPublishEnabled());
     }
 
-    final boolean isAcceptingPublish()
+    public final boolean publishDelayExpired()
     {
-        return (publishEnabled() && publishReady());
+        return Timer.delayExpired(lastRequestTime, getConfiguration().getPublishFrequency());
     }
 
-    final Analytics getAnalytics()
+    public final boolean sendRequest(String data)
     {
-        return analytics;
+        boolean success = false;
+
+        try
+        {
+            StockholmHTTPResponse response = httpClient.request(getHTTPRequest(data));
+
+            if (response != null)
+            {
+                success = isRequestSuccessful(IReporterResponseHandler.getAction(response));
+            }
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+        }
+
+        lastRequestTime = System.currentTimeMillis();
+
+        return success;
     }
 }

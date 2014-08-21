@@ -5,6 +5,7 @@ package com.apple.iossystems.smp.reporting.core.event;
  */
 public enum EventAttribute
 {
+    ATHENA_COLOR("ast"),
     CARD_BIN("bin"),
     CARD_EVENT("evt"),
     CARD_ISSUER("bnm"),
@@ -24,18 +25,13 @@ public enum EventAttribute
     TIMESTAMP("tim"),
     USE_CASE_TYPE("psr"),
     USER_AGENT("dua"),
-    // other
-    //CHECK_CARD_STATUS_CODE("check_card_status_code"),
-    //CHECK_CARD_NETWORK_SUB_STATUS_CODE("check_card_network_sub_status_code"),
-    //DEVICE_TYPE("device_type"),
-    //IOS_VERSION("ios_version"),
     // Oslo
     APPLICATION_ID("application_id"),
     MERCHANT_ID("merchant_id"),
     TRANSACTION_AMOUNT("transaction_amount"),
     TRANSACTION_STATUS("transaction_status");
 
-    private String key;
+    private final String key;
 
     private EventAttribute(String key)
     {

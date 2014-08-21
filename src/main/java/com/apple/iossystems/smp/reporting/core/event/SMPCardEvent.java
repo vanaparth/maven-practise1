@@ -13,9 +13,10 @@ public enum SMPCardEvent
     UNLINK_CARD("103"),
     RESUME_CARD("104"),
     PUT_PENDING("105"),
+    POST_COMMAND("106"),
     UNKNOWN("000");
 
-    private String code;
+    private final String code;
 
     private SMPCardEvent(String code)
     {

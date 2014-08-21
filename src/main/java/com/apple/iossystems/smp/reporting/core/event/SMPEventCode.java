@@ -3,6 +3,7 @@ package com.apple.iossystems.smp.reporting.core.event;
 import com.apple.iossystems.smp.domain.CardSource;
 import com.apple.iossystems.smp.domain.FpanType;
 import com.apple.iossystems.smp.domain.clm.Card;
+import com.apple.iossystems.smp.domain.device.CardEligibilityStatus;
 
 /**
  * @author Toch
@@ -11,6 +12,27 @@ public class SMPEventCode
 {
     private SMPEventCode()
     {
+    }
+
+    public static String getCardEligibilityStatusCode(CardEligibilityStatus cardStatus)
+    {
+        switch (cardStatus)
+        {
+            case INELIGIBLE:
+                return "7";
+
+            case ELIGIBLE:
+                return "8";
+
+            case NETWORK_UNAVAILABLE:
+                return "9";
+
+            case PROVISIONED:
+                return "10";
+
+            default:
+                return "0";
+        }
     }
 
     public static String getCardStatusCode(Card.CardStatus cardStatus)
@@ -76,7 +98,7 @@ public class SMPEventCode
         }
     }
 
-    public static String getPNOCode(String name)
+    public static String getPNONameCode(String name)
     {
         if (name.equalsIgnoreCase("helium"))
         {
@@ -130,10 +152,5 @@ public class SMPEventCode
         {
             return "0";
         }
-    }
-
-    public static String getSupportsInAppPaymentCode(boolean value)
-    {
-        return (value ? "1" : "2");
     }
 }

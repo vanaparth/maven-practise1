@@ -8,7 +8,7 @@ public enum InAppTransactionStatus
     FAILED("0"),
     SUCCESS("1");
 
-    private String code;
+    private final String code;
 
     private InAppTransactionStatus(String code)
     {

@@ -44,4 +44,14 @@ public abstract class IReporterConfigurationService
 
         return configuration;
     }
+
+    public final ConfigurationEvent getConfigurationEvent()
+    {
+        IReporterConfiguration lastConfiguration = configuration;
+        long lastTimestamp = timestamp;
+
+        reloadConfiguration();
+
+        return ConfigurationEvent.getInstance(configuration, (timestamp > lastTimestamp), !configuration.isEquals(lastConfiguration));
+    }
 }

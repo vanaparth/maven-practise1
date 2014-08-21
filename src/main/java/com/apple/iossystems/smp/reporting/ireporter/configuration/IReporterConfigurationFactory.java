@@ -41,11 +41,15 @@ public class IReporterConfigurationFactory
         try
         {
             StockholmHTTPResponse response = SMPHttpClient.getInstance().request(HttpRequest.getInstance(configurationType.getConfigurationURL(), "GET", null, null, null, null));
-            String content = response.getContent();
 
-            if (response.isSuccessful() && content != null)
+            if (response != null)
             {
-                return getConfigurationFromJson(content);
+                String content = response.getContent();
+
+                if (response.isSuccessful() && (content != null))
+                {
+                    return getConfigurationFromJson(content);
+                }
             }
         }
         catch (Exception e)

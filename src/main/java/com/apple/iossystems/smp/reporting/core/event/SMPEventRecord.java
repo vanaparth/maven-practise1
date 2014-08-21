@@ -14,18 +14,13 @@ public class SMPEventRecord
 
     public static void completeBuild(EventRecord record)
     {
-        setTimestamp(record);
         setLocation(record);
 
+        setHash(record, EventAttribute.CONVERSATION_ID);
         setHash(record, EventAttribute.DEVICE_SERIAL_NUMBER);
         setHash(record, EventAttribute.DPAN_ID);
         setHash(record, EventAttribute.DSID);
         setHash(record, EventAttribute.FPAN_ID);
-    }
-
-    private static void setTimestamp(EventRecord record)
-    {
-        record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(System.currentTimeMillis()));
     }
 
     private static void setLocation(EventRecord record)

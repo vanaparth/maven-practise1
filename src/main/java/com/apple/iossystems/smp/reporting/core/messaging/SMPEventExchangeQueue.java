@@ -42,7 +42,7 @@ class SMPEventExchangeQueue
             return true;
         }
 
-        if (this instanceof SMPEventExchangeQueue)
+        if (object instanceof SMPEventExchangeQueue)
         {
             return (name.equals(((SMPEventExchangeQueue) object).name));
         }

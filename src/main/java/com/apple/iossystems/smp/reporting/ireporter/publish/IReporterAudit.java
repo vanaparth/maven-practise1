@@ -17,11 +17,14 @@ public class IReporterAudit
 
     private final int backlogCount;
 
+    private final int lostCount;
+
     private IReporterAudit(Builder builder)
     {
         sentCount = builder.sentCount;
         failedCount = builder.failedCount;
         backlogCount = builder.backlogCount;
+        lostCount = builder.lostCount;
     }
 
     public String toJson()
@@ -33,7 +36,7 @@ public class IReporterAudit
     {
         AuditRequest result = new AuditRequest();
 
-        result.addAuditRecord(new AuditRecord(sentCount, failedCount, backlogCount));
+        result.addAuditRecord(new AuditRecord(sentCount, failedCount, backlogCount, lostCount));
 
         return result;
     }
@@ -48,26 +51,33 @@ public class IReporterAudit
         private int sentCount;
         private int failedCount;
         private int backlogCount;
+        private int lostCount;
 
         private Builder()
         {
         }
 
-        public Builder sentCount(int val)
+        public Builder sentCount(int value)
         {
-            sentCount = val;
+            sentCount = value;
             return this;
         }
 
-        public Builder failedCount(int val)
+        public Builder failedCount(int value)
         {
-            failedCount = val;
+            failedCount = value;
             return this;
         }
 
-        public Builder backlogCount(int val)
+        public Builder backlogCount(int value)
         {
-            backlogCount = val;
+            backlogCount = value;
+            return this;
+        }
+
+        public Builder lostCount(int value)
+        {
+            lostCount = value;
             return this;
         }
 
@@ -100,16 +110,18 @@ public class IReporterAudit
         private int sent;
         private int failed;
         private int backlog;
+        private int lost;
 
         private AuditRecord()
         {
         }
 
-        private AuditRecord(int sent, int failed, int backlog)
+        private AuditRecord(int sent, int failed, int backlog, int lost)
         {
             this.sent = sent;
             this.failed = failed;
             this.backlog = backlog;
+            this.lost = lost;
         }
     }
 }

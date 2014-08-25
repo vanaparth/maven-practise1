@@ -206,32 +206,37 @@ public class SMPReportingFunctionalTest
     {
         Map<String, String> data = new HashMap<String, String>();
 
-        data.put(EventAttribute.CARD_BIN.key(), "1");
-        data.put(EventAttribute.CARD_ISSUER.key(), "2");
-        data.put(EventAttribute.CARD_SOURCE.key(), "3");
+        data.put(EventAttribute.ATHENA_COLOR.key(), "1");
+        data.put(EventAttribute.CARD_BIN.key(), "2");
+        data.put(EventAttribute.CARD_ISSUER.key(), "3");
 
-        data.put(EventAttribute.CARD_STATUS.key(), "4");
-        data.put(EventAttribute.CARD_TYPE.key(), "5");
-        data.put(EventAttribute.CONVERSATION_ID.key(), "6");
+        data.put(EventAttribute.CARD_SOURCE.key(), "4");
+        data.put(EventAttribute.CARD_STATUS.key(), "5");
+        data.put(EventAttribute.CARD_TYPE.key(), "6");
 
-        data.put(EventAttribute.DEVICE_LANGUAGE.key(), "7");
-        data.put(EventAttribute.DEVICE_LOCATION.key(), "8");
-        data.put(EventAttribute.DEVICE_SERIAL_NUMBER.key(), "9");
+        data.put(EventAttribute.CONVERSATION_ID.key(), "7");
+        data.put(EventAttribute.DEVICE_LANGUAGE.key(), "8");
+        data.put(EventAttribute.DEVICE_LOCATION.key(), "9");
 
-        data.put(EventAttribute.DPAN_ID.key(), "10");
-        data.put(EventAttribute.DSID.key(), "11");
-        data.put(EventAttribute.CARD_EVENT.key(), "12");
+        data.put(EventAttribute.DEVICE_SERIAL_NUMBER.key(), "10");
+        data.put(EventAttribute.DPAN_ID.key(), "11");
+        data.put(EventAttribute.DSID.key(), "12");
+        data.put(EventAttribute.CARD_EVENT.key(), "13");
 
-        data.put(EventAttribute.FPAN_ID.key(), "13");
-        data.put(EventAttribute.PNO.key(), "14");
-        data.put(EventAttribute.PROVISION_STATUS.key(), "15");
+        data.put(EventAttribute.FPAN_ID.key(), "14");
+        data.put(EventAttribute.PNO.key(), "15");
+        data.put(EventAttribute.PROVISION_STATUS.key(), "16");
 
-        data.put(EventAttribute.SUPPORTS_IN_APP_PAYMENT.key(), "16");
-        data.put(EventAttribute.TIMESTAMP.key(), "17");
-        data.put(EventAttribute.USE_CASE_TYPE.key(), "18");
+        data.put(EventAttribute.SUPPORTS_IN_APP_PAYMENT.key(), "17");
+        data.put(EventAttribute.TIMESTAMP.key(), "18");
+        data.put(EventAttribute.USE_CASE_TYPE.key(), "19");
 
-        data.put(EventAttribute.USER_AGENT.key(), "19");
+        data.put(EventAttribute.USER_AGENT.key(), "20");
 
-        return EventRecord.getInstance(data);
+        EventRecord record = EventRecord.getInstance();
+
+        record.putAll(data);
+
+        return record;
     }
 }

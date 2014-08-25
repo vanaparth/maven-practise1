@@ -33,12 +33,12 @@ public class ReportsScheduledTask extends IReporterScheduledTask
     }
 
     @Override
-    public synchronized void handlePublishEvent()
+    public void handlePublishEvent()
     {
         IReporterPublishService service = getService();
         PublishTaskHandler publishTaskHandler = getPublishTaskHandler();
 
-        if (service.isEnabled() && service.publishDelayExpired() && publishTaskHandler.hasData())
+        if (service.isEnabled() && service.publishDelayExpired())
         {
             publishEventRecords(publishTaskHandler.emptyQueue());
         }

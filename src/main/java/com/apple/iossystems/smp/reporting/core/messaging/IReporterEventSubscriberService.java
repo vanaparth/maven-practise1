@@ -24,6 +24,10 @@ class IReporterEventSubscriberService<LogEvent> extends SMPEventSubscriberServic
     @Override
     public void handleEvent(com.apple.iossystems.logging.pubsub.LogEvent logEvent)
     {
-        iReporterService.postSMPEvent(EventRecord.getInstance(logEvent.getMetadata()));
+        EventRecord record = EventRecord.getInstance();
+
+        record.putAll(logEvent.getMetadata());
+
+        iReporterService.postSMPEvent(record);
     }
 }

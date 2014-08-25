@@ -9,26 +9,15 @@ import java.util.Set;
  */
 public class EventRecord
 {
-    private Map<String, String> data;
+    private Map<String, String> data = new HashMap<String, String>();
 
     private EventRecord()
     {
-        this(new HashMap<String, String>());
-    }
-
-    private EventRecord(Map<String, String> data)
-    {
-        this.data = data;
     }
 
     public static EventRecord getInstance()
     {
         return new EventRecord();
-    }
-
-    public static EventRecord getInstance(Map<String, String> data)
-    {
-        return new EventRecord(data);
     }
 
     public void setAttributeValue(String key, String value)
@@ -52,6 +41,11 @@ public class EventRecord
     public int size()
     {
         return data.size();
+    }
+
+    public void putAll(Map<String, String> map)
+    {
+        data.putAll(map);
     }
 
     @Override

@@ -29,7 +29,7 @@ public class AuditScheduledTask extends IReporterScheduledTask
     }
 
     @Override
-    public synchronized void handlePublishEvent()
+    public void handlePublishEvent()
     {
         sendAudit();
     }

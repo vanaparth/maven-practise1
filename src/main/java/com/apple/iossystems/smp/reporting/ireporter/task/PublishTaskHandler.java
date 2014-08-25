@@ -7,12 +7,15 @@ import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 import com.apple.iossystems.smp.reporting.ireporter.publish.IReporterPublishService;
 
+import java.util.concurrent.BlockingQueue;
+import java.util.concurrent.LinkedBlockingQueue;
+
 /**
  * @author Toch
  */
 public class PublishTaskHandler
 {
-    private EventRecords eventRecords = EventRecords.getInstance();
+    private BlockingQueue<EventRecord> queue = new LinkedBlockingQueue<EventRecord>();
 
     private Statistics statistics = Statistics.getInstance();
 
@@ -61,32 +64,36 @@ public class PublishTaskHandler
 
     private boolean reportsReady()
     {
-        int available = eventRecords.size();
+        int available = queue.size();
 
         IReporterPublishService service = reportsScheduledTask.getService();
 
         return ((available >= service.getConfiguration().getMaxBatchSize()) || ((available > 0) && service.publishDelayExpired()));
     }
 
-    public synchronized void add(EventRecord e)
+    public void add(EventRecord e)
     {
-        eventRecords.add(e);
+        queue.offer(e);
 
         handleAddEvent();
     }
 
-    public synchronized EventRecords emptyQueue()
+    public EventRecords emptyQueue()
     {
-        EventRecords records = eventRecords;
+        EventRecords records;
 
-        eventRecords = EventRecords.getInstance();
+        if (queue.isEmpty())
+        {
+            records = EventRecords.getEmpty();
+        }
+        else
+        {
+            records = EventRecords.getInstance();
+
+            queue.drainTo(records.getList());
+        }
 
         return records;
-    }
-
-    public synchronized boolean hasData()
-    {
-        return (!eventRecords.isEmpty());
     }
 
     Statistics getStatistics()

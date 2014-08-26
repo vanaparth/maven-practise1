@@ -16,7 +16,6 @@ public class SMPEventRecord
     {
         setLocation(record);
 
-        setHash(record, EventAttribute.CONVERSATION_ID);
         setHash(record, EventAttribute.DEVICE_SERIAL_NUMBER);
         setHash(record, EventAttribute.DPAN_ID);
         setHash(record, EventAttribute.DSID);

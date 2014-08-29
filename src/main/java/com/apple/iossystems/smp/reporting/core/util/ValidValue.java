@@ -13,9 +13,4 @@ public class ValidValue
     {
         return (value != null) ? Integer.valueOf(value) : defaultValue;
     }
-
-    public static long getLongValueWithDefault(String value, long defaultValue)
-    {
-        return (value != null) ? Long.valueOf(value) : defaultValue;
-    }
 }

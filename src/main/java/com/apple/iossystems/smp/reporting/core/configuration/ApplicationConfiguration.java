@@ -21,9 +21,9 @@ abstract class ApplicationConfiguration
     // Property keys not in SMPBroker.properties
     static final String RABBIT_CONSUMER_THREADS_COUNT_KEY = "rabbit.consumerThreads";
     static final String RABBIT_CONSUMER_THREADS_PREFETCH_COUNT_KEY = "rabbit.consumerThreads.prefetchCount";
-    static final String SMP_EVENTS_PUBLISH_ENABLE_KEY = "smp.events.publish.enable";
+    static final String SMP_EVENTS_PUBLISH_ENABLE_KEY = "smp.reporting.events.publish.enable";
     private static final String SMP_REPORTING_APPLICATION_ENABLE_KEY = "smp.reporting.application.enable";
-    private static final String SMP_EVENTS_EXCHANGE_KEY = "smp.events.exchange";
+    private static final String SMP_EVENTS_EXCHANGE_KEY = "smp.reporting.events.exchange";
 
     // Property keys not in SMPBroker.properties for iReporter
     private static final String IREPORTER_URL_KEY = "ireporter.url";

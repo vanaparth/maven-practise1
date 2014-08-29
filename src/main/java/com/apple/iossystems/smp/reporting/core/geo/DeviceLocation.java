@@ -13,10 +13,17 @@ public class DeviceLocation
     {
         int index = value.indexOf('/');
 
-        float lat = Float.valueOf(value.substring(0, index));
-        float lon = Float.valueOf(value.substring(index + 1, value.length()));
+        if (index >= 0)
+        {
+            float lat = Float.valueOf(value.substring(0, index));
+            float lon = Float.valueOf(value.substring(index + 1, value.length()));
 
-        return Coordinates.getInstance(lon, lat);
+            return Coordinates.getInstance(lon, lat);
+        }
+        else
+        {
+            return Coordinates.getDefaultCoordinates();
+        }
     }
 
     public static Coordinates truncateCoordinates(Coordinates coordinates)

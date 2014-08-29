@@ -52,6 +52,7 @@ public class SMPEventNotificationService
         properties.setProperty(LogService.DISTINGUISHED_NAME, "events");
         properties.setProperty(LogService.TYPE, LoggerType.HYBRIDPUBSUB.toString());
         properties.setProperty(LogService.EXCHANGE_NAME, ApplicationConfigurationManager.getSMPEventsExchangeName());
+        properties.setProperty(LogService.STORE_NAME, "reporting");
 
         try
         {
@@ -59,8 +60,7 @@ public class SMPEventNotificationService
         }
         catch (Exception e)
         {
-            enabled = false;
-            LOGGER.error("Failed to initialize events logging service", e);
+            LOGGER.error(e);
         }
     }
 

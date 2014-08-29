@@ -26,14 +26,10 @@ public class SMPReportingFunctionalTest
         integrationTests();
     }
 
-    private static void testService()
-    {
-        postRecords(getRecords(10));
-    }
-
     private static void integrationTests()
     {
-        // Run the first test before each of the rest since the first batch is always sent immediately
+        setProperties();
+
         // test1();
         // test2();
         // test3();
@@ -44,6 +40,11 @@ public class SMPReportingFunctionalTest
         // test8();
         // test9();
         // test10();
+    }
+
+    private static void setProperties()
+    {
+        System.setProperty("enable.hubble", "true");
     }
 
     private static void test1()
@@ -175,19 +176,26 @@ public class SMPReportingFunctionalTest
 
     private static void postRecords(EventRecords records)
     {
+        try
+        {
+            IReporterService iReporterService = IReporterService.getInstance();
+
+            postRecords(iReporterService, records);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+        }
+    }
+
+    private static void postRecords(IReporterService iReporterService, EventRecords records)
+    {
         List<EventRecord> list = records.getList();
 
         for (EventRecord record : list)
         {
-            postRecord(record);
+            iReporterService.postSMPEvent(record);
         }
-    }
-
-    private static void postRecord(EventRecord record)
-    {
-        LOGGER.info(record);
-
-        IReporterService.getInstance().postSMPEvent(record);
     }
 
     private static EventRecords getRecords(int count)

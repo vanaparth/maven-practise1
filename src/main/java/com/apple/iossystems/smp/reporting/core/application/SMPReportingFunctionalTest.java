@@ -1,5 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.application;
 
+import com.apple.cds.keystone.config.PropertyManager;
+import com.apple.iossystems.smp.StockholmHTTPResponse;
 import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
@@ -28,7 +30,11 @@ public class SMPReportingFunctionalTest
 
     private static void integrationTests()
     {
-        setProperties();
+        initPropertyManager();
+
+        //testICloudProdConfig();
+        //testICloudProdPublish();
+        //setSystemProperties();
 
         // test1();
         // test2();
@@ -42,9 +48,26 @@ public class SMPReportingFunctionalTest
         // test10();
     }
 
-    private static void setProperties()
+    private static void setSystemProperties()
     {
         System.setProperty("enable.hubble", "true");
+    }
+
+    private static PropertyManager initPropertyManager()
+    {
+        PropertyManager propertyManager = null;
+
+        try
+        {
+            propertyManager = PropertyManager.getInstance();
+            propertyManager.initializeProperties(true);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+        }
+
+        return propertyManager;
     }
 
     private static void test1()
@@ -246,5 +269,42 @@ public class SMPReportingFunctionalTest
         record.putAll(data);
 
         return record;
+    }
+
+    private static void testICloudProdConfig()
+    {
+        HttpRequest httpRequest = HttpRequest.getInstance("https://mr-e3sh.icloud.com/e3/rest/1/config/stockholm", "GET", null, null, null, null);
+
+        try
+        {
+            StockholmHTTPResponse response = SMPHttpClient.getInstance().request(httpRequest);
+
+            System.out.println(response.getContent());
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+
+            e.printStackTrace();
+        }
+    }
+
+    private static void testICloudProdPublish()
+    {
+        IReporterConfiguration configuration = IReporterConfiguration.Builder.fromDefault(IReporterConfiguration.Type.REPORTS);
+        Map<String, String> headers = configuration.getRequestHeaders();
+
+        EventRecords records = getRecords(10);
+
+        HttpRequest httpRequest = HttpRequest.getInstance("https://mr-e3sh.icloud.com/e3/rest/1/stockholm", "POST", null, configuration.getContentType(), IReporterJsonBuilder.toJson(records.getList()), headers);
+
+        try
+        {
+            SMPHttpClient.getInstance().request(httpRequest);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+        }
     }
 }

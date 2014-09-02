@@ -46,14 +46,19 @@ public abstract class IReporterPublishService
         return configurationService.getConfiguration();
     }
 
+    private boolean publishDelayExpired()
+    {
+        return Timer.delayExpired(lastRequestTime, getConfiguration().getPublishFrequency());
+    }
+
     public final boolean isEnabled()
     {
         return (getConfiguration().isPublishEnabled());
     }
 
-    public final boolean publishDelayExpired()
+    public final boolean publishReady()
     {
-        return Timer.delayExpired(lastRequestTime, getConfiguration().getPublishFrequency());
+        return (isEnabled() && publishDelayExpired());
     }
 
     public final boolean sendRequest(String data)

@@ -1,5 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.application;
 
+import com.apple.cds.keystone.config.PropertyManager;
+import com.apple.iossystems.smp.StockholmHTTPResponse;
 import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
@@ -26,14 +28,14 @@ public class SMPReportingFunctionalTest
         integrationTests();
     }
 
-    private static void testService()
-    {
-        postRecords(getRecords(10));
-    }
-
     private static void integrationTests()
     {
-        // Run the first test before each of the rest since the first batch is always sent immediately
+        setSystemProperties();
+        initPropertyManager();
+
+        testICloudProdConfig();
+        //testICloudProdPublish();
+
         // test1();
         // test2();
         // test3();
@@ -44,6 +46,28 @@ public class SMPReportingFunctionalTest
         // test8();
         // test9();
         // test10();
+    }
+
+    private static void setSystemProperties()
+    {
+        System.setProperty("enable.hubble", "true");
+    }
+
+    private static PropertyManager initPropertyManager()
+    {
+        PropertyManager propertyManager = null;
+
+        try
+        {
+            propertyManager = PropertyManager.getInstance();
+            propertyManager.initializeProperties(true);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+        }
+
+        return propertyManager;
     }
 
     private static void test1()
@@ -175,19 +199,26 @@ public class SMPReportingFunctionalTest
 
     private static void postRecords(EventRecords records)
     {
+        try
+        {
+            IReporterService iReporterService = IReporterService.getInstance();
+
+            postRecords(iReporterService, records);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+        }
+    }
+
+    private static void postRecords(IReporterService iReporterService, EventRecords records)
+    {
         List<EventRecord> list = records.getList();
 
         for (EventRecord record : list)
         {
-            postRecord(record);
+            iReporterService.postSMPEvent(record);
         }
-    }
-
-    private static void postRecord(EventRecord record)
-    {
-        LOGGER.info(record);
-
-        IReporterService.getInstance().postSMPEvent(record);
     }
 
     private static EventRecords getRecords(int count)
@@ -202,36 +233,81 @@ public class SMPReportingFunctionalTest
         return records;
     }
 
+    private static void testICloudProdConfig()
+    {
+        //String url = "https://icloud4-e3.icloud.com";
+        String url = "https://mr-e3sh.icloud.com";
+
+        HttpRequest httpRequest = HttpRequest.getInstance(url + "/e3/rest/1/config/stockholm", "GET", null, null, null, null);
+
+        try
+        {
+            StockholmHTTPResponse response = SMPHttpClient.getInstance().request(httpRequest);
+
+            System.out.println(response.getContent());
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+
+            e.printStackTrace();
+        }
+    }
+
+    private static void testICloudProdPublish()
+    {
+        IReporterConfiguration configuration = IReporterConfiguration.Builder.fromDefault(IReporterConfiguration.Type.REPORTS);
+        Map<String, String> headers = configuration.getRequestHeaders();
+
+        EventRecords records = getRecords(10);
+
+        HttpRequest httpRequest = HttpRequest.getInstance("https://mr-e3sh.icloud.com/e3/rest/1/stockholm", "POST", null, configuration.getContentType(), IReporterJsonBuilder.toJson(records.getList()), headers);
+
+        try
+        {
+            SMPHttpClient.getInstance().request(httpRequest);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+        }
+    }
+
     private static EventRecord getRecord()
     {
         Map<String, String> data = new HashMap<String, String>();
 
-        data.put(EventAttribute.CARD_BIN.key(), "1");
-        data.put(EventAttribute.CARD_ISSUER.key(), "2");
-        data.put(EventAttribute.CARD_SOURCE.key(), "3");
+        data.put(EventAttribute.ATHENA_COLOR.key(), "1");
+        data.put(EventAttribute.CARD_BIN.key(), "2");
+        data.put(EventAttribute.CARD_ISSUER.key(), "3");
 
-        data.put(EventAttribute.CARD_STATUS.key(), "4");
-        data.put(EventAttribute.CARD_TYPE.key(), "5");
-        data.put(EventAttribute.CONVERSATION_ID.key(), "6");
+        data.put(EventAttribute.CARD_SOURCE.key(), "4");
+        data.put(EventAttribute.CARD_STATUS.key(), "5");
+        data.put(EventAttribute.CARD_TYPE.key(), "6");
 
-        data.put(EventAttribute.DEVICE_LANGUAGE.key(), "7");
-        data.put(EventAttribute.DEVICE_LOCATION.key(), "8");
-        data.put(EventAttribute.DEVICE_SERIAL_NUMBER.key(), "9");
+        data.put(EventAttribute.CONVERSATION_ID.key(), "7");
+        data.put(EventAttribute.DEVICE_LANGUAGE.key(), "8");
+        data.put(EventAttribute.DEVICE_LOCATION.key(), "9");
 
-        data.put(EventAttribute.DPAN_ID.key(), "10");
-        data.put(EventAttribute.DSID.key(), "11");
-        data.put(EventAttribute.CARD_EVENT.key(), "12");
+        data.put(EventAttribute.DEVICE_SERIAL_NUMBER.key(), "10");
+        data.put(EventAttribute.DPAN_ID.key(), "11");
+        data.put(EventAttribute.DSID.key(), "12");
+        data.put(EventAttribute.CARD_EVENT.key(), "13");
 
-        data.put(EventAttribute.FPAN_ID.key(), "13");
-        data.put(EventAttribute.PNO.key(), "14");
-        data.put(EventAttribute.PROVISION_STATUS.key(), "15");
+        data.put(EventAttribute.FPAN_ID.key(), "14");
+        data.put(EventAttribute.PNO.key(), "15");
+        data.put(EventAttribute.PROVISION_STATUS.key(), "16");
 
-        data.put(EventAttribute.SUPPORTS_IN_APP_PAYMENT.key(), "16");
-        data.put(EventAttribute.TIMESTAMP.key(), "17");
-        data.put(EventAttribute.USE_CASE_TYPE.key(), "18");
+        data.put(EventAttribute.SUPPORTS_IN_APP_PAYMENT.key(), "17");
+        data.put(EventAttribute.TIMESTAMP.key(), "18");
+        data.put(EventAttribute.USE_CASE_TYPE.key(), "19");
 
-        data.put(EventAttribute.USER_AGENT.key(), "19");
+        data.put(EventAttribute.USER_AGENT.key(), "20");
 
-        return EventRecord.getInstance(data);
+        EventRecord record = EventRecord.getInstance();
+
+        record.putAll(data);
+
+        return record;
     }
 }

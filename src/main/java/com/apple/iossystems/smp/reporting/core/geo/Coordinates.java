@@ -5,6 +5,8 @@ package com.apple.iossystems.smp.reporting.core.geo;
  */
 public class Coordinates
 {
+    private static final Coordinates DEFAULT_COORDINATES = new Coordinates(0, 0);
+
     private final float longitude;
     private final float latitude;
 
@@ -38,5 +40,10 @@ public class Coordinates
     public String getReverseString()
     {
         return latitude + "," + longitude;
+    }
+
+    public static Coordinates getDefaultCoordinates()
+    {
+        return DEFAULT_COORDINATES;
     }
 }

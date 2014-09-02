@@ -64,7 +64,7 @@ public class SMPEvent
         }
     }
 
-    public EventRecords buildRecords()
+    private EventRecords buildRecords()
     {
         EventRecord record = EventRecord.getInstance();
 

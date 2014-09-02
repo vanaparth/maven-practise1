@@ -10,14 +10,12 @@ public class SMPReportingApplication
 {
     private static final SMPReportingApplication INSTANCE = new SMPReportingApplication();
 
-    private boolean started = false;
-
     private SMPReportingApplication()
     {
-        setSystemProperties();
+        init();
     }
 
-    private static SMPReportingApplication getInstance()
+    public static SMPReportingApplication getInstance()
     {
         return INSTANCE;
     }
@@ -39,23 +37,17 @@ public class SMPReportingApplication
         return ApplicationConfigurationManager.getSMPReportingApplicationEnable();
     }
 
-    private synchronized void startApplication()
+    private void init()
     {
-        if (isEnabled() && !started)
+        if (isEnabled())
         {
-            startSMPEventExchangeManager();
+            setSystemProperties();
 
-            started = true;
+            SMPEventExchangeManager.getInstance().start();
         }
-    }
-
-    private void startSMPEventExchangeManager()
-    {
-        SMPEventExchangeManager.getInstance().start();
     }
 
     public static void start()
     {
-        getInstance().startApplication();
     }
 }

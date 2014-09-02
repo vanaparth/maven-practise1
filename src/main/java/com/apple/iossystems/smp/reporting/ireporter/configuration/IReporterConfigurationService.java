@@ -25,17 +25,21 @@ public abstract class IReporterConfigurationService
         timestamp = System.currentTimeMillis();
     }
 
-    private void reloadConfiguration()
+    private boolean configurationExpired()
+    {
+        return Timer.delayExpired(timestamp, configuration.getConfigurationReloadFrequency());
+    }
+
+    private boolean reloadConfiguration()
     {
         if (configurationExpired())
         {
             updateConfiguration();
-        }
-    }
 
-    private boolean configurationExpired()
-    {
-        return Timer.delayExpired(timestamp, configuration.getConfigurationReloadFrequency());
+            return true;
+        }
+
+        return false;
     }
 
     public final IReporterConfiguration getConfiguration()
@@ -48,10 +52,9 @@ public abstract class IReporterConfigurationService
     public final ConfigurationEvent getConfigurationEvent()
     {
         IReporterConfiguration lastConfiguration = configuration;
-        long lastTimestamp = timestamp;
 
-        reloadConfiguration();
+        boolean updated = reloadConfiguration();
 
-        return ConfigurationEvent.getInstance(configuration, (timestamp > lastTimestamp), !configuration.isEquals(lastConfiguration));
+        return ConfigurationEvent.getInstance(updated, !configuration.isEquals(lastConfiguration));
     }
 }

@@ -118,6 +118,11 @@ public class IReporterConfiguration
 
     public boolean isEquals(IReporterConfiguration configuration)
     {
+        return ((this == configuration) || (configurationEquals(configuration)));
+    }
+
+    private boolean configurationEquals(IReporterConfiguration configuration)
+    {
         return ((publishURL.equalsIgnoreCase(configuration.publishURL)) &&
                 (publishKey.equalsIgnoreCase(configuration.publishKey)) &&
                 (contentType.equalsIgnoreCase(configuration.contentType)) &&

@@ -30,11 +30,11 @@ public class SMPReportingFunctionalTest
 
     private static void integrationTests()
     {
+        setSystemProperties();
         initPropertyManager();
 
-        //testICloudProdConfig();
+        testICloudProdConfig();
         //testICloudProdPublish();
-        //setSystemProperties();
 
         // test1();
         // test2();
@@ -233,6 +233,46 @@ public class SMPReportingFunctionalTest
         return records;
     }
 
+    private static void testICloudProdConfig()
+    {
+        //String url = "https://icloud4-e3.icloud.com";
+        String url = "https://mr-e3sh.icloud.com";
+
+        HttpRequest httpRequest = HttpRequest.getInstance(url + "/e3/rest/1/config/stockholm", "GET", null, null, null, null);
+
+        try
+        {
+            StockholmHTTPResponse response = SMPHttpClient.getInstance().request(httpRequest);
+
+            System.out.println(response.getContent());
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+
+            e.printStackTrace();
+        }
+    }
+
+    private static void testICloudProdPublish()
+    {
+        IReporterConfiguration configuration = IReporterConfiguration.Builder.fromDefault(IReporterConfiguration.Type.REPORTS);
+        Map<String, String> headers = configuration.getRequestHeaders();
+
+        EventRecords records = getRecords(10);
+
+        HttpRequest httpRequest = HttpRequest.getInstance("https://mr-e3sh.icloud.com/e3/rest/1/stockholm", "POST", null, configuration.getContentType(), IReporterJsonBuilder.toJson(records.getList()), headers);
+
+        try
+        {
+            SMPHttpClient.getInstance().request(httpRequest);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+        }
+    }
+
     private static EventRecord getRecord()
     {
         Map<String, String> data = new HashMap<String, String>();
@@ -269,42 +309,5 @@ public class SMPReportingFunctionalTest
         record.putAll(data);
 
         return record;
-    }
-
-    private static void testICloudProdConfig()
-    {
-        HttpRequest httpRequest = HttpRequest.getInstance("https://mr-e3sh.icloud.com/e3/rest/1/config/stockholm", "GET", null, null, null, null);
-
-        try
-        {
-            StockholmHTTPResponse response = SMPHttpClient.getInstance().request(httpRequest);
-
-            System.out.println(response.getContent());
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e);
-
-            e.printStackTrace();
-        }
-    }
-
-    private static void testICloudProdPublish()
-    {
-        IReporterConfiguration configuration = IReporterConfiguration.Builder.fromDefault(IReporterConfiguration.Type.REPORTS);
-        Map<String, String> headers = configuration.getRequestHeaders();
-
-        EventRecords records = getRecords(10);
-
-        HttpRequest httpRequest = HttpRequest.getInstance("https://mr-e3sh.icloud.com/e3/rest/1/stockholm", "POST", null, configuration.getContentType(), IReporterJsonBuilder.toJson(records.getList()), headers);
-
-        try
-        {
-            SMPHttpClient.getInstance().request(httpRequest);
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e);
-        }
     }
 }

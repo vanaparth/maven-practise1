@@ -5,6 +5,9 @@ package com.apple.iossystems.smp.reporting.core.event;
  */
 public enum EventAttribute
 {
+    // Reserved
+    EVENT_TYPE("event_type"),
+    // Stockholm
     ATHENA_COLOR("ast"),
     CARD_BIN("bin"),
     CARD_EVENT("evt"),
@@ -26,10 +29,10 @@ public enum EventAttribute
     USE_CASE_TYPE("psr"),
     USER_AGENT("dua"),
     // Oslo
-    APPLICATION_ID("application_id"),
-    MERCHANT_ID("merchant_id"),
-    TRANSACTION_AMOUNT("transaction_amount"),
-    TRANSACTION_STATUS("transaction_status");
+    MERCHANT_ID("mid"),
+    TRANSACTION_AMOUNT("tmt"),
+    TRANSACTION_ID("tid"),
+    TRANSACTION_STATUS("tst");
 
     private final String key;
 

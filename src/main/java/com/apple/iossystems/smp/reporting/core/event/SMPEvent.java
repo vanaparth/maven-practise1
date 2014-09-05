@@ -21,6 +21,11 @@ public class SMPEvent
         pno = builder.pno;
     }
 
+    public static Builder getBuilder()
+    {
+        return new Builder();
+    }
+
     public static class Builder
     {
         private SMPCardEvent smpCardEvent;
@@ -90,10 +95,5 @@ public class SMPEvent
         records.add(record);
 
         return records;
-    }
-
-    public static Builder getBuilder()
-    {
-        return new Builder();
     }
 }

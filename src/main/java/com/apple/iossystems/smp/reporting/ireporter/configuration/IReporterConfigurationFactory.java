@@ -21,9 +21,9 @@ public class IReporterConfigurationFactory
         return IReporterConfiguration.Builder.fromDefault(configurationType);
     }
 
-    private static IReporterConfiguration getConfigurationFromJson(String json)
+    private static IReporterConfiguration getConfigurationFromJson(IReporterConfiguration.Type configurationType, String json)
     {
-        return IReporterConfiguration.Builder.fromJson(json);
+        return IReporterConfiguration.Builder.fromJson(configurationType, json);
     }
 
     static IReporterConfiguration loadReportsConfiguration()
@@ -34,6 +34,11 @@ public class IReporterConfigurationFactory
     static IReporterConfiguration loadAuditConfiguration()
     {
         return load(IReporterConfiguration.Type.AUDIT);
+    }
+
+    static IReporterConfiguration loadPaymentReportsConfiguration()
+    {
+        return load(IReporterConfiguration.Type.PAYMENT_REPORTS);
     }
 
     private static IReporterConfiguration load(IReporterConfiguration.Type configurationType)
@@ -48,7 +53,7 @@ public class IReporterConfigurationFactory
 
                 if (response.isSuccessful() && (content != null))
                 {
-                    return getConfigurationFromJson(content);
+                    return getConfigurationFromJson(configurationType, content);
                 }
             }
         }

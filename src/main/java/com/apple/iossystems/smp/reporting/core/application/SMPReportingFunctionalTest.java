@@ -33,8 +33,8 @@ public class SMPReportingFunctionalTest
         setSystemProperties();
         initPropertyManager();
 
-        testICloudProdConfig();
-        //testICloudProdPublish();
+        //testICloudProdConfig();
+        // testICloudProdPublish();
 
         // test1();
         // test2();
@@ -53,21 +53,17 @@ public class SMPReportingFunctionalTest
         System.setProperty("enable.hubble", "true");
     }
 
-    private static PropertyManager initPropertyManager()
+    private static void initPropertyManager()
     {
-        PropertyManager propertyManager = null;
-
         try
         {
-            propertyManager = PropertyManager.getInstance();
+            PropertyManager propertyManager = PropertyManager.getInstance();
             propertyManager.initializeProperties(true);
         }
         catch (Exception e)
         {
             LOGGER.error(e);
         }
-
-        return propertyManager;
     }
 
     private static void test1()

@@ -190,4 +190,3 @@ public abstract class SMPEventSubscriberService<LogEvent> extends EventSubscribe
         }
     }
 }
-

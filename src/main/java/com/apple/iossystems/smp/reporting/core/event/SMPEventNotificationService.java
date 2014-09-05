@@ -20,8 +20,6 @@ public class SMPEventNotificationService
 
     private static final SMPEventNotificationService INSTANCE = new SMPEventNotificationService();
 
-    private boolean enabled = ApplicationConfigurationManager.getSMPEventsPublishEnable();
-
     private LogService logService;
 
     private SMPEventNotificationService()
@@ -86,10 +84,7 @@ public class SMPEventNotificationService
         // Prevent any side effects
         try
         {
-            if (enabled)
-            {
-                publishEventRecords(records);
-            }
+            publishEventRecords(records);
         }
         catch (Exception e)
         {

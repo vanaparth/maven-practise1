@@ -33,14 +33,14 @@ public class EventRecord
         return data.get(key);
     }
 
+    public String removeAttributeValue(String key)
+    {
+        return data.remove(key);
+    }
+
     public Map<String, String> getData()
     {
         return data;
-    }
-
-    public int size()
-    {
-        return data.size();
     }
 
     public void putAll(Map<String, String> map)
@@ -51,15 +51,15 @@ public class EventRecord
     @Override
     public String toString()
     {
-        StringBuffer strBuf = new StringBuffer();
+        StringBuilder strBuilder = new StringBuilder();
 
         Set<Map.Entry<String, String>> entrySet = data.entrySet();
 
         for (Map.Entry<String, String> entry : entrySet)
         {
-            strBuf.append(entry.getKey()).append(":").append(entry.getValue()).append("\n");
+            strBuilder.append(entry.getKey()).append(":").append(entry.getValue()).append("\n");
         }
 
-        return strBuf.toString();
+        return strBuilder.toString();
     }
 }

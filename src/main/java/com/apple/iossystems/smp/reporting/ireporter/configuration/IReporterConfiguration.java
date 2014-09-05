@@ -1,8 +1,7 @@
 package com.apple.iossystems.smp.reporting.ireporter.configuration;
 
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
-import com.google.gson.GsonBuilder;
-import com.google.gson.annotations.SerializedName;
+import com.google.gson.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -15,28 +14,32 @@ public class IReporterConfiguration
     // URLs
     public static final String BASE_URL = ApplicationConfigurationManager.getIReporterURL();
 
-    public static final String DEFAULT_REPORTS_CONFIGURATION_URL = BASE_URL + ApplicationConfigurationManager.getIReporterReportsConfigurationURL();
+    public static final String DEFAULT_REPORTS_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/stockholm";
 
-    public static final String DEFAULT_AUDIT_CONFIGURATION_URL = BASE_URL + ApplicationConfigurationManager.getIReporterAuditConfigurationURL();
+    public static final String DEFAULT_AUDIT_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/stockholm_audit";
 
-    public static final String DEFAULT_REPORTS_URL = BASE_URL + ApplicationConfigurationManager.getIReporterReportsURL();
+    public static final String DEFAULT_PAYMENT_REPORTS_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/oslo";
 
-    public static final String DEFAULT_AUDIT_URL = BASE_URL + ApplicationConfigurationManager.getIReporterAuditURL();
+    public static final String DEFAULT_REPORTS_URL = BASE_URL + "/e3/rest/1/stockholm";
+
+    public static final String DEFAULT_AUDIT_URL = BASE_URL + "/e3/rest/1/stockholm_audit";
+
+    public static final String DEFAULT_PAYMENT_REPORTS_URL = BASE_URL + "/e3/rest/1/oslo";
 
     // Other configuration settings
-    public static final String DEFAULT_PUBLISH_KEY = ApplicationConfigurationManager.getIReporterPublishKey();
+    public static final String DEFAULT_PUBLISH_KEY = "QWERTYUIOPASDF12";
 
-    public static final String DEFAULT_CONTENT_TYPE = ApplicationConfigurationManager.getIReporterContentType();
+    public static final String DEFAULT_CONTENT_TYPE = "application/json";
 
-    public static final boolean DEFAULT_PUBLISH_ENABLED = ApplicationConfigurationManager.getIReporterPublishEnable();
+    public static final boolean DEFAULT_PUBLISH_ENABLED = true;
 
-    public static final int DEFAULT_MAX_BATCH_SIZE = ApplicationConfigurationManager.getIReporterMaxBatchSize();
+    public static final int DEFAULT_MAX_BATCH_SIZE = 100;
 
     // Publish frequency in milliseconds
-    public static final int DEFAULT_PUBLISH_FREQUENCY = ApplicationConfigurationManager.getIReporterPublishFrequency();
+    public static final int DEFAULT_PUBLISH_FREQUENCY = 2 * 60 * 1000;
 
     // Configuration reload frequency in milliseconds
-    public static final int DEFAULT_CONFIGURATION_RELOAD_FREQUENCY = ApplicationConfigurationManager.getIReporterConfigurationReloadFrequency();
+    public static final int DEFAULT_CONFIGURATION_RELOAD_FREQUENCY = 60 * 60 * 1000;
 
 
     private final String publishURL;
@@ -135,7 +138,8 @@ public class IReporterConfiguration
     public enum Type
     {
         REPORTS(DEFAULT_REPORTS_CONFIGURATION_URL, DEFAULT_REPORTS_URL),
-        AUDIT(DEFAULT_AUDIT_CONFIGURATION_URL, DEFAULT_AUDIT_URL);
+        AUDIT(DEFAULT_AUDIT_CONFIGURATION_URL, DEFAULT_AUDIT_URL),
+        PAYMENT_REPORTS(DEFAULT_PAYMENT_REPORTS_CONFIGURATION_URL, DEFAULT_PAYMENT_REPORTS_URL);
 
         private final String configurationURL;
         private final String publishURL;
@@ -271,65 +275,65 @@ public class IReporterConfiguration
             return builder.build();
         }
 
-        public static IReporterConfiguration fromJson(String json)
+        public static IReporterConfiguration fromJson(IReporterConfiguration.Type configurationType, String json)
         {
-            ConfigurationResponse configurationResponse = new GsonBuilder().create().fromJson(json, ConfigurationResponse.class);
-
-            Builder builder = Builder.getInstance();
-
-            builder.publishURL(configurationResponse.endpoint.getURL()).
-                    publishKey(configurationResponse.headers.xLoadText).
-                    contentType(configurationResponse.headers.contentType).
-                    publishEnabled(configurationResponse.shouldPublishFlag).
-                    maxBatchSize(configurationResponse.batchSize).
-                    publishFrequency(configurationResponse.publishFrequencyInSeconds * 1000).
-                    configurationReloadFrequency(configurationResponse.configReloadFrequencyInMinutes * 60 * 1000);
-
-            return builder.build();
+            try
+            {
+                return getGson().fromJson(json, Builder.class).build();
+            }
+            catch (Exception e)
+            {
+                e.printStackTrace();
+                return fromDefault(configurationType);
+            }
         }
 
-        private class ConfigurationResponse
+        private static Gson getGson()
         {
-            private EndPoint endpoint;
-            private String method;
-            private Header headers;
-            private boolean shouldPublishFlag;
-            private int batchSize;
-            private int publishFrequencyInSeconds;
-            private int configReloadFrequencyInMinutes;
+            GsonBuilder gsonBuilder = new GsonBuilder();
 
-            private ConfigurationResponse()
+            gsonBuilder.registerTypeAdapter(Builder.class, new BuilderDeserializer());
+
+            return gsonBuilder.create();
+        }
+
+        private static class BuilderDeserializer implements JsonDeserializer<Builder>
+        {
+            @Override
+            public Builder deserialize(JsonElement jsonElement, java.lang.reflect.Type type, JsonDeserializationContext context) throws JsonParseException
             {
+                JsonObject jsonObject = jsonElement.getAsJsonObject();
+
+                // String method = jsonObject.get("method").getAsString();
+                boolean shouldPublishFlag = jsonObject.get("shouldPublishFlag").getAsBoolean();
+                int batchSize = jsonObject.get("batchSize").getAsInt();
+                int publishFrequencyInSeconds = jsonObject.get("publishFrequencyInSeconds").getAsInt();
+                int configReloadFrequencyInMinutes = jsonObject.get("configReloadFrequencyInMinutes").getAsInt();
+
+                JsonObject headersObject = jsonObject.get("headers").getAsJsonObject();
+
+                String xLoadText = headersObject.get("X-LoadText").getAsString();
+                String contentType = headersObject.get("Content-Type").getAsString();
+
+                JsonObject endPointObject = jsonObject.getAsJsonObject("endpoint");
+
+                // String protocol = endPointObject.get("protocol").getAsString();
+                // String hostname = endPointObject.get("hostname").getAsString();
+                String uri = endPointObject.get("uri").getAsString();
+
+                return new Builder().publishURL(getURL(uri)).
+                        publishKey(xLoadText).
+                        contentType(contentType).
+                        publishEnabled(shouldPublishFlag).
+                        maxBatchSize(batchSize).
+                        publishFrequency(publishFrequencyInSeconds * 1000).
+                        configurationReloadFrequency(configReloadFrequencyInMinutes * 60 * 1000);
             }
 
-            private class EndPoint
+            private String getURL(String uri)
             {
-                private String protocol;
-                private String hostname;
-                private String uri;
-
-                private EndPoint()
-                {
-                }
-
-                private String getURL()
-                {
-                    //return protocol + "://" + hostname + "/" + uri;
-                    return BASE_URL + "/" + uri;
-                }
-            }
-
-            private class Header
-            {
-                @SerializedName("X-LoadText")
-                private String xLoadText;
-
-                @SerializedName("Content-Type")
-                private String contentType;
-
-                private Header()
-                {
-                }
+                //return protocol + "://" + hostname + uri;
+                return BASE_URL + uri;
             }
         }
     }

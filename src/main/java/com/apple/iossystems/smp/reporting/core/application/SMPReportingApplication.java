@@ -29,22 +29,13 @@ public class SMPReportingApplication
         System.setProperty(ApplicationConfigurationManager.getRabbitVHostKey(), ApplicationConfigurationManager.getKeystoneRabbitVHost());
         System.setProperty(ApplicationConfigurationManager.getRabbitConsumerThreadsCountKey(), String.valueOf(ApplicationConfigurationManager.getRabbitConsumerThreadsCount()));
         System.setProperty(ApplicationConfigurationManager.getRabbitConsumerThreadsPrefetchCountKey(), String.valueOf(ApplicationConfigurationManager.getRabbitConsumerThreadsPrefetchCount()));
-        System.setProperty(ApplicationConfigurationManager.getSMPEventsPublishEnableKey(), String.valueOf(ApplicationConfigurationManager.getSMPEventsPublishEnable()));
-    }
-
-    private boolean isEnabled()
-    {
-        return ApplicationConfigurationManager.getSMPReportingApplicationEnable();
     }
 
     private void init()
     {
-        if (isEnabled())
-        {
-            setSystemProperties();
+        setSystemProperties();
 
-            SMPEventExchangeManager.getInstance().start();
-        }
+        SMPEventExchangeManager.getInstance().start();
     }
 
     public static void start()

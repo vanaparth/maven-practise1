@@ -4,6 +4,7 @@ import com.apple.iossystems.smp.reporting.core.analytics.Metric;
 import com.apple.iossystems.smp.reporting.core.analytics.Statistics;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledNotification;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledTaskHandler;
+import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 import com.apple.iossystems.smp.reporting.hubble.analytics.HubbleAnalytics;
@@ -21,10 +22,12 @@ public class PublishTaskHandler implements ScheduledTaskHandler
 {
     private IReporterPublishService reportsPublishService = ReportsPublishService.getInstance();
     private IReporterPublishService auditPublishService = AuditPublishService.getInstance();
+    private IReporterPublishService paymentReportsPublishService = PaymentReportsPublishService.getInstance();
 
     private Statistics statistics = Statistics.getInstance();
 
-    private BlockingQueue<EventRecord> queue = new LinkedBlockingQueue<EventRecord>(1000);
+    private BlockingQueue<EventRecord> reportsQueue = new LinkedBlockingQueue<EventRecord>(1000);
+    private BlockingQueue<EventRecord> paymentReportsQueue = new LinkedBlockingQueue<EventRecord>(1000);
 
     private static final Metric[] AUDIT_METRICS =
             {
@@ -60,22 +63,21 @@ public class PublishTaskHandler implements ScheduledTaskHandler
     @Override
     public final void handleEvent()
     {
-        handlePublishEvent();
+        handlePublishReportsEvent();
+        handlePublishPaymentReportsEvent();
         handleAuditEvent();
         handleConfigurationEvent();
     }
 
-    private boolean reportsReady()
+    private boolean reportsReady(IReporterPublishService service, BlockingQueue<EventRecord> queue)
     {
         int available = queue.size();
-
-        IReporterPublishService service = reportsPublishService;
 
         return ((service.isEnabled() && (available >= service.getConfiguration().getMaxBatchSize())) ||
                 ((available > 0) && service.publishReady()));
     }
 
-    private EventRecords emptyQueue()
+    private EventRecords emptyQueue(BlockingQueue<EventRecord> queue)
     {
         EventRecords records;
 
@@ -93,39 +95,57 @@ public class PublishTaskHandler implements ScheduledTaskHandler
         return records;
     }
 
-    private void handlePublishEvent()
+    private int handlePublishEvent(IReporterPublishService service, BlockingQueue<EventRecord> queue)
     {
-        IReporterPublishService service = reportsPublishService;
+        int count = 0;
 
-        if (reportsReady())
+        if (reportsReady(service, queue))
         {
-            EventRecords records = emptyQueue();
+            EventRecords records = emptyQueue(queue);
+            count = records.size();
 
-            if (records.size() > 0)
+            if (count > 0)
             {
                 List<EventRecord> list = records.getList();
-                int count = list.size();
 
-                if (service.sendRequest(IReporterJsonBuilder.toJson(list)))
+                if (!service.sendRequest(IReporterJsonBuilder.toJson(records.getList())))
                 {
-                    // Hubble
-                    HubbleAnalytics.incrementCountForEvent(Metric.REPORTS_MESSAGES_SENT);
-                    HubbleAnalytics.log(Metric.REPORTS_RECORDS_SENT, count);
-                    // IReporter
-                    statistics.increment(Metric.IREPORTER_REPORTS_RECORDS_SENT, count);
-                }
-                else
-                {
-                    // Hubble
-                    HubbleAnalytics.incrementCountForEvent(Metric.REPORTS_MESSAGES_FAILED);
-                    HubbleAnalytics.log(Metric.REPORTS_RECORDS_FAILED, count);
-                    // IReporter
-                    statistics.increment(Metric.IREPORTER_REPORTS_RECORDS_FAILED, count);
-                    // Add back to queue
                     queue.addAll(list);
+
+                    count = -count;
                 }
             }
         }
+
+        return count;
+    }
+
+    private void handlePublishReportsEvent()
+    {
+        int count = handlePublishEvent(reportsPublishService, reportsQueue);
+
+        if (count > 0)
+        {
+            // Hubble
+            HubbleAnalytics.incrementCountForEvent(Metric.REPORTS_MESSAGES_SENT);
+            HubbleAnalytics.log(Metric.REPORTS_RECORDS_SENT, count);
+            // IReporter
+            statistics.increment(Metric.IREPORTER_REPORTS_RECORDS_SENT, count);
+        }
+        else if (count < 0)
+        {
+            count = -count;
+            // Hubble
+            HubbleAnalytics.incrementCountForEvent(Metric.REPORTS_MESSAGES_FAILED);
+            HubbleAnalytics.log(Metric.REPORTS_RECORDS_FAILED, count);
+            // IReporter
+            statistics.increment(Metric.IREPORTER_REPORTS_RECORDS_FAILED, count);
+        }
+    }
+
+    private void handlePublishPaymentReportsEvent()
+    {
+        handlePublishEvent(paymentReportsPublishService, paymentReportsQueue);
     }
 
     private void handleAuditEvent()
@@ -159,6 +179,8 @@ public class PublishTaskHandler implements ScheduledTaskHandler
         logConfigurationEvent(reportsPublishService.getConfigurationService().getConfigurationEvent(), Metric.REPORTS_CONFIGURATION_REQUESTED, Metric.REPORTS_CONFIGURATION_CHANGED);
 
         logConfigurationEvent(auditPublishService.getConfigurationService().getConfigurationEvent(), Metric.AUDIT_CONFIGURATION_REQUESTED, Metric.AUDIT_CONFIGURATION_CHANGED);
+
+        paymentReportsPublishService.getConfigurationService().getConfigurationEvent();
     }
 
     private void logConfigurationEvent(ConfigurationEvent configurationEvent, Metric configurationRequestedMetric, Metric configurationChangedMetric)
@@ -174,8 +196,15 @@ public class PublishTaskHandler implements ScheduledTaskHandler
         }
     }
 
-    public boolean add(EventRecord e)
+    public boolean add(EventRecord record)
     {
-        return queue.offer(e);
+        if (record.removeAttributeValue(EventAttribute.EVENT_TYPE.key()) == null)
+        {
+            return reportsQueue.offer(record);
+        }
+        else
+        {
+            return paymentReportsQueue.offer(record);
+        }
     }
 }

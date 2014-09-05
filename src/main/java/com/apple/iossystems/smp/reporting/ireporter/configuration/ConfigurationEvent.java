@@ -3,8 +3,12 @@ package com.apple.iossystems.smp.reporting.ireporter.configuration;
 /**
  * @author Toch
  */
-public class ConfigurationEvent
+public enum ConfigurationEvent
 {
+    NONE(false, false),
+    UPDATED(true, false),
+    MODIFIED(true, true);
+
     private final boolean updated;
     private final boolean modified;
 
@@ -16,7 +20,18 @@ public class ConfigurationEvent
 
     public static ConfigurationEvent getInstance(boolean updated, boolean modified)
     {
-        return new ConfigurationEvent(updated, modified);
+        if (!updated && !modified)
+        {
+            return NONE;
+        }
+        else if (updated && !modified)
+        {
+            return UPDATED;
+        }
+        else
+        {
+            return MODIFIED;
+        }
     }
 
     public boolean isUpdated()

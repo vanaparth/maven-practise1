@@ -50,9 +50,4 @@ public class EventRecords
     {
         return list.size();
     }
-
-    public boolean isEmpty()
-    {
-        return list.isEmpty();
-    }
 }

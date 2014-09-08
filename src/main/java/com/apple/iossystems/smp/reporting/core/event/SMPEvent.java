@@ -87,7 +87,7 @@ public class SMPEvent
 
             if (pnoName != null)
             {
-                record.setAttributeValue(EventAttribute.PNO.key(), SMPEventCode.getPNONameCode(pnoName));
+                writeSMPEventCode(record, EventAttribute.PNO, SMPEventCode.getPNONameCode(pnoName));
             }
         }
 
@@ -95,5 +95,13 @@ public class SMPEvent
         records.add(record);
 
         return records;
+    }
+
+    private static void writeSMPEventCode(EventRecord record, EventAttribute attribute, String code)
+    {
+        if (SMPEventCode.isValid(code))
+        {
+            record.setAttributeValue(attribute.key(), code);
+        }
     }
 }

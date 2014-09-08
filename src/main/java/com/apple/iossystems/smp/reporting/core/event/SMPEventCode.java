@@ -10,8 +10,15 @@ import com.apple.iossystems.smp.domain.device.CardEligibilityStatus;
  */
 public class SMPEventCode
 {
+    private static final String UNKNOWN_CODE = "000";
+
     private SMPEventCode()
     {
+    }
+
+    public static boolean isValid(String code)
+    {
+        return (!code.equals(UNKNOWN_CODE));
     }
 
     public static String getCardEligibilityStatusCode(CardEligibilityStatus cardStatus)
@@ -31,7 +38,7 @@ public class SMPEventCode
                 return "10";
 
             default:
-                return "0";
+                return UNKNOWN_CODE;
         }
     }
 
@@ -57,8 +64,11 @@ public class SMPEventCode
             case SUSPENDED_WALLET:
                 return "6";
 
-            default:
+            case UNKNOWN:
                 return "0";
+
+            default:
+                return UNKNOWN_CODE;
         }
     }
 
@@ -79,7 +89,7 @@ public class SMPEventCode
                 return "4";
 
             default:
-                return "0";
+                return UNKNOWN_CODE;
         }
     }
 
@@ -94,7 +104,7 @@ public class SMPEventCode
                 return "2";
 
             default:
-                return "0";
+                return UNKNOWN_CODE;
         }
     }
 
@@ -118,7 +128,7 @@ public class SMPEventCode
         }
         else
         {
-            return "0";
+            return UNKNOWN_CODE;
         }
     }
 
@@ -130,7 +140,7 @@ public class SMPEventCode
         }
         else
         {
-            return "0";
+            return UNKNOWN_CODE;
         }
     }
 
@@ -150,7 +160,7 @@ public class SMPEventCode
         }
         else
         {
-            return "0";
+            return UNKNOWN_CODE;
         }
     }
 }

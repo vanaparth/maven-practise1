@@ -3,6 +3,8 @@ package com.apple.iossystems.smp.reporting.core.util;
 import com.apple.iossystems.smp.utils.CryptoUtils;
 import com.apple.iossystems.smp.utils.PBKDF2Util;
 import org.apache.log4j.Logger;
+import org.bouncycastle.crypto.PBEParametersGenerator;
+import org.bouncycastle.crypto.digests.SHA256Digest;
 import org.bouncycastle.util.encoders.Hex;
 
 import java.nio.charset.Charset;
@@ -26,8 +28,8 @@ public class SecurityProvider
 
         try
         {
-            byte[] salt = CryptoUtils.getDigest("SHA-256", input.toLowerCase().getBytes(Charset.forName("UTF-8")));
-            byte[] bytes = PBKDF2Util.normalizedHashOfEmailAddressWithCount(input, salt, HASH_ITERATIONS);
+            byte[] salt = CryptoUtils.getDigest("SHA-256", input.getBytes(Charset.forName("UTF-8")));
+            byte[] bytes = PBKDF2Util.hashWithDigest(new SHA256Digest(), PBEParametersGenerator.PKCS5PasswordToUTF8Bytes(input.toCharArray()), salt, HASH_ITERATIONS, 32);
 
             output = new String(Hex.encode(bytes));
         }

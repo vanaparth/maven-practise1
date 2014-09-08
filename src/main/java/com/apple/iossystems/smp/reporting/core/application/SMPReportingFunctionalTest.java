@@ -130,7 +130,7 @@ public class SMPReportingFunctionalTest
     {
         try
         {
-            SMPHttpClient.getInstance().request(HttpRequest.getInstance(IReporterConfiguration.Type.AUDIT.getConfigurationURL(), "POST", null, null, null, null));
+            SMPHttpClient.getInstance().request(HttpRequest.getInstance(IReporterConfiguration.Type.REPORTS.getConfigurationURL(), "POST", null, null, "", null));
         }
         catch (Exception e)
         {
@@ -152,7 +152,7 @@ public class SMPReportingFunctionalTest
     {
         try
         {
-            SMPHttpClient.getInstance().request(HttpRequest.getInstance(IReporterConfiguration.Type.AUDIT.getConfigurationURL(), "GET", null, null, null, null));
+            SMPHttpClient.getInstance().request(HttpRequest.getInstance(IReporterConfiguration.Type.REPORTS.getConfigurationURL(), "GET", null, null, null, null));
         }
         catch (Exception e)
         {

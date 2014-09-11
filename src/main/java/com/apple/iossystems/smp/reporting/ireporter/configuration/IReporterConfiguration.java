@@ -283,7 +283,6 @@ public class IReporterConfiguration
             }
             catch (Exception e)
             {
-                e.printStackTrace();
                 return fromDefault(configurationType);
             }
         }

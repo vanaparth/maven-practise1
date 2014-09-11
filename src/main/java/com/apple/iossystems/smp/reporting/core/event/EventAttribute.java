@@ -11,6 +11,7 @@ public enum EventAttribute
     ATHENA_COLOR("ast"),
     CARD_BIN("bin"),
     CARD_EVENT("evt"),
+    CARD_ID("cid"),
     CARD_ISSUER("bnm"),
     CARD_SOURCE("ptp"),
     CARD_STATUS("cst"),

@@ -59,4 +59,3 @@ public class HttpRequest
         return headers;
     }
 }
-

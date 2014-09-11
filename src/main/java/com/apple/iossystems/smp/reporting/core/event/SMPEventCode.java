@@ -16,7 +16,7 @@ public class SMPEventCode
     {
     }
 
-    public static boolean isValid(String code)
+    private static boolean isValid(String code)
     {
         return (!code.equals(UNKNOWN_CODE));
     }
@@ -161,6 +161,14 @@ public class SMPEventCode
         else
         {
             return UNKNOWN_CODE;
+        }
+    }
+
+    public static void writeCode(EventRecord record, EventAttribute attribute, String code)
+    {
+        if (isValid(code))
+        {
+            record.setAttributeValue(attribute.key(), code);
         }
     }
 }

@@ -123,7 +123,7 @@ class IReporterEventSubscriberService<LogEvent> extends SMPEventSubscriberServic
 
         private void startScheduledTasks()
         {
-            scheduledNotification = ScheduledNotification.getInstance(this, 10 * 60 * 1000);
+            scheduledNotification = ScheduledNotification.getInstance(this, 60 * 1000);
         }
 
         @Override

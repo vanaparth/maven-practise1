@@ -128,7 +128,7 @@ public class PublishTaskHandler implements ScheduledTaskHandler
         {
             // Hubble
             HubbleAnalytics.incrementCountForEvent(Metric.REPORTS_MESSAGES_SENT);
-            HubbleAnalytics.log(Metric.REPORTS_RECORDS_SENT, count);
+            HubbleAnalytics.incrementCountForEvent(Metric.REPORTS_RECORDS_SENT, count);
             // IReporter
             statistics.increment(Metric.IREPORTER_REPORTS_RECORDS_SENT, count);
         }
@@ -137,7 +137,7 @@ public class PublishTaskHandler implements ScheduledTaskHandler
             count = -count;
             // Hubble
             HubbleAnalytics.incrementCountForEvent(Metric.REPORTS_MESSAGES_FAILED);
-            HubbleAnalytics.log(Metric.REPORTS_RECORDS_FAILED, count);
+            HubbleAnalytics.incrementCountForEvent(Metric.REPORTS_RECORDS_FAILED, count);
             // IReporter
             statistics.increment(Metric.IREPORTER_REPORTS_RECORDS_FAILED, count);
         }

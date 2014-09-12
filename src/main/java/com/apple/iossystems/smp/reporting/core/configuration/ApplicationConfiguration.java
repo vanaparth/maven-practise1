@@ -22,7 +22,7 @@ class ApplicationConfiguration
 
     private static final String SMP_EVENTS_EXCHANGE_KEY = "smp.reporting.events.exchange";
     private static final String IREPORTER_URL_KEY = "icloud.ireporter.url";
-    private static final String HMAC_PASS_KEY = "icloud.ireporter.hmac.pass";
+    private static final String HASH_PASS_KEY = "icloud.ireporter.pass";
 
     static final String KEYSTONE_RABBIT_HOST = PROPERTY_MANAGER.valueForKeyWithDefault(KEYSTONE_RABBIT_HOST_KEY, "rabbit-np-amqp.corp.apple.com");
     static final String KEYSTONE_RABBIT_PORT = PROPERTY_MANAGER.valueForKeyWithDefault(KEYSTONE_RABBIT_PORT_KEY, "5672");
@@ -35,7 +35,7 @@ class ApplicationConfiguration
 
     static final String SMP_EVENTS_EXCHANGE = PROPERTY_MANAGER.valueForKeyWithDefault(SMP_EVENTS_EXCHANGE_KEY, "iossystems.stockholm.events");
     static final String IREPORTER_URL = PROPERTY_MANAGER.valueForKeyWithDefault(IREPORTER_URL_KEY, "https://icloud4-e3.icloud.com");
-    static final String HMAC_PASS = PROPERTY_MANAGER.valueForKeyWithDefault(HMAC_PASS_KEY, "pLijzg2e2QNspdhOyNWdOSScPszmZBryJ0L8BcQ116BhkT6p0iHyNcwnlFIwhLun");
+    static final String HASH_PASS = PROPERTY_MANAGER.valueForKeyWithDefault(HASH_PASS_KEY, "pLijzg2e2QNspdhOyNWdOSScPszmZBryJ0L8BcQ116BhkT6p0iHyNcwnlFIwhLun");
 
     static final String LOG_LEVEL_EVENT_NAME = LogLevel.EVENT.name();
 

@@ -19,7 +19,7 @@ public class SecurityProvider
 
     private static final int HASH_ITERATIONS = 10;
 
-    private static final char[] PASSWORD = ApplicationConfigurationManager.getHmacPassword().toCharArray();
+    private static final char[] PASSWORD = ApplicationConfigurationManager.getHashPassword().toCharArray();
 
     private SecurityProvider()
     {

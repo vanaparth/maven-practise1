@@ -93,4 +93,9 @@ public class ApplicationConfigurationManager
     {
         return ApplicationConfiguration.IREPORTER_URL;
     }
+
+    public static String getHmacPassword()
+    {
+        return ApplicationConfiguration.HMAC_PASS;
+    }
 }

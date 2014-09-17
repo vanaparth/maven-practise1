@@ -1,10 +1,10 @@
 package com.apple.iossystems.smp.reporting.core.event;
 
-import com.apple.iossystems.logging.LogLevel;
 import com.apple.iossystems.logging.LogService;
 import com.apple.iossystems.logging.LogServiceFactory;
 import com.apple.iossystems.logging.LoggerType;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
+import com.apple.iossystems.smp.reporting.core.email.SMPEmailEvent;
 import com.apple.iossystems.smp.reporting.core.util.MapToPair;
 import org.apache.log4j.Logger;
 
@@ -62,9 +62,10 @@ public class SMPEventNotificationService
         }
     }
 
+
     private void publishEventRecord(EventRecord record)
     {
-        logService.logEvent("event", LogLevel.EVENT, MapToPair.toPairs(record.getData()));
+        logService.logEvent("event", EventType.getLogLevel(record), MapToPair.toPairs(record.getData()));
     }
 
     private void publishEventRecords(EventRecords records)
@@ -73,9 +74,11 @@ public class SMPEventNotificationService
 
         for (EventRecord record : list)
         {
-            SMPEventRecord.completeBuild(record);
+            EventRecord copy = record.copy();
 
-            publishEventRecord(record);
+            SMPEventRecord.completeBuild(copy);
+
+            publishEventRecord(copy);
         }
     }
 
@@ -85,6 +88,8 @@ public class SMPEventNotificationService
         try
         {
             publishEventRecords(records);
+
+            publishEventRecords(SMPEmailEvent.getEventRecords(records));
         }
         catch (Exception e)
         {

@@ -1,4 +1,4 @@
-package com.apple.iossystems.smp.reporting.hubble.analytics;
+package com.apple.iossystems.smp.reporting.core.hubble;
 
 import com.apple.cds.analysis.OperationalAnalytics;
 import com.apple.cds.keystone.core.OperationalAnalyticsManager;

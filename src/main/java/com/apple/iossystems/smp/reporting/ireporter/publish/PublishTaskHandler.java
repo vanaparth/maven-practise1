@@ -4,10 +4,12 @@ import com.apple.iossystems.smp.reporting.core.analytics.Metric;
 import com.apple.iossystems.smp.reporting.core.analytics.Statistics;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledNotification;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledTaskHandler;
+import com.apple.iossystems.smp.reporting.core.email.EmailPublishService;
 import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
-import com.apple.iossystems.smp.reporting.hubble.analytics.HubbleAnalytics;
+import com.apple.iossystems.smp.reporting.core.event.EventType;
+import com.apple.iossystems.smp.reporting.core.hubble.HubbleAnalytics;
 import com.apple.iossystems.smp.reporting.ireporter.configuration.ConfigurationEvent;
 import com.apple.iossystems.smp.reporting.ireporter.json.IReporterJsonBuilder;
 
@@ -23,11 +25,13 @@ public class PublishTaskHandler implements ScheduledTaskHandler
     private IReporterPublishService reportsPublishService = ReportsPublishService.getInstance();
     private IReporterPublishService auditPublishService = AuditPublishService.getInstance();
     private IReporterPublishService paymentReportsPublishService = PaymentReportsPublishService.getInstance();
+    private EmailPublishService emailPublishService = EmailPublishService.getInstance();
 
     private Statistics statistics = Statistics.getInstance();
 
     private BlockingQueue<EventRecord> reportsQueue = new LinkedBlockingQueue<EventRecord>(1000);
     private BlockingQueue<EventRecord> paymentReportsQueue = new LinkedBlockingQueue<EventRecord>(1000);
+    private BlockingQueue<EventRecord> emailReportsQueue = new LinkedBlockingQueue<EventRecord>(1000);
 
     private static final Metric[] AUDIT_METRICS =
             {
@@ -63,6 +67,7 @@ public class PublishTaskHandler implements ScheduledTaskHandler
     @Override
     public final void handleEvent()
     {
+        handleEmailEvent();
         handlePublishReportsEvent();
         handlePublishPaymentReportsEvent();
         handleAuditEvent();
@@ -179,8 +184,6 @@ public class PublishTaskHandler implements ScheduledTaskHandler
         logConfigurationEvent(reportsPublishService.getConfigurationService().getConfigurationEvent(), Metric.REPORTS_CONFIGURATION_REQUESTED, Metric.REPORTS_CONFIGURATION_CHANGED);
 
         logConfigurationEvent(auditPublishService.getConfigurationService().getConfigurationEvent(), Metric.AUDIT_CONFIGURATION_REQUESTED, Metric.AUDIT_CONFIGURATION_CHANGED);
-
-        paymentReportsPublishService.getConfigurationService().getConfigurationEvent();
     }
 
     private void logConfigurationEvent(ConfigurationEvent configurationEvent, Metric configurationRequestedMetric, Metric configurationChangedMetric)
@@ -196,15 +199,36 @@ public class PublishTaskHandler implements ScheduledTaskHandler
         }
     }
 
+    private void handleEmailEvent()
+    {
+        EventRecords records = emptyQueue(emailReportsQueue);
+
+        if (records.size() > 0)
+        {
+            emailPublishService.send(records);
+        }
+    }
+
     public boolean add(EventRecord record)
     {
-        if (record.removeAttributeValue(EventAttribute.EVENT_TYPE.key()) == null)
+        String value = record.removeAttributeValue(EventAttribute.EVENT_TYPE.key());
+        EventType eventType = EventType.getEventType(value);
+
+        if (eventType == EventType.REPORTS)
         {
             return reportsQueue.offer(record);
         }
-        else
+        else if (eventType == EventType.PAYMENT)
         {
             return paymentReportsQueue.offer(record);
+        }
+        else if (eventType == EventType.EMAIL)
+        {
+            return emailReportsQueue.offer(record);
+        }
+        else
+        {
+            return true;
         }
     }
 }

@@ -14,20 +14,22 @@ class IReporterEventSubscriberService<LogEvent> extends SMPEventSubscriberServic
 {
     private static final Logger LOGGER = Logger.getLogger(IReporterEventSubscriberService.class);
 
-    private IReporterService iReporterService = IReporterService.getInstance();
+    private IReporterService iReporterService;
 
     private TaskHandler taskHandler;
 
     private EventRecord pendingEventRecord;
 
-    private IReporterEventSubscriberService(String queueName) throws Exception
+    private IReporterEventSubscriberService(String queueName, IReporterService iReporterService)
     {
         super(queueName);
+
+        this.iReporterService = iReporterService;
     }
 
-    static IReporterEventSubscriberService getInstance(String queueName) throws Exception
+    static IReporterEventSubscriberService getInstance(String queueName, IReporterService iReporterService)
     {
-        return new IReporterEventSubscriberService(queueName);
+        return new IReporterEventSubscriberService(queueName, iReporterService);
     }
 
     @Override

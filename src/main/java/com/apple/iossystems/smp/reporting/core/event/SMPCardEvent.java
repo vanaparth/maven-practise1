@@ -45,4 +45,17 @@ public enum SMPCardEvent
                 return UNKNOWN;
         }
     }
+
+    public static SMPCardEvent getSMPCardEvent(String code)
+    {
+        for (SMPCardEvent smpCardEvent : SMPCardEvent.values())
+        {
+            if (smpCardEvent.code.equals(code))
+            {
+                return smpCardEvent;
+            }
+        }
+
+        return UNKNOWN;
+    }
 }

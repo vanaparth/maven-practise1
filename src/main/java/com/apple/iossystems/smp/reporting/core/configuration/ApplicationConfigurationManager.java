@@ -84,11 +84,6 @@ public class ApplicationConfigurationManager
         return ApplicationConfiguration.SMP_EVENTS_EXCHANGE;
     }
 
-    public static String getLogLevelEventName()
-    {
-        return ApplicationConfiguration.LOG_LEVEL_EVENT_NAME;
-    }
-
     public static String getIReporterURL()
     {
         return ApplicationConfiguration.IREPORTER_URL;

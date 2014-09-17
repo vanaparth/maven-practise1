@@ -48,6 +48,15 @@ public class EventRecord
         data.putAll(map);
     }
 
+    public EventRecord copy()
+    {
+        EventRecord copy = new EventRecord();
+
+        copy.putAll(data);
+
+        return copy;
+    }
+
     @Override
     public String toString()
     {

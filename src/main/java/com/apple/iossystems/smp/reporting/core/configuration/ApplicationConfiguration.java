@@ -1,7 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.configuration;
 
 import com.apple.cds.keystone.config.PropertyManager;
-import com.apple.iossystems.logging.LogLevel;
 import org.apache.log4j.Logger;
 
 /**
@@ -36,8 +35,6 @@ class ApplicationConfiguration
     static final String SMP_EVENTS_EXCHANGE = PROPERTY_MANAGER.valueForKeyWithDefault(SMP_EVENTS_EXCHANGE_KEY, "iossystems.stockholm.events");
     static final String IREPORTER_URL = PROPERTY_MANAGER.valueForKeyWithDefault(IREPORTER_URL_KEY, "https://icloud4-e3.icloud.com");
     static final String HASH_PASS = PROPERTY_MANAGER.valueForKeyWithDefault(HASH_PASS_KEY, "pLijzg2e2QNspdhOyNWdOSScPszmZBryJ0L8BcQ116BhkT6p0iHyNcwnlFIwhLun");
-
-    static final String LOG_LEVEL_EVENT_NAME = LogLevel.EVENT.name();
 
     static final String RABBIT_HOST_KEY = "rabbit.host";
     static final String RABBIT_PORT_KEY = "rabbit.port";

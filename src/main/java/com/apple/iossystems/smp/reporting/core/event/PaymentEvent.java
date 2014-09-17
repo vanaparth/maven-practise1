@@ -101,7 +101,7 @@ public class PaymentEvent
     {
         EventRecord record = EventRecord.getInstance();
 
-        record.setAttributeValue(EventAttribute.EVENT_TYPE.key(), "Payment Event");
+        record.setAttributeValue(EventAttribute.EVENT_TYPE.key(), EventType.PAYMENT.getKey());
 
         record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(Calendar.getCurrentHourMillis()));
         record.setAttributeValue(EventAttribute.MERCHANT_ID.key(), merchantId);

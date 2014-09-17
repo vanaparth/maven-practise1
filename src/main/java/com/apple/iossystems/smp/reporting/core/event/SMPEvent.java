@@ -73,6 +73,7 @@ public class SMPEvent
     {
         EventRecord record = EventRecord.getInstance();
 
+        record.setAttributeValue(EventAttribute.EVENT_TYPE.key(), EventType.REPORTS.getKey());
         record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(System.currentTimeMillis()));
         record.setAttributeValue(EventAttribute.CONVERSATION_ID.key(), conversationId);
 

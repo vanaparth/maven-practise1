@@ -27,10 +27,13 @@
         </dependency>
         <dependency>
             <groupId>com.apple.iossystems</groupId>
+            <artifactId>SMPBusinessLogicBase</artifactId>
+            <version>1.0</version>
+        </dependency>
+        <dependency>
+            <groupId>com.apple.iossystems</groupId>
             <artifactId>SMPPersistenceServices</artifactId>
             <version>1.0</version>
         </dependency>
     </dependencies>
 </project>
-
-

@@ -74,11 +74,7 @@ public class SMPEventNotificationService
 
         for (EventRecord record : list)
         {
-            EventRecord copy = record.copy();
-
-            SMPEventRecord.completeBuild(copy);
-
-            publishEventRecord(copy);
+            publishEventRecord(record);
         }
     }
 

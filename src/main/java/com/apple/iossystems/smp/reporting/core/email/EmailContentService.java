@@ -6,8 +6,8 @@ import com.apple.iossystems.smp.domain.AccountDataDescriptor;
 import com.apple.iossystems.smp.domain.device.AbstractPass;
 import com.apple.iossystems.smp.domain.icloud.FetchDeviceResponse;
 import com.apple.iossystems.smp.icloud.util.iCloudService;
+import com.apple.iossystems.smp.persistence.entity.DeviceType;
 import com.apple.iossystems.smp.persistence.entity.PanMetadata;
-import com.apple.iossystems.smp.persistence.entity.PassPan;
 import com.apple.iossystems.smp.persistence.entity.PassbookPass;
 import com.apple.iossystems.smp.persistence.entity.SecureElement;
 import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
@@ -19,7 +19,7 @@ import org.apache.log4j.Logger;
 /**
  * @author Toch
  */
-public class EmailContentService
+class EmailContentService
 {
     private static final Logger LOGGER = Logger.getLogger(EmailContentService.class);
 
@@ -48,21 +48,35 @@ public class EmailContentService
 
             if (accountDataDescriptor != null)
             {
-                cardHolderEmail = accountDataDescriptor.getEmailAddress();
+                String value = accountDataDescriptor.getEmailAddress();
+
+                if (value != null)
+                {
+                    cardHolderEmail = value;
+                }
             }
         }
 
         return cardHolderEmail;
     }
 
-    static String getDeviceName(String dsid, String serialNumber)
+    static String getDeviceName(PassbookPass passbookPass, SecureElement secureElement)
     {
         String deviceName = "";
 
         try
         {
-            FetchDeviceResponse fetchDeviceResponse = ICLOUD_SERVICE.fetchDeviceResponse(dsid, serialNumber);
-            deviceName = fetchDeviceResponse.getDeviceName();
+            FetchDeviceResponse fetchDeviceResponse = ICLOUD_SERVICE.fetchDeviceResponse(passbookPass.getUserPrincipal(), secureElement.getDeviceSerialNumber());
+
+            if (fetchDeviceResponse != null)
+            {
+                String value = fetchDeviceResponse.getDeviceName();
+
+                if (value != null)
+                {
+                    deviceName = value;
+                }
+            }
         }
         catch (Exception e)
         {
@@ -72,23 +86,28 @@ public class EmailContentService
         return deviceName;
     }
 
-    static String getDeviceSerialNumber(String dpanId)
+    static String getDeviceType(SecureElement secureElement)
     {
-        String deviceSerialNumber = "";
+        String deviceTypeName = "";
 
-        PassPan passPan = PASS_MANAGEMENT_SERVICE.getPassPanByDpanId(dpanId);
+        DeviceType deviceType = secureElement.getDeviceType();
 
-        if (passPan != null)
+        if (deviceType != null)
         {
-            SecureElement secureElement = PASS_MANAGEMENT_SERVICE.getPassPanByDpanId(dpanId).getSecureElementId();
+            String value = deviceType.getDeviceTypeName();
 
-            if (secureElement != null)
+            if (value != null)
             {
-                deviceSerialNumber = secureElement.getDeviceSerialNumber();
+                deviceTypeName = value;
             }
         }
 
-        return deviceSerialNumber;
+        return deviceTypeName;
+    }
+
+    static String getLocale()
+    {
+        return "";
     }
 
     static PassbookPass getPassByDpanId(String dpanId)
@@ -96,14 +115,14 @@ public class EmailContentService
         return PASS_MANAGEMENT_SERVICE.getPassByDpanId(dpanId);
     }
 
-    static String getSeId(SecureElement secureElement)
+    static SecureElement getSecureElement(String dpanId)
     {
-        return secureElement.getSeid();
+        return PASS_MANAGEMENT_SERVICE.getPassPanByDpanId(dpanId).getSecureElementId();
     }
 
-    static boolean isFirstProvision(String seId, String userPrincipal)
+    static boolean isFirstProvision(PassbookPass passbookPass, SecureElement secureElement)
     {
-        return (SECURE_ELEMENT_SERVICE.findBySeIdAndUserPrincipal(seId, userPrincipal).getProvisioningCount() == 1);
+        return (SECURE_ELEMENT_SERVICE.findBySeIdAndUserPrincipal(secureElement.getSeid(), passbookPass.getUserPrincipal()).getProvisioningCount() == 1);
     }
 
     static void setValuesFromPassbookPass(EventRecord eventRecord, PassbookPass passbookPass)
@@ -116,13 +135,19 @@ public class EmailContentService
 
     static void setValueFromPanMetaData(EventRecord eventRecord, PanMetadata panMetaData, EmailAttribute[] emailAttributes)
     {
-        String metaDataKey = panMetaData.getKey();
+        String panMetaDataKey = panMetaData.getKey();
 
         for (EmailAttribute emailAttribute : emailAttributes)
         {
-            if (metaDataKey.equals(emailAttribute.passKey))
+            if (panMetaDataKey.equals(emailAttribute.panMetaDataKey))
             {
-                eventRecord.setAttributeValue(emailAttribute.eventAttribute.key(), panMetaData.getValue());
+                String recordKey = emailAttribute.eventAttribute.key();
+                String recordValue = eventRecord.getAttributeValue(recordKey);
+
+                if (recordValue == null)
+                {
+                    eventRecord.setAttributeValue(recordKey, panMetaData.getValue());
+                }
 
                 break;
             }
@@ -134,16 +159,17 @@ public class EmailContentService
         private static final EmailAttribute[] EMAIL_ATTRIBUTES =
                 {
                         new EmailAttribute(EventAttribute.CARD_DISPLAY_NUMBER, AbstractPass.PAYMENT_PASS_FPAN_SUFFIX_KEY),
+                        new EmailAttribute(EventAttribute.CARD_DESCRIPTION, AbstractPass.PAYMENT_PASS_LONG_DESC_KEY),
                         new EmailAttribute(EventAttribute.CARD_DESCRIPTION, AbstractPass.PAYMENT_PASS_SHORT_DESC_KEY)
                 };
 
         private final EventAttribute eventAttribute;
-        private final String passKey;
+        private final String panMetaDataKey;
 
-        private EmailAttribute(EventAttribute eventAttribute, String passKey)
+        private EmailAttribute(EventAttribute eventAttribute, String panMetaDataKey)
         {
             this.eventAttribute = eventAttribute;
-            this.passKey = passKey;
+            this.panMetaDataKey = panMetaDataKey;
         }
     }
 }

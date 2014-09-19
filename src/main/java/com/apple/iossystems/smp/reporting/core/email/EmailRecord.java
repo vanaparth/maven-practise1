@@ -6,36 +6,27 @@ import java.util.Date;
 /**
  * @author Toch
  */
-public class EmailEvent
+class EmailRecord
 {
-    private final String cardEvent;
     private final String cardHolderName;
     private final String cardHolderEmail;
-    private final String cardDescription;
-    private final String cardDisplayNumber;
     private final String conversationId;
     private final String deviceName;
     private final String deviceType;
+    private final String dsid;
     private final String locale;
     private final String timestamp;
 
-    private EmailEvent(Builder builder)
+    private EmailRecord(Builder builder)
     {
-        cardEvent = builder.cardEvent;
         cardHolderName = builder.cardHolderName;
         cardHolderEmail = builder.cardHolderEmail;
-        cardDescription = builder.cardDescription;
-        cardDisplayNumber = builder.cardDisplayNumber;
         conversationId = builder.conversationId;
         deviceName = builder.deviceName;
         deviceType = builder.deviceType;
+        dsid = builder.dsid;
         locale = builder.locale;
         timestamp = builder.timestamp;
-    }
-
-    public String getCardEvent()
-    {
-        return cardEvent;
     }
 
     public String getCardHolderName()
@@ -48,16 +39,6 @@ public class EmailEvent
         return cardHolderEmail;
     }
 
-    public String getCardDescription()
-    {
-        return cardDescription;
-    }
-
-    public String getCardDisplayNumber()
-    {
-        return cardDisplayNumber;
-    }
-
     public String getConversationId()
     {
         return conversationId;
@@ -68,19 +49,19 @@ public class EmailEvent
         return deviceName;
     }
 
-    private String getDeviceType()
+    public String getDeviceType()
     {
         return deviceType;
     }
 
-    private String getLocale()
+    public String getDsid()
     {
-        return locale;
+        return dsid;
     }
 
-    public String getTimestamp()
+    public String getLocale()
     {
-        return timestamp;
+        return locale;
     }
 
     public Date getDate()
@@ -98,25 +79,17 @@ public class EmailEvent
 
     public static class Builder
     {
-        private String cardEvent;
         private String cardHolderName;
         private String cardHolderEmail;
-        private String cardDescription;
-        private String cardDisplayNumber;
         private String conversationId;
         private String deviceName;
         private String deviceType;
+        private String dsid;
         private String locale;
         private String timestamp;
 
         private Builder()
         {
-        }
-
-        public Builder cardEvent(String value)
-        {
-            cardEvent = value;
-            return this;
         }
 
         public Builder cardHolderName(String value)
@@ -128,18 +101,6 @@ public class EmailEvent
         public Builder cardHolderEmail(String value)
         {
             cardHolderEmail = value;
-            return this;
-        }
-
-        public Builder cardDescription(String value)
-        {
-            cardDescription = value;
-            return this;
-        }
-
-        public Builder cardDisplayNumber(String value)
-        {
-            cardDisplayNumber = value;
             return this;
         }
 
@@ -161,6 +122,12 @@ public class EmailEvent
             return this;
         }
 
+        public Builder dsid(String value)
+        {
+            dsid = value;
+            return this;
+        }
+
         public Builder locale(String value)
         {
             locale = value;
@@ -173,9 +140,9 @@ public class EmailEvent
             return this;
         }
 
-        public EmailEvent build()
+        public EmailRecord build()
         {
-            return new EmailEvent(this);
+            return new EmailRecord(this);
         }
     }
 }

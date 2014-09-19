@@ -16,6 +16,14 @@ public class SMPEventCode
     {
     }
 
+    public static void writeCode(EventRecord record, EventAttribute attribute, String code)
+    {
+        if (isValid(code))
+        {
+            record.setAttributeValue(attribute.key(), code);
+        }
+    }
+
     private static boolean isValid(String code)
     {
         return (!code.equals(UNKNOWN_CODE));
@@ -36,36 +44,6 @@ public class SMPEventCode
 
             case PROVISIONED:
                 return "10";
-
-            default:
-                return UNKNOWN_CODE;
-        }
-    }
-
-    public static String getCardStatusCode(Card.CardStatus cardStatus)
-    {
-        switch (cardStatus)
-        {
-            case ACTIVE:
-                return "1";
-
-            case SUSPENDED:
-                return "2";
-
-            case UNLINKED:
-                return "3";
-
-            case SUSPENDED_OTP:
-                return "4";
-
-            case SUSPENDED_ISSUER:
-                return "5";
-
-            case SUSPENDED_WALLET:
-                return "6";
-
-            case UNKNOWN:
-                return "0";
 
             default:
                 return UNKNOWN_CODE;
@@ -164,11 +142,59 @@ public class SMPEventCode
         }
     }
 
-    public static void writeCode(EventRecord record, EventAttribute attribute, String code)
+    private enum CardStatus
     {
-        if (isValid(code))
+        ACTIVE(Card.CardStatus.ACTIVE, "1"),
+        SUSPENDED(Card.CardStatus.SUSPENDED, "2"),
+        UNLINKED(Card.CardStatus.UNLINKED, "3"),
+        SUSPENDED_OTP(Card.CardStatus.SUSPENDED_OTP, "4"),
+        SUSPENDED_ISSUER(Card.CardStatus.SUSPENDED_ISSUER, "5"),
+        SUSPENDED_WALLET(Card.CardStatus.SUSPENDED_WALLET, "6"),
+        UNKNOWN(Card.CardStatus.UNKNOWN, "0");
+
+        private final Card.CardStatus cardStatus;
+        private final String code;
+
+        private CardStatus(Card.CardStatus cardStatus, String code)
         {
-            record.setAttributeValue(attribute.key(), code);
+            this.cardStatus = cardStatus;
+            this.code = code;
         }
+
+        private static String getCode(Card.CardStatus cardStatus)
+        {
+            for (CardStatus e : CardStatus.values())
+            {
+                if (e.cardStatus == cardStatus)
+                {
+                    return e.code;
+                }
+            }
+
+            return UNKNOWN_CODE;
+        }
+
+        private static Card.CardStatus getCardStatus(String code)
+        {
+            for (CardStatus e : CardStatus.values())
+            {
+                if (e.code == code)
+                {
+                    return e.cardStatus;
+                }
+            }
+
+            return Card.CardStatus.UNKNOWN;
+        }
+    }
+
+    public static String getCardStatusCode(Card.CardStatus cardStatus)
+    {
+        return CardStatus.getCode(cardStatus);
+    }
+
+    public static Card.CardStatus getCardStatus(String code)
+    {
+        return CardStatus.getCardStatus(code);
     }
 }

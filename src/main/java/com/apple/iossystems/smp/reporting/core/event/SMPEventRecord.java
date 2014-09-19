@@ -12,7 +12,7 @@ public class SMPEventRecord
     {
     }
 
-    public static void completeBuild(EventRecord record)
+    public static EventRecord maskSelectedAttributes(EventRecord record)
     {
         setLocation(record);
 
@@ -23,6 +23,8 @@ public class SMPEventRecord
         setHash(record, EventAttribute.FPAN_ID);
         setHash(record, EventAttribute.MERCHANT_ID);
         setHash(record, EventAttribute.TRANSACTION_ID);
+
+        return record;
     }
 
     private static void setLocation(EventRecord record)

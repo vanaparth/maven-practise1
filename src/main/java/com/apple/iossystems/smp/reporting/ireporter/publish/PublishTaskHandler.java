@@ -5,10 +5,7 @@ import com.apple.iossystems.smp.reporting.core.analytics.Statistics;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledNotification;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledTaskHandler;
 import com.apple.iossystems.smp.reporting.core.email.EmailPublishService;
-import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
-import com.apple.iossystems.smp.reporting.core.event.EventRecord;
-import com.apple.iossystems.smp.reporting.core.event.EventRecords;
-import com.apple.iossystems.smp.reporting.core.event.EventType;
+import com.apple.iossystems.smp.reporting.core.event.*;
 import com.apple.iossystems.smp.reporting.core.hubble.HubbleAnalytics;
 import com.apple.iossystems.smp.reporting.ireporter.configuration.ConfigurationEvent;
 import com.apple.iossystems.smp.reporting.ireporter.json.IReporterJsonBuilder;
@@ -216,11 +213,11 @@ public class PublishTaskHandler implements ScheduledTaskHandler
 
         if (eventType == EventType.REPORTS)
         {
-            return reportsQueue.offer(record);
+            return reportsQueue.offer(SMPEventRecord.maskSelectedAttributes(record));
         }
         else if (eventType == EventType.PAYMENT)
         {
-            return paymentReportsQueue.offer(record);
+            return paymentReportsQueue.offer(SMPEventRecord.maskSelectedAttributes(record));
         }
         else if (eventType == EventType.EMAIL)
         {

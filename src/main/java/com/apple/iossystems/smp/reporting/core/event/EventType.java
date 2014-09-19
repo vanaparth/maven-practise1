@@ -7,10 +7,10 @@ import com.apple.iossystems.logging.LogLevel;
  */
 public enum EventType
 {
-    REPORTS("reports", LogLevel.EVENT),
-    PAYMENT("payment", LogLevel.EVENT),
-    EMAIL("email", LogLevel.EVENT),
-    //
+    REPORTS("reports", LogLevel.EVENT1),
+    PAYMENT("payment", LogLevel.EVENT2),
+    EMAIL("email", LogLevel.EVENT3),
+
     UNKNOWN("unknown", LogLevel.EVENT);
 
     private final String key;

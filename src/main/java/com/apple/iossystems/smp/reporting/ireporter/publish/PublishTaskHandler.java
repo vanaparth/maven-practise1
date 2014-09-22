@@ -213,11 +213,11 @@ public class PublishTaskHandler implements ScheduledTaskHandler
 
         if (eventType == EventType.REPORTS)
         {
-            return reportsQueue.offer(SMPEventRecord.maskSelectedAttributes(record));
+            return reportsQueue.offer(SMPEventRecord.maskSelectedAttributes(SMPEventRecord.removeEmailAttributes(record)));
         }
         else if (eventType == EventType.PAYMENT)
         {
-            return paymentReportsQueue.offer(SMPEventRecord.maskSelectedAttributes(record));
+            return paymentReportsQueue.offer(SMPEventRecord.maskSelectedAttributes(SMPEventRecord.removeEmailAttributes(record)));
         }
         else if (eventType == EventType.EMAIL)
         {

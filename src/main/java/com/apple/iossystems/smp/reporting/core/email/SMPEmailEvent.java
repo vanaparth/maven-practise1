@@ -1,6 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.iossystems.smp.reporting.core.event.*;
+import com.google.gson.GsonBuilder;
 
 import java.util.*;
 
@@ -10,8 +11,6 @@ import java.util.*;
 public class SMPEmailEvent
 {
     private static final String CARD_EVENTS_KEY = "CardEvents";
-
-    private static final EventAttribute[] GROUP_EVENT_ATTRIBUTES = {EventAttribute.EVENT_TYPE, EventAttribute.CARD_EVENT, EventAttribute.TIMESTAMP, EventAttribute.CONVERSATION_ID};
 
     private SMPEmailEvent()
     {
@@ -48,7 +47,7 @@ public class SMPEmailEvent
 
                 if (groupRecord == null)
                 {
-                    groupRecord = new GroupRecord(createGroupEventRecord(record));
+                    groupRecord = new GroupRecord(record);
 
                     map.put(groupKey, groupRecord);
                 }
@@ -66,36 +65,12 @@ public class SMPEmailEvent
         {
             EventRecord eventRecord = groupRecord.eventRecord;
 
-            eventRecord.setAttributeValue(CARD_EVENTS_KEY, CardEvent.getGson().toJson(groupRecord.cardEvents, List.class));
+            eventRecord.setAttributeValue(CARD_EVENTS_KEY, new GsonBuilder().create().toJson(groupRecord.cardEvents, List.class));
 
             outputRecords.add(eventRecord);
         }
 
         return outputRecords;
-    }
-
-    private static EventRecord createGroupEventRecord(EventRecord record)
-    {
-        EventRecord groupEventRecord = EventRecord.getInstance();
-
-        copyEventAttributes(record, groupEventRecord, GROUP_EVENT_ATTRIBUTES);
-
-        return groupEventRecord;
-    }
-
-    private static void copyEventAttributes(EventRecord srcRecord, EventRecord destRecord, EventAttribute[] eventAttributes)
-    {
-        for (EventAttribute eventAttribute : eventAttributes)
-        {
-            copyEventAttribute(srcRecord, destRecord, eventAttribute);
-        }
-    }
-
-    private static void copyEventAttribute(EventRecord srcRecord, EventRecord destRecord, EventAttribute eventAttribute)
-    {
-        String key = eventAttribute.key();
-
-        destRecord.setAttributeValue(key, srcRecord.getAttributeValue(key));
     }
 
     private static class GroupRecord
@@ -122,7 +97,7 @@ public class SMPEmailEvent
 
         if (json != null)
         {
-            cardEvents = Arrays.asList(CardEvent.getGson().fromJson(json, CardEvent[].class));
+            cardEvents = Arrays.asList(new GsonBuilder().create().fromJson(json, CardEvent[].class));
         }
         else
         {

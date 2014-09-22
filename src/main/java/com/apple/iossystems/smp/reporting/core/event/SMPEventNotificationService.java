@@ -8,7 +8,6 @@ import com.apple.iossystems.smp.reporting.core.email.SMPEmailEvent;
 import com.apple.iossystems.smp.reporting.core.util.MapToPair;
 import org.apache.log4j.Logger;
 
-import java.util.List;
 import java.util.Properties;
 
 /**
@@ -70,9 +69,7 @@ public class SMPEventNotificationService
 
     private void publishEventRecords(EventRecords records)
     {
-        List<EventRecord> list = records.getList();
-
-        for (EventRecord record : list)
+        for (EventRecord record : records.getList())
         {
             publishEventRecord(record);
         }

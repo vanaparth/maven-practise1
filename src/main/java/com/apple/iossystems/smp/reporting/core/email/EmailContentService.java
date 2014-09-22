@@ -6,6 +6,7 @@ import com.apple.iossystems.smp.persistence.entity.SecureElement;
 import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
+import com.apple.iossystems.smp.reporting.core.util.ValidValue;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -66,16 +67,17 @@ class EmailContentService
         String conversationId = record.getAttributeValue(EventAttribute.CONVERSATION_ID.key());
         String timestamp = record.getAttributeValue(EventAttribute.TIMESTAMP.key());
 
+        AthenaCardEvent athenaCardEvent = AthenaCardEvent.fromJson(record.getAttributeValue(EventAttribute.ATHENA_CARD_EVENT.key()));
         PassbookPass passbookPass = SMPEventDataService.getPassByDpanId(dpanId);
         SecureElement secureElement = SMPEventDataService.getSecureElement(dpanId);
 
-        String cardHolderName = passbookPass.getCardHolderName();
-        String cardHolderEmail = SMPEventDataService.getCardHolderEmail();
+        String cardHolderName = ValidValue.getStringValueWithDefault(athenaCardEvent.getCardHolderName(), passbookPass.getCardHolderName());
+        String cardHolderEmail = ValidValue.getStringValueWithDefault(athenaCardEvent.getCardHolderEmail(), SMPEventDataService.getCardHolderEmail());
 
-        String deviceName = SMPEventDataService.getDeviceName(passbookPass, secureElement);
-        String deviceType = SMPEventDataService.getDeviceType(secureElement);
-        String dsid = passbookPass.getUserPrincipal();
-        String locale = SMPEventDataService.getLocale();
+        String deviceName = ValidValue.getStringValueWithDefault(athenaCardEvent.getDeviceName(), SMPEventDataService.getDeviceName(passbookPass, secureElement));
+        String deviceType = ValidValue.getStringValueWithDefault(athenaCardEvent.getDeviceType(), SMPEventDataService.getDeviceType(secureElement));
+        String dsid = ValidValue.getStringValueWithDefault(athenaCardEvent.getDsid(), passbookPass.getUserPrincipal());
+        String locale = ValidValue.getStringValueWithDefault(athenaCardEvent.getDeviceLanguage(), SMPEventDataService.getLocale());
 
         boolean isFirstProvision = (smpCardEvent == SMPCardEvent.PROVISION_CARD) && (secureElement.getProvisioningCount() == 1);
 

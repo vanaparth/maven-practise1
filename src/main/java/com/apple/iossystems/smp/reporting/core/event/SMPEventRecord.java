@@ -27,6 +27,13 @@ public class SMPEventRecord
         return record;
     }
 
+    public static EventRecord removeEmailAttributes(EventRecord record)
+    {
+        record.removeAttributeValue(EventAttribute.ATHENA_CARD_EVENT.key());
+
+        return record;
+    }
+
     private static void setLocation(EventRecord record)
     {
         String key = EventAttribute.DEVICE_LOCATION.key();

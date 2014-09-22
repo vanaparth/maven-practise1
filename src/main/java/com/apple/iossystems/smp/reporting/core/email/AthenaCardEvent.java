@@ -10,7 +10,7 @@ public class AthenaCardEvent
 {
     private final String cardHolderName;
     private final String cardHolderEmail;
-    private final String cardDescription;
+    private final String cardDisplayNumber;
     private final String deviceLanguage;
     private final String deviceName;
     private final String deviceType;
@@ -20,7 +20,7 @@ public class AthenaCardEvent
     {
         cardHolderName = builder.cardHolderName;
         cardHolderEmail = builder.cardHolderEmail;
-        cardDescription = builder.cardDescription;
+        cardDisplayNumber = builder.cardDisplayNumber;
         deviceLanguage = builder.deviceLanguage;
         deviceName = builder.deviceName;
         deviceType = builder.deviceType;
@@ -37,9 +37,9 @@ public class AthenaCardEvent
         return cardHolderEmail;
     }
 
-    public String getCardDescription()
+    public String getCardDisplayNumber()
     {
-        return cardDescription;
+        return cardDisplayNumber;
     }
 
     public String getDeviceLanguage()
@@ -66,7 +66,7 @@ public class AthenaCardEvent
     {
         private String cardHolderName;
         private String cardHolderEmail;
-        private String cardDescription;
+        private String cardDisplayNumber;
         private String deviceLanguage;
         private String deviceName;
         private String deviceType;
@@ -84,9 +84,9 @@ public class AthenaCardEvent
             return this;
         }
 
-        public Builder cardDescription(String value)
+        public Builder cardDisplayNumber(String value)
         {
-            cardDescription = value;
+            cardDisplayNumber = value;
             return this;
         }
 
@@ -123,7 +123,7 @@ public class AthenaCardEvent
     public static String toJson(AthenaCardDescriptor athenaCardDescriptor)
     {
         AthenaCardEvent athenaEvent = new Builder().cardHolderName(athenaCardDescriptor.getCardHolderName()).
-                cardDescription(athenaCardDescriptor.getLastFour()).
+                cardDisplayNumber(athenaCardDescriptor.getLastFour()).
                 deviceLanguage(athenaCardDescriptor.getDeviceLanguage()).
                 deviceName(athenaCardDescriptor.getDeviceName()).
                 deviceType(athenaCardDescriptor.getDeviceType()).

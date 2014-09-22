@@ -1,60 +1,70 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
-import com.apple.iossystems.smp.domain.clm.Card;
-import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
-import com.apple.iossystems.smp.reporting.core.event.EventRecord;
-import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
-import com.apple.iossystems.smp.reporting.core.event.SMPEventCode;
+import com.apple.iossystems.smp.reporting.core.util.JsonObjectReader;
+import com.google.gson.*;
+
+import java.lang.reflect.Type;
 
 /**
  * @author Toch
  */
-public class CardEvent
+class CardEvent
 {
-    private static final Card.CardStatus[] VALID_SUSPEND_STATUS = {Card.CardStatus.SUSPENDED, Card.CardStatus.SUSPENDED_OTP, Card.CardStatus.SUSPENDED_ISSUER, Card.CardStatus.SUSPENDED_WALLET};
+    private final String dpanId;
+    private final boolean status;
 
-    private static final Card.CardStatus[] VALID_UNLINKED_STATUS = {Card.CardStatus.UNLINKED};
-
-    private static final Card.CardStatus[] VALID_RESUME_STATUS = {Card.CardStatus.ACTIVE};
-
-    private CardEvent()
+    private CardEvent(String dpanId, boolean status)
     {
+        this.dpanId = dpanId;
+        this.status = status;
     }
 
-    private static boolean isValidStatus(Card.CardStatus cardStatus, Card.CardStatus[] validCardStatusList)
+    public static CardEvent getInstance(String dpanId, boolean status)
     {
-        for (Card.CardStatus validCardStatus : validCardStatusList)
-        {
-            if (cardStatus == validCardStatus)
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return new CardEvent(dpanId, status);
     }
 
-    public static boolean hasValidCardStatus(EventRecord record)
+    public String getDpanId()
     {
-        SMPCardEvent cardEvent = SMPCardEvent.getSMPCardEvent(record.getAttributeValue(EventAttribute.CARD_EVENT.key()));
+        return dpanId;
+    }
 
-        Card.CardStatus[] validCardStatusList = null;
+    public boolean getStatus()
+    {
+        return status;
+    }
 
-        if (cardEvent == SMPCardEvent.SUSPEND_CARD)
+    public static Gson getGson()
+    {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+
+        gsonBuilder.registerTypeAdapter(CardEvent.class, new CardEventAdapter());
+
+        return gsonBuilder.create();
+    }
+
+    private static class CardEventAdapter implements JsonSerializer<CardEvent>, JsonDeserializer<CardEvent>
+    {
+        @Override
+        public JsonElement serialize(CardEvent cardEvent, Type type, JsonSerializationContext context)
         {
-            validCardStatusList = VALID_SUSPEND_STATUS;
-        }
-        else if (cardEvent == SMPCardEvent.UNLINK_CARD)
-        {
-            validCardStatusList = VALID_UNLINKED_STATUS;
-        }
-        else if (cardEvent == SMPCardEvent.RESUME_CARD)
-        {
-            validCardStatusList = VALID_RESUME_STATUS;
+            JsonObject jsonObject = new JsonObject();
+
+            jsonObject.addProperty("dpanId", cardEvent.dpanId);
+            jsonObject.addProperty("status", cardEvent.status);
+
+            return jsonObject;
         }
 
-        Card.CardStatus cardStatus = SMPEventCode.getCardStatus(record.getAttributeValue(EventAttribute.CARD_STATUS.key()));
+        @Override
+        public CardEvent deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException
+        {
+            JsonObject jsonObject = jsonElement.getAsJsonObject();
 
-        return (validCardStatusList == null) ? true : isValidStatus(cardStatus, validCardStatusList);
+            String dpanId = JsonObjectReader.getAsString(jsonObject, "dpanId");
+            boolean status = JsonObjectReader.getAsBoolean(jsonObject, "status");
+
+            return new CardEvent(dpanId, status);
+        }
     }
 }

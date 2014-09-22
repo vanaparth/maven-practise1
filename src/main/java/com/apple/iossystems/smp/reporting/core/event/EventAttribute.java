@@ -33,17 +33,7 @@ public enum EventAttribute
     MERCHANT_ID("mid"),
     TRANSACTION_AMOUNT("tmt"),
     TRANSACTION_ID("tid"),
-    TRANSACTION_STATUS("tst"),
-    // Email Reporting
-    CARD_HOLDER_NAME("card_holder_name"),
-    CARD_HOLDER_EMAIL("card_holder_email"),
-    CARD_DESCRIPTION("card_description"),
-    CARD_DISPLAY_NUMBER("card_display_number"),
-    DEVICE_NAME("device_name"),
-    DEVICE_TYPE("device_type"),
-    LOCALE("locale"),
-    EVENT_STATUS("event_status"),
-    FIRST_PROVISION("first_provision");
+    TRANSACTION_STATUS("tst");
 
     private final String key;
 

@@ -1,8 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.cds.keystone.spring.AppContext;
-import com.apple.iossystems.smp.broker.domain.registry.AccountDataValue;
-import com.apple.iossystems.smp.domain.AccountDataDescriptor;
 import com.apple.iossystems.smp.domain.icloud.FetchDeviceResponse;
 import com.apple.iossystems.smp.icloud.util.iCloudService;
 import com.apple.iossystems.smp.persistence.entity.*;
@@ -21,35 +19,6 @@ class SMPEventDataService
 
     private SMPEventDataService()
     {
-    }
-
-    private static AccountDataValue getAccountDataValue()
-    {
-        return null;
-    }
-
-    static String getCardHolderEmail()
-    {
-        String cardHolderEmail = "";
-
-        AccountDataValue accountDataValue = getAccountDataValue();
-
-        if (accountDataValue != null)
-        {
-            AccountDataDescriptor accountDataDescriptor = accountDataValue.getAccountDataDescriptor();
-
-            if (accountDataDescriptor != null)
-            {
-                String value = accountDataDescriptor.getEmailAddress();
-
-                if (value != null)
-                {
-                    cardHolderEmail = value;
-                }
-            }
-        }
-
-        return cardHolderEmail;
     }
 
     static String getDeviceName(PassbookPass passbookPass, SecureElement secureElement)
@@ -95,11 +64,6 @@ class SMPEventDataService
         }
 
         return deviceTypeName;
-    }
-
-    static String getLocale()
-    {
-        return "";
     }
 
     static PassbookPass getPassByDpanId(String dpanId)

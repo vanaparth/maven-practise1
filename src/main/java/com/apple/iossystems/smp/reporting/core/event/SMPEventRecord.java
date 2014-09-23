@@ -30,6 +30,7 @@ public class SMPEventRecord
     public static EventRecord removeEmailAttributes(EventRecord record)
     {
         record.removeAttributeValue(EventAttribute.ATHENA_CARD_EVENT.key());
+        record.removeAttributeValue(EventAttribute.MANAGE_CARD_EVENT.key());
 
         return record;
     }

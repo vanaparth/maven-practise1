@@ -1,5 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
+import com.apple.iossystems.smp.domain.AccountDataDescriptor;
 import com.apple.iossystems.smp.domain.AthenaCardDescriptor;
 import com.google.gson.GsonBuilder;
 
@@ -120,9 +121,10 @@ public class AthenaCardEvent
         }
     }
 
-    public static String toJson(AthenaCardDescriptor athenaCardDescriptor)
+    public static String toJson(String conversationId, AthenaCardDescriptor athenaCardDescriptor)
     {
         AthenaCardEvent athenaEvent = new Builder().cardHolderName(athenaCardDescriptor.getCardHolderName()).
+                cardHolderEmail(CacheService.get(getCacheKey(conversationId))).
                 cardDisplayNumber(athenaCardDescriptor.getLastFour()).
                 deviceLanguage(athenaCardDescriptor.getDeviceLanguage()).
                 deviceName(athenaCardDescriptor.getDeviceName()).
@@ -142,5 +144,32 @@ public class AthenaCardEvent
         {
             return new Builder().build();
         }
+    }
+
+    private static final long CACHE_TIMEOUT = 15 * 60 * 1000;
+
+    public static void cache(String conversationId, AccountDataDescriptor accountDataDescriptor)
+    {
+        if (accountDataDescriptor != null)
+        {
+            String emailAddress = accountDataDescriptor.getEmailAddress();
+
+            if (emailAddress != null)
+            {
+                CacheService.put(getCacheKey(conversationId), emailAddress, CACHE_TIMEOUT);
+            }
+        }
+    }
+
+    private static String getCacheKey(String conversationId)
+    {
+        String key = null;
+
+        if (conversationId != null)
+        {
+            key = "smp_reporting_athena_card_event_" + conversationId;
+        }
+
+        return key;
     }
 }

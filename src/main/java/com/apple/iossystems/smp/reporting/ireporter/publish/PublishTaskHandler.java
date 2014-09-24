@@ -110,7 +110,7 @@ public class PublishTaskHandler implements ScheduledTaskHandler
             {
                 List<EventRecord> list = records.getList();
 
-                if (!service.sendRequest(IReporterJsonBuilder.toJson(records.getList())))
+                if (!service.sendRequest(IReporterJsonBuilder.toJson(list)))
                 {
                     queue.addAll(list);
 

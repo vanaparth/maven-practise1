@@ -150,7 +150,7 @@ public class AthenaCardEvent
 
     public static void cache(String conversationId, AccountDataDescriptor accountDataDescriptor)
     {
-        if (accountDataDescriptor != null)
+        if ((conversationId != null) && (accountDataDescriptor != null))
         {
             String emailAddress = accountDataDescriptor.getEmailAddress();
 

@@ -23,7 +23,7 @@ class SMPEventDataService
 
     static String getDeviceName(PassbookPass passbookPass, SecureElement secureElement)
     {
-        String deviceName = "";
+        String deviceName = null;
 
         try
         {
@@ -31,12 +31,7 @@ class SMPEventDataService
 
             if (fetchDeviceResponse != null)
             {
-                String value = fetchDeviceResponse.getDeviceName();
-
-                if (value != null)
-                {
-                    deviceName = value;
-                }
+                deviceName = fetchDeviceResponse.getDeviceName();
             }
         }
         catch (Exception e)
@@ -49,18 +44,13 @@ class SMPEventDataService
 
     static String getDeviceType(SecureElement secureElement)
     {
-        String deviceTypeName = "";
+        String deviceTypeName = null;
 
         DeviceType deviceType = secureElement.getDeviceType();
 
         if (deviceType != null)
         {
-            String value = deviceType.getDeviceTypeName();
-
-            if (value != null)
-            {
-                deviceTypeName = value;
-            }
+            deviceTypeName = deviceType.getDeviceTypeName();
         }
 
         return deviceTypeName;

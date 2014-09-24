@@ -7,7 +7,7 @@ import org.apache.log4j.Logger;
 /**
  * @author Toch
  */
-public class CacheService
+class CacheService
 {
     private static final Logger LOGGER = Logger.getLogger(CacheService.class);
 

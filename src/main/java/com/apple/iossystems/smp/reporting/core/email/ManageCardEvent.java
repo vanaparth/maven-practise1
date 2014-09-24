@@ -1,7 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.iossystems.smp.reporting.core.util.JsonObjectReader;
-import com.apple.iossystems.smp.reporting.core.util.ValidValue;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
@@ -87,12 +86,21 @@ public class ManageCardEvent
         {
             String cardHolderName = null;
 
-            if ((firstName != null) && (lastName != null))
+            if (firstName != null)
             {
-                String cardHolderFirstName = ValidValue.getStringValueWithDefault(firstName, "");
-                String cardHolderLastName = ValidValue.getStringValueWithDefault(lastName, "");
+                cardHolderName = firstName;
+            }
 
-                cardHolderName = cardHolderFirstName + " " + cardHolderLastName;
+            if (lastName != null)
+            {
+                if (cardHolderName != null)
+                {
+                    cardHolderName += " " + lastName;
+                }
+                else
+                {
+                    cardHolderName = lastName;
+                }
             }
 
             return cardHolderName;
@@ -123,6 +131,14 @@ public class ManageCardEvent
         return jsonObject.toString();
     }
 
+    private static void addProperty(JsonObject jsonObject, String key, String value)
+    {
+        if (value != null)
+        {
+            jsonObject.addProperty(key, value);
+        }
+    }
+
     private static Gson getGson()
     {
         GsonBuilder gsonBuilder = new GsonBuilder();
@@ -141,14 +157,6 @@ public class ManageCardEvent
         else
         {
             return new Builder().build();
-        }
-    }
-
-    private static void addProperty(JsonObject jsonObject, String key, String value)
-    {
-        if (value != null)
-        {
-            jsonObject.addProperty(key, value);
         }
     }
 

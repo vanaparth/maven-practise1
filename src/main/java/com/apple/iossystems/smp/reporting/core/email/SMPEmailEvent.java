@@ -33,11 +33,9 @@ public class SMPEmailEvent
 
     private static EventRecords groupEventRecords(EventRecords records)
     {
-        List<EventRecord> list = records.getList();
-
         Map<String, GroupRecord> map = new HashMap<String, GroupRecord>();
 
-        for (EventRecord record : list)
+        for (EventRecord record : records.getList())
         {
             String groupKey = getGroupKey(record);
 
@@ -109,11 +107,9 @@ public class SMPEmailEvent
 
     public static EventRecords getEventRecords(EventRecords records)
     {
-        List<EventRecord> list = records.getList();
-
         EventRecords outputRecords = EventRecords.getInstance();
 
-        for (EventRecord record : list)
+        for (EventRecord record : records.getList())
         {
             if (isEmailRecord(record))
             {

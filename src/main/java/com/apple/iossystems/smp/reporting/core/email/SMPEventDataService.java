@@ -21,7 +21,7 @@ class SMPEventDataService
     {
     }
 
-    static String getDeviceName(PassbookPass passbookPass, SecureElement secureElement)
+    public static String getDeviceName(PassbookPass passbookPass, SecureElement secureElement)
     {
         String deviceName = null;
 
@@ -42,7 +42,7 @@ class SMPEventDataService
         return deviceName;
     }
 
-    static String getDeviceType(SecureElement secureElement)
+    public static String getDeviceType(SecureElement secureElement)
     {
         String deviceTypeName = null;
 
@@ -56,12 +56,12 @@ class SMPEventDataService
         return deviceTypeName;
     }
 
-    static PassbookPass getPassByDpanId(String dpanId)
+    public static PassbookPass getPassByDpanId(String dpanId)
     {
         return PASS_MANAGEMENT_SERVICE.getPassByDpanId(dpanId);
     }
 
-    static SecureElement getSecureElement(String dpanId)
+    public static SecureElement getSecureElement(String dpanId)
     {
         SecureElement secureElement = null;
 
@@ -75,7 +75,7 @@ class SMPEventDataService
         return secureElement;
     }
 
-    static String getValueFromPassbookPass(PassbookPass passbookPass, String key)
+    public static String getValueFromPassbookPass(PassbookPass passbookPass, String key)
     {
         String value = null;
 

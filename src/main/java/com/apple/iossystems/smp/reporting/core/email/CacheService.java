@@ -11,7 +11,7 @@ class CacheService
 {
     private static final Logger LOGGER = Logger.getLogger(CacheService.class);
 
-    private static Cache CACHE = getCache();
+    private static final Cache CACHE = getCache();
 
     private CacheService()
     {
@@ -56,7 +56,12 @@ class CacheService
         {
             if (key != null)
             {
-                value = String.valueOf(CACHE.valueForKey(key));
+                Object cacheValue = CACHE.valueForKey(key);
+
+                if(cacheValue != null)
+                {
+                    value = String.valueOf(cacheValue);
+                }
             }
         }
         catch (Exception e)

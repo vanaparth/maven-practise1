@@ -103,6 +103,9 @@ public class EmailPublishService
         List<SMPEmailCardData> successCards = cardEventRecord.getSuccessCards();
         List<SMPEmailCardData> failedCards = cardEventRecord.getFailedCards();
 
+        // Logging for email tests
+        Logger.getLogger(EmailPublishService.class).info("Sending email for " + smpCardEvent.name()  + "\t" + emailRecord.getCardHolderName() + "\t" + emailRecord.getCardHolderEmail() + "\t" + emailRecord.getConversationId() + "\t" + emailRecord.getDeviceName() + "\t" + emailRecord.getDeviceType());
+
         if (smpCardEvent == SMPCardEvent.PROVISION_CARD)
         {
             if (emailRecord.isFirstProvisionEvent())

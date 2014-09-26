@@ -1,6 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.iossystems.smp.reporting.core.util.JsonObjectReader;
+import com.apple.iossystems.smp.reporting.core.util.JsonObjectWriter;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
@@ -51,6 +52,10 @@ public class ManageCardEvent
         private String cardHolderEmail;
         private String locale;
         private String deviceName;
+
+        private Builder()
+        {
+        }
 
         private Builder firstName(String value)
         {
@@ -122,21 +127,13 @@ public class ManageCardEvent
     {
         JsonObject jsonObject = new JsonObject();
 
-        addProperty(jsonObject, FIRST_NAME, map.get(FIRST_NAME));
-        addProperty(jsonObject, LAST_NAME, map.get(LAST_NAME));
-        addProperty(jsonObject, CARD_HOLDER_EMAIL, map.get(CARD_HOLDER_EMAIL));
-        addProperty(jsonObject, LOCALE, map.get(LOCALE));
-        addProperty(jsonObject, DEVICE_NAME, map.get(DEVICE_NAME));
+        JsonObjectWriter.addProperty(jsonObject, FIRST_NAME, map.get(FIRST_NAME));
+        JsonObjectWriter.addProperty(jsonObject, LAST_NAME, map.get(LAST_NAME));
+        JsonObjectWriter.addProperty(jsonObject, CARD_HOLDER_EMAIL, map.get(CARD_HOLDER_EMAIL));
+        JsonObjectWriter.addProperty(jsonObject, LOCALE, map.get(LOCALE));
+        JsonObjectWriter.addProperty(jsonObject, DEVICE_NAME, map.get(DEVICE_NAME));
 
         return jsonObject.toString();
-    }
-
-    private static void addProperty(JsonObject jsonObject, String key, String value)
-    {
-        if (value != null)
-        {
-            jsonObject.addProperty(key, value);
-        }
     }
 
     private static Gson getGson()

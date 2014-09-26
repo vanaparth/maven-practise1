@@ -33,7 +33,7 @@ class CacheService
         return cache;
     }
 
-    public static void put(String key, Object value, long timeout)
+    public static void put(String key, String value, long timeout)
     {
         try
         {
@@ -58,7 +58,7 @@ class CacheService
             {
                 Object cacheValue = CACHE.valueForKey(key);
 
-                if(cacheValue != null)
+                if (cacheValue != null)
                 {
                     value = String.valueOf(cacheValue);
                 }

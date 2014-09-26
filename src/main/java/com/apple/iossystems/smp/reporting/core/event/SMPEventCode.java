@@ -2,7 +2,6 @@ package com.apple.iossystems.smp.reporting.core.event;
 
 import com.apple.iossystems.smp.domain.CardSource;
 import com.apple.iossystems.smp.domain.FpanType;
-import com.apple.iossystems.smp.domain.clm.Card;
 import com.apple.iossystems.smp.domain.device.CardEligibilityStatus;
 
 /**
@@ -14,6 +13,11 @@ public class SMPEventCode
 
     private SMPEventCode()
     {
+    }
+
+    public static String getUnknownCode()
+    {
+        return UNKNOWN_CODE;
     }
 
     public static void writeCode(EventRecord record, EventAttribute attribute, String code)
@@ -140,61 +144,5 @@ public class SMPEventCode
         {
             return UNKNOWN_CODE;
         }
-    }
-
-    private enum CardStatus
-    {
-        ACTIVE(Card.CardStatus.ACTIVE, "1"),
-        SUSPENDED(Card.CardStatus.SUSPENDED, "2"),
-        UNLINKED(Card.CardStatus.UNLINKED, "3"),
-        SUSPENDED_OTP(Card.CardStatus.SUSPENDED_OTP, "4"),
-        SUSPENDED_ISSUER(Card.CardStatus.SUSPENDED_ISSUER, "5"),
-        SUSPENDED_WALLET(Card.CardStatus.SUSPENDED_WALLET, "6"),
-        UNKNOWN(Card.CardStatus.UNKNOWN, "0");
-
-        private final Card.CardStatus cardStatus;
-        private final String code;
-
-        private CardStatus(Card.CardStatus cardStatus, String code)
-        {
-            this.cardStatus = cardStatus;
-            this.code = code;
-        }
-
-        private static String getCode(Card.CardStatus cardStatus)
-        {
-            for (CardStatus e : CardStatus.values())
-            {
-                if (e.cardStatus == cardStatus)
-                {
-                    return e.code;
-                }
-            }
-
-            return UNKNOWN_CODE;
-        }
-
-        private static Card.CardStatus getCardStatus(String code)
-        {
-            for (CardStatus e : CardStatus.values())
-            {
-                if (e.code == code)
-                {
-                    return e.cardStatus;
-                }
-            }
-
-            return Card.CardStatus.UNKNOWN;
-        }
-    }
-
-    public static String getCardStatusCode(Card.CardStatus cardStatus)
-    {
-        return CardStatus.getCode(cardStatus);
-    }
-
-    public static Card.CardStatus getCardStatus(String code)
-    {
-        return CardStatus.getCardStatus(code);
     }
 }

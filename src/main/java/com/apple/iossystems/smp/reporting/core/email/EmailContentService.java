@@ -58,7 +58,7 @@ class EmailContentService
             cardDescription = SMPEventDataService.getValueFromPassbookPass(passbookPass, AbstractPass.PAYMENT_PASS_SHORT_DESC_KEY);
         }
 
-        return Card.getInstance(cardDescription, cardDisplayNumber, cardEvent.getStatus());
+        return Card.getInstance(cardDescription, cardDisplayNumber, cardEvent);
     }
 
     private static EmailRecord createEmailRecord(EventRecord record, List<CardEvent> cardEvents, String dpanId)
@@ -77,8 +77,8 @@ class EmailContentService
 
         String deviceName = selectValue(new String[]{athenaCardEvent.getDeviceName(), manageCardEvent.getDeviceName(), SMPEventDataService.getDeviceName(passbookPass, secureElement)});
         String deviceType = ValidValue.getStringValueWithDefault(athenaCardEvent.getDeviceType(), SMPEventDataService.getDeviceType(secureElement));
-        String locale = ValidValue.getStringValueWithDefault(athenaCardEvent.getDeviceLanguage(), manageCardEvent.getLocale());
         String dsid = ValidValue.getStringValueWithDefault(athenaCardEvent.getDsid(), passbookPass.getUserPrincipal());
+        String locale = ValidValue.getStringValueWithDefault(athenaCardEvent.getDeviceLanguage(), manageCardEvent.getLocale());
 
         boolean isFirstProvision = (smpCardEvent == SMPCardEvent.PROVISION_CARD) && (secureElement.getProvisioningCount() == 1);
 

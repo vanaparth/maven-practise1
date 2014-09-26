@@ -30,13 +30,8 @@ public class PublishTaskHandler implements ScheduledTaskHandler
     private BlockingQueue<EventRecord> paymentReportsQueue = new LinkedBlockingQueue<EventRecord>(1000);
     private BlockingQueue<EventRecord> emailReportsQueue = new LinkedBlockingQueue<EventRecord>(1000);
 
-    private static final Metric[] AUDIT_METRICS =
-            {
-                    Metric.IREPORTER_REPORTS_RECORDS_SENT,
-                    Metric.IREPORTER_REPORTS_RECORDS_FAILED,
-                    Metric.IREPORTER_REPORTS_RECORDS_PENDING,
-                    Metric.IREPORTER_REPORTS_RECORDS_LOST
-            };
+    private static final PublishMetric REPORTS_METRICS = PublishMetric.getReportsMetrics();
+    private static final PublishMetric PAYMENT_REPORTS_METRICS = PublishMetric.getPaymentReportsMetrics();
 
     private PublishTaskHandler() throws Exception
     {
@@ -65,8 +60,7 @@ public class PublishTaskHandler implements ScheduledTaskHandler
     public final void handleEvent()
     {
         handleEmailEvent();
-        handlePublishReportsEvent();
-        handlePublishPaymentReportsEvent();
+        handlePublishEvent();
         handleAuditEvent();
         handleConfigurationEvent();
     }
@@ -97,7 +91,7 @@ public class PublishTaskHandler implements ScheduledTaskHandler
         return records;
     }
 
-    private int handlePublishEvent(IReporterPublishService service, BlockingQueue<EventRecord> queue)
+    private int publish(IReporterPublishService service, BlockingQueue<EventRecord> queue)
     {
         int count = 0;
 
@@ -122,65 +116,69 @@ public class PublishTaskHandler implements ScheduledTaskHandler
         return count;
     }
 
-    private void handlePublishReportsEvent()
+    private void handlePublishEvent()
     {
-        int count = handlePublishEvent(reportsPublishService, reportsQueue);
+        handlePublishEvent(reportsPublishService, reportsQueue, REPORTS_METRICS);
+        handlePublishEvent(paymentReportsPublishService, paymentReportsQueue, PAYMENT_REPORTS_METRICS);
+    }
+
+    private void handleAuditEvent()
+    {
+        handleAuditEvent(auditPublishService, REPORTS_METRICS);
+    }
+
+    private void handlePublishEvent(IReporterPublishService publishService, BlockingQueue<EventRecord> queue, PublishMetric publishMetric)
+    {
+        int count = publish(publishService, queue);
 
         if (count > 0)
         {
             // Hubble
-            HubbleAnalytics.incrementCountForEvent(Metric.REPORTS_MESSAGES_SENT);
-            HubbleAnalytics.incrementCountForEvent(Metric.REPORTS_RECORDS_SENT, count);
+            HubbleAnalytics.incrementCountForEvent(publishMetric.getMessagesSentMetric());
+            HubbleAnalytics.incrementCountForEvent(publishMetric.getRecordsSentMetric(), count);
             // IReporter
-            statistics.increment(Metric.IREPORTER_REPORTS_RECORDS_SENT, count);
+            statistics.increment(publishMetric.getIReporterRecordsSent(), count);
         }
         else if (count < 0)
         {
             count = -count;
             // Hubble
-            HubbleAnalytics.incrementCountForEvent(Metric.REPORTS_MESSAGES_FAILED);
-            HubbleAnalytics.incrementCountForEvent(Metric.REPORTS_RECORDS_FAILED, count);
+            HubbleAnalytics.incrementCountForEvent(publishMetric.getMessagesFailedMetric());
+            HubbleAnalytics.incrementCountForEvent(publishMetric.getRecordsFailedMetric(), count);
             // IReporter
-            statistics.increment(Metric.IREPORTER_REPORTS_RECORDS_FAILED, count);
+            statistics.increment(publishMetric.getIReporterRecordsFailed(), count);
         }
     }
 
-    private void handlePublishPaymentReportsEvent()
+    private void handleAuditEvent(IReporterPublishService auditService, PublishMetric publishMetric)
     {
-        handlePublishEvent(paymentReportsPublishService, paymentReportsQueue);
-    }
-
-    private void handleAuditEvent()
-    {
-        IReporterPublishService service = auditPublishService;
-
-        if (service.publishReady())
+        if (auditService.publishReady())
         {
-            int sent = statistics.getIntValue(Metric.IREPORTER_REPORTS_RECORDS_SENT);
-            int failed = statistics.getIntValue(Metric.IREPORTER_REPORTS_RECORDS_FAILED);
-            int backLog = statistics.getIntValue(Metric.IREPORTER_REPORTS_RECORDS_PENDING);
-            int lost = statistics.getIntValue(Metric.IREPORTER_REPORTS_RECORDS_LOST);
+            int sent = statistics.getIntValue(publishMetric.getIReporterRecordsSent());
+            int failed = statistics.getIntValue(publishMetric.getIReporterRecordsFailed());
+            int backLog = statistics.getIntValue(publishMetric.getIReporterRecordsPending());
+            int lost = statistics.getIntValue(publishMetric.getIReporterRecordsLost());
 
             IReporterAudit auditData = IReporterAudit.getBuilder().sentCount(sent).failedCount(failed).backlogCount(backLog).lostCount(lost).build();
 
-            if (service.sendRequest(auditData.toJson()))
+            if (auditService.sendRequest(auditData.toJson()))
             {
-                HubbleAnalytics.incrementCountForEvent(Metric.AUDIT_RECORDS_SENT);
+                HubbleAnalytics.incrementCountForEvent(publishMetric.getAuditRecordsSent());
 
-                statistics.clear(AUDIT_METRICS);
+                statistics.clear(publishMetric.getAuditMetrics());
             }
             else
             {
-                HubbleAnalytics.incrementCountForEvent(Metric.AUDIT_RECORDS_FAILED);
+                HubbleAnalytics.incrementCountForEvent(publishMetric.getAuditRecordsFailed());
             }
         }
     }
 
     private void handleConfigurationEvent()
     {
-        logConfigurationEvent(reportsPublishService.getConfigurationService().getConfigurationEvent(), Metric.REPORTS_CONFIGURATION_REQUESTED, Metric.REPORTS_CONFIGURATION_CHANGED);
-
-        logConfigurationEvent(auditPublishService.getConfigurationService().getConfigurationEvent(), Metric.AUDIT_CONFIGURATION_REQUESTED, Metric.AUDIT_CONFIGURATION_CHANGED);
+        logConfigurationEvent(reportsPublishService.getConfigurationService().getConfigurationEvent(), REPORTS_METRICS.getReportsConfigurationRequestedMetric(), REPORTS_METRICS.getReportsConfigurationChangedMetric());
+        logConfigurationEvent(paymentReportsPublishService.getConfigurationService().getConfigurationEvent(), PAYMENT_REPORTS_METRICS.getReportsConfigurationRequestedMetric(), PAYMENT_REPORTS_METRICS.getReportsConfigurationChangedMetric());
+        logConfigurationEvent(auditPublishService.getConfigurationService().getConfigurationEvent(), REPORTS_METRICS.getAuditConfigurationRequestedMetric(), REPORTS_METRICS.getAuditConfigurationChangedMetric());
     }
 
     private void logConfigurationEvent(ConfigurationEvent configurationEvent, Metric configurationRequestedMetric, Metric configurationChangedMetric)

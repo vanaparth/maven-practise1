@@ -4,12 +4,11 @@ import com.apple.iossystems.smp.domain.clm.Card;
 import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
-import com.apple.iossystems.smp.reporting.core.event.SMPEventCode;
 
 /**
  * @author Toch
  */
-class CardEventStatus
+public class CardEventStatus
 {
     private static final Card.CardStatus[] VALID_SUSPEND_STATUS = {Card.CardStatus.SUSPENDED, Card.CardStatus.SUSPENDED_ISSUER, Card.CardStatus.SUSPENDED_OTP, Card.CardStatus.SUSPENDED_WALLET};
 
@@ -53,8 +52,34 @@ class CardEventStatus
             validCardStatusList = VALID_RESUME_STATUS;
         }
 
-        Card.CardStatus cardStatus = SMPEventCode.getCardStatus(record.getAttributeValue(EventAttribute.CARD_STATUS.key()));
+        Card.CardStatus cardStatus = SMPCardStatus.getCardStatus(record.getAttributeValue(EventAttribute.CARD_STATUS.key()));
 
-        return (validCardStatusList == null) ? true : isValidStatus(cardStatus, validCardStatusList);
+        return ((validCardStatusList == null) || isValidStatus(cardStatus, validCardStatusList));
+    }
+
+    public static Card.CardStatus getDefaultValidCardStatus(EventRecord record)
+    {
+        SMPCardEvent cardEvent = SMPCardEvent.getSMPCardEvent(record.getAttributeValue(EventAttribute.CARD_EVENT.key()));
+
+        Card.CardStatus defaultValidCardStatus;
+
+        if (cardEvent == SMPCardEvent.SUSPEND_CARD)
+        {
+            defaultValidCardStatus = Card.CardStatus.SUSPENDED;
+        }
+        else if (cardEvent == SMPCardEvent.UNLINK_CARD)
+        {
+            defaultValidCardStatus = Card.CardStatus.UNLINKED;
+        }
+        else if (cardEvent == SMPCardEvent.RESUME_CARD)
+        {
+            defaultValidCardStatus = Card.CardStatus.ACTIVE;
+        }
+        else
+        {
+            defaultValidCardStatus = Card.CardStatus.ACTIVE;
+        }
+
+        return defaultValidCardStatus;
     }
 }

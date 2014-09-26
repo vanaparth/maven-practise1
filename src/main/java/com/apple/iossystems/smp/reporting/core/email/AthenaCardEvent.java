@@ -73,49 +73,53 @@ public class AthenaCardEvent
         private String deviceType;
         private String dsid;
 
-        public Builder cardHolderName(String value)
+        private Builder()
+        {
+        }
+
+        private Builder cardHolderName(String value)
         {
             cardHolderName = value;
             return this;
         }
 
-        public Builder cardHolderEmail(String value)
+        private Builder cardHolderEmail(String value)
         {
             cardHolderEmail = value;
             return this;
         }
 
-        public Builder cardDisplayNumber(String value)
+        private Builder cardDisplayNumber(String value)
         {
             cardDisplayNumber = value;
             return this;
         }
 
-        public Builder deviceLanguage(String value)
+        private Builder deviceLanguage(String value)
         {
             deviceLanguage = value;
             return this;
         }
 
-        public Builder deviceName(String value)
+        private Builder deviceName(String value)
         {
             deviceName = value;
             return this;
         }
 
-        public Builder deviceType(String value)
+        private Builder deviceType(String value)
         {
             deviceType = value;
             return this;
         }
 
-        public Builder dsid(String value)
+        private Builder dsid(String value)
         {
             dsid = value;
             return this;
         }
 
-        public AthenaCardEvent build()
+        private AthenaCardEvent build()
         {
             return new AthenaCardEvent(this);
         }
@@ -123,15 +127,24 @@ public class AthenaCardEvent
 
     public static String toJson(String conversationId, AthenaCardDescriptor athenaCardDescriptor)
     {
-        AthenaCardEvent athenaEvent = new Builder().cardHolderName(athenaCardDescriptor.getCardHolderName()).
-                cardHolderEmail(CacheService.get(getCacheKey(conversationId))).
-                cardDisplayNumber(athenaCardDescriptor.getLastFour()).
-                deviceLanguage(athenaCardDescriptor.getDeviceLanguage()).
-                deviceName(athenaCardDescriptor.getDeviceName()).
-                deviceType(athenaCardDescriptor.getDeviceType()).
-                dsid(athenaCardDescriptor.getDsId()).build();
+        AthenaCardEvent athenaCardEvent;
 
-        return new GsonBuilder().create().toJson(athenaEvent);
+        if ((conversationId != null) && (athenaCardDescriptor != null))
+        {
+            athenaCardEvent = new Builder().cardHolderName(athenaCardDescriptor.getCardHolderName()).
+                    cardHolderEmail(CacheService.get(getCacheKey(conversationId))).
+                    cardDisplayNumber(athenaCardDescriptor.getLastFour()).
+                    deviceLanguage(athenaCardDescriptor.getDeviceLanguage()).
+                    deviceName(athenaCardDescriptor.getDeviceName()).
+                    deviceType(athenaCardDescriptor.getDeviceType()).
+                    dsid(athenaCardDescriptor.getDsId()).build();
+        }
+        else
+        {
+            athenaCardEvent = new Builder().build();
+        }
+
+        return new GsonBuilder().create().toJson(athenaCardEvent);
     }
 
     public static AthenaCardEvent fromJson(String json)

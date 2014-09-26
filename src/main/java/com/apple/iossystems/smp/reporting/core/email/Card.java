@@ -7,18 +7,18 @@ class Card
 {
     private final String description;
     private final String displayNumber;
-    private final boolean status;
+    private final CardEvent cardEvent;
 
-    private Card(String description, String displayNumber, boolean status)
+    private Card(String description, String displayNumber, CardEvent cardEvent)
     {
         this.description = description;
         this.displayNumber = displayNumber;
-        this.status = status;
+        this.cardEvent = cardEvent;
     }
 
-    public static Card getInstance(String description, String displayNumber, boolean status)
+    public static Card getInstance(String description, String displayNumber, CardEvent cardEvent)
     {
-        return new Card(description, displayNumber, status);
+        return new Card(description, displayNumber, cardEvent);
     }
 
     public String getDescription()
@@ -31,8 +31,8 @@ class Card
         return displayNumber;
     }
 
-    public boolean getStatus()
+    public CardEvent getCardEvent()
     {
-        return status;
+        return cardEvent;
     }
 }

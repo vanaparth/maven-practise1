@@ -21,7 +21,25 @@ public enum Metric
     IREPORTER_REPORTS_RECORDS_SENT(""),
     IREPORTER_REPORTS_RECORDS_FAILED(""),
     IREPORTER_REPORTS_RECORDS_PENDING(""),
-    IREPORTER_REPORTS_RECORDS_LOST("");
+    IREPORTER_REPORTS_RECORDS_LOST(""),
+
+    // Oslo IReporter Reports Metrics for Hubble
+    PAYMENT_REPORTS_RECORDS_SENT("kpi.ireporter.transactions.published.oslo"),
+    PAYMENT_REPORTS_MESSAGES_SENT("kpi.ireporter.messages.published.oslo"),
+    PAYMENT_REPORTS_RECORDS_FAILED("kpi.ireporter.transactions.rejected.oslo"),
+    PAYMENT_REPORTS_MESSAGES_FAILED("kpi.ireporter.messages.rejected.oslo"),
+    PAYMENT_REPORTS_CONFIGURATION_REQUESTED("kpi.ireporter.configuration.fetched.oslo"),
+    PAYMENT_REPORTS_CONFIGURATION_CHANGED("kpi.ireporter.configuration.changed.oslo"),
+    // Oslo IReporter Audit Metrics for Hubble
+    PAYMENT_AUDIT_RECORDS_SENT("kpi.ireporter.transactions.published.audit.oslo"),
+    PAYMENT_AUDIT_RECORDS_FAILED("kpi.ireporter.transactions.rejected.audit.oslo"),
+    PAYMENT_AUDIT_CONFIGURATION_REQUESTED("kpi.ireporter.configuration.fetched.audit.oslo"),
+    PAYMENT_AUDIT_CONFIGURATION_CHANGED("kpi.ireporter.configuration.changed.audit.oslo"),
+    // Oslo IReporter Reports Metrics for IReporter
+    PAYMENT_IREPORTER_REPORTS_RECORDS_SENT(""),
+    PAYMENT_IREPORTER_REPORTS_RECORDS_FAILED(""),
+    PAYMENT_IREPORTER_REPORTS_RECORDS_PENDING(""),
+    PAYMENT_IREPORTER_REPORTS_RECORDS_LOST("");
 
     private final String kpi;
 

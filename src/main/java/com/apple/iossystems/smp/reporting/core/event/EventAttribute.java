@@ -36,7 +36,8 @@ public enum EventAttribute
     TRANSACTION_STATUS("tst"),
     // Email
     ATHENA_CARD_EVENT("athena_card_event"),
-    MANAGE_CARD_EVENT("manage_card_event");
+    MANAGE_CARD_EVENT("manage_card_event"),
+    MANAGE_CARD_EVENT_SOURCE("manage_card_event_source");
 
     private final String key;
 

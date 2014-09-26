@@ -7,6 +7,7 @@ import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
 import org.apache.log4j.Logger;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -52,16 +53,45 @@ public class EmailPublishService
 
     private CardEventRecord getCardEventRecord(EmailRecord emailRecord)
     {
-        List<Card> cards = emailRecord.getCards();
-
-        if (cards != null)
+        if (emailRecord.getCards() != null)
         {
-            return CardEventRecord.getCardEventRecord(cards);
+            return CardEventRecord.getCardEventRecord(filterCards(emailRecord));
         }
         else
         {
             return CardEventRecord.getInstance();
         }
+    }
+
+    private List<Card> filterCards(EmailRecord emailRecord)
+    {
+        SMPCardEvent smpCardEvent = emailRecord.getSMPCardEvent();
+
+        boolean doFilter = ((smpCardEvent == SMPCardEvent.SUSPEND_CARD) || (smpCardEvent == SMPCardEvent.UNLINK_CARD) || (smpCardEvent == SMPCardEvent.RESUME_CARD));
+
+        List<Card> cards = emailRecord.getCards();
+
+        List<Card> filteredCards = new ArrayList<Card>();
+
+        if (cards != null)
+        {
+            for (Card card : cards)
+            {
+                if ((!doFilter) || (doFilter && hasValidCardEventSource(card)))
+                {
+                    filteredCards.add(card);
+                }
+            }
+        }
+
+        return filteredCards;
+    }
+
+    private boolean hasValidCardEventSource(Card card)
+    {
+        CardEvent cardEvent = card.getCardEvent();
+
+        return ((cardEvent == null) || (cardEvent.getCardEventSource() == CardEventSource.FMIP));
     }
 
     private void sendRequest(EmailRecord emailRecord) throws Exception

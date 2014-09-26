@@ -1,7 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.iossystems.smp.reporting.core.event.*;
-import com.google.gson.GsonBuilder;
 
 import java.util.*;
 
@@ -52,8 +51,9 @@ public class SMPEmailEvent
 
                 String dpanId = record.getAttributeValue(EventAttribute.DPAN_ID.key());
                 boolean status = CardEventStatus.hasValidCardStatus(record);
+                CardEventSource cardEventSource = CardEventSource.getSource(record.getAttributeValue(EventAttribute.MANAGE_CARD_EVENT_SOURCE.key()));
 
-                groupRecord.addCardEvent(CardEvent.getInstance(dpanId, status));
+                groupRecord.addCardEvent(CardEvent.getInstance(dpanId, status, cardEventSource));
             }
         }
 
@@ -63,7 +63,7 @@ public class SMPEmailEvent
         {
             EventRecord eventRecord = groupRecord.eventRecord;
 
-            eventRecord.setAttributeValue(CARD_EVENTS_KEY, new GsonBuilder().create().toJson(groupRecord.cardEvents, List.class));
+            eventRecord.setAttributeValue(CARD_EVENTS_KEY, CardEvent.getGson().toJson(groupRecord.cardEvents, List.class));
 
             outputRecords.add(eventRecord);
         }
@@ -95,7 +95,7 @@ public class SMPEmailEvent
 
         if (json != null)
         {
-            cardEvents = Arrays.asList(new GsonBuilder().create().fromJson(json, CardEvent[].class));
+            cardEvents = Arrays.asList(CardEvent.getGson().fromJson(json, CardEvent[].class));
         }
         else
         {

@@ -74,20 +74,13 @@ public class SMPEventExchangeManager
 
     private void startSMPEventSubscribers()
     {
-        try
-        {
-            IReporterService service = IReporterService.getInstance();
+        IReporterService service = IReporterService.getInstance();
 
-            IReporterEventSubscriberService.getInstance(EventType.REPORTS.getQueueName(), service).begin();
+        IReporterEventSubscriberService.getInstance(EventType.REPORTS.getQueueName(), service).begin();
 
-            IReporterEventSubscriberService.getInstance(EventType.PAYMENT.getQueueName(), service).begin();
+        IReporterEventSubscriberService.getInstance(EventType.PAYMENT.getQueueName(), service).begin();
 
-            IReporterEventSubscriberService.getInstance(EventType.EMAIL.getQueueName(), service).begin();
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e);
-        }
+        IReporterEventSubscriberService.getInstance(EventType.EMAIL.getQueueName(), service).begin();
     }
 
     public void start()

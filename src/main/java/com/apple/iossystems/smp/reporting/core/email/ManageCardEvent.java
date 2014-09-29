@@ -16,6 +16,7 @@ public class ManageCardEvent
     private final String cardHolderEmail;
     private final String locale;
     private final String deviceName;
+    private final String deviceImageUrl;
 
     private ManageCardEvent(Builder builder)
     {
@@ -23,6 +24,7 @@ public class ManageCardEvent
         cardHolderEmail = builder.cardHolderEmail;
         locale = builder.locale;
         deviceName = builder.deviceName;
+        deviceImageUrl = builder.deviceImageUrl;
     }
 
     public String getCardHolderName()
@@ -45,6 +47,11 @@ public class ManageCardEvent
         return deviceName;
     }
 
+    public String getDeviceImageUrl()
+    {
+        return deviceImageUrl;
+    }
+
     private static class Builder
     {
         private String firstName;
@@ -52,6 +59,7 @@ public class ManageCardEvent
         private String cardHolderEmail;
         private String locale;
         private String deviceName;
+        private String deviceImageUrl;
 
         private Builder()
         {
@@ -84,6 +92,12 @@ public class ManageCardEvent
         private Builder deviceName(String value)
         {
             deviceName = value;
+            return this;
+        }
+
+        public Builder deviceImageUrl(String value)
+        {
+            deviceImageUrl = value;
             return this;
         }
 
@@ -122,6 +136,7 @@ public class ManageCardEvent
     private static final String CARD_HOLDER_EMAIL = "customerEmail";
     private static final String LOCALE = "customerLocale";
     private static final String DEVICE_NAME = "deviceName";
+    private static final String DEVICE_IMAGE_URL = "deviceImageURL";
 
     public static String toJson(Map<String, String> map)
     {
@@ -132,17 +147,9 @@ public class ManageCardEvent
         JsonObjectWriter.addProperty(jsonObject, CARD_HOLDER_EMAIL, map.get(CARD_HOLDER_EMAIL));
         JsonObjectWriter.addProperty(jsonObject, LOCALE, map.get(LOCALE));
         JsonObjectWriter.addProperty(jsonObject, DEVICE_NAME, map.get(DEVICE_NAME));
+        JsonObjectWriter.addProperty(jsonObject, DEVICE_IMAGE_URL, map.get(DEVICE_IMAGE_URL));
 
         return jsonObject.toString();
-    }
-
-    private static Gson getGson()
-    {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-
-        gsonBuilder.registerTypeAdapter(ManageCardEvent.class, new ManageCardEventAdapter());
-
-        return gsonBuilder.create();
     }
 
     public static ManageCardEvent fromJson(String json)
@@ -157,6 +164,15 @@ public class ManageCardEvent
         }
     }
 
+    private static Gson getGson()
+    {
+        GsonBuilder gsonBuilder = new GsonBuilder();
+
+        gsonBuilder.registerTypeAdapter(ManageCardEvent.class, new ManageCardEventAdapter());
+
+        return gsonBuilder.create();
+    }
+
     private static class ManageCardEventAdapter implements JsonDeserializer<ManageCardEvent>
     {
         @Override
@@ -169,12 +185,14 @@ public class ManageCardEvent
             String cardHolderEmail = JsonObjectReader.getAsString(jsonObject, CARD_HOLDER_EMAIL);
             String locale = JsonObjectReader.getAsString(jsonObject, LOCALE);
             String deviceName = JsonObjectReader.getAsString(jsonObject, DEVICE_NAME);
+            String deviceImageUrl = JsonObjectReader.getAsString(jsonObject, DEVICE_IMAGE_URL);
 
             return new Builder().firstName(firstName).
                     lastName(lastName).
                     cardHolderEmail(cardHolderEmail).
                     locale(locale).
-                    deviceName(deviceName).build();
+                    deviceName(deviceName).
+                    deviceImageUrl(deviceImageUrl).build();
         }
     }
 }

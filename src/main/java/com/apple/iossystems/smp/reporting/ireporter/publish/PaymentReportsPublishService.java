@@ -8,11 +8,11 @@ import com.apple.iossystems.smp.reporting.ireporter.configuration.PaymentReports
  */
 public class PaymentReportsPublishService extends IReporterPublishService
 {
-    private PaymentReportsPublishService() throws Exception
+    private PaymentReportsPublishService()
     {
     }
 
-    public static PaymentReportsPublishService getInstance() throws Exception
+    public static PaymentReportsPublishService getInstance()
     {
         return new PaymentReportsPublishService();
     }

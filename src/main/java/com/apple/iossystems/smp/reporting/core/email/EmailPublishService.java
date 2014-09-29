@@ -2,6 +2,7 @@ package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.iossystems.smp.email.service.impl.ssp.domain.*;
 import com.apple.iossystems.smp.email.service.impl.ssp.handler.*;
+import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
@@ -21,12 +22,7 @@ public class EmailPublishService
     {
     }
 
-    public static EmailPublishService getInstance()
-    {
-        return new EmailPublishService();
-    }
-
-    public void send(EventRecords records)
+    public static void send(EventRecords records)
     {
         for (EventRecord record : records.getList())
         {
@@ -34,7 +30,7 @@ public class EmailPublishService
         }
     }
 
-    private void sendEventRecord(EventRecord record)
+    private static void sendEventRecord(EventRecord record)
     {
         try
         {
@@ -51,7 +47,7 @@ public class EmailPublishService
         }
     }
 
-    private CardEventRecord getCardEventRecord(EmailRecord emailRecord)
+    private static CardEventRecord getCardEventRecord(EmailRecord emailRecord)
     {
         if (emailRecord.getCards() != null)
         {
@@ -63,7 +59,7 @@ public class EmailPublishService
         }
     }
 
-    private List<Card> filterCards(EmailRecord emailRecord)
+    private static List<Card> filterCards(EmailRecord emailRecord)
     {
         SMPCardEvent smpCardEvent = emailRecord.getSMPCardEvent();
 
@@ -87,14 +83,14 @@ public class EmailPublishService
         return filteredCards;
     }
 
-    private boolean hasValidCardEventSource(Card card)
+    private static boolean hasValidCardEventSource(Card card)
     {
         CardEvent cardEvent = card.getCardEvent();
 
         return ((cardEvent == null) || (cardEvent.getCardEventSource() == CardEventSource.FMIP));
     }
 
-    private void sendRequest(EmailRecord emailRecord) throws Exception
+    private static void sendRequest(EmailRecord emailRecord) throws Exception
     {
         SMPCardEvent smpCardEvent = emailRecord.getSMPCardEvent();
 
@@ -102,9 +98,6 @@ public class EmailPublishService
 
         List<SMPEmailCardData> successCards = cardEventRecord.getSuccessCards();
         List<SMPEmailCardData> failedCards = cardEventRecord.getFailedCards();
-
-        // Logging for email tests
-        Logger.getLogger(EmailPublishService.class).info("Sending email for " + smpCardEvent.name()  + "\t" + emailRecord.getCardHolderName() + "\t" + emailRecord.getCardHolderEmail() + "\t" + emailRecord.getConversationId() + "\t" + emailRecord.getDeviceName() + "\t" + emailRecord.getDeviceType());
 
         if (smpCardEvent == SMPCardEvent.PROVISION_CARD)
         {
@@ -119,13 +112,13 @@ public class EmailPublishService
         {
             if (cardEventRecord.isSuccessful())
             {
-                SuspendEmailRequest request = new SuspendEmailRequest(emailRecord.getDeviceName(), successCards, emailRecord.getDate(), emailRecord.getCardHolderName(), emailRecord.getConversationId(), emailRecord.getCardHolderEmail(), emailRecord.getDsid(), emailRecord.getLocale(), emailRecord.getDeviceType(),null);
+                SuspendEmailRequest request = new SuspendEmailRequest(emailRecord.getDeviceName(), successCards, emailRecord.getDate(), emailRecord.getCardHolderName(), emailRecord.getConversationId(), emailRecord.getCardHolderEmail(), emailRecord.getDsid(), emailRecord.getLocale(), emailRecord.getDeviceType(), emailRecord.getDeviceImageUrl());
 
                 new SMPSuccessSuspendMailHandler(request).sendEmail();
             }
             else if (cardEventRecord.hasPartialSuccess())
             {
-                PartialSuspendEmailRequest request = new PartialSuspendEmailRequest(emailRecord.getDeviceName(), successCards, emailRecord.getDate(), emailRecord.getCardHolderName(), emailRecord.getConversationId(), emailRecord.getCardHolderEmail(), emailRecord.getLocale(), emailRecord.getDsid(), emailRecord.getDeviceType(), failedCards, null);
+                PartialSuspendEmailRequest request = new PartialSuspendEmailRequest(emailRecord.getDeviceName(), successCards, emailRecord.getDate(), emailRecord.getCardHolderName(), emailRecord.getConversationId(), emailRecord.getCardHolderEmail(), emailRecord.getLocale(), emailRecord.getDsid(), emailRecord.getDeviceType(), failedCards, emailRecord.getDeviceImageUrl());
 
                 new SMPPartialSuspendMailHandler(request).sendEmail();
             }
@@ -134,16 +127,41 @@ public class EmailPublishService
         {
             if (cardEventRecord.isSuccessful())
             {
-                RemoveEmailRequest request = new RemoveEmailRequest(emailRecord.getDeviceName(), successCards, emailRecord.getDate(), emailRecord.getCardHolderName(), emailRecord.getConversationId(), emailRecord.getCardHolderEmail(), emailRecord.getLocale(), emailRecord.getDeviceType(), emailRecord.getDsid(), null);
+                RemoveEmailRequest request = new RemoveEmailRequest(emailRecord.getDeviceName(), successCards, emailRecord.getDate(), emailRecord.getCardHolderName(), emailRecord.getConversationId(), emailRecord.getCardHolderEmail(), emailRecord.getLocale(), emailRecord.getDeviceType(), emailRecord.getDsid(), emailRecord.getDeviceImageUrl());
 
                 new SMPSuccessRemoveMailHandler(request).sendEmail();
             }
             else if (cardEventRecord.hasPartialSuccess())
             {
-                PartialRemoveEmailRequest request = new PartialRemoveEmailRequest(emailRecord.getDeviceName(), successCards, emailRecord.getDate(), emailRecord.getCardHolderName(), emailRecord.getConversationId(), emailRecord.getCardHolderEmail(), emailRecord.getLocale(), emailRecord.getDsid(), emailRecord.getDeviceType(), failedCards,null);
+                PartialRemoveEmailRequest request = new PartialRemoveEmailRequest(emailRecord.getDeviceName(), successCards, emailRecord.getDate(), emailRecord.getCardHolderName(), emailRecord.getConversationId(), emailRecord.getCardHolderEmail(), emailRecord.getLocale(), emailRecord.getDsid(), emailRecord.getDeviceType(), failedCards, emailRecord.getDeviceImageUrl());
 
                 new SMPPartialRemoveMailHandler(request).sendEmail();
             }
+        }
+
+        log(emailRecord);
+    }
+
+    private static void log(EmailRecord emailRecord)
+    {
+        // Logging for email tests
+        SMPCardEvent smpCardEvent = emailRecord.getSMPCardEvent();
+        String smpCardEventName = (smpCardEvent != null) ? smpCardEvent.name() : "Unknown Event";
+
+        LOGGER.info("Sending email for " + smpCardEventName);
+
+        if (ApplicationConfigurationManager.getIReporterURL().contains("https://icloud4-e3.icloud.com"))
+        {
+            LOGGER.info(emailRecord.getCardHolderName() + "\t" +
+                    emailRecord.getCardHolderEmail() + "\t" +
+                    emailRecord.getDate() + "\t" +
+                    emailRecord.isFirstProvisionEvent() + "\t" +
+                    emailRecord.getConversationId() + "\t" +
+                    emailRecord.getDsid() + "\t" +
+                    emailRecord.getLocale() + "\t" +
+                    emailRecord.getDeviceName() + "\t" +
+                    emailRecord.getDeviceType() + "\t" +
+                    emailRecord.getDeviceImageUrl());
         }
     }
 }

@@ -9,11 +9,11 @@ public class IReporterService
 {
     private PublishTaskHandler publishTaskHandler = PublishTaskHandler.getInstance();
 
-    private IReporterService() throws Exception
+    private IReporterService()
     {
     }
 
-    public static IReporterService getInstance() throws Exception
+    public static IReporterService getInstance()
     {
         return new IReporterService();
     }

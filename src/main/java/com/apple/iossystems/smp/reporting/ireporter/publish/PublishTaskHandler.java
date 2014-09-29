@@ -1,13 +1,11 @@
 package com.apple.iossystems.smp.reporting.ireporter.publish;
 
-import com.apple.iossystems.smp.reporting.core.analytics.Metric;
 import com.apple.iossystems.smp.reporting.core.analytics.Statistics;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledNotification;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledTaskHandler;
 import com.apple.iossystems.smp.reporting.core.email.EmailPublishService;
 import com.apple.iossystems.smp.reporting.core.event.*;
 import com.apple.iossystems.smp.reporting.core.hubble.HubbleAnalytics;
-import com.apple.iossystems.smp.reporting.ireporter.configuration.ConfigurationEvent;
 import com.apple.iossystems.smp.reporting.ireporter.json.IReporterJsonBuilder;
 
 import java.util.List;
@@ -22,7 +20,6 @@ public class PublishTaskHandler implements ScheduledTaskHandler
     private IReporterPublishService reportsPublishService = ReportsPublishService.getInstance();
     private IReporterPublishService auditPublishService = AuditPublishService.getInstance();
     private IReporterPublishService paymentReportsPublishService = PaymentReportsPublishService.getInstance();
-    private EmailPublishService emailPublishService = EmailPublishService.getInstance();
 
     private Statistics statistics = Statistics.getInstance();
 
@@ -33,11 +30,11 @@ public class PublishTaskHandler implements ScheduledTaskHandler
     private static final PublishMetric REPORTS_METRICS = PublishMetric.getReportsMetrics();
     private static final PublishMetric PAYMENT_REPORTS_METRICS = PublishMetric.getPaymentReportsMetrics();
 
-    private PublishTaskHandler() throws Exception
+    private PublishTaskHandler()
     {
     }
 
-    public static PublishTaskHandler getInstance() throws Exception
+    public static PublishTaskHandler getInstance()
     {
         PublishTaskHandler publishTaskHandler = new PublishTaskHandler();
 
@@ -62,7 +59,6 @@ public class PublishTaskHandler implements ScheduledTaskHandler
         handleEmailEvent();
         handlePublishEvent();
         handleAuditEvent();
-        handleConfigurationEvent();
     }
 
     private boolean reportsReady(IReporterPublishService service, BlockingQueue<EventRecord> queue)
@@ -174,33 +170,13 @@ public class PublishTaskHandler implements ScheduledTaskHandler
         }
     }
 
-    private void handleConfigurationEvent()
-    {
-        logConfigurationEvent(reportsPublishService.getConfigurationService().getConfigurationEvent(), REPORTS_METRICS.getReportsConfigurationRequestedMetric(), REPORTS_METRICS.getReportsConfigurationChangedMetric());
-        logConfigurationEvent(paymentReportsPublishService.getConfigurationService().getConfigurationEvent(), PAYMENT_REPORTS_METRICS.getReportsConfigurationRequestedMetric(), PAYMENT_REPORTS_METRICS.getReportsConfigurationChangedMetric());
-        logConfigurationEvent(auditPublishService.getConfigurationService().getConfigurationEvent(), REPORTS_METRICS.getAuditConfigurationRequestedMetric(), REPORTS_METRICS.getAuditConfigurationChangedMetric());
-    }
-
-    private void logConfigurationEvent(ConfigurationEvent configurationEvent, Metric configurationRequestedMetric, Metric configurationChangedMetric)
-    {
-        if (configurationEvent.isUpdated())
-        {
-            HubbleAnalytics.incrementCountForEvent(configurationRequestedMetric);
-        }
-
-        if (configurationEvent.isModified())
-        {
-            HubbleAnalytics.incrementCountForEvent(configurationChangedMetric);
-        }
-    }
-
     private void handleEmailEvent()
     {
         EventRecords records = emptyQueue(emailReportsQueue);
 
         if (records.size() > 0)
         {
-            emailPublishService.send(records);
+            EmailPublishService.send(records);
         }
     }
 

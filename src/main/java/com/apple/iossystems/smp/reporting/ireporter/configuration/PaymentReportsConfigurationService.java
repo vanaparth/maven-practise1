@@ -19,4 +19,10 @@ public class PaymentReportsConfigurationService extends IReporterConfigurationSe
     {
         return IReporterConfigurationFactory.loadPaymentReportsConfiguration();
     }
+
+    @Override
+    ConfigurationMetric getConfigurationMetric()
+    {
+        return ConfigurationMetric.PAYMENT_REPORTS;
+    }
 }

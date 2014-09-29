@@ -8,11 +8,11 @@ import com.apple.iossystems.smp.reporting.ireporter.configuration.ReportsConfigu
  */
 public class ReportsPublishService extends IReporterPublishService
 {
-    private ReportsPublishService() throws Exception
+    private ReportsPublishService()
     {
     }
 
-    public static ReportsPublishService getInstance() throws Exception
+    public static ReportsPublishService getInstance()
     {
         return new ReportsPublishService();
     }

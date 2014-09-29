@@ -19,6 +19,7 @@ class EmailRecord
     private final String cardHolderEmail;
     private final String deviceName;
     private final String deviceType;
+    private final String deviceImageUrl;
     private final String dsid;
     private final String locale;
 
@@ -35,6 +36,7 @@ class EmailRecord
         cardHolderEmail = builder.cardHolderEmail;
         deviceName = builder.deviceName;
         deviceType = builder.deviceType;
+        deviceImageUrl = builder.deviceImageUrl;
         dsid = builder.dsid;
         locale = builder.locale;
 
@@ -70,6 +72,11 @@ class EmailRecord
     public String getDeviceType()
     {
         return deviceType;
+    }
+
+    public String getDeviceImageUrl()
+    {
+        return deviceImageUrl;
     }
 
     public String getDsid()
@@ -115,6 +122,7 @@ class EmailRecord
         private String cardHolderEmail;
         private String deviceName;
         private String deviceType;
+        private String deviceImageUrl;
         private String dsid;
         private String locale;
 
@@ -167,6 +175,12 @@ class EmailRecord
             return this;
         }
 
+        public Builder deviceImageUrl(String value)
+        {
+            deviceImageUrl = value;
+            return this;
+        }
+
         public Builder dsid(String value)
         {
             dsid = value;
@@ -196,6 +210,11 @@ class EmailRecord
             if (timestamp == null)
             {
                 timestamp = String.valueOf(System.currentTimeMillis());
+            }
+
+            if (deviceImageUrl == null)
+            {
+                deviceImageUrl = "https://statici.icloud.com/fmipmobile/deviceImages-4.0/iPhone/iPhone7,1-e1e4e3-e1ccb5/online-nolocation_iphone__2x.png";
             }
         }
 

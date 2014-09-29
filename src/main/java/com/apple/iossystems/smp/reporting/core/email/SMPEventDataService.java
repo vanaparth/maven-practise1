@@ -7,6 +7,8 @@ import com.apple.iossystems.smp.persistence.entity.*;
 import com.apple.iossystems.smp.service.PassManagementService;
 import org.apache.log4j.Logger;
 
+import java.util.Collection;
+
 /**
  * @author Toch
  */
@@ -79,13 +81,18 @@ class SMPEventDataService
     {
         String value = null;
 
-        for (PanMetadata panMetadata : passbookPass.getPanMetadataCollection())
-        {
-            if (panMetadata.getKey().equals(key))
-            {
-                value = panMetadata.getValue();
+        Collection<PanMetadata> panMetadataCollection = passbookPass.getPanMetadataCollection();
 
-                break;
+        if (panMetadataCollection != null)
+        {
+            for (PanMetadata panMetadata : panMetadataCollection)
+            {
+                if ((panMetadata != null) && (key.equals(panMetadata.getKey())))
+                {
+                    value = panMetadata.getValue();
+
+                    break;
+                }
             }
         }
 

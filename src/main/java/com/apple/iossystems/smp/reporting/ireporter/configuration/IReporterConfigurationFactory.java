@@ -45,7 +45,7 @@ public class IReporterConfigurationFactory
     {
         try
         {
-            StockholmHTTPResponse response = SMPHttpClient.getInstance().request(HttpRequest.getInstance(configurationType.getConfigurationURL(), "GET", null, null, null, null));
+            StockholmHTTPResponse response = SMPHttpClient.request(HttpRequest.getInstance(configurationType.getConfigurationURL(), "GET", null, null, null, null));
 
             if (response != null)
             {

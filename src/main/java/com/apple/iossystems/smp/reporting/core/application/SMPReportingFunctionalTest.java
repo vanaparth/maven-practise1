@@ -118,7 +118,7 @@ public class SMPReportingFunctionalTest
 
         try
         {
-            SMPHttpClient.getInstance().request(httpRequest);
+            SMPHttpClient.request(httpRequest);
         }
         catch (Exception e)
         {
@@ -130,7 +130,7 @@ public class SMPReportingFunctionalTest
     {
         try
         {
-            SMPHttpClient.getInstance().request(HttpRequest.getInstance(IReporterConfiguration.Type.REPORTS.getConfigurationURL(), "POST", null, null, "", null));
+            SMPHttpClient.request(HttpRequest.getInstance(IReporterConfiguration.Type.REPORTS.getConfigurationURL(), "POST", null, null, "", null));
         }
         catch (Exception e)
         {
@@ -152,7 +152,7 @@ public class SMPReportingFunctionalTest
     {
         try
         {
-            SMPHttpClient.getInstance().request(HttpRequest.getInstance(IReporterConfiguration.Type.REPORTS.getConfigurationURL(), "GET", null, null, null, null));
+            SMPHttpClient.request(HttpRequest.getInstance(IReporterConfiguration.Type.REPORTS.getConfigurationURL(), "GET", null, null, null, null));
         }
         catch (Exception e)
         {
@@ -173,7 +173,7 @@ public class SMPReportingFunctionalTest
 
         try
         {
-            SMPHttpClient.getInstance().request(httpRequest);
+            SMPHttpClient.request(httpRequest);
         }
         catch (Exception e)
         {
@@ -195,16 +195,9 @@ public class SMPReportingFunctionalTest
 
     private static void postRecords(EventRecords records)
     {
-        try
-        {
-            IReporterService iReporterService = IReporterService.getInstance();
+        IReporterService iReporterService = IReporterService.getInstance();
 
-            postRecords(iReporterService, records);
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e);
-        }
+        postRecords(iReporterService, records);
     }
 
     private static void postRecords(IReporterService iReporterService, EventRecords records)
@@ -238,7 +231,7 @@ public class SMPReportingFunctionalTest
 
         try
         {
-            StockholmHTTPResponse response = SMPHttpClient.getInstance().request(httpRequest);
+            StockholmHTTPResponse response = SMPHttpClient.request(httpRequest);
 
             System.out.println(response.getContent());
         }
@@ -261,7 +254,7 @@ public class SMPReportingFunctionalTest
 
         try
         {
-            SMPHttpClient.getInstance().request(httpRequest);
+            SMPHttpClient.request(httpRequest);
         }
         catch (Exception e)
         {

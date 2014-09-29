@@ -19,11 +19,9 @@ public abstract class IReporterPublishService
 
     private IReporterConfigurationService configurationService = getConfigurationService();
 
-    private SMPHttpClient httpClient = SMPHttpClient.getInstance();
-
     private long lastRequestTime;
 
-    IReporterPublishService() throws Exception
+    IReporterPublishService()
     {
     }
 
@@ -67,7 +65,7 @@ public abstract class IReporterPublishService
 
         try
         {
-            StockholmHTTPResponse response = httpClient.request(getHTTPRequest(data));
+            StockholmHTTPResponse response = SMPHttpClient.request(getHTTPRequest(data));
 
             if (response != null)
             {

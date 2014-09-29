@@ -126,7 +126,8 @@ public class IReporterConfiguration
 
     private boolean configurationEquals(IReporterConfiguration configuration)
     {
-        return ((publishURL.equalsIgnoreCase(configuration.publishURL)) &&
+        return ((configuration != null) &&
+                (publishURL.equalsIgnoreCase(configuration.publishURL)) &&
                 (publishKey.equalsIgnoreCase(configuration.publishKey)) &&
                 (contentType.equalsIgnoreCase(configuration.contentType)) &&
                 (publishEnabled == configuration.publishEnabled) &&
@@ -235,7 +236,7 @@ public class IReporterConfiguration
             int minPublishFrequency = 60 * 1000;
             int maxPublishFrequency = 60 * 60 * 1000;
             int minConfigurationReloadFrequency = 60 * 60 * 1000;
-            int maxConfigurationReloadFrequency = 24 * 60 * 60 * 1000;
+            int maxConfigurationReloadFrequency = 60 * 60 * 1000;
 
             if ((maxBatchSize < defaultMinBatchSize) || (maxBatchSize > defaultMaxBatchSize))
             {

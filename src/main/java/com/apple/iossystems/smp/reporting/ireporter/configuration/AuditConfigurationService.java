@@ -19,4 +19,10 @@ public class AuditConfigurationService extends IReporterConfigurationService
     {
         return IReporterConfigurationFactory.loadAuditConfiguration();
     }
+
+    @Override
+    ConfigurationMetric getConfigurationMetric()
+    {
+        return ConfigurationMetric.AUDIT;
+    }
 }

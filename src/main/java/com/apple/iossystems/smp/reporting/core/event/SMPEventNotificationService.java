@@ -61,10 +61,16 @@ public class SMPEventNotificationService
         }
     }
 
-
     private void publishEventRecord(EventRecord record)
     {
-        logService.logEvent("event", EventType.getLogLevel(record), MapToPair.toPairs(record.getData()));
+        try
+        {
+            logService.logEvent("event", EventType.getLogLevel(record), MapToPair.toPairs(record.getData()));
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+        }
     }
 
     private void publishEventRecords(EventRecords records)

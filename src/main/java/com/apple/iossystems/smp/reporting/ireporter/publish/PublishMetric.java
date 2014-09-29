@@ -23,11 +23,6 @@ class PublishMetric
     private final Metric auditRecordsSent;
     private final Metric auditRecordsFailed;
 
-    private final Metric reportsConfigurationRequested;
-    private final Metric reportsConfigurationChanged;
-    private final Metric auditConfigurationRequested;
-    private final Metric auditConfigurationChanged;
-
     private final Metric[] auditMetrics;
 
     private PublishMetric(Builder builder)
@@ -44,11 +39,6 @@ class PublishMetric
 
         auditRecordsSent = builder.auditRecordsSent;
         auditRecordsFailed = builder.auditRecordsFailed;
-
-        reportsConfigurationRequested = builder.reportsConfigurationRequested;
-        reportsConfigurationChanged = builder.reportsConfigurationChanged;
-        auditConfigurationRequested = builder.auditConfigurationRequested;
-        auditConfigurationChanged = builder.auditConfigurationChanged;
 
         auditMetrics = builder.auditMetrics;
     }
@@ -113,26 +103,6 @@ class PublishMetric
         return auditRecordsFailed;
     }
 
-    public Metric getReportsConfigurationRequestedMetric()
-    {
-        return reportsConfigurationRequested;
-    }
-
-    public Metric getReportsConfigurationChangedMetric()
-    {
-        return reportsConfigurationChanged;
-    }
-
-    public Metric getAuditConfigurationRequestedMetric()
-    {
-        return auditConfigurationRequested;
-    }
-
-    public Metric getAuditConfigurationChangedMetric()
-    {
-        return auditConfigurationChanged;
-    }
-
     public Metric[] getAuditMetrics()
     {
         return auditMetrics;
@@ -152,11 +122,6 @@ class PublishMetric
 
         private Metric auditRecordsSent;
         private Metric auditRecordsFailed;
-
-        private Metric reportsConfigurationRequested;
-        private Metric reportsConfigurationChanged;
-        private Metric auditConfigurationRequested;
-        private Metric auditConfigurationChanged;
 
         private Metric[] auditMetrics;
 
@@ -224,30 +189,6 @@ class PublishMetric
             return this;
         }
 
-        private Builder reportsConfigurationRequested(Metric value)
-        {
-            reportsConfigurationRequested = value;
-            return this;
-        }
-
-        private Builder reportsConfigurationChanged(Metric value)
-        {
-            reportsConfigurationChanged = value;
-            return this;
-        }
-
-        private Builder auditConfigurationRequested(Metric value)
-        {
-            auditConfigurationRequested = value;
-            return this;
-        }
-
-        private Builder auditConfigurationChanged(Metric value)
-        {
-            auditConfigurationChanged = value;
-            return this;
-        }
-
         private Builder auditMetrics(Metric[] value)
         {
             auditMetrics = value;
@@ -272,10 +213,6 @@ class PublishMetric
                 iReporterRecordsLost(Metric.IREPORTER_REPORTS_RECORDS_LOST).
                 auditRecordsSent(Metric.AUDIT_RECORDS_SENT).
                 auditRecordsFailed(Metric.AUDIT_RECORDS_FAILED).
-                reportsConfigurationRequested(Metric.REPORTS_CONFIGURATION_REQUESTED).
-                reportsConfigurationChanged(Metric.REPORTS_CONFIGURATION_CHANGED).
-                auditConfigurationRequested(Metric.AUDIT_CONFIGURATION_REQUESTED).
-                auditConfigurationChanged(Metric.AUDIT_CONFIGURATION_CHANGED).
                 auditMetrics(new Metric[]{
                         Metric.IREPORTER_REPORTS_RECORDS_SENT,
                         Metric.IREPORTER_REPORTS_RECORDS_FAILED,
@@ -296,10 +233,6 @@ class PublishMetric
                 iReporterRecordsLost(Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_LOST).
                 auditRecordsSent(Metric.PAYMENT_AUDIT_RECORDS_SENT).
                 auditRecordsFailed(Metric.PAYMENT_AUDIT_RECORDS_FAILED).
-                reportsConfigurationRequested(Metric.PAYMENT_REPORTS_CONFIGURATION_REQUESTED).
-                reportsConfigurationChanged(Metric.PAYMENT_REPORTS_CONFIGURATION_CHANGED).
-                auditConfigurationRequested(Metric.PAYMENT_AUDIT_CONFIGURATION_REQUESTED).
-                auditConfigurationChanged(Metric.PAYMENT_AUDIT_CONFIGURATION_CHANGED).
                 auditMetrics(new Metric[]{
                         Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_SENT,
                         Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_FAILED,

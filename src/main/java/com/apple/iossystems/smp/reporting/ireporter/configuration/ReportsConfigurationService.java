@@ -19,4 +19,10 @@ public class ReportsConfigurationService extends IReporterConfigurationService
     {
         return IReporterConfigurationFactory.loadReportsConfiguration();
     }
+
+    @Override
+    ConfigurationMetric getConfigurationMetric()
+    {
+        return ConfigurationMetric.REPORTS;
+    }
 }

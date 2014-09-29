@@ -8,11 +8,11 @@ import com.apple.iossystems.smp.reporting.ireporter.configuration.IReporterConfi
  */
 public class AuditPublishService extends IReporterPublishService
 {
-    private AuditPublishService() throws Exception
+    private AuditPublishService()
     {
     }
 
-    public static AuditPublishService getInstance() throws Exception
+    public static AuditPublishService getInstance()
     {
         return new AuditPublishService();
     }

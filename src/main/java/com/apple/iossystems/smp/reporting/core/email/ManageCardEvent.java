@@ -5,7 +5,8 @@ import com.apple.iossystems.smp.reporting.core.util.JsonObjectWriter;
 import com.google.gson.*;
 
 import java.lang.reflect.Type;
-import java.util.Map;
+import java.util.Arrays;
+import java.util.List;
 
 /**
  * @author Toch
@@ -14,17 +15,25 @@ public class ManageCardEvent
 {
     private final String cardHolderName;
     private final String cardHolderEmail;
+    private final String dsid;
     private final String locale;
     private final String deviceName;
     private final String deviceImageUrl;
+    private final CardEventSource cardEventSource;
+    private final ManageCardAPI manageCardAPI;
+    private final List<CardEvent> cardEvents;
 
     private ManageCardEvent(Builder builder)
     {
-        cardHolderName = builder.getCardHolderName();
+        cardHolderName = builder.cardHolderName;
         cardHolderEmail = builder.cardHolderEmail;
+        dsid = builder.dsid;
         locale = builder.locale;
         deviceName = builder.deviceName;
         deviceImageUrl = builder.deviceImageUrl;
+        cardEventSource = builder.cardEventSource;
+        manageCardAPI = builder.manageCardAPI;
+        cardEvents = builder.cardEvents;
     }
 
     public String getCardHolderName()
@@ -35,6 +44,11 @@ public class ManageCardEvent
     public String getCardHolderEmail()
     {
         return cardHolderEmail;
+    }
+
+    public String getDsid()
+    {
+        return dsid;
     }
 
     public String getLocale()
@@ -52,44 +66,67 @@ public class ManageCardEvent
         return deviceImageUrl;
     }
 
-    private static class Builder
+    public CardEventSource getCardEventSource()
     {
-        private String firstName;
-        private String lastName;
+        return cardEventSource;
+    }
+
+    public ManageCardAPI getManageCardAPI()
+    {
+        return manageCardAPI;
+    }
+
+    public List<CardEvent> getCardEvents()
+    {
+        return cardEvents;
+    }
+
+    public static Builder getBuilder()
+    {
+        return new Builder();
+    }
+
+    public static class Builder
+    {
+        private String cardHolderName;
         private String cardHolderEmail;
+        private String dsid;
         private String locale;
         private String deviceName;
         private String deviceImageUrl;
+        private CardEventSource cardEventSource;
+        private ManageCardAPI manageCardAPI;
+        private List<CardEvent> cardEvents;
 
         private Builder()
         {
         }
 
-        private Builder firstName(String value)
+        public Builder cardHolderName(String value)
         {
-            firstName = value;
+            cardHolderName = value;
             return this;
         }
 
-        private Builder lastName(String value)
-        {
-            lastName = value;
-            return this;
-        }
-
-        private Builder cardHolderEmail(String value)
+        public Builder cardHolderEmail(String value)
         {
             cardHolderEmail = value;
             return this;
         }
 
-        private Builder locale(String value)
+        public Builder dsid(String value)
+        {
+            dsid = value;
+            return this;
+        }
+
+        public Builder locale(String value)
         {
             locale = value;
             return this;
         }
 
-        private Builder deviceName(String value)
+        public Builder deviceName(String value)
         {
             deviceName = value;
             return this;
@@ -101,55 +138,37 @@ public class ManageCardEvent
             return this;
         }
 
-        private String getCardHolderName()
+        public Builder cardEventSource(CardEventSource value)
         {
-            String cardHolderName = null;
-
-            if (firstName != null)
-            {
-                cardHolderName = firstName;
-            }
-
-            if (lastName != null)
-            {
-                if (cardHolderName != null)
-                {
-                    cardHolderName += " " + lastName;
-                }
-                else
-                {
-                    cardHolderName = lastName;
-                }
-            }
-
-            return cardHolderName;
+            cardEventSource = value;
+            return this;
         }
 
-        private ManageCardEvent build()
+        public Builder manageCardAPI(ManageCardAPI value)
+        {
+            manageCardAPI = value;
+            return this;
+        }
+
+        public Builder cardEvents(List<CardEvent> value)
+        {
+            cardEvents = value;
+            return this;
+        }
+
+        public ManageCardEvent build()
         {
             return new ManageCardEvent(this);
         }
     }
 
-    private static final String FIRST_NAME = "customerFirstName";
-    private static final String LAST_NAME = "customerLastName";
-    private static final String CARD_HOLDER_EMAIL = "customerEmail";
-    private static final String LOCALE = "customerLocale";
-    private static final String DEVICE_NAME = "deviceName";
-    private static final String DEVICE_IMAGE_URL = "deviceImageURL";
-
-    public static String toJson(Map<String, String> map)
+    private static Gson getGson()
     {
-        JsonObject jsonObject = new JsonObject();
+        GsonBuilder gsonBuilder = new GsonBuilder();
 
-        JsonObjectWriter.addProperty(jsonObject, FIRST_NAME, map.get(FIRST_NAME));
-        JsonObjectWriter.addProperty(jsonObject, LAST_NAME, map.get(LAST_NAME));
-        JsonObjectWriter.addProperty(jsonObject, CARD_HOLDER_EMAIL, map.get(CARD_HOLDER_EMAIL));
-        JsonObjectWriter.addProperty(jsonObject, LOCALE, map.get(LOCALE));
-        JsonObjectWriter.addProperty(jsonObject, DEVICE_NAME, map.get(DEVICE_NAME));
-        JsonObjectWriter.addProperty(jsonObject, DEVICE_IMAGE_URL, map.get(DEVICE_IMAGE_URL));
+        gsonBuilder.registerTypeAdapter(ManageCardEvent.class, new ManageCardEventAdapter());
 
-        return jsonObject.toString();
+        return gsonBuilder.create();
     }
 
     public static ManageCardEvent fromJson(String json)
@@ -164,13 +183,33 @@ public class ManageCardEvent
         }
     }
 
-    private static Gson getGson()
+    public String toJson()
     {
-        GsonBuilder gsonBuilder = new GsonBuilder();
+        JsonObject jsonObject = new JsonObject();
 
-        gsonBuilder.registerTypeAdapter(ManageCardEvent.class, new ManageCardEventAdapter());
+        JsonObjectWriter.addProperty(jsonObject, "cardHolderName", cardHolderName);
+        JsonObjectWriter.addProperty(jsonObject, "cardHolderEmail", cardHolderEmail);
+        JsonObjectWriter.addProperty(jsonObject, "dsid", dsid);
+        JsonObjectWriter.addProperty(jsonObject, "locale", locale);
+        JsonObjectWriter.addProperty(jsonObject, "deviceName", deviceName);
+        JsonObjectWriter.addProperty(jsonObject, "deviceImageURL", deviceImageUrl);
 
-        return gsonBuilder.create();
+        if (cardEventSource != null)
+        {
+            JsonObjectWriter.addProperty(jsonObject, "cardEventSource", cardEventSource.getCode());
+        }
+
+        if (manageCardAPI != null)
+        {
+            JsonObjectWriter.addProperty(jsonObject, "manageCardAPI", manageCardAPI.getCode());
+        }
+
+        if ((cardEvents != null) && (!cardEvents.isEmpty()))
+        {
+            JsonObjectWriter.addProperty(jsonObject, "cardEvents", CardEvent.getGson().toJson(cardEvents, List.class));
+        }
+
+        return jsonObject.toString();
     }
 
     private static class ManageCardEventAdapter implements JsonDeserializer<ManageCardEvent>
@@ -180,19 +219,49 @@ public class ManageCardEvent
         {
             JsonObject jsonObject = jsonElement.getAsJsonObject();
 
-            String firstName = JsonObjectReader.getAsString(jsonObject, FIRST_NAME);
-            String lastName = JsonObjectReader.getAsString(jsonObject, LAST_NAME);
-            String cardHolderEmail = JsonObjectReader.getAsString(jsonObject, CARD_HOLDER_EMAIL);
-            String locale = JsonObjectReader.getAsString(jsonObject, LOCALE);
-            String deviceName = JsonObjectReader.getAsString(jsonObject, DEVICE_NAME);
-            String deviceImageUrl = JsonObjectReader.getAsString(jsonObject, DEVICE_IMAGE_URL);
+            String cardHolderName = JsonObjectReader.getAsString(jsonObject, "cardHolderName");
+            String cardHolderEmail = JsonObjectReader.getAsString(jsonObject, "cardHolderEmail");
+            String dsid = JsonObjectReader.getAsString(jsonObject, "dsid");
+            String locale = JsonObjectReader.getAsString(jsonObject, "locale");
+            String deviceName = JsonObjectReader.getAsString(jsonObject, "deviceName");
+            String deviceImageUrl = JsonObjectReader.getAsString(jsonObject, "deviceImageURL");
 
-            return new Builder().firstName(firstName).
-                    lastName(lastName).
+            CardEventSource cardEventSource = null;
+
+            String cardEventSourceCode = JsonObjectReader.getAsString(jsonObject, "cardEventSource");
+
+            if (cardEventSourceCode != null)
+            {
+                cardEventSource = CardEventSource.getCardEventSource(cardEventSourceCode);
+            }
+
+            ManageCardAPI manageCardAPI = null;
+
+            String manageCardApiCode = JsonObjectReader.getAsString(jsonObject, "manageCardAPI");
+
+            if (manageCardApiCode != null)
+            {
+                manageCardAPI = ManageCardAPI.getManageCardAPI(manageCardApiCode);
+            }
+
+            List<CardEvent> cardEvents = null;
+
+            JsonArray jsonArray = JsonObjectReader.getAsJsonArray(jsonObject, "cardEvents");
+
+            if (jsonArray != null)
+            {
+                cardEvents = Arrays.asList(CardEvent.getGson().fromJson(jsonArray, CardEvent[].class));
+            }
+
+            return new Builder().cardHolderName(cardHolderName).
                     cardHolderEmail(cardHolderEmail).
+                    dsid(dsid).
                     locale(locale).
                     deviceName(deviceName).
-                    deviceImageUrl(deviceImageUrl).build();
+                    deviceImageUrl(deviceImageUrl).
+                    cardEventSource(cardEventSource).
+                    manageCardAPI(manageCardAPI).
+                    cardEvents(cardEvents).build();
         }
     }
 }

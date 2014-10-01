@@ -26,6 +26,8 @@ class EmailRecord
     private final boolean firstProvisionEvent;
     private final List<Card> cards;
 
+    private final ManageCardEvent manageCardEvent;
+
     private EmailRecord(Builder builder)
     {
         smpCardEvent = builder.smpCardEvent;
@@ -42,6 +44,8 @@ class EmailRecord
 
         firstProvisionEvent = builder.firstProvisionEvent;
         cards = builder.cards;
+
+        manageCardEvent = builder.manageCardEvent;
     }
 
     public SMPCardEvent getSMPCardEvent()
@@ -99,6 +103,11 @@ class EmailRecord
         return cards;
     }
 
+    public ManageCardEvent getManageCardEvent()
+    {
+        return manageCardEvent;
+    }
+
     public Date getDate()
     {
         Calendar calendar = Calendar.getInstance();
@@ -128,6 +137,8 @@ class EmailRecord
 
         private boolean firstProvisionEvent;
         private List<Card> cards;
+
+        private ManageCardEvent manageCardEvent;
 
         private Builder()
         {
@@ -202,6 +213,12 @@ class EmailRecord
         public Builder cards(List<Card> value)
         {
             cards = value;
+            return this;
+        }
+
+        public Builder manageCardEvent(ManageCardEvent value)
+        {
+            manageCardEvent = value;
             return this;
         }
 

@@ -12,19 +12,17 @@ import java.lang.reflect.Type;
 class CardEvent
 {
     private final String dpanId;
-    private final boolean status;
-    private final CardEventSource cardEventSource;
+    private final boolean eventStatus;
 
-    private CardEvent(String dpanId, boolean status, CardEventSource cardEventSource)
+    private CardEvent(String dpanId, boolean eventStatus)
     {
         this.dpanId = dpanId;
-        this.status = status;
-        this.cardEventSource = cardEventSource;
+        this.eventStatus = eventStatus;
     }
 
-    public static CardEvent getInstance(String dpanId, boolean status, CardEventSource cardEventSource)
+    public static CardEvent getInstance(String dpanId, boolean eventStatus)
     {
-        return new CardEvent(dpanId, status, cardEventSource);
+        return new CardEvent(dpanId, eventStatus);
     }
 
     public String getDpanId()
@@ -32,14 +30,18 @@ class CardEvent
         return dpanId;
     }
 
-    public boolean getStatus()
+    public boolean getEventStatus()
     {
-        return status;
+        return eventStatus;
     }
 
-    public CardEventSource getCardEventSource()
+    public static Gson getGson()
     {
-        return cardEventSource;
+        GsonBuilder gsonBuilder = new GsonBuilder();
+
+        gsonBuilder.registerTypeAdapter(CardEvent.class, new CardEventAdapter());
+
+        return gsonBuilder.create();
     }
 
     private static class CardEventAdapter implements JsonSerializer<CardEvent>, JsonDeserializer<CardEvent>
@@ -50,12 +52,7 @@ class CardEvent
             JsonObject jsonObject = new JsonObject();
 
             JsonObjectWriter.addProperty(jsonObject, "dpanId", cardEvent.dpanId);
-            JsonObjectWriter.addProperty(jsonObject, "status", cardEvent.status);
-
-            if (cardEvent.cardEventSource != null)
-            {
-                JsonObjectWriter.addProperty(jsonObject, "cardEventSourceCode", cardEvent.cardEventSource.getCode());
-            }
+            JsonObjectWriter.addProperty(jsonObject, "eventStatus", cardEvent.eventStatus);
 
             return jsonObject;
         }
@@ -66,19 +63,9 @@ class CardEvent
             JsonObject jsonObject = jsonElement.getAsJsonObject();
 
             String dpanId = JsonObjectReader.getAsString(jsonObject, "dpanId");
-            boolean status = JsonObjectReader.getAsBoolean(jsonObject, "status");
-            CardEventSource cardEventSource = CardEventSource.getSource(JsonObjectReader.getAsString(jsonObject, "cardEventSourceCode"));
+            boolean eventStatus = JsonObjectReader.getAsBoolean(jsonObject, "eventStatus");
 
-            return new CardEvent(dpanId, status, cardEventSource);
+            return new CardEvent(dpanId, eventStatus);
         }
-    }
-
-    public static Gson getGson()
-    {
-        GsonBuilder gsonBuilder = new GsonBuilder();
-
-        gsonBuilder.registerTypeAdapter(CardEvent.class, new CardEventAdapter());
-
-        return gsonBuilder.create();
     }
 }

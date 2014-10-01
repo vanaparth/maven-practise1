@@ -125,6 +125,18 @@ public class AthenaCardEvent
         }
     }
 
+    public static AthenaCardEvent fromJson(String json)
+    {
+        if (json != null)
+        {
+            return new GsonBuilder().create().fromJson(json, AthenaCardEvent.class);
+        }
+        else
+        {
+            return new Builder().build();
+        }
+    }
+
     public static String toJson(String conversationId, AthenaCardDescriptor athenaCardDescriptor)
     {
         AthenaCardEvent athenaCardEvent;
@@ -145,18 +157,6 @@ public class AthenaCardEvent
         }
 
         return new GsonBuilder().create().toJson(athenaCardEvent);
-    }
-
-    public static AthenaCardEvent fromJson(String json)
-    {
-        if (json != null)
-        {
-            return new GsonBuilder().create().fromJson(json, AthenaCardEvent.class);
-        }
-        else
-        {
-            return new Builder().build();
-        }
     }
 
     private static final long CACHE_TIMEOUT = 15 * 60 * 1000;

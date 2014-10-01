@@ -15,11 +15,6 @@ public class SMPEventCode
     {
     }
 
-    public static String getUnknownCode()
-    {
-        return UNKNOWN_CODE;
-    }
-
     public static void writeCode(EventRecord record, EventAttribute attribute, String code)
     {
         if (isValid(code))

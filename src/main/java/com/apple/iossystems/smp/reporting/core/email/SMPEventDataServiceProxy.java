@@ -109,13 +109,18 @@ class SMPEventDataServiceProxy
         return (manageCardEvent != null) ? manageCardEvent.getDeviceImageUrl() : null;
     }
 
-    public static String getDsid(AthenaCardEvent athenaCardEvent, PassbookPass passbookPass)
+    public static String getDsid(AthenaCardEvent athenaCardEvent, ManageCardEvent manageCardEvent, PassbookPass passbookPass)
     {
         String value = null;
 
         if (athenaCardEvent != null)
         {
             value = athenaCardEvent.getDsid();
+        }
+
+        if ((value == null) && (manageCardEvent != null))
+        {
+            value = manageCardEvent.getDsid();
         }
 
         if ((value == null) && (passbookPass != null))
@@ -148,19 +153,24 @@ class SMPEventDataServiceProxy
         return ((secureElement != null) && (secureElement.getProvisioningCount() == 1));
     }
 
-    public static String getDpanId(List<CardEvent> cardEvents)
+    public static String getDpanId(ManageCardEvent manageCardEvent)
     {
         String value = null;
 
-        if (cardEvents != null)
+        if (manageCardEvent != null)
         {
-            for (CardEvent cardEvent : cardEvents)
-            {
-                value = cardEvent.getDpanId();
+            List<CardEvent> cardEvents = manageCardEvent.getCardEvents();
 
-                if (value != null)
+            if (cardEvents != null)
+            {
+                for (CardEvent cardEvent : cardEvents)
                 {
-                    break;
+                    value = cardEvent.getDpanId();
+
+                    if (value != null)
+                    {
+                        break;
+                    }
                 }
             }
         }
@@ -168,7 +178,23 @@ class SMPEventDataServiceProxy
         return value;
     }
 
-    public static List<Card> getCards(List<CardEvent> cardEvents)
+    public static List<Card> getCards(AthenaCardEvent athenaCardEvent, ManageCardEvent manageCardEvent)
+    {
+        List<Card> cards;
+
+        if (manageCardEvent != null)
+        {
+            cards = getCards(athenaCardEvent, manageCardEvent.getCardEvents());
+        }
+        else
+        {
+            cards = new ArrayList<Card>();
+        }
+
+        return cards;
+    }
+
+    private static List<Card> getCards(AthenaCardEvent athenaCardEvent, List<CardEvent> cardEvents)
     {
         List<Card> cards = new ArrayList<Card>();
 
@@ -176,14 +202,14 @@ class SMPEventDataServiceProxy
         {
             for (CardEvent cardEvent : cardEvents)
             {
-                cards.add(getCard(cardEvent));
+                cards.add(getCard(athenaCardEvent, cardEvent));
             }
         }
 
         return cards;
     }
 
-    private static Card getCard(CardEvent cardEvent)
+    private static Card getCard(AthenaCardEvent athenaCardEvent, CardEvent cardEvent)
     {
         String cardDisplayNumber = null;
         String cardDescription = null;
@@ -204,6 +230,11 @@ class SMPEventDataServiceProxy
                     cardDescription = SMPEventDataService.getValueFromPassbookPass(passbookPass, AbstractPass.PAYMENT_PASS_SHORT_DESC_KEY);
                 }
             }
+        }
+
+        if ((cardDisplayNumber == null) && (athenaCardEvent != null))
+        {
+            cardDisplayNumber = athenaCardEvent.getCardDisplayNumber();
         }
 
         return Card.getInstance(cardDescription, cardDisplayNumber, cardEvent);

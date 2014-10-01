@@ -2,7 +2,6 @@ package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.iossystems.smp.email.service.impl.ssp.domain.*;
 import com.apple.iossystems.smp.email.service.impl.ssp.handler.*;
-import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
@@ -73,7 +72,7 @@ public class EmailPublishService
         {
             for (Card card : cards)
             {
-                if ((!doFilter) || (doFilter && hasValidCardEventSource(card)))
+                if ((!doFilter) || (doFilter && hasValidCardEventSource(emailRecord)))
                 {
                     filteredCards.add(card);
                 }
@@ -83,11 +82,19 @@ public class EmailPublishService
         return filteredCards;
     }
 
-    private static boolean hasValidCardEventSource(Card card)
+    private static boolean hasValidCardEventSource(EmailRecord emailRecord)
     {
-        CardEvent cardEvent = card.getCardEvent();
+        ManageCardEvent manageCardEvent = emailRecord.getManageCardEvent();
 
-        return ((cardEvent == null) || (cardEvent.getCardEventSource() == CardEventSource.FMIP));
+        if (manageCardEvent != null)
+        {
+            ManageCardAPI manageCardAPI = manageCardEvent.getManageCardAPI();
+            CardEventSource cardEventSource = manageCardEvent.getCardEventSource();
+
+            return (manageCardAPI == null) || (cardEventSource == null) || ((manageCardAPI == ManageCardAPI.MANAGE_DEVICE) && (cardEventSource == CardEventSource.FMIP));
+        }
+
+        return true;
     }
 
     private static void sendRequest(EmailRecord emailRecord) throws Exception
@@ -139,29 +146,7 @@ public class EmailPublishService
             }
         }
 
-        log(emailRecord);
-    }
-
-    private static void log(EmailRecord emailRecord)
-    {
-        // Logging for email tests
-        SMPCardEvent smpCardEvent = emailRecord.getSMPCardEvent();
-        String smpCardEventName = (smpCardEvent != null) ? smpCardEvent.name() : "Unknown Event";
-
-        LOGGER.info("Sending email for " + smpCardEventName);
-
-        if (ApplicationConfigurationManager.getIReporterURL().contains("https://icloud4-e3.icloud.com"))
-        {
-            LOGGER.info(emailRecord.getCardHolderName() + "\t" +
-                    emailRecord.getCardHolderEmail() + "\t" +
-                    emailRecord.getDate() + "\t" +
-                    emailRecord.isFirstProvisionEvent() + "\t" +
-                    emailRecord.getConversationId() + "\t" +
-                    emailRecord.getDsid() + "\t" +
-                    emailRecord.getLocale() + "\t" +
-                    emailRecord.getDeviceName() + "\t" +
-                    emailRecord.getDeviceType() + "\t" +
-                    emailRecord.getDeviceImageUrl());
-        }
+        EmailPublishServiceLogger.logTests(emailRecord, cardEventRecord);
+        EmailPublishServiceLogger.log(emailRecord);
     }
 }

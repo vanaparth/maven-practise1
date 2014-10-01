@@ -52,7 +52,7 @@ public class CardEventStatus
             validCardStatusList = VALID_RESUME_STATUS;
         }
 
-        Card.CardStatus cardStatus = SMPCardStatus.getCardStatus(record.getAttributeValue(EventAttribute.CARD_STATUS.key()));
+        Card.CardStatus cardStatus = SMPCardStatus.getSMPCardStatus(record.getAttributeValue(EventAttribute.CARD_STATUS.key())).getCardStatus();
 
         return ((validCardStatusList == null) || isValidStatus(cardStatus, validCardStatusList));
     }

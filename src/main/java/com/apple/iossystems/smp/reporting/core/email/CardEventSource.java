@@ -31,20 +31,20 @@ public enum CardEventSource
         return code;
     }
 
-    public static String getCode(Actor actor)
+    public static CardEventSource getCardEventSource(Actor actor)
     {
         for (CardEventSource e : CardEventSource.values())
         {
             if (e.actor == actor)
             {
-                return e.code;
+                return e;
             }
         }
 
-        return getUnknownSource().code;
+        return getUnknownSource();
     }
 
-    public static CardEventSource getSource(String code)
+    public static CardEventSource getCardEventSource(String code)
     {
         for (CardEventSource e : CardEventSource.values())
         {

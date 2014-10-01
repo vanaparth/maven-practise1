@@ -31,7 +31,6 @@ public class SMPEventRecord
     {
         record.removeAttributeValue(EventAttribute.ATHENA_CARD_EVENT.key());
         record.removeAttributeValue(EventAttribute.MANAGE_CARD_EVENT.key());
-        record.removeAttributeValue(EventAttribute.MANAGE_CARD_EVENT_SOURCE.key());
 
         return record;
     }

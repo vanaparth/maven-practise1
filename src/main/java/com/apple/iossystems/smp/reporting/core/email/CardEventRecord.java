@@ -60,7 +60,7 @@ class CardEventRecord
         {
             CardEvent cardEvent = card.getCardEvent();
 
-            if ((cardEvent == null) || (cardEvent.getStatus()))
+            if ((cardEvent == null) || (cardEvent.getEventStatus()))
             {
                 cardEventRecord.addSuccessCard(new SMPEmailCardData(card.getDisplayNumber(), card.getDescription()));
             }

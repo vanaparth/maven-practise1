@@ -24,6 +24,16 @@ public enum SMPCardStatus
         this.code = code;
     }
 
+    public Card.CardStatus getCardStatus()
+    {
+        return cardStatus;
+    }
+
+    public String getCode()
+    {
+        return code;
+    }
+
     private static SMPCardStatus getUnknownStatus()
     {
         return UNKNOWN;
@@ -42,16 +52,16 @@ public enum SMPCardStatus
         return getUnknownStatus().code;
     }
 
-    public static Card.CardStatus getCardStatus(String code)
+    public static SMPCardStatus getSMPCardStatus(String code)
     {
         for (SMPCardStatus e : SMPCardStatus.values())
         {
             if (e.code.equals(code))
             {
-                return e.cardStatus;
+                return e;
             }
         }
 
-        return getUnknownStatus().cardStatus;
+        return getUnknownStatus();
     }
 }

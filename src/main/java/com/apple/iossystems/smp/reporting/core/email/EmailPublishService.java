@@ -158,6 +158,6 @@ public class EmailPublishService
 
     private static String getLocale(EmailRecord record)
     {
-        return (EMAIL_LOCALE) ? "en_US" : record.getLocale();
+        return (EMAIL_LOCALE ? "en_US" : record.getLocale());
     }
 }

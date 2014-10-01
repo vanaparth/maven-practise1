@@ -246,11 +246,11 @@ public class ManageCardEvent
 
             List<CardEvent> cardEvents = null;
 
-            JsonArray jsonArray = JsonObjectReader.getAsJsonArray(jsonObject, "cardEvents");
+            String cardEventsJson = JsonObjectReader.getAsString(jsonObject, "cardEvents");
 
-            if (jsonArray != null)
+            if (cardEventsJson != null)
             {
-                cardEvents = Arrays.asList(CardEvent.getGson().fromJson(jsonArray, CardEvent[].class));
+                cardEvents = Arrays.asList(CardEvent.getGson().fromJson(cardEventsJson, CardEvent[].class));
             }
 
             return new Builder().cardHolderName(cardHolderName).

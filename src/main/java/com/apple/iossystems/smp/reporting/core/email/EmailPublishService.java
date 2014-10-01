@@ -78,7 +78,7 @@ public class EmailPublishService
         {
             for (Card card : cards)
             {
-                if ((!doFilter) || (doFilter && hasValidCardEventSource(emailRecord)))
+                if ((!doFilter) || (hasValidCardEventSource(emailRecord)))
                 {
                     filteredCards.add(card);
                 }

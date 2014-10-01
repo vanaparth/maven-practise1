@@ -1,6 +1,5 @@
 package com.apple.iossystems.smp.reporting.core.util;
 
-import com.google.gson.JsonArray;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
@@ -25,10 +24,5 @@ public class JsonObjectReader
         JsonElement jsonElement = jsonObject.get(key);
 
         return ((jsonElement != null) && jsonElement.getAsBoolean());
-    }
-
-    public static JsonArray getAsJsonArray(JsonObject jsonObject, String key)
-    {
-        return jsonObject.getAsJsonArray(key);
     }
 }

@@ -58,9 +58,7 @@ public abstract class IReporterConfigurationService
 
         HubbleAnalytics.incrementCountForEvent(configurationMetric.getRequestedMetric());
 
-        if (((configuration1 != null) && (configuration2 == null)) ||
-                ((configuration1 == null) && (configuration2 != null)) ||
-                ((configuration1 != null) && (!configuration1.isEquals(configuration2))))
+        if ((configuration1 != null) && (configuration2 != null) && (!configuration1.isEquals(configuration2)))
         {
             HubbleAnalytics.incrementCountForEvent(configurationMetric.getChangedMetric());
         }

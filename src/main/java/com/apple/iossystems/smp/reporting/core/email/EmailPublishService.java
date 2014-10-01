@@ -2,6 +2,7 @@ package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.iossystems.smp.email.service.impl.ssp.domain.*;
 import com.apple.iossystems.smp.email.service.impl.ssp.handler.*;
+import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
@@ -16,6 +17,11 @@ import java.util.List;
 public class EmailPublishService
 {
     private static final Logger LOGGER = Logger.getLogger(EmailPublishService.class);
+
+    private static final boolean EMAIL_PROVISION = ApplicationConfigurationManager.getEmailProvision();
+    private static final boolean EMAIL_SUSPEND = ApplicationConfigurationManager.getEmailSuspend();
+    private static final boolean EMAIL_UNLINK = ApplicationConfigurationManager.getEmailUnlink();
+    private static final boolean EMAIL_LOCALE = ApplicationConfigurationManager.getEmailLocale();
 
     private EmailPublishService()
     {
@@ -106,41 +112,41 @@ public class EmailPublishService
         List<SMPEmailCardData> successCards = cardEventRecord.getSuccessCards();
         List<SMPEmailCardData> failedCards = cardEventRecord.getFailedCards();
 
-        if (smpCardEvent == SMPCardEvent.PROVISION_CARD)
+        if ((smpCardEvent == SMPCardEvent.PROVISION_CARD) && EMAIL_PROVISION)
         {
             if (emailRecord.isFirstProvisionEvent())
             {
-                FirstTimeProvisionRequest request = new FirstTimeProvisionRequest(emailRecord.getCardHolderName(), emailRecord.getConversationId(), emailRecord.getCardHolderEmail(), emailRecord.getLocale(), emailRecord.getDeviceName(), emailRecord.getDeviceType(), emailRecord.getDsid());
+                FirstTimeProvisionRequest request = new FirstTimeProvisionRequest(emailRecord.getCardHolderName(), emailRecord.getConversationId(), emailRecord.getCardHolderEmail(), getLocale(emailRecord), emailRecord.getDeviceName(), emailRecord.getDeviceType(), emailRecord.getDsid());
 
                 new SMPFirstTimeProvisionMailHandler(request).sendEmail();
             }
         }
-        else if (smpCardEvent == SMPCardEvent.SUSPEND_CARD)
+        else if ((smpCardEvent == SMPCardEvent.SUSPEND_CARD) && EMAIL_SUSPEND)
         {
             if (cardEventRecord.isSuccessful())
             {
-                SuspendEmailRequest request = new SuspendEmailRequest(emailRecord.getDeviceName(), successCards, emailRecord.getDate(), emailRecord.getCardHolderName(), emailRecord.getConversationId(), emailRecord.getCardHolderEmail(), emailRecord.getDsid(), emailRecord.getLocale(), emailRecord.getDeviceType(), emailRecord.getDeviceImageUrl());
+                SuspendEmailRequest request = new SuspendEmailRequest(emailRecord.getDeviceName(), successCards, emailRecord.getDate(), emailRecord.getCardHolderName(), emailRecord.getConversationId(), emailRecord.getCardHolderEmail(), emailRecord.getDsid(), getLocale(emailRecord), emailRecord.getDeviceType(), emailRecord.getDeviceImageUrl());
 
                 new SMPSuccessSuspendMailHandler(request).sendEmail();
             }
             else if (cardEventRecord.hasPartialSuccess())
             {
-                PartialSuspendEmailRequest request = new PartialSuspendEmailRequest(emailRecord.getDeviceName(), successCards, emailRecord.getDate(), emailRecord.getCardHolderName(), emailRecord.getConversationId(), emailRecord.getCardHolderEmail(), emailRecord.getLocale(), emailRecord.getDsid(), emailRecord.getDeviceType(), failedCards, emailRecord.getDeviceImageUrl());
+                PartialSuspendEmailRequest request = new PartialSuspendEmailRequest(emailRecord.getDeviceName(), successCards, emailRecord.getDate(), emailRecord.getCardHolderName(), emailRecord.getConversationId(), emailRecord.getCardHolderEmail(), getLocale(emailRecord), emailRecord.getDsid(), emailRecord.getDeviceType(), failedCards, emailRecord.getDeviceImageUrl());
 
                 new SMPPartialSuspendMailHandler(request).sendEmail();
             }
         }
-        else if (smpCardEvent == SMPCardEvent.UNLINK_CARD)
+        else if ((smpCardEvent == SMPCardEvent.UNLINK_CARD) && EMAIL_UNLINK)
         {
             if (cardEventRecord.isSuccessful())
             {
-                RemoveEmailRequest request = new RemoveEmailRequest(emailRecord.getDeviceName(), successCards, emailRecord.getDate(), emailRecord.getCardHolderName(), emailRecord.getConversationId(), emailRecord.getCardHolderEmail(), emailRecord.getLocale(), emailRecord.getDeviceType(), emailRecord.getDsid(), emailRecord.getDeviceImageUrl());
+                RemoveEmailRequest request = new RemoveEmailRequest(emailRecord.getDeviceName(), successCards, emailRecord.getDate(), emailRecord.getCardHolderName(), emailRecord.getConversationId(), emailRecord.getCardHolderEmail(), getLocale(emailRecord), emailRecord.getDeviceType(), emailRecord.getDsid(), emailRecord.getDeviceImageUrl());
 
                 new SMPSuccessRemoveMailHandler(request).sendEmail();
             }
             else if (cardEventRecord.hasPartialSuccess())
             {
-                PartialRemoveEmailRequest request = new PartialRemoveEmailRequest(emailRecord.getDeviceName(), successCards, emailRecord.getDate(), emailRecord.getCardHolderName(), emailRecord.getConversationId(), emailRecord.getCardHolderEmail(), emailRecord.getLocale(), emailRecord.getDsid(), emailRecord.getDeviceType(), failedCards, emailRecord.getDeviceImageUrl());
+                PartialRemoveEmailRequest request = new PartialRemoveEmailRequest(emailRecord.getDeviceName(), successCards, emailRecord.getDate(), emailRecord.getCardHolderName(), emailRecord.getConversationId(), emailRecord.getCardHolderEmail(), getLocale(emailRecord), emailRecord.getDsid(), emailRecord.getDeviceType(), failedCards, emailRecord.getDeviceImageUrl());
 
                 new SMPPartialRemoveMailHandler(request).sendEmail();
             }
@@ -148,5 +154,10 @@ public class EmailPublishService
 
         EmailPublishServiceLogger.logTests(emailRecord, cardEventRecord);
         EmailPublishServiceLogger.log(emailRecord);
+    }
+
+    private static String getLocale(EmailRecord record)
+    {
+        return (EMAIL_LOCALE) ? "en_US" : record.getLocale();
     }
 }

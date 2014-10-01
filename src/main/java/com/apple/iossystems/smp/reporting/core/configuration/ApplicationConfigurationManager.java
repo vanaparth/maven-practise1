@@ -93,4 +93,24 @@ public class ApplicationConfigurationManager
     {
         return ApplicationConfiguration.HASH_PASS;
     }
+
+    public static boolean getEmailProvision()
+    {
+        return ApplicationConfiguration.EMAIL_PROVISION;
+    }
+
+    public static boolean getEmailSuspend()
+    {
+        return ApplicationConfiguration.EMAIL_SUSPEND;
+    }
+
+    public static boolean getEmailUnlink()
+    {
+        return ApplicationConfiguration.EMAIL_UNLINK;
+    }
+
+    public static boolean getEmailLocale()
+    {
+        return ApplicationConfiguration.EMAIL_LOCALE;
+    }
 }

@@ -74,7 +74,7 @@ class EmailPublishServiceLogger
     {
         SMPCardEvent smpCardEvent = record.getSMPCardEvent();
 
-        return ((smpCardEvent == SMPCardEvent.PROVISION_CARD) || (smpCardEvent == SMPCardEvent.SUSPEND_CARD) || (smpCardEvent == SMPCardEvent.UNLINK_CARD));
+        return ((smpCardEvent == SMPCardEvent.PROVISION_CARD) || (smpCardEvent == SMPCardEvent.SUSPEND_CARD) || (smpCardEvent == SMPCardEvent.UNLINK_CARD) || (smpCardEvent == SMPCardEvent.RESUME_CARD));
     }
 
     public static void logTests(EmailRecord record, CardEventRecord cardEventRecord)
@@ -99,5 +99,46 @@ class EmailPublishServiceLogger
                     "Success Cards: " + cardEventRecord.getSuccessCards().size() + "\t" +
                     "Failed Cards: " + cardEventRecord.getFailedCards().size());
         }
+    }
+
+    private static String getEmailRecordString(EmailRecord record)
+    {
+        SMPCardEvent smpCardEvent = record.getSMPCardEvent();
+        String smpCardEventName = (smpCardEvent != null) ? smpCardEvent.name() : "Unknown Event";
+
+        ManageCardEvent manageCardEvent = record.getManageCardEvent();
+        String manageCardEventValue = "";
+
+        if(manageCardEvent != null)
+        {
+            manageCardEventValue =
+                    "[Cardholder name: " + manageCardEvent.getCardHolderName() + "\t" +
+                            "Cardholder email: " + manageCardEvent.getCardHolderEmail() + "\t" +
+                            "Dsid: " + manageCardEvent.getDsid() + "\t" +
+                            "Device name: " + manageCardEvent.getDeviceName() + "\t" +
+                            "Device image url:" + manageCardEvent.getDeviceImageUrl() + "\t" +
+                            "Locale: " + manageCardEvent.getLocale() + "\t" +
+                            "Manage card api: " + manageCardEvent.getManageCardAPI() + "\t" +
+                            "Card event source: " + manageCardEvent.getCardEventSource() + "]";
+        }
+
+        return "Name: " + record.getCardHolderName() + "\t" +
+                "event: " + smpCardEventName + "\t" +
+                "Email: " + record.getCardHolderEmail() + "\t" +
+                "Date: " + record.getDate() + "\t" +
+                "First provision: " + record.isFirstProvisionEvent() + "\t" +
+                "Conversation id: " + record.getConversationId() + "\t" +
+                "Dsid: " + record.getDsid() + "\t" +
+                "Locale: " + record.getLocale() + "\t" +
+                "Device name: " + record.getDeviceName() + "\t" +
+                "Device type: " + record.getDeviceType() + "\t" +
+                "Device image url: " + record.getDeviceImageUrl() + "\t" +
+                "Manage Card Event: " + manageCardEventValue;
+
+    }
+
+    public static void logCheck(EmailRecord record, boolean valid)
+    {
+        LOGGER.info("Email record valid check is " + valid + getEmailRecordString(record));
     }
 }

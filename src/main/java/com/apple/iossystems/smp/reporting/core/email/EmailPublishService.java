@@ -140,13 +140,15 @@ public class EmailPublishService
         {
             if (cardEventRecord.isSuccessful())
             {
-                RemoveEmailRequest request = new RemoveEmailRequest(emailRecord.getDeviceName(), successCards, emailRecord.getDate(), emailRecord.getCardHolderName(), emailRecord.getConversationId(), emailRecord.getCardHolderEmail(), getLocale(emailRecord), emailRecord.getDeviceType(), emailRecord.getDsid(), emailRecord.getDeviceImageUrl());
+                RemoveEmailRequest request = new RemoveEmailRequest(emailRecord.getDeviceName(), successCards, emailRecord.getDate(),
+                        emailRecord.getCardHolderName(), emailRecord.getConversationId(), emailRecord.getCardHolderEmail(),
+                        emailRecord.getLocale(), emailRecord.getDeviceType(), emailRecord.getDsid(), emailRecord.getDeviceImageUrl(), null);
 
                 new SMPSuccessRemoveMailHandler(request).sendEmail();
             }
             else if (cardEventRecord.hasPartialSuccess())
             {
-                PartialRemoveEmailRequest request = new PartialRemoveEmailRequest(emailRecord.getDeviceName(), successCards, emailRecord.getDate(), emailRecord.getCardHolderName(), emailRecord.getConversationId(), emailRecord.getCardHolderEmail(), getLocale(emailRecord), emailRecord.getDsid(), emailRecord.getDeviceType(), failedCards, emailRecord.getDeviceImageUrl());
+                PartialRemoveEmailRequest request = new PartialRemoveEmailRequest(emailRecord.getDeviceName(), successCards, emailRecord.getDate(), emailRecord.getCardHolderName(), emailRecord.getConversationId(), emailRecord.getCardHolderEmail(), emailRecord.getLocale(), emailRecord.getDsid(), emailRecord.getDeviceType(), failedCards, emailRecord.getDeviceImageUrl(),null);
 
                 new SMPPartialRemoveMailHandler(request).sendEmail();
             }

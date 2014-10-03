@@ -76,11 +76,11 @@ class EmailPublishServiceLogger
     // Logging for email tests
     private static final boolean LOG_TESTS = ApplicationConfigurationManager.getIReporterURL().equals("https://icloud4-e3.icloud.com");
 
-    public static void logTests(EmailRecord record, CardEventRecord cardEventRecord)
+    public static void logTests(EmailRecord record, CardEventRecord cardEventRecord, boolean requestSent)
     {
         if (LOG_TESTS && (record != null) && doLog(record))
         {
-            LOGGER.info("Sending email for " + getEmailRecordString(record) + "\t" + getCardEventRecordString(cardEventRecord));
+            LOGGER.info("Sending email [" + requestSent + "] for " + getEmailRecordString(record) + "\t" + getCardEventRecordString(cardEventRecord));
         }
     }
 

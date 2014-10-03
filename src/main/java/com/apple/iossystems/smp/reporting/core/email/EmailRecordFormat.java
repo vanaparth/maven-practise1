@@ -40,6 +40,11 @@ class EmailRecordFormat
         return ValidValue.getStringValueWithDefault(value, "");
     }
 
+    public static String getValidValue(String value)
+    {
+        return ValidValue.getStringValueWithDefault(value, "");
+    }
+
     public static String getDeviceType(EmailRecord record)
     {
         String deviceType = record.getDeviceType();

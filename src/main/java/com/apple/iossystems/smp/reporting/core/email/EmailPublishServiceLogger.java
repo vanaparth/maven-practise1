@@ -1,5 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
+import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
 import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
 import org.apache.log4j.Logger;
 
@@ -31,7 +32,7 @@ class EmailPublishServiceLogger
     {
         String message = getMessage(record);
 
-        if (hasRequiredValues(record))
+        if (EmailRecordFilter.hasRequiredValues(record))
         {
             message = "Sending email " + message;
         }
@@ -65,11 +66,6 @@ class EmailPublishServiceLogger
         }
     }
 
-    private static boolean hasRequiredValues(EmailRecord record)
-    {
-        return ((record == null) || (record.getCardHolderEmail() != null));
-    }
-
     private static boolean doLog(EmailRecord record)
     {
         SMPCardEvent smpCardEvent = record.getSMPCardEvent();
@@ -77,27 +73,14 @@ class EmailPublishServiceLogger
         return ((smpCardEvent == SMPCardEvent.PROVISION_CARD) || (smpCardEvent == SMPCardEvent.SUSPEND_CARD) || (smpCardEvent == SMPCardEvent.UNLINK_CARD) || (smpCardEvent == SMPCardEvent.RESUME_CARD));
     }
 
+    // Logging for email tests
+    private static final boolean LOG_TESTS = ApplicationConfigurationManager.getIReporterURL().equals("https://icloud4-e3.icloud.com");
+
     public static void logTests(EmailRecord record, CardEventRecord cardEventRecord)
     {
-        // Logging for email tests
-        if ((record != null) && doLog(record))
+        if (LOG_TESTS && (record != null) && doLog(record))
         {
-            SMPCardEvent smpCardEvent = record.getSMPCardEvent();
-            String smpCardEventName = (smpCardEvent != null) ? smpCardEvent.name() : "Unknown Event";
-
-            LOGGER.info("Sending email for " + smpCardEventName + "\t" +
-                    "Name: " + record.getCardHolderName() + "\t" +
-                    "Email: " + record.getCardHolderEmail() + "\t" +
-                    "Date: " + record.getDate() + "\t" +
-                    "First provision: " + record.isFirstProvisionEvent() + "\t" +
-                    "Conversation id: " + record.getConversationId() + "\t" +
-                    "Dsid: " + record.getDsid() + "\t" +
-                    "Locale: " + record.getLocale() + "\t" +
-                    "Device name: " + record.getDeviceName() + "\t" +
-                    "Device type: " + record.getDeviceType() + "\t" +
-                    "Device image url: " + record.getDeviceImageUrl() + "\t" +
-                    "Success Cards: " + cardEventRecord.getSuccessCards().size() + "\t" +
-                    "Failed Cards: " + cardEventRecord.getFailedCards().size());
+            LOGGER.info("Sending email for " + getEmailRecordString(record) + "\t" + getCardEventRecordString(cardEventRecord));
         }
     }
 
@@ -109,7 +92,7 @@ class EmailPublishServiceLogger
         ManageCardEvent manageCardEvent = record.getManageCardEvent();
         String manageCardEventValue = "";
 
-        if(manageCardEvent != null)
+        if (manageCardEvent != null)
         {
             manageCardEventValue =
                     "[Cardholder name: " + manageCardEvent.getCardHolderName() + "\t" +
@@ -119,13 +102,13 @@ class EmailPublishServiceLogger
                             "Device image url:" + manageCardEvent.getDeviceImageUrl() + "\t" +
                             "Locale: " + manageCardEvent.getLocale() + "\t" +
                             "Manage card api: " + manageCardEvent.getManageCardAPI() + "\t" +
-                            "Card event source: " + manageCardEvent.getCardEventSource() + "]";
+                            "Card event source: " + manageCardEvent.getCardEventSource() + "t" +
+                            "Fmip source: " + manageCardEvent.getFmipSource() + "]";
         }
 
         return "Name: " + record.getCardHolderName() + "\t" +
-                "event: " + smpCardEventName + "\t" +
+                "Event: " + smpCardEventName + "\t" +
                 "Email: " + record.getCardHolderEmail() + "\t" +
-                "Date: " + record.getDate() + "\t" +
                 "First provision: " + record.isFirstProvisionEvent() + "\t" +
                 "Conversation id: " + record.getConversationId() + "\t" +
                 "Dsid: " + record.getDsid() + "\t" +
@@ -133,12 +116,12 @@ class EmailPublishServiceLogger
                 "Device name: " + record.getDeviceName() + "\t" +
                 "Device type: " + record.getDeviceType() + "\t" +
                 "Device image url: " + record.getDeviceImageUrl() + "\t" +
-                "Manage Card Event: " + manageCardEventValue;
+                "Manage card event: " + manageCardEventValue;
 
     }
 
-    public static void logCheck(EmailRecord record, boolean valid)
+    private static String getCardEventRecordString(CardEventRecord record)
     {
-        LOGGER.info("Email record valid check is " + valid + getEmailRecordString(record));
+        return "Success Cards: " + record.getSuccessCards().size() + "\t" + "Failed Cards: " + record.getFailedCards().size();
     }
 }

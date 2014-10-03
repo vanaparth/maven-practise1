@@ -28,6 +28,9 @@ class ApplicationConfiguration
     private static final String EMAIL_UNLINK_KEY = "smp.reporting.email.unlink";
     private static final String EMAIL_LOCALE_KEY = "smp.reporting.email.locale";
 
+    private static final String FMIP_CERTIFICATE_KEY = "com.apple.iossystems.internal.fmip.app.cert";
+    private static final String FMIP_REMOTE_CERTIFICATE_KEY = "com.apple.iossystems.internal.fmip.remote.cert";
+
     static final String KEYSTONE_RABBIT_HOST = PROPERTY_MANAGER.valueForKeyWithDefault(KEYSTONE_RABBIT_HOST_KEY, "rabbit-np-amqp.corp.apple.com");
     static final String KEYSTONE_RABBIT_PORT = PROPERTY_MANAGER.valueForKeyWithDefault(KEYSTONE_RABBIT_PORT_KEY, "5672");
     static final String KEYSTONE_RABBIT_USER = PROPERTY_MANAGER.valueForKeyWithDefault(KEYSTONE_RABBIT_USER_KEY, "SMPQA_User");
@@ -45,6 +48,9 @@ class ApplicationConfiguration
     static final boolean EMAIL_SUSPEND = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault(EMAIL_SUSPEND_KEY, true);
     static final boolean EMAIL_UNLINK = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault(EMAIL_UNLINK_KEY, true);
     static final boolean EMAIL_LOCALE = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault(EMAIL_LOCALE_KEY, true);
+
+    static final String FMIP_CERTIFICATE = PROPERTY_MANAGER.valueForKeyWithDefault(FMIP_CERTIFICATE_KEY, "26f655da225308ee");
+    static final String FMIP_REMOTE_CERTIFICATE = PROPERTY_MANAGER.valueForKeyWithDefault(FMIP_REMOTE_CERTIFICATE_KEY, "7dc037c70bfebddb");
 
     static final String RABBIT_HOST_KEY = "rabbit.host";
     static final String RABBIT_PORT_KEY = "rabbit.port";

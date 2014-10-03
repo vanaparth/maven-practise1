@@ -20,6 +20,7 @@ public class ManageCardEvent
     private final String deviceName;
     private final String deviceImageUrl;
     private final CardEventSource cardEventSource;
+    private final FmipSource fmipSource;
     private final ManageCardAPI manageCardAPI;
     private final List<CardEvent> cardEvents;
 
@@ -32,6 +33,7 @@ public class ManageCardEvent
         deviceName = builder.deviceName;
         deviceImageUrl = builder.deviceImageUrl;
         cardEventSource = builder.cardEventSource;
+        fmipSource = builder.fmipSource;
         manageCardAPI = builder.manageCardAPI;
         cardEvents = builder.cardEvents;
     }
@@ -71,6 +73,11 @@ public class ManageCardEvent
         return cardEventSource;
     }
 
+    public FmipSource getFmipSource()
+    {
+        return fmipSource;
+    }
+
     public ManageCardAPI getManageCardAPI()
     {
         return manageCardAPI;
@@ -95,6 +102,7 @@ public class ManageCardEvent
         private String deviceName;
         private String deviceImageUrl;
         private CardEventSource cardEventSource;
+        private FmipSource fmipSource;
         private ManageCardAPI manageCardAPI;
         private List<CardEvent> cardEvents;
 
@@ -144,6 +152,12 @@ public class ManageCardEvent
             return this;
         }
 
+        public Builder fmipSource(FmipSource value)
+        {
+            fmipSource = value;
+            return this;
+        }
+
         public Builder manageCardAPI(ManageCardAPI value)
         {
             manageCardAPI = value;
@@ -171,6 +185,11 @@ public class ManageCardEvent
         return gsonBuilder.create();
     }
 
+    public String toJson()
+    {
+        return getGson().toJson(this);
+    }
+
     public static ManageCardEvent fromJson(String json)
     {
         if (json != null)
@@ -183,37 +202,44 @@ public class ManageCardEvent
         }
     }
 
-    public String toJson()
+    private static class ManageCardEventAdapter implements JsonSerializer<ManageCardEvent>, JsonDeserializer<ManageCardEvent>
     {
-        JsonObject jsonObject = new JsonObject();
-
-        JsonObjectWriter.addProperty(jsonObject, "cardHolderName", cardHolderName);
-        JsonObjectWriter.addProperty(jsonObject, "cardHolderEmail", cardHolderEmail);
-        JsonObjectWriter.addProperty(jsonObject, "dsid", dsid);
-        JsonObjectWriter.addProperty(jsonObject, "locale", locale);
-        JsonObjectWriter.addProperty(jsonObject, "deviceName", deviceName);
-        JsonObjectWriter.addProperty(jsonObject, "deviceImageURL", deviceImageUrl);
-
-        if (cardEventSource != null)
+        @Override
+        public JsonElement serialize(ManageCardEvent manageCardEvent, Type type, JsonSerializationContext context)
         {
-            JsonObjectWriter.addProperty(jsonObject, "cardEventSource", cardEventSource.getCode());
+
+            JsonObject jsonObject = new JsonObject();
+
+            JsonObjectWriter.addProperty(jsonObject, "cardHolderName", manageCardEvent.cardHolderName);
+            JsonObjectWriter.addProperty(jsonObject, "cardHolderEmail", manageCardEvent.cardHolderEmail);
+            JsonObjectWriter.addProperty(jsonObject, "dsid", manageCardEvent.dsid);
+            JsonObjectWriter.addProperty(jsonObject, "locale", manageCardEvent.locale);
+            JsonObjectWriter.addProperty(jsonObject, "deviceName", manageCardEvent.deviceName);
+            JsonObjectWriter.addProperty(jsonObject, "deviceImageURL", manageCardEvent.deviceImageUrl);
+
+            if (manageCardEvent.cardEventSource != null)
+            {
+                JsonObjectWriter.addProperty(jsonObject, "cardEventSource", manageCardEvent.cardEventSource.getCode());
+            }
+
+            if (manageCardEvent.fmipSource != null)
+            {
+                JsonObjectWriter.addProperty(jsonObject, "fmipSource", manageCardEvent.fmipSource.getCode());
+            }
+
+            if (manageCardEvent.manageCardAPI != null)
+            {
+                JsonObjectWriter.addProperty(jsonObject, "manageCardAPI", manageCardEvent.manageCardAPI.getCode());
+            }
+
+            if ((manageCardEvent.cardEvents != null) && (!manageCardEvent.cardEvents.isEmpty()))
+            {
+                JsonObjectWriter.addProperty(jsonObject, "cardEvents", CardEvent.getGson().toJson(manageCardEvent.cardEvents, List.class));
+            }
+
+            return jsonObject;
         }
 
-        if (manageCardAPI != null)
-        {
-            JsonObjectWriter.addProperty(jsonObject, "manageCardAPI", manageCardAPI.getCode());
-        }
-
-        if ((cardEvents != null) && (!cardEvents.isEmpty()))
-        {
-            JsonObjectWriter.addProperty(jsonObject, "cardEvents", CardEvent.getGson().toJson(cardEvents, List.class));
-        }
-
-        return jsonObject.toString();
-    }
-
-    private static class ManageCardEventAdapter implements JsonDeserializer<ManageCardEvent>
-    {
         @Override
         public ManageCardEvent deserialize(JsonElement jsonElement, Type type, JsonDeserializationContext context) throws JsonParseException
         {
@@ -233,6 +259,15 @@ public class ManageCardEvent
             if (cardEventSourceCode != null)
             {
                 cardEventSource = CardEventSource.getCardEventSource(cardEventSourceCode);
+            }
+
+            FmipSource fmipSource = null;
+
+            String fmipSourceCode = JsonObjectReader.getAsString(jsonObject, "fmipSource");
+
+            if (fmipSourceCode != null)
+            {
+                fmipSource = FmipSource.getFmipSourceFromCode(fmipSourceCode);
             }
 
             ManageCardAPI manageCardAPI = null;
@@ -260,6 +295,7 @@ public class ManageCardEvent
                     deviceName(deviceName).
                     deviceImageUrl(deviceImageUrl).
                     cardEventSource(cardEventSource).
+                    fmipSource(fmipSource).
                     manageCardAPI(manageCardAPI).
                     cardEvents(cardEvents).build();
         }

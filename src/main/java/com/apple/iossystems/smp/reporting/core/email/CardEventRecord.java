@@ -56,17 +56,20 @@ class CardEventRecord
     {
         CardEventRecord cardEventRecord = new CardEventRecord();
 
-        for (Card card : cards)
+        if (cards != null)
         {
-            CardEvent cardEvent = card.getCardEvent();
+            for (Card card : cards)
+            {
+                CardEvent cardEvent = card.getCardEvent();
 
-            if ((cardEvent == null) || (cardEvent.getEventStatus()))
-            {
-                cardEventRecord.addSuccessCard(new SMPEmailCardData(card.getDisplayNumber(), card.getDescription()));
-            }
-            else
-            {
-                cardEventRecord.addFailedCard(new SMPEmailCardData(card.getDisplayNumber(), card.getDescription()));
+                if ((cardEvent == null) || (cardEvent.getEventStatus()))
+                {
+                    cardEventRecord.addSuccessCard(new SMPEmailCardData(card.getDisplayNumber(), EmailRecordFormat.formatCardDescription(card.getDescription())));
+                }
+                else
+                {
+                    cardEventRecord.addFailedCard(new SMPEmailCardData(card.getDisplayNumber(), EmailRecordFormat.formatCardDescription(card.getDescription())));
+                }
             }
         }
 

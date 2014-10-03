@@ -5,6 +5,7 @@ import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -25,6 +26,7 @@ public class ManageCardEventBuilder
     private String dsid;
     private ManageCardAPI manageCardAPI;
     private Actor actor;
+    private FmipSource fmipSource;
     private Map<String, String> cardData;
     private List<CardEvent> cardEvents;
 
@@ -52,6 +54,12 @@ public class ManageCardEventBuilder
     public ManageCardEventBuilder actor(Actor value)
     {
         actor = value;
+        return this;
+    }
+
+    public ManageCardEventBuilder fmipSource(BigInteger value)
+    {
+        fmipSource = FmipSource.getFmipSourceFromCertificate(value);
         return this;
     }
 
@@ -93,6 +101,7 @@ public class ManageCardEventBuilder
                 deviceName(deviceName).
                 deviceImageUrl(deviceImageUrl).
                 cardEventSource(CardEventSource.getCardEventSource(actor)).
+                fmipSource(fmipSource).
                 manageCardAPI(manageCardAPI).
                 cardEvents(cardEvents).build();
     }

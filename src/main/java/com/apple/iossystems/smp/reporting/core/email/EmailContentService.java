@@ -23,10 +23,9 @@ class EmailContentService
 
         AthenaCardEvent athenaCardEvent = AthenaCardEvent.fromJson(record.getAttributeValue(EventAttribute.ATHENA_CARD_EVENT.key()));
         ManageCardEvent manageCardEvent = ManageCardEvent.fromJson(record.getAttributeValue(EventAttribute.MANAGE_CARD_EVENT.key()));
-        String dpanId = SMPEventDataServiceProxy.getDpanId(manageCardEvent);
 
-        PassbookPass passbookPass = SMPEventDataServiceProxy.getPassbookPass(dpanId);
-        SecureElement secureElement = SMPEventDataServiceProxy.getSecureElement(dpanId);
+        PassbookPass passbookPass = SMPEventDataServiceProxy.getPassbookPass(manageCardEvent);
+        SecureElement secureElement = SMPEventDataServiceProxy.getSecureElement(manageCardEvent);
 
         String cardHolderName = SMPEventDataServiceProxy.getCardHolderName(athenaCardEvent, manageCardEvent, passbookPass);
         String cardHolderEmail = SMPEventDataServiceProxy.getCardHolderEmail(athenaCardEvent, manageCardEvent);

@@ -16,14 +16,64 @@ class SMPEventDataServiceProxy
     {
     }
 
-    public static PassbookPass getPassbookPass(String dpanId)
+    private static PassbookPass getPassbookPass(String dpanId)
     {
         return (dpanId != null) ? SMPEventDataService.getPassByDpanId(dpanId) : null;
     }
 
-    public static SecureElement getSecureElement(String dpanId)
+    private static SecureElement getSecureElement(String dpanId)
     {
         return (dpanId != null) ? SMPEventDataService.getSecureElement(dpanId) : null;
+    }
+
+    public static PassbookPass getPassbookPass(ManageCardEvent manageCardEvent)
+    {
+        PassbookPass passbookPass = null;
+
+        if (manageCardEvent != null)
+        {
+            List<CardEvent> cardEvents = manageCardEvent.getCardEvents();
+
+            if (cardEvents != null)
+            {
+                for (CardEvent cardEvent : cardEvents)
+                {
+                    passbookPass = getPassbookPass(cardEvent.getDpanId());
+
+                    if (passbookPass != null)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return passbookPass;
+    }
+
+    public static SecureElement getSecureElement(ManageCardEvent manageCardEvent)
+    {
+        SecureElement secureElement = null;
+
+        if (manageCardEvent != null)
+        {
+            List<CardEvent> cardEvents = manageCardEvent.getCardEvents();
+
+            if (cardEvents != null)
+            {
+                for (CardEvent cardEvent : cardEvents)
+                {
+                    secureElement = getSecureElement(cardEvent.getDpanId());
+
+                    if (secureElement != null)
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
+        return secureElement;
     }
 
     public static String getCardHolderName(AthenaCardEvent athenaCardEvent, ManageCardEvent manageCardEvent, PassbookPass passbookPass)
@@ -150,32 +200,7 @@ class SMPEventDataServiceProxy
 
     public static boolean isFirstProvision(SecureElement secureElement)
     {
-        return ((secureElement != null) && (secureElement.getProvisioningCount() == 1));
-    }
-
-    public static String getDpanId(ManageCardEvent manageCardEvent)
-    {
-        String value = null;
-
-        if (manageCardEvent != null)
-        {
-            List<CardEvent> cardEvents = manageCardEvent.getCardEvents();
-
-            if (cardEvents != null)
-            {
-                for (CardEvent cardEvent : cardEvents)
-                {
-                    value = cardEvent.getDpanId();
-
-                    if (value != null)
-                    {
-                        break;
-                    }
-                }
-            }
-        }
-
-        return value;
+        return ((secureElement != null) && (secureElement.getProvisioningCount() <= 1));
     }
 
     public static List<Card> getCards(AthenaCardEvent athenaCardEvent, ManageCardEvent manageCardEvent)
@@ -214,20 +239,23 @@ class SMPEventDataServiceProxy
         String cardDisplayNumber = null;
         String cardDescription = null;
 
-        String dpanId = cardEvent.getDpanId();
-
-        if (dpanId != null)
+        if (cardEvent != null)
         {
-            PassbookPass passbookPass = SMPEventDataService.getPassByDpanId(dpanId);
+            String dpanId = cardEvent.getDpanId();
 
-            if (passbookPass != null)
+            if (dpanId != null)
             {
-                cardDisplayNumber = SMPEventDataService.getValueFromPassbookPass(passbookPass, AbstractPass.PAYMENT_PASS_FPAN_SUFFIX_KEY);
-                cardDescription = SMPEventDataService.getValueFromPassbookPass(passbookPass, AbstractPass.PAYMENT_PASS_LONG_DESC_KEY);
+                PassbookPass passbookPass = SMPEventDataService.getPassByDpanId(dpanId);
 
-                if (cardDescription == null)
+                if (passbookPass != null)
                 {
-                    cardDescription = SMPEventDataService.getValueFromPassbookPass(passbookPass, AbstractPass.PAYMENT_PASS_SHORT_DESC_KEY);
+                    cardDisplayNumber = SMPEventDataService.getValueFromPassbookPass(passbookPass, AbstractPass.PAYMENT_PASS_FPAN_SUFFIX_KEY);
+                    cardDescription = SMPEventDataService.getValueFromPassbookPass(passbookPass, AbstractPass.PAYMENT_PASS_LONG_DESC_KEY);
+
+                    if (cardDescription == null)
+                    {
+                        cardDescription = SMPEventDataService.getValueFromPassbookPass(passbookPass, AbstractPass.PAYMENT_PASS_SHORT_DESC_KEY);
+                    }
                 }
             }
         }

@@ -113,4 +113,14 @@ public class ApplicationConfigurationManager
     {
         return ApplicationConfiguration.EMAIL_LOCALE;
     }
+
+    public static String getFmipCertificate()
+    {
+        return ApplicationConfiguration.FMIP_CERTIFICATE;
+    }
+
+    public static String getFmipRemoteCertificate()
+    {
+        return ApplicationConfiguration.FMIP_REMOTE_CERTIFICATE;
+    }
 }

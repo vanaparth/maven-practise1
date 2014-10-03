@@ -74,7 +74,7 @@ class EmailPublishServiceLogger
     }
 
     // Logging for email tests
-    private static final boolean LOG_TESTS = ApplicationConfigurationManager.getIReporterURL().equals("https://icloud4-e3.icloud.com");
+    private static final boolean LOG_TESTS = ApplicationConfigurationManager.getIReporterURL().contains("https://icloud4-e3.icloud.com");
 
     public static void logTests(EmailRecord record, CardEventRecord cardEventRecord, boolean requestSent)
     {
@@ -102,7 +102,7 @@ class EmailPublishServiceLogger
                             "Device image url:" + manageCardEvent.getDeviceImageUrl() + "\t" +
                             "Locale: " + manageCardEvent.getLocale() + "\t" +
                             "Manage card api: " + manageCardEvent.getManageCardAPI() + "\t" +
-                            "Card event source: " + manageCardEvent.getCardEventSource() + "t" +
+                            "Card event source: " + manageCardEvent.getCardEventSource() + "\t" +
                             "Fmip source: " + manageCardEvent.getFmipSource() + "]";
         }
 

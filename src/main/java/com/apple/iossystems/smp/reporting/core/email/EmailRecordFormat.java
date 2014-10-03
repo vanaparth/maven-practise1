@@ -33,7 +33,7 @@ class EmailRecordFormat
 
             if (fmipSource != null)
             {
-                value = fmipSource.getCode();
+                value = fmipSource.getDescription();
             }
         }
 

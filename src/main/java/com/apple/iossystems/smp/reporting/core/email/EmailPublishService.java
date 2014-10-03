@@ -46,7 +46,7 @@ public class EmailPublishService
             {
                 if (EmailRecordFilter.isValidEmailRecord(emailRecord))
                 {
-                    doSendRequest(emailRecord);
+                    sendRequest(emailRecord);
 
                     requestSent = true;
                 }
@@ -60,11 +60,11 @@ public class EmailPublishService
         }
     }
 
-    private static void doSendRequest(EmailRecord emailRecord)
+    private static void sendRequest(EmailRecord emailRecord)
     {
         try
         {
-            sendRequest(emailRecord);
+            doSendRequest(emailRecord);
         }
         catch (Exception e)
         {
@@ -90,7 +90,7 @@ public class EmailPublishService
         }
     }
 
-    private static void sendRequest(EmailRecord emailRecord) throws Exception
+    private static void doSendRequest(EmailRecord emailRecord) throws Exception
     {
         SMPCardEvent smpCardEvent = emailRecord.getSMPCardEvent();
 

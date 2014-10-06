@@ -1,31 +1,33 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
-import com.apple.iossystems.smp.domain.AccountDataDescriptor;
 import com.apple.iossystems.smp.domain.AthenaCardDescriptor;
 import com.google.gson.GsonBuilder;
+import org.apache.log4j.Logger;
 
 /**
  * @author Toch
  */
-public class AthenaCardEvent
+public class ProvisionCardEvent
 {
     private final String cardHolderName;
     private final String cardHolderEmail;
     private final String cardDisplayNumber;
-    private final String deviceLanguage;
     private final String deviceName;
     private final String deviceType;
     private final String dsid;
+    private final String locale;
+    private final boolean firstProvision;
 
-    private AthenaCardEvent(Builder builder)
+    private ProvisionCardEvent(Builder builder)
     {
         cardHolderName = builder.cardHolderName;
         cardHolderEmail = builder.cardHolderEmail;
         cardDisplayNumber = builder.cardDisplayNumber;
-        deviceLanguage = builder.deviceLanguage;
         deviceName = builder.deviceName;
         deviceType = builder.deviceType;
         dsid = builder.dsid;
+        locale = builder.locale;
+        firstProvision = builder.firstProvision;
     }
 
     public String getCardHolderName()
@@ -43,11 +45,6 @@ public class AthenaCardEvent
         return cardDisplayNumber;
     }
 
-    public String getDeviceLanguage()
-    {
-        return deviceLanguage;
-    }
-
     public String getDeviceName()
     {
         return deviceName;
@@ -63,15 +60,26 @@ public class AthenaCardEvent
         return dsid;
     }
 
+    public String getLocale()
+    {
+        return locale;
+    }
+
+    public boolean isFirstProvision()
+    {
+        return firstProvision;
+    }
+
     private static class Builder
     {
         private String cardHolderName;
         private String cardHolderEmail;
         private String cardDisplayNumber;
-        private String deviceLanguage;
         private String deviceName;
         private String deviceType;
         private String dsid;
+        private String locale;
+        private boolean firstProvision;
 
         private Builder()
         {
@@ -95,12 +103,6 @@ public class AthenaCardEvent
             return this;
         }
 
-        private Builder deviceLanguage(String value)
-        {
-            deviceLanguage = value;
-            return this;
-        }
-
         private Builder deviceName(String value)
         {
             deviceName = value;
@@ -119,17 +121,29 @@ public class AthenaCardEvent
             return this;
         }
 
-        private AthenaCardEvent build()
+        private Builder locale(String value)
         {
-            return new AthenaCardEvent(this);
+            locale = value;
+            return this;
+        }
+
+        private Builder firstProvision(boolean value)
+        {
+            firstProvision = value;
+            return this;
+        }
+
+        private ProvisionCardEvent build()
+        {
+            return new ProvisionCardEvent(this);
         }
     }
 
-    public static AthenaCardEvent fromJson(String json)
+    public static ProvisionCardEvent fromJson(String json)
     {
         if (json != null)
         {
-            return new GsonBuilder().create().fromJson(json, AthenaCardEvent.class);
+            return new GsonBuilder().create().fromJson(json, ProvisionCardEvent.class);
         }
         else
         {
@@ -139,50 +153,42 @@ public class AthenaCardEvent
 
     public static String toJson(String conversationId, AthenaCardDescriptor athenaCardDescriptor)
     {
-        AthenaCardEvent athenaCardEvent;
+        ProvisionCardEvent provisionCardEvent;
 
         if ((conversationId != null) && (athenaCardDescriptor != null))
         {
-            athenaCardEvent = new Builder().cardHolderName(athenaCardDescriptor.getCardHolderName()).
-                    cardHolderEmail(CacheService.get(getCacheKey(conversationId))).
+            provisionCardEvent = new Builder().cardHolderName(athenaCardDescriptor.getCardHolderName()).
+                    cardHolderEmail(NetworkCheckCardEventCache.get(NetworkCheckCardEventCache.Attribute.EMAIL, conversationId)).
                     cardDisplayNumber(athenaCardDescriptor.getLastFour()).
-                    deviceLanguage(athenaCardDescriptor.getDeviceLanguage()).
                     deviceName(athenaCardDescriptor.getDeviceName()).
-                    deviceType(athenaCardDescriptor.getDeviceType()).
-                    dsid(athenaCardDescriptor.getDsId()).build();
+                    deviceType(NetworkCheckCardEventCache.get(NetworkCheckCardEventCache.Attribute.DEVICE_TYPE, conversationId)).
+                    dsid(athenaCardDescriptor.getDsId()).
+                    locale(NetworkCheckCardEventCache.get(NetworkCheckCardEventCache.Attribute.LOCALE, conversationId)).
+                    firstProvision(getFirstProvisionStatus(athenaCardDescriptor.getSeid())).build();
         }
         else
         {
-            athenaCardEvent = new Builder().build();
+            provisionCardEvent = new Builder().build();
         }
 
-        return new GsonBuilder().create().toJson(athenaCardEvent);
+        return new GsonBuilder().create().toJson(provisionCardEvent);
     }
 
-    private static final long CACHE_TIMEOUT = 15 * 60 * 1000;
+    private static final Logger LOGGER = Logger.getLogger(ProvisionCardEvent.class);
 
-    public static void cache(String conversationId, AccountDataDescriptor accountDataDescriptor)
+    private static boolean getFirstProvisionStatus(String seId)
     {
-        if ((conversationId != null) && (accountDataDescriptor != null))
-        {
-            String emailAddress = accountDataDescriptor.getEmailAddress();
+        boolean firstProvision = false;
 
-            if (emailAddress != null)
-            {
-                CacheService.put(getCacheKey(conversationId), emailAddress, CACHE_TIMEOUT);
-            }
+        try
+        {
+            firstProvision = ((SMPEventDataServiceProxy.getProvisionCount(SMPEventDataServiceProxy.getSecureElementBySeId(seId))) == 0);
         }
-    }
-
-    private static String getCacheKey(String conversationId)
-    {
-        String key = null;
-
-        if (conversationId != null)
+        catch (Exception e)
         {
-            key = "smp_reporting_athena_card_event_" + conversationId;
+            LOGGER.error(e);
         }
 
-        return key;
+        return firstProvision;
     }
 }

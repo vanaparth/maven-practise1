@@ -10,8 +10,8 @@ import java.math.BigInteger;
  */
 public enum FmipSource
 {
-    FMIP("1", "FMIP", stringToBigInteger(ApplicationConfigurationManager.getFmipCertificate())),
-    REMOTE("2", "SETUP_SERVICE", stringToBigInteger(ApplicationConfigurationManager.getFmipRemoteCertificate()));
+    FMIP("1", "FMIP", initFmipSourceCertificate(ApplicationConfigurationManager.getFmipCertificate(), "1")),
+    REMOTE("2", "SETUP_SERVICE", initFmipSourceCertificate(ApplicationConfigurationManager.getFmipRemoteCertificate(), "2"));
 
     private final String code;
     private final String description;
@@ -67,7 +67,12 @@ public enum FmipSource
 
     private static final Logger LOGGER = Logger.getLogger(FmipSource.class);
 
-    private static BigInteger stringToBigInteger(String certificate)
+    private static BigInteger initFmipSourceCertificate(String certificate, String defaultValue)
+    {
+        return (!certificate.equals("0")) ? certificateToBigInteger(certificate) : certificateToBigInteger(defaultValue);
+    }
+
+    private static BigInteger certificateToBigInteger(String certificate)
     {
         BigInteger value;
 

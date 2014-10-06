@@ -37,7 +37,7 @@ class CacheService
     {
         try
         {
-            if (key != null)
+            if ((key != null) && (value != null))
             {
                 CACHE.setValueForKeyWithTimeout(value, key, timeout);
             }

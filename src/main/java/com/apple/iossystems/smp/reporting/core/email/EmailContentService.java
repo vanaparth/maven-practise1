@@ -21,23 +21,23 @@ class EmailContentService
         String conversationId = record.getAttributeValue(EventAttribute.CONVERSATION_ID.key());
         String timestamp = record.getAttributeValue(EventAttribute.TIMESTAMP.key());
 
-        AthenaCardEvent athenaCardEvent = AthenaCardEvent.fromJson(record.getAttributeValue(EventAttribute.ATHENA_CARD_EVENT.key()));
+        ProvisionCardEvent provisionCardEvent = ProvisionCardEvent.fromJson(record.getAttributeValue(EventAttribute.PROVISION_CARD_EVENT.key()));
         ManageCardEvent manageCardEvent = ManageCardEvent.fromJson(record.getAttributeValue(EventAttribute.MANAGE_CARD_EVENT.key()));
 
         PassbookPass passbookPass = SMPEventDataServiceProxy.getPassbookPass(manageCardEvent);
         SecureElement secureElement = SMPEventDataServiceProxy.getSecureElement(manageCardEvent);
 
-        String cardHolderName = SMPEventDataServiceProxy.getCardHolderName(athenaCardEvent, manageCardEvent, passbookPass);
-        String cardHolderEmail = SMPEventDataServiceProxy.getCardHolderEmail(athenaCardEvent, manageCardEvent);
+        String cardHolderName = SMPEventDataServiceProxy.getCardHolderName(provisionCardEvent, manageCardEvent, passbookPass);
+        String cardHolderEmail = SMPEventDataServiceProxy.getCardHolderEmail(provisionCardEvent, manageCardEvent);
 
-        String deviceName = SMPEventDataServiceProxy.getDeviceName(athenaCardEvent, manageCardEvent, passbookPass, secureElement);
-        String deviceType = SMPEventDataServiceProxy.getDeviceType(athenaCardEvent, secureElement);
+        String deviceName = SMPEventDataServiceProxy.getDeviceName(provisionCardEvent, manageCardEvent, passbookPass, secureElement);
+        String deviceType = SMPEventDataServiceProxy.getDeviceType(provisionCardEvent, secureElement);
         String deviceImageUrl = SMPEventDataServiceProxy.getDeviceImageUrl(manageCardEvent);
 
-        String dsid = SMPEventDataServiceProxy.getDsid(athenaCardEvent, manageCardEvent, passbookPass);
-        String locale = SMPEventDataServiceProxy.getLocale(athenaCardEvent, manageCardEvent);
+        String dsid = SMPEventDataServiceProxy.getDsid(provisionCardEvent, manageCardEvent, passbookPass);
+        String locale = SMPEventDataServiceProxy.getLocale(provisionCardEvent, manageCardEvent);
 
-        boolean isFirstProvision = (smpCardEvent == SMPCardEvent.PROVISION_CARD) && SMPEventDataServiceProxy.isFirstProvision(secureElement);
+        boolean isFirstProvision = (smpCardEvent == SMPCardEvent.PROVISION_CARD) && SMPEventDataServiceProxy.isFirstProvision(provisionCardEvent);
 
         return EmailRecord.getBuilder().smpCardEvent(smpCardEvent).
                 conversationId(conversationId).
@@ -50,7 +50,7 @@ class EmailContentService
                 dsid(dsid).
                 locale(locale).
                 firstProvisionEvent(isFirstProvision).
-                cards(SMPEventDataServiceProxy.getCards(athenaCardEvent, manageCardEvent)).
+                cards(SMPEventDataServiceProxy.getCards(provisionCardEvent, manageCardEvent)).
                 manageCardEvent(manageCardEvent).
                 build();
     }

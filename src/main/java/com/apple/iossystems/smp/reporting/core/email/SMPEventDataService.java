@@ -5,6 +5,7 @@ import com.apple.iossystems.smp.domain.icloud.FetchDeviceResponse;
 import com.apple.iossystems.smp.icloud.util.iCloudService;
 import com.apple.iossystems.smp.persistence.entity.*;
 import com.apple.iossystems.smp.service.PassManagementService;
+import com.apple.iossystems.smp.service.SecureElementService;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
@@ -18,6 +19,7 @@ class SMPEventDataService
 
     private static final iCloudService ICLOUD_SERVICE = (iCloudService) AppContext.getApplicationContext().getBean("iCloudServiceImpl");
     private static final PassManagementService PASS_MANAGEMENT_SERVICE = AppContext.getApplicationContext().getBean(PassManagementService.class);
+    private static final SecureElementService SECURE_ELEMENT_SERVICE = AppContext.getApplicationContext().getBean(SecureElementService.class);
 
     private SMPEventDataService()
     {
@@ -63,7 +65,7 @@ class SMPEventDataService
         return PASS_MANAGEMENT_SERVICE.getPassByDpanId(dpanId);
     }
 
-    public static SecureElement getSecureElement(String dpanId)
+    public static SecureElement getSecureElementByDpanId(String dpanId)
     {
         SecureElement secureElement = null;
 
@@ -75,6 +77,11 @@ class SMPEventDataService
         }
 
         return secureElement;
+    }
+
+    public static SecureElement getSecureElementBySeId(String seId)
+    {
+        return SECURE_ELEMENT_SERVICE.findSecureElementBySeId(seId);
     }
 
     public static String getValueFromPassbookPass(PassbookPass passbookPass, String key)

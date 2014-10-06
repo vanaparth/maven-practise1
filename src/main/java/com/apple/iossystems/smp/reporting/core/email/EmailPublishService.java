@@ -51,7 +51,7 @@ public class EmailPublishService
                     requestSent = true;
                 }
 
-                log(emailRecord, requestSent);
+                EmailPublishServiceLogger.log(emailRecord, requestSent);
             }
         }
         catch (Exception e)
@@ -72,29 +72,11 @@ public class EmailPublishService
         }
     }
 
-    private static void log(EmailRecord emailRecord, boolean requestSent)
-    {
-        EmailPublishServiceLogger.log(emailRecord);
-        EmailPublishServiceLogger.logTests(emailRecord, getCardEventRecord(emailRecord), requestSent);
-    }
-
-    private static CardEventRecord getCardEventRecord(EmailRecord emailRecord)
-    {
-        if (emailRecord.getCards() != null)
-        {
-            return CardEventRecord.getCardEventRecord(emailRecord.getCards());
-        }
-        else
-        {
-            return CardEventRecord.getInstance();
-        }
-    }
-
     private static void doSendRequest(EmailRecord emailRecord) throws Exception
     {
         SMPCardEvent smpCardEvent = emailRecord.getSMPCardEvent();
 
-        CardEventRecord cardEventRecord = getCardEventRecord(emailRecord);
+        CardEventRecord cardEventRecord = CardEventRecord.getCardEventRecord(emailRecord);
 
         List<SMPEmailCardData> successCards = cardEventRecord.getSuccessCards();
         List<SMPEmailCardData> failedCards = cardEventRecord.getFailedCards();
@@ -109,7 +91,7 @@ public class EmailPublishService
                         EmailRecordFormat.getValidValue(emailRecord.getCardHolderEmail()),
                         EmailRecordFormat.getValidValue(EmailRecordFormat.getLocale(emailRecord, EMAIL_LOCALE)),
                         EmailRecordFormat.getValidValue(emailRecord.getDeviceName()),
-                        EmailRecordFormat.getValidValue(EmailRecordFormat.getDeviceType(emailRecord)),
+                        EmailRecordFormat.getValidValue(emailRecord.getDeviceType()),
                         EmailRecordFormat.getValidValue(emailRecord.getDsid()));
 
                 new SMPFirstTimeProvisionMailHandler(request).sendEmail();
@@ -130,7 +112,7 @@ public class EmailPublishService
                             EmailRecordFormat.getValidValue(emailRecord.getCardHolderEmail()),
                             EmailRecordFormat.getValidValue(emailRecord.getDsid()),
                             EmailRecordFormat.getValidValue(EmailRecordFormat.getLocale(emailRecord, EMAIL_LOCALE)),
-                            EmailRecordFormat.getValidValue(EmailRecordFormat.getDeviceType(emailRecord)),
+                            EmailRecordFormat.getValidValue(emailRecord.getDeviceType()),
                             EmailRecordFormat.getValidValue(emailRecord.getDeviceImageUrl()));
 
                     new SMPSuccessSuspendMailHandler(request).sendEmail();
@@ -146,7 +128,7 @@ public class EmailPublishService
                             EmailRecordFormat.getValidValue(emailRecord.getCardHolderEmail()),
                             EmailRecordFormat.getValidValue(EmailRecordFormat.getLocale(emailRecord, EMAIL_LOCALE)),
                             EmailRecordFormat.getValidValue(emailRecord.getDsid()),
-                            EmailRecordFormat.getValidValue(EmailRecordFormat.getDeviceType(emailRecord)),
+                            EmailRecordFormat.getValidValue(emailRecord.getDeviceType()),
                             failedCards,
                             EmailRecordFormat.getValidValue(emailRecord.getDeviceImageUrl()));
 
@@ -168,7 +150,7 @@ public class EmailPublishService
                             EmailRecordFormat.getValidValue(emailRecord.getConversationId()),
                             EmailRecordFormat.getValidValue(emailRecord.getCardHolderEmail()),
                             EmailRecordFormat.getValidValue(EmailRecordFormat.getLocale(emailRecord, EMAIL_LOCALE)),
-                            EmailRecordFormat.getValidValue(EmailRecordFormat.getDeviceType(emailRecord)),
+                            EmailRecordFormat.getValidValue(emailRecord.getDeviceType()),
                             EmailRecordFormat.getValidValue(emailRecord.getDsid()),
                             EmailRecordFormat.getValidValue(emailRecord.getDeviceImageUrl()),
                             EmailRecordFormat.getValidValue(EmailRecordFormat.getFmipSource(emailRecord)));
@@ -186,7 +168,7 @@ public class EmailPublishService
                             EmailRecordFormat.getValidValue(emailRecord.getCardHolderEmail()),
                             EmailRecordFormat.getValidValue(EmailRecordFormat.getLocale(emailRecord, EMAIL_LOCALE)),
                             EmailRecordFormat.getValidValue(emailRecord.getDsid()),
-                            EmailRecordFormat.getValidValue(EmailRecordFormat.getDeviceType(emailRecord)),
+                            EmailRecordFormat.getValidValue(emailRecord.getDeviceType()),
                             failedCards,
                             EmailRecordFormat.getValidValue(emailRecord.getDeviceImageUrl()),
                             EmailRecordFormat.getValidValue(EmailRecordFormat.getFmipSource(emailRecord)));

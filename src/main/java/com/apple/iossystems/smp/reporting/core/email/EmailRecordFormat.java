@@ -37,48 +37,11 @@ class EmailRecordFormat
             }
         }
 
-        return ValidValue.getStringValueWithDefault(value, "");
+        return getValidValue(value);
     }
 
     public static String getValidValue(String value)
     {
         return ValidValue.getStringValueWithDefault(value, "");
-    }
-
-    public static String getDeviceType(EmailRecord record)
-    {
-        String deviceType = record.getDeviceType();
-
-        if (deviceType != null)
-        {
-            String value = getDeviceTypeFromCode(deviceType);
-
-            if ((value != null) && (!value.isEmpty()))
-            {
-                deviceType = value;
-            }
-        }
-
-        return ValidValue.getStringValueWithDefault(deviceType, "");
-    }
-
-    private static String getDeviceTypeFromCode(String value)
-    {
-        if (value.equals("1"))
-        {
-            return "iPhone";
-        }
-        else if (value.equals("2"))
-        {
-            return "iPad";
-        }
-        else if (value.equals("3"))
-        {
-            return "Watch";
-        }
-        else
-        {
-            return "";
-        }
     }
 }

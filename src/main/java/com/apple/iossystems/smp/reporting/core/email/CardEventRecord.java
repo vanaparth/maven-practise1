@@ -17,9 +17,14 @@ class CardEventRecord
     {
     }
 
-    public static CardEventRecord getInstance()
+    private void addSuccessCard(SMPEmailCardData card)
     {
-        return new CardEventRecord();
+        successCards.add(card);
+    }
+
+    private void addFailedCard(SMPEmailCardData card)
+    {
+        failedCards.add(card);
     }
 
     public List<SMPEmailCardData> getSuccessCards()
@@ -32,16 +37,6 @@ class CardEventRecord
         return failedCards;
     }
 
-    public void addSuccessCard(SMPEmailCardData card)
-    {
-        successCards.add(card);
-    }
-
-    public void addFailedCard(SMPEmailCardData card)
-    {
-        failedCards.add(card);
-    }
-
     public boolean isSuccessful()
     {
         return (!successCards.isEmpty() && failedCards.isEmpty());
@@ -52,7 +47,19 @@ class CardEventRecord
         return (!failedCards.isEmpty());
     }
 
-    public static CardEventRecord getCardEventRecord(List<Card> cards)
+    public static CardEventRecord getCardEventRecord(EmailRecord emailRecord)
+    {
+        if ((emailRecord != null) && (emailRecord.getCards() != null))
+        {
+            return CardEventRecord.getCardEventRecord(emailRecord.getCards());
+        }
+        else
+        {
+            return new CardEventRecord();
+        }
+    }
+
+    private static CardEventRecord getCardEventRecord(List<Card> cards)
     {
         CardEventRecord cardEventRecord = new CardEventRecord();
 

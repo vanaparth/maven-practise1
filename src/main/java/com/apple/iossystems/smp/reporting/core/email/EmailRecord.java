@@ -1,5 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
+import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
 import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
 
 import java.util.Calendar;
@@ -231,7 +232,7 @@ class EmailRecord
 
             if (deviceImageUrl == null)
             {
-                deviceImageUrl = "https://statici.icloud.com/fmipmobile/deviceImages-4.0/iPhone/iPhone7,1-e1e4e3-e1ccb5/online-nolocation_iphone__2x.png";
+                deviceImageUrl = ApplicationConfigurationManager.getDeviceImageUrl();
             }
         }
 

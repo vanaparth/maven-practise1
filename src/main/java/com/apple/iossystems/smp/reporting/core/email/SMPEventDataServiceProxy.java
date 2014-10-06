@@ -16,14 +16,19 @@ class SMPEventDataServiceProxy
     {
     }
 
-    private static PassbookPass getPassbookPass(String dpanId)
+    private static PassbookPass getPassbookPassByDpanId(String dpanId)
     {
         return (dpanId != null) ? SMPEventDataService.getPassByDpanId(dpanId) : null;
     }
 
-    private static SecureElement getSecureElement(String dpanId)
+    private static SecureElement getSecureElementByDpanId(String dpanId)
     {
-        return (dpanId != null) ? SMPEventDataService.getSecureElement(dpanId) : null;
+        return (dpanId != null) ? SMPEventDataService.getSecureElementByDpanId(dpanId) : null;
+    }
+
+    public static SecureElement getSecureElementBySeId(String seId)
+    {
+        return (seId != null) ? SMPEventDataService.getSecureElementBySeId(seId) : null;
     }
 
     public static PassbookPass getPassbookPass(ManageCardEvent manageCardEvent)
@@ -38,7 +43,7 @@ class SMPEventDataServiceProxy
             {
                 for (CardEvent cardEvent : cardEvents)
                 {
-                    passbookPass = getPassbookPass(cardEvent.getDpanId());
+                    passbookPass = getPassbookPassByDpanId(cardEvent.getDpanId());
 
                     if (passbookPass != null)
                     {
@@ -63,7 +68,7 @@ class SMPEventDataServiceProxy
             {
                 for (CardEvent cardEvent : cardEvents)
                 {
-                    secureElement = getSecureElement(cardEvent.getDpanId());
+                    secureElement = getSecureElementByDpanId(cardEvent.getDpanId());
 
                     if (secureElement != null)
                     {
@@ -76,13 +81,13 @@ class SMPEventDataServiceProxy
         return secureElement;
     }
 
-    public static String getCardHolderName(AthenaCardEvent athenaCardEvent, ManageCardEvent manageCardEvent, PassbookPass passbookPass)
+    public static String getCardHolderName(ProvisionCardEvent provisionCardEvent, ManageCardEvent manageCardEvent, PassbookPass passbookPass)
     {
         String value = null;
 
-        if (athenaCardEvent != null)
+        if (provisionCardEvent != null)
         {
-            value = athenaCardEvent.getCardHolderName();
+            value = provisionCardEvent.getCardHolderName();
         }
 
         if ((value == null) && (manageCardEvent != null))
@@ -98,13 +103,13 @@ class SMPEventDataServiceProxy
         return value;
     }
 
-    public static String getCardHolderEmail(AthenaCardEvent athenaCardEvent, ManageCardEvent manageCardEvent)
+    public static String getCardHolderEmail(ProvisionCardEvent provisionCardEvent, ManageCardEvent manageCardEvent)
     {
         String value = null;
 
-        if (athenaCardEvent != null)
+        if (provisionCardEvent != null)
         {
-            value = athenaCardEvent.getCardHolderEmail();
+            value = provisionCardEvent.getCardHolderEmail();
         }
 
         if ((value == null) && (manageCardEvent != null))
@@ -115,13 +120,13 @@ class SMPEventDataServiceProxy
         return value;
     }
 
-    public static String getDeviceName(AthenaCardEvent athenaCardEvent, ManageCardEvent manageCardEvent, PassbookPass passbookPass, SecureElement secureElement)
+    public static String getDeviceName(ProvisionCardEvent provisionCardEvent, ManageCardEvent manageCardEvent, PassbookPass passbookPass, SecureElement secureElement)
     {
         String value = null;
 
-        if (athenaCardEvent != null)
+        if (provisionCardEvent != null)
         {
-            value = athenaCardEvent.getDeviceName();
+            value = provisionCardEvent.getDeviceName();
         }
 
         if ((value == null) && (manageCardEvent != null))
@@ -137,13 +142,13 @@ class SMPEventDataServiceProxy
         return value;
     }
 
-    public static String getDeviceType(AthenaCardEvent athenaCardEvent, SecureElement secureElement)
+    public static String getDeviceType(ProvisionCardEvent provisionCardEvent, SecureElement secureElement)
     {
         String value = null;
 
-        if (athenaCardEvent != null)
+        if (provisionCardEvent != null)
         {
-            value = athenaCardEvent.getDeviceType();
+            value = provisionCardEvent.getDeviceType();
         }
 
         if ((value == null) && (secureElement != null))
@@ -159,13 +164,13 @@ class SMPEventDataServiceProxy
         return (manageCardEvent != null) ? manageCardEvent.getDeviceImageUrl() : null;
     }
 
-    public static String getDsid(AthenaCardEvent athenaCardEvent, ManageCardEvent manageCardEvent, PassbookPass passbookPass)
+    public static String getDsid(ProvisionCardEvent provisionCardEvent, ManageCardEvent manageCardEvent, PassbookPass passbookPass)
     {
         String value = null;
 
-        if (athenaCardEvent != null)
+        if (provisionCardEvent != null)
         {
-            value = athenaCardEvent.getDsid();
+            value = provisionCardEvent.getDsid();
         }
 
         if ((value == null) && (manageCardEvent != null))
@@ -181,13 +186,13 @@ class SMPEventDataServiceProxy
         return value;
     }
 
-    public static String getLocale(AthenaCardEvent athenaCardEvent, ManageCardEvent manageCardEvent)
+    public static String getLocale(ProvisionCardEvent provisionCardEvent, ManageCardEvent manageCardEvent)
     {
         String value = null;
 
-        if (athenaCardEvent != null)
+        if (provisionCardEvent != null)
         {
-            value = athenaCardEvent.getDeviceLanguage();
+            value = provisionCardEvent.getLocale();
         }
 
         if ((value == null) && (manageCardEvent != null))
@@ -198,18 +203,23 @@ class SMPEventDataServiceProxy
         return value;
     }
 
-    public static boolean isFirstProvision(SecureElement secureElement)
+    public static int getProvisionCount(SecureElement secureElement)
     {
-        return ((secureElement != null) && (secureElement.getProvisioningCount() <= 1));
+        return ((secureElement != null) ? secureElement.getProvisioningCount() : 0);
     }
 
-    public static List<Card> getCards(AthenaCardEvent athenaCardEvent, ManageCardEvent manageCardEvent)
+    public static boolean isFirstProvision(ProvisionCardEvent provisionCardEvent)
+    {
+        return ((provisionCardEvent != null) && provisionCardEvent.isFirstProvision());
+    }
+
+    public static List<Card> getCards(ProvisionCardEvent provisionCardEvent, ManageCardEvent manageCardEvent)
     {
         List<Card> cards;
 
         if (manageCardEvent != null)
         {
-            cards = getCards(athenaCardEvent, manageCardEvent.getCardEvents());
+            cards = getCards(provisionCardEvent, manageCardEvent.getCardEvents());
         }
         else
         {
@@ -219,7 +229,7 @@ class SMPEventDataServiceProxy
         return cards;
     }
 
-    private static List<Card> getCards(AthenaCardEvent athenaCardEvent, List<CardEvent> cardEvents)
+    private static List<Card> getCards(ProvisionCardEvent provisionCardEvent, List<CardEvent> cardEvents)
     {
         List<Card> cards = new ArrayList<Card>();
 
@@ -227,14 +237,14 @@ class SMPEventDataServiceProxy
         {
             for (CardEvent cardEvent : cardEvents)
             {
-                cards.add(getCard(athenaCardEvent, cardEvent));
+                cards.add(getCard(provisionCardEvent, cardEvent));
             }
         }
 
         return cards;
     }
 
-    private static Card getCard(AthenaCardEvent athenaCardEvent, CardEvent cardEvent)
+    private static Card getCard(ProvisionCardEvent provisionCardEvent, CardEvent cardEvent)
     {
         String cardDisplayNumber = null;
         String cardDescription = null;
@@ -260,9 +270,9 @@ class SMPEventDataServiceProxy
             }
         }
 
-        if ((cardDisplayNumber == null) && (athenaCardEvent != null))
+        if ((cardDisplayNumber == null) && (provisionCardEvent != null))
         {
-            cardDisplayNumber = athenaCardEvent.getCardDisplayNumber();
+            cardDisplayNumber = provisionCardEvent.getCardDisplayNumber();
         }
 
         return Card.getInstance(cardDescription, cardDisplayNumber, cardEvent);

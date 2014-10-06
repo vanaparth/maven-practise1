@@ -23,6 +23,8 @@ class ApplicationConfiguration
     private static final String IREPORTER_URL_KEY = "icloud.ireporter.url";
     private static final String HASH_PASS_KEY = "icloud.ireporter.pass";
 
+    private static final String DEVICE_IMAGE_URL_KEY = "smp.reporting.email.deviceimage.url";
+
     private static final String EMAIL_PROVISION_KEY = "smp.reporting.email.provision";
     private static final String EMAIL_SUSPEND_KEY = "smp.reporting.email.suspend";
     private static final String EMAIL_UNLINK_KEY = "smp.reporting.email.unlink";
@@ -44,13 +46,15 @@ class ApplicationConfiguration
     static final String IREPORTER_URL = PROPERTY_MANAGER.valueForKeyWithDefault(IREPORTER_URL_KEY, "https://icloud4-e3.icloud.com");
     static final String HASH_PASS = PROPERTY_MANAGER.valueForKeyWithDefault(HASH_PASS_KEY, "pLijzg2e2QNspdhOyNWdOSScPszmZBryJ0L8BcQ116BhkT6p0iHyNcwnlFIwhLun");
 
+    static final String DEVICE_IMAGE_URL = PROPERTY_MANAGER.valueForKeyWithDefault(DEVICE_IMAGE_URL_KEY, "https://statici.icloud.com/fmipmobile/deviceImages-4.0/iPhone/iPhone7,1-e1e4e3-e1ccb5/online-nolocation_iphone__2x.png");
+
     static final boolean EMAIL_PROVISION = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault(EMAIL_PROVISION_KEY, true);
     static final boolean EMAIL_SUSPEND = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault(EMAIL_SUSPEND_KEY, true);
     static final boolean EMAIL_UNLINK = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault(EMAIL_UNLINK_KEY, true);
     static final boolean EMAIL_LOCALE = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault(EMAIL_LOCALE_KEY, true);
 
-    static final String FMIP_CERTIFICATE = PROPERTY_MANAGER.valueForKeyWithDefault(FMIP_CERTIFICATE_KEY, "26f655da225308ee");
-    static final String FMIP_REMOTE_CERTIFICATE = PROPERTY_MANAGER.valueForKeyWithDefault(FMIP_REMOTE_CERTIFICATE_KEY, "7dc037c70bfebddb");
+    static final String FMIP_CERTIFICATE = PROPERTY_MANAGER.valueForKeyWithDefault(FMIP_CERTIFICATE_KEY, "0");
+    static final String FMIP_REMOTE_CERTIFICATE = PROPERTY_MANAGER.valueForKeyWithDefault(FMIP_REMOTE_CERTIFICATE_KEY, "0");
 
     static final String RABBIT_HOST_KEY = "rabbit.host";
     static final String RABBIT_PORT_KEY = "rabbit.port";

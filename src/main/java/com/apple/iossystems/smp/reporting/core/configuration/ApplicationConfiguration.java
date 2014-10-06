@@ -46,7 +46,7 @@ class ApplicationConfiguration
     static final String IREPORTER_URL = PROPERTY_MANAGER.valueForKeyWithDefault(IREPORTER_URL_KEY, "https://icloud4-e3.icloud.com");
     static final String HASH_PASS = PROPERTY_MANAGER.valueForKeyWithDefault(HASH_PASS_KEY, "pLijzg2e2QNspdhOyNWdOSScPszmZBryJ0L8BcQ116BhkT6p0iHyNcwnlFIwhLun");
 
-    static final String DEVICE_IMAGE_URL = PROPERTY_MANAGER.valueForKeyWithDefault(DEVICE_IMAGE_URL_KEY, "https://statici.icloud.com/fmipmobile/deviceImages-4.0/iPhone/iPhone7,1-e1e4e3-e1ccb5/online-nolocation_iphone__2x.png");
+    static final String DEVICE_IMAGE_URL = PROPERTY_MANAGER.valueForKeyWithDefault(DEVICE_IMAGE_URL_KEY, "");
 
     static final boolean EMAIL_PROVISION = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault(EMAIL_PROVISION_KEY, true);
     static final boolean EMAIL_SUSPEND = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault(EMAIL_SUSPEND_KEY, true);

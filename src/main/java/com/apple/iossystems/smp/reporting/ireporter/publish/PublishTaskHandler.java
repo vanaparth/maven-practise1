@@ -7,6 +7,7 @@ import com.apple.iossystems.smp.reporting.core.email.EmailPublishService;
 import com.apple.iossystems.smp.reporting.core.event.*;
 import com.apple.iossystems.smp.reporting.core.hubble.HubbleAnalytics;
 import com.apple.iossystems.smp.reporting.ireporter.json.IReporterJsonBuilder;
+import org.apache.log4j.Logger;
 
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
@@ -195,6 +196,7 @@ public class PublishTaskHandler implements ScheduledTaskHandler
         }
         else if (eventType == EventType.EMAIL)
         {
+            Logger.getLogger(PublishTaskHandler.class).info("Received email event" );
             return emailReportsQueue.offer(record);
         }
         else

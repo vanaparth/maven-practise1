@@ -44,7 +44,12 @@ class CardEventRecord
 
     public boolean hasPartialSuccess()
     {
-        return (!failedCards.isEmpty());
+        return (!successCards.isEmpty() && !failedCards.isEmpty());
+    }
+
+    public boolean isFailed()
+    {
+        return (successCards.isEmpty() && !failedCards.isEmpty());
     }
 
     public static CardEventRecord getCardEventRecord(EmailRecord emailRecord)

@@ -134,6 +134,22 @@ public class EmailPublishService
 
                     new SMPPartialSuspendMailHandler(request).sendEmail();
                 }
+                else if (cardEventRecord.isFailed())
+                {
+                    SuspendEmailRequest request = new SuspendEmailRequest(
+                            EmailRecordFormat.getValidValue(emailRecord.getDeviceName()),
+                            failedCards,
+                            emailRecord.getDate(),
+                            EmailRecordFormat.getValidValue(emailRecord.getCardHolderName()),
+                            EmailRecordFormat.getValidValue(emailRecord.getConversationId()),
+                            EmailRecordFormat.getValidValue(emailRecord.getCardHolderEmail()),
+                            EmailRecordFormat.getValidValue(emailRecord.getDsid()),
+                            EmailRecordFormat.getValidValue(EmailRecordFormat.getLocale(emailRecord, EMAIL_LOCALE)),
+                            EmailRecordFormat.getValidValue(emailRecord.getDeviceType()),
+                            EmailRecordFormat.getValidValue(emailRecord.getDeviceImageUrl()));
+
+                    new SMPFailSuspendMailHandler(request).sendEmail();
+                }
             }
         }
         else if (smpCardEvent == SMPCardEvent.UNLINK_CARD)
@@ -174,6 +190,23 @@ public class EmailPublishService
                             EmailRecordFormat.getValidValue(EmailRecordFormat.getFmipSource(emailRecord)));
 
                     new SMPPartialRemoveMailHandler(request).sendEmail();
+                }
+                else if (cardEventRecord.isFailed())
+                {
+                    RemoveEmailRequest request = new RemoveEmailRequest(
+                            EmailRecordFormat.getValidValue(emailRecord.getDeviceName()),
+                            failedCards,
+                            emailRecord.getDate(),
+                            EmailRecordFormat.getValidValue(emailRecord.getCardHolderName()),
+                            EmailRecordFormat.getValidValue(emailRecord.getConversationId()),
+                            EmailRecordFormat.getValidValue(emailRecord.getCardHolderEmail()),
+                            EmailRecordFormat.getValidValue(EmailRecordFormat.getLocale(emailRecord, EMAIL_LOCALE)),
+                            EmailRecordFormat.getValidValue(emailRecord.getDeviceType()),
+                            EmailRecordFormat.getValidValue(emailRecord.getDsid()),
+                            EmailRecordFormat.getValidValue(emailRecord.getDeviceImageUrl()),
+                            EmailRecordFormat.getValidValue(EmailRecordFormat.getFmipSource(emailRecord)));
+
+                    new SMPFailRemoveMailHandler(request).sendEmail();
                 }
             }
         }

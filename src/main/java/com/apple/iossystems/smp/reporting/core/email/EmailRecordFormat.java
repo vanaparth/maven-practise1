@@ -16,9 +16,9 @@ class EmailRecordFormat
         return (useDefaultLocale ? "en_US" : record.getLocale());
     }
 
-    public static String formatCardDescription(String cardDescription)
+    public static String formatCardDisplayNumber(String cardDisplayNumber)
     {
-        return (cardDescription != null) ? ("****" + cardDescription) : "";
+        return ((cardDisplayNumber != null) ? ("****" + cardDisplayNumber) : "");
     }
 
     public static String getFmipSource(EmailRecord record)

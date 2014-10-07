@@ -65,7 +65,6 @@ public class SMPEventNotificationService
     {
         try
         {
-            LOGGER.debug("Publishing event " + EventType.getLogLevel(record));
             logService.logEvent("event", EventType.getLogLevel(record), MapToPair.toPairs(record.getData()));
         }
         catch (Exception e)

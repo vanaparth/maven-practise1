@@ -23,15 +23,13 @@ class ApplicationConfiguration
     private static final String IREPORTER_URL_KEY = "icloud.ireporter.url";
     private static final String HASH_PASS_KEY = "icloud.ireporter.pass";
 
-    private static final String DEVICE_IMAGE_URL_KEY = "smp.reporting.email.deviceimage.url";
-
     private static final String EMAIL_PROVISION_KEY = "smp.reporting.email.provision";
     private static final String EMAIL_SUSPEND_KEY = "smp.reporting.email.suspend";
     private static final String EMAIL_UNLINK_KEY = "smp.reporting.email.unlink";
     private static final String EMAIL_LOCALE_KEY = "smp.reporting.email.locale";
 
     private static final String FMIP_CERTIFICATE_KEY = "com.apple.iossystems.internal.fmip.app.cert";
-    private static final String FMIP_REMOTE_CERTIFICATE_KEY = "com.apple.iossystems.internal.fmip.remote.cert";
+    private static final String FMIP_REMOTE_CERTIFICATE_KEY = "com.apple.iossystems.internal.fmip.setup.cert";
 
     static final String KEYSTONE_RABBIT_HOST = PROPERTY_MANAGER.valueForKeyWithDefault(KEYSTONE_RABBIT_HOST_KEY, "rabbit-np-amqp.corp.apple.com");
     static final String KEYSTONE_RABBIT_PORT = PROPERTY_MANAGER.valueForKeyWithDefault(KEYSTONE_RABBIT_PORT_KEY, "5672");
@@ -45,8 +43,6 @@ class ApplicationConfiguration
     static final String SMP_EVENTS_EXCHANGE = PROPERTY_MANAGER.valueForKeyWithDefault(SMP_EVENTS_EXCHANGE_KEY, "iossystems.stockholm.events");
     static final String IREPORTER_URL = PROPERTY_MANAGER.valueForKeyWithDefault(IREPORTER_URL_KEY, "https://icloud4-e3.icloud.com");
     static final String HASH_PASS = PROPERTY_MANAGER.valueForKeyWithDefault(HASH_PASS_KEY, "pLijzg2e2QNspdhOyNWdOSScPszmZBryJ0L8BcQ116BhkT6p0iHyNcwnlFIwhLun");
-
-    static final String DEVICE_IMAGE_URL = PROPERTY_MANAGER.valueForKeyWithDefault(DEVICE_IMAGE_URL_KEY, "");
 
     static final boolean EMAIL_PROVISION = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault(EMAIL_PROVISION_KEY, true);
     static final boolean EMAIL_SUSPEND = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault(EMAIL_SUSPEND_KEY, true);

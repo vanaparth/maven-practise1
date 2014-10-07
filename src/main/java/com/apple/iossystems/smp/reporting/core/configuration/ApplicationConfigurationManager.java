@@ -94,11 +94,6 @@ public class ApplicationConfigurationManager
         return ApplicationConfiguration.HASH_PASS;
     }
 
-    public static String getDeviceImageUrl()
-    {
-        return ApplicationConfiguration.DEVICE_IMAGE_URL;
-    }
-
     public static boolean getEmailProvision()
     {
         return ApplicationConfiguration.EMAIL_PROVISION;

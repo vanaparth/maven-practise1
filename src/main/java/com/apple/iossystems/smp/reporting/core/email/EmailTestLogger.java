@@ -1,5 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
+import com.apple.iossystems.smp.email.service.impl.ssp.domain.SMPEmailCardData;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
 import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
 import org.apache.log4j.Logger;
@@ -29,7 +30,21 @@ class EmailTestLogger
 
     private static String getCardEventRecordString(CardEventRecord record)
     {
-        return "Success Cards: " + record.getSuccessCards().size() + "\t" + "Failed Cards: " + record.getFailedCards().size();
+        StringBuilder message = new StringBuilder();
+
+        message.append("Success Cards: " + record.getSuccessCards().size() + "\tFailed Cards: " + record.getFailedCards().size());
+
+        for (SMPEmailCardData smpEmailCardData : record.getSuccessCards())
+        {
+            message.append("Success Card: " + smpEmailCardData.getCardLastFour() + "\t" + smpEmailCardData.getCardShortDescription());
+        }
+
+        for (SMPEmailCardData smpEmailCardData : record.getFailedCards())
+        {
+            message.append("Failed Card: " + smpEmailCardData.getCardLastFour() + "\t" + smpEmailCardData.getCardShortDescription());
+        }
+
+        return message.toString();
     }
 
     private static String getEmailRecordString(EmailRecord record)

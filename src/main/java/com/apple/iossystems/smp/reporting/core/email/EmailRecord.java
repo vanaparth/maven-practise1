@@ -1,6 +1,5 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
-import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
 import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
 
 import java.util.Calendar;
@@ -228,11 +227,6 @@ class EmailRecord
             if (timestamp == null)
             {
                 timestamp = String.valueOf(System.currentTimeMillis());
-            }
-
-            if (deviceImageUrl == null)
-            {
-                deviceImageUrl = ApplicationConfigurationManager.getDeviceImageUrl();
             }
         }
 

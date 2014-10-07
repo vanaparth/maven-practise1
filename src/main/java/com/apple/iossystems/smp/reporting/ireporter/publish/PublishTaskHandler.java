@@ -20,6 +20,7 @@ public class PublishTaskHandler implements ScheduledTaskHandler
     private IReporterPublishService reportsPublishService = ReportsPublishService.getInstance();
     private IReporterPublishService auditPublishService = AuditPublishService.getInstance();
     private IReporterPublishService paymentReportsPublishService = PaymentReportsPublishService.getInstance();
+    private IReporterPublishService paymentAuditPublishService = PaymentAuditPublishService.getInstance();
 
     private Statistics statistics = Statistics.getInstance();
 
@@ -121,6 +122,7 @@ public class PublishTaskHandler implements ScheduledTaskHandler
     private void handleAuditEvent()
     {
         handleAuditEvent(auditPublishService, REPORTS_METRICS);
+        handleAuditEvent(paymentAuditPublishService, PAYMENT_REPORTS_METRICS);
     }
 
     private void handlePublishEvent(IReporterPublishService publishService, BlockingQueue<EventRecord> queue, PublishMetric publishMetric)

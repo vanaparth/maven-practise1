@@ -1,8 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.iossystems.smp.domain.Actor;
-import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
-import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 
 import java.math.BigInteger;
 import java.util.ArrayList;

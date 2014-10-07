@@ -41,6 +41,11 @@ public class IReporterConfigurationFactory
         return load(IReporterConfiguration.Type.PAYMENT_REPORTS);
     }
 
+    static IReporterConfiguration loadPaymentAuditConfiguration()
+    {
+        return load(IReporterConfiguration.Type.PAYMENT_AUDIT);
+    }
+
     private static IReporterConfiguration load(IReporterConfiguration.Type configurationType)
     {
         try

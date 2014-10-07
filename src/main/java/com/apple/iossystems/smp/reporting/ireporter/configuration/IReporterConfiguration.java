@@ -18,13 +18,17 @@ public class IReporterConfiguration
 
     public static final String DEFAULT_AUDIT_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/stockholm_audit";
 
-    public static final String DEFAULT_PAYMENT_REPORTS_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/oslo";
-
     public static final String DEFAULT_REPORTS_URL = BASE_URL + "/e3/rest/1/stockholm";
 
     public static final String DEFAULT_AUDIT_URL = BASE_URL + "/e3/rest/1/stockholm_audit";
 
+    public static final String DEFAULT_PAYMENT_REPORTS_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/oslo";
+
+    public static final String DEFAULT_PAYMENT_AUDIT_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/oslo_audit";
+
     public static final String DEFAULT_PAYMENT_REPORTS_URL = BASE_URL + "/e3/rest/1/oslo";
+
+    public static final String DEFAULT_PAYMENT_AUDIT_URL = BASE_URL + "/e3/rest/1/oslo_audit";
 
     // Other configuration settings
     public static final String DEFAULT_PUBLISH_KEY = "QWERTYUIOPASDF12";
@@ -140,7 +144,8 @@ public class IReporterConfiguration
     {
         REPORTS(DEFAULT_REPORTS_CONFIGURATION_URL, DEFAULT_REPORTS_URL),
         AUDIT(DEFAULT_AUDIT_CONFIGURATION_URL, DEFAULT_AUDIT_URL),
-        PAYMENT_REPORTS(DEFAULT_PAYMENT_REPORTS_CONFIGURATION_URL, DEFAULT_PAYMENT_REPORTS_URL);
+        PAYMENT_REPORTS(DEFAULT_PAYMENT_REPORTS_CONFIGURATION_URL, DEFAULT_PAYMENT_REPORTS_URL),
+        PAYMENT_AUDIT(DEFAULT_PAYMENT_AUDIT_CONFIGURATION_URL, DEFAULT_PAYMENT_AUDIT_URL);
 
         private final String configurationURL;
         private final String publishURL;

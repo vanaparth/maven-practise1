@@ -24,7 +24,7 @@ class EmailTestLogger
         {
             CardEventRecord cardEventRecord = CardEventRecord.getCardEventRecord(record);
 
-            LOGGER.info("Sending email [" + requestSent + "] for " + getEmailRecordString(record) + " " + getCardEventRecordString(cardEventRecord));
+            LOGGER.info("Sending email [" + requestSent + "] for " + getEmailRecordString(record) + "\t" + getCardEventRecordString(cardEventRecord));
         }
     }
 
@@ -32,16 +32,16 @@ class EmailTestLogger
     {
         StringBuilder message = new StringBuilder();
 
-        message.append("Success Cards: " + record.getSuccessCards().size() + " Failed Cards: " + record.getFailedCards().size());
+        message.append("Success Cards: " + record.getSuccessCards().size() + "\tFailed Cards: " + record.getFailedCards().size());
 
         for (SMPEmailCardData smpEmailCardData : record.getSuccessCards())
         {
-            message.append("Success Card: " + smpEmailCardData.getCardLastFour() + " " + smpEmailCardData.getCardShortDescription());
+            message.append("\tSuccess Card: " + smpEmailCardData.getCardLastFour() + "\t" + smpEmailCardData.getCardShortDescription());
         }
 
         for (SMPEmailCardData smpEmailCardData : record.getFailedCards())
         {
-            message.append("Failed Card: " + smpEmailCardData.getCardLastFour() + " " + smpEmailCardData.getCardShortDescription());
+            message.append("\tFailed Card: " + smpEmailCardData.getCardLastFour() + "\t" + smpEmailCardData.getCardShortDescription());
         }
 
         return message.toString();
@@ -58,28 +58,28 @@ class EmailTestLogger
         if (manageCardEvent != null)
         {
             manageCardEventValue =
-                    "[Cardholder name: " + manageCardEvent.getCardHolderName() +
-                            " Cardholder email: " + manageCardEvent.getCardHolderEmail() +
-                            " Dsid: " + manageCardEvent.getDsid() +
-                            " Device name: " + manageCardEvent.getDeviceName() +
-                            " Device image url:" + manageCardEvent.getDeviceImageUrl() +
-                            " Locale: " + manageCardEvent.getLocale() +
-                            " Manage card api: " + manageCardEvent.getManageCardAPI() +
-                            " Card event source: " + manageCardEvent.getCardEventSource() +
-                            " Fmip source: " + manageCardEvent.getFmipSource() + "]";
+                    "[ Cardholder name: " + manageCardEvent.getCardHolderName() +
+                            "\tCardholder email: " + manageCardEvent.getCardHolderEmail() +
+                            "\tDsid: " + manageCardEvent.getDsid() +
+                            "\tDevice name: " + manageCardEvent.getDeviceName() +
+                            "\tDevice image url:" + manageCardEvent.getDeviceImageUrl() +
+                            "\tLocale: " + manageCardEvent.getLocale() +
+                            "\tManage card api: " + manageCardEvent.getManageCardAPI() +
+                            "\tCard event source: " + manageCardEvent.getCardEventSource() +
+                            "\tFmip source: " + manageCardEvent.getFmipSource() + " ]";
         }
 
         return "Name: " + record.getCardHolderName() +
-                " Event: " + smpCardEventName +
-                " Email: " + record.getCardHolderEmail() +
-                " First provision: " + record.isFirstProvisionEvent() +
-                " Conversation id: " + record.getConversationId() +
-                " Dsid: " + record.getDsid() +
-                " Locale: " + record.getLocale() +
-                " Device name: " + record.getDeviceName() +
-                " Device type: " + record.getDeviceType() +
-                " Device image url: " + record.getDeviceImageUrl() +
-                " Manage card event: " + manageCardEventValue;
+                "\tEvent: " + smpCardEventName +
+                "\tEmail: " + record.getCardHolderEmail() +
+                "\tFirst provision: " + record.isFirstProvisionEvent() +
+                "\tConversation id: " + record.getConversationId() +
+                "\tDsid: " + record.getDsid() +
+                "\tLocale: " + record.getLocale() +
+                "\tDevice name: " + record.getDeviceName() +
+                "\tDevice type: " + record.getDeviceType() +
+                "\tDevice image url: " + record.getDeviceImageUrl() +
+                "\tManage card event: " + manageCardEventValue;
 
     }
 }

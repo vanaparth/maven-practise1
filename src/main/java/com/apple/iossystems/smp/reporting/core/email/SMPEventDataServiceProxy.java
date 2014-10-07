@@ -268,11 +268,21 @@ class SMPEventDataServiceProxy
                     }
                 }
             }
+
+            if (cardDescription == null)
+            {
+                cardDescription = cardEvent.getCardDescription();
+            }
         }
 
         if ((cardDisplayNumber == null) && (provisionCardEvent != null))
         {
             cardDisplayNumber = provisionCardEvent.getCardDisplayNumber();
+        }
+
+        if ((cardDisplayNumber == null) && (cardEvent != null))
+        {
+            cardDisplayNumber = cardEvent.getCardDisplayNumber();
         }
 
         return Card.getInstance(cardDescription, cardDisplayNumber, cardEvent);

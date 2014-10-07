@@ -3,7 +3,6 @@ package com.apple.iossystems.smp.reporting.core.email;
 import com.apple.iossystems.smp.domain.Actor;
 import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
-import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -69,9 +68,9 @@ public class ManageCardEventBuilder
         return this;
     }
 
-    public ManageCardEventBuilder cardEvents(EventRecords records)
+    public ManageCardEventBuilder cardEvents(List<CardEvent> value)
     {
-        cardEvents = getCardEvents(records);
+        cardEvents = value;
         return this;
     }
 
@@ -104,24 +103,6 @@ public class ManageCardEventBuilder
                 fmipSource(fmipSource).
                 manageCardAPI(manageCardAPI).
                 cardEvents(cardEvents).build();
-    }
-
-    private List<CardEvent> getCardEvents(EventRecords records)
-    {
-        List<CardEvent> cardEvents = new ArrayList<CardEvent>();
-
-        if (records != null)
-        {
-            for (EventRecord record : records.getList())
-            {
-                String dpanId = record.getAttributeValue(EventAttribute.DPAN_ID.key());
-                boolean eventStatus = CardEventStatus.hasValidCardStatus(record);
-
-                cardEvents.add(CardEvent.getInstance(dpanId, eventStatus));
-            }
-        }
-
-        return cardEvents;
     }
 
     private String getCardHolderName(String firstName, String lastName)

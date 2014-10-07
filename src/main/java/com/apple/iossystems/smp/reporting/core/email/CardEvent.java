@@ -9,25 +9,39 @@ import java.lang.reflect.Type;
 /**
  * @author Toch
  */
-class CardEvent
+public class CardEvent
 {
     private final String dpanId;
+    private final String cardDisplayNumber;
+    private final String cardDescription;
     private final boolean eventStatus;
 
-    private CardEvent(String dpanId, boolean eventStatus)
+    private CardEvent(String dpanId, String cardDisplayNumber, String cardDescription, boolean eventStatus)
     {
         this.dpanId = dpanId;
+        this.cardDisplayNumber = cardDisplayNumber;
+        this.cardDescription = cardDescription;
         this.eventStatus = eventStatus;
     }
 
-    public static CardEvent getInstance(String dpanId, boolean eventStatus)
+    public static CardEvent getInstance(String dpanId, String cardDisplayNumber, String cardDescription, boolean eventStatus)
     {
-        return new CardEvent(dpanId, eventStatus);
+        return new CardEvent(dpanId, cardDisplayNumber, cardDescription, eventStatus);
     }
 
     public String getDpanId()
     {
         return dpanId;
+    }
+
+    public String getCardDisplayNumber()
+    {
+        return cardDisplayNumber;
+    }
+
+    public String getCardDescription()
+    {
+        return cardDescription;
     }
 
     public boolean getEventStatus()
@@ -52,6 +66,8 @@ class CardEvent
             JsonObject jsonObject = new JsonObject();
 
             JsonObjectWriter.addProperty(jsonObject, "dpanId", cardEvent.dpanId);
+            JsonObjectWriter.addProperty(jsonObject, "cardDisplayNumber", cardEvent.cardDisplayNumber);
+            JsonObjectWriter.addProperty(jsonObject, "cardDescription", cardEvent.cardDescription);
             JsonObjectWriter.addProperty(jsonObject, "eventStatus", cardEvent.eventStatus);
 
             return jsonObject;
@@ -63,9 +79,11 @@ class CardEvent
             JsonObject jsonObject = jsonElement.getAsJsonObject();
 
             String dpanId = JsonObjectReader.getAsString(jsonObject, "dpanId");
+            String cardDisplayNumber = JsonObjectReader.getAsString(jsonObject, "cardDisplayNumber");
+            String cardDescription = JsonObjectReader.getAsString(jsonObject, "cardDescription");
             boolean eventStatus = JsonObjectReader.getAsBoolean(jsonObject, "eventStatus");
 
-            return new CardEvent(dpanId, eventStatus);
+            return new CardEvent(dpanId, cardDisplayNumber, cardDescription, eventStatus);
         }
     }
 }

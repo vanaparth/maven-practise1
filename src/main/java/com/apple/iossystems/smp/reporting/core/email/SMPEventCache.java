@@ -3,11 +3,11 @@ package com.apple.iossystems.smp.reporting.core.email;
 /**
  * @author Toch
  */
-public class NetworkCheckCardEventCache
+public class SMPEventCache
 {
     private static final long CACHE_TIMEOUT = 15 * 60 * 1000;
 
-    private NetworkCheckCardEventCache()
+    private SMPEventCache()
     {
     }
 
@@ -17,7 +17,7 @@ public class NetworkCheckCardEventCache
 
         if (conversationId != null)
         {
-            key = "smp_reporting_ncc_event_" + attribute.key + "_" + conversationId;
+            key = "smp_reporting_event_" + attribute.key + "_" + conversationId;
         }
 
         return key;
@@ -37,6 +37,7 @@ public class NetworkCheckCardEventCache
     {
         DEVICE_TYPE("device_type"),
         EMAIL("email"),
+        FIRST_PROVISION("first_provision"),
         LOCALE("locale");
 
         private final String key;

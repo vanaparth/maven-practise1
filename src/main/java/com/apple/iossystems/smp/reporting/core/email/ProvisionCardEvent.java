@@ -158,13 +158,13 @@ public class ProvisionCardEvent
         if ((conversationId != null) && (athenaCardDescriptor != null))
         {
             provisionCardEvent = new Builder().cardHolderName(athenaCardDescriptor.getCardHolderName()).
-                    cardHolderEmail(NetworkCheckCardEventCache.get(NetworkCheckCardEventCache.Attribute.EMAIL, conversationId)).
+                    cardHolderEmail(SMPEventCache.get(SMPEventCache.Attribute.EMAIL, conversationId)).
                     cardDisplayNumber(athenaCardDescriptor.getLastFour()).
                     deviceName(athenaCardDescriptor.getDeviceName()).
-                    deviceType(NetworkCheckCardEventCache.get(NetworkCheckCardEventCache.Attribute.DEVICE_TYPE, conversationId)).
+                    deviceType(SMPEventCache.get(SMPEventCache.Attribute.DEVICE_TYPE, conversationId)).
                     dsid(athenaCardDescriptor.getDsId()).
-                    locale(NetworkCheckCardEventCache.get(NetworkCheckCardEventCache.Attribute.LOCALE, conversationId)).
-                    firstProvision(getFirstProvisionStatus(athenaCardDescriptor.getSeid())).build();
+                    locale(SMPEventCache.get(SMPEventCache.Attribute.LOCALE, conversationId)).
+                    firstProvision(Boolean.valueOf(SMPEventCache.get(SMPEventCache.Attribute.FIRST_PROVISION, conversationId))).build();
         }
         else
         {
@@ -176,7 +176,7 @@ public class ProvisionCardEvent
 
     private static final Logger LOGGER = Logger.getLogger(ProvisionCardEvent.class);
 
-    private static boolean getFirstProvisionStatus(String seId)
+    public static boolean getFirstProvisionStatusFromSeId(String seId)
     {
         boolean firstProvision = false;
 

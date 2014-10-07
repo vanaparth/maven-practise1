@@ -76,11 +76,11 @@ class CardEventRecord
 
                 if ((cardEvent == null) || (cardEvent.getEventStatus()))
                 {
-                    cardEventRecord.addSuccessCard(new SMPEmailCardData(EmailRecordFormat.formatCardDisplayNumber(card.getDisplayNumber()), card.getDescription()));
+                    cardEventRecord.addSuccessCard(new SMPEmailCardData(EmailRecordFormat.getValidValue(card.getDisplayNumber()), EmailRecordFormat.getValidValue(card.getDescription())));
                 }
                 else
                 {
-                    cardEventRecord.addFailedCard(new SMPEmailCardData(EmailRecordFormat.formatCardDisplayNumber(card.getDisplayNumber()), card.getDescription()));
+                    cardEventRecord.addFailedCard(new SMPEmailCardData(EmailRecordFormat.getValidValue(card.getDisplayNumber()), EmailRecordFormat.getValidValue(card.getDescription())));
                 }
             }
         }

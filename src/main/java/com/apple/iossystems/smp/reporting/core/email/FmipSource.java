@@ -56,8 +56,6 @@ public enum FmipSource
     {
         for (FmipSource e : FmipSource.values())
         {
-            LOGGER.info("Checking certificates " + e.certificate + " [" + e.certificate.toString(16) + "] and " + certificate + " [" + certificate.toString(16) + "] match: " + (e.certificate.equals(certificate)));
-
             if (e.certificate.equals(certificate))
             {
                 return e;

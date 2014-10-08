@@ -3,6 +3,7 @@ package com.apple.iossystems.smp.reporting.core.email;
 import com.apple.iossystems.smp.domain.device.AbstractPass;
 import com.apple.iossystems.smp.persistence.entity.PassbookPass;
 import com.apple.iossystems.smp.persistence.entity.SecureElement;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
 /**
  * @author Toch
  */
-class SMPEventDataServiceProxy
+public class SMPEventDataServiceProxy
 {
     private SMPEventDataServiceProxy()
     {
@@ -213,78 +214,107 @@ class SMPEventDataServiceProxy
         return ((provisionCardEvent != null) && provisionCardEvent.isFirstProvision());
     }
 
-    public static List<Card> getCards(ProvisionCardEvent provisionCardEvent, ManageCardEvent manageCardEvent)
+    private static String getCardDisplayNumber(ProvisionCardEvent provisionCardEvent, CardEvent cardEvent, PassbookPass passbookPass)
     {
-        List<Card> cards;
+        String value = null;
 
-        if (manageCardEvent != null)
+        if (provisionCardEvent != null)
         {
-            cards = getCards(provisionCardEvent, manageCardEvent.getCardEvents());
-        }
-        else
-        {
-            cards = new ArrayList<Card>();
+            value = provisionCardEvent.getCardDisplayNumber();
+            Logger.getLogger(EmailTestLogger.class).info("Number from ProvisionCardEvent: " + value);
         }
 
-        return cards;
+        if ((value == null) && (cardEvent != null))
+        {
+            value = cardEvent.getCardDisplayNumber();
+            Logger.getLogger(EmailTestLogger.class).info("Number from CardEvent: " + value);
+        }
+
+        if ((value == null) && (passbookPass != null))
+        {
+            value = passbookPass.getFpanSuffix();
+            Logger.getLogger(EmailTestLogger.class).info("Number from PassbookPass: " + value);
+        }
+
+        return value;
     }
 
-    private static List<Card> getCards(ProvisionCardEvent provisionCardEvent, List<CardEvent> cardEvents)
+    private static String getCardDescription(CardEvent cardEvent, PassbookPass passbookPass)
     {
-        List<Card> cards = new ArrayList<Card>();
-
-        if (cardEvents != null)
-        {
-            for (CardEvent cardEvent : cardEvents)
-            {
-                cards.add(getCard(provisionCardEvent, cardEvent));
-            }
-        }
-
-        return cards;
-    }
-
-    private static Card getCard(ProvisionCardEvent provisionCardEvent, CardEvent cardEvent)
-    {
-        String cardDisplayNumber = null;
-        String cardDescription = null;
+        String value = null;
 
         if (cardEvent != null)
         {
-            String dpanId = cardEvent.getDpanId();
+            value = cardEvent.getCardDescription();
+            Logger.getLogger(EmailTestLogger.class).info("Description from CardEvent: " + value);
 
-            if (dpanId != null)
+            if (value == null)
             {
-                PassbookPass passbookPass = SMPEventDataService.getPassByDpanId(dpanId);
+                value = getCardDescriptionFromDpanId(cardEvent.getDpanId());
+                Logger.getLogger(EmailTestLogger.class).info("Description from CardEvent dpanId: " + value);
+            }
+        }
 
-                if (passbookPass != null)
+        if ((value == null) && (passbookPass != null))
+        {
+            value = getCardDescriptionFromPassbookPass(passbookPass);
+            Logger.getLogger(EmailTestLogger.class).info("Description from PassbookPass: " + value);
+        }
+
+        return value;
+    }
+
+    public static String getCardDescriptionFromDpanId(String dpanId)
+    {
+        return ((dpanId != null) ? getCardDescriptionFromPassbookPass(SMPEventDataService.getPassByDpanId(dpanId)) : null);
+    }
+
+    public static String getCardDescriptionFromPassbookPass(PassbookPass passbookPass)
+    {
+        String value = null;
+
+        if (passbookPass != null)
+        {
+            value = SMPEventDataService.getValueFromPassbookPass(passbookPass, AbstractPass.PAYMENT_PASS_LONG_DESC_KEY);
+            Logger.getLogger(EmailTestLogger.class).info("Description (Long) from provisionCardEvent: " + value);
+
+            if (value == null)
+            {
+                value = SMPEventDataService.getValueFromPassbookPass(passbookPass, AbstractPass.PAYMENT_PASS_SHORT_DESC_KEY);
+                Logger.getLogger(EmailTestLogger.class).info("Description (Short) from provisionCardEvent: " + value);
+            }
+        }
+
+        return value;
+    }
+
+    private static Card getCard(ProvisionCardEvent provisionCardEvent, CardEvent cardEvent, PassbookPass passbookPass)
+    {
+        String cardDisplayNumber = getCardDisplayNumber(provisionCardEvent, cardEvent, passbookPass);
+        String cardDescription = getCardDescription(cardEvent, passbookPass);
+
+        Logger.getLogger(EmailTestLogger.class).info("Creating card - Number: " + cardDisplayNumber + "\tDescription: " + cardDescription);
+
+        return Card.getInstance(cardDisplayNumber, cardDescription, cardEvent);
+    }
+
+    public static List<Card> getCards(ProvisionCardEvent provisionCardEvent, ManageCardEvent manageCardEvent, PassbookPass passbookPass)
+    {
+        List<Card> cards = new ArrayList<Card>();
+
+        if (manageCardEvent != null)
+        {
+            List<CardEvent> cardEvents = manageCardEvent.getCardEvents();
+
+            if (cardEvents != null)
+            {
+                for (CardEvent cardEvent : cardEvents)
                 {
-                    cardDisplayNumber = SMPEventDataService.getValueFromPassbookPass(passbookPass, AbstractPass.PAYMENT_PASS_FPAN_SUFFIX_KEY);
-                    cardDescription = SMPEventDataService.getValueFromPassbookPass(passbookPass, AbstractPass.PAYMENT_PASS_LONG_DESC_KEY);
-
-                    if (cardDescription == null)
-                    {
-                        cardDescription = SMPEventDataService.getValueFromPassbookPass(passbookPass, AbstractPass.PAYMENT_PASS_SHORT_DESC_KEY);
-                    }
+                    cards.add(getCard(provisionCardEvent, cardEvent, passbookPass));
                 }
             }
-
-            if (cardDescription == null)
-            {
-                cardDescription = cardEvent.getCardDescription();
-            }
         }
 
-        if ((cardDisplayNumber == null) && (provisionCardEvent != null))
-        {
-            cardDisplayNumber = provisionCardEvent.getCardDisplayNumber();
-        }
-
-        if ((cardDisplayNumber == null) && (cardEvent != null))
-        {
-            cardDisplayNumber = cardEvent.getCardDisplayNumber();
-        }
-
-        return Card.getInstance(cardDescription, cardDisplayNumber, cardEvent);
+        return cards;
     }
 }

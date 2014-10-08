@@ -50,7 +50,7 @@ class EmailContentService
                 dsid(dsid).
                 locale(locale).
                 firstProvisionEvent(isFirstProvision).
-                cards(SMPEventDataServiceProxy.getCards(provisionCardEvent, manageCardEvent)).
+                cards(SMPEventDataServiceProxy.getCards(provisionCardEvent, manageCardEvent, passbookPass)).
                 manageCardEvent(manageCardEvent).
                 build();
     }

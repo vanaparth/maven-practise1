@@ -5,30 +5,30 @@ package com.apple.iossystems.smp.reporting.core.email;
  */
 class Card
 {
-    private final String description;
     private final String displayNumber;
+    private final String description;
     private final CardEvent cardEvent;
 
-    private Card(String description, String displayNumber, CardEvent cardEvent)
+    private Card(String displayNumber, String description, CardEvent cardEvent)
     {
-        this.description = description;
         this.displayNumber = displayNumber;
+        this.description = description;
         this.cardEvent = cardEvent;
     }
 
-    public static Card getInstance(String description, String displayNumber, CardEvent cardEvent)
+    public static Card getInstance(String displayNumber, String description, CardEvent cardEvent)
     {
-        return new Card(description, displayNumber, cardEvent);
-    }
-
-    public String getDescription()
-    {
-        return description;
+        return new Card(displayNumber, description, cardEvent);
     }
 
     public String getDisplayNumber()
     {
         return displayNumber;
+    }
+
+    public String getDescription()
+    {
+        return description;
     }
 
     public CardEvent getCardEvent()

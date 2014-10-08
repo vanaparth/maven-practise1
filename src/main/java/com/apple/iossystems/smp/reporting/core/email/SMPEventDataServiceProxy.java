@@ -3,7 +3,6 @@ package com.apple.iossystems.smp.reporting.core.email;
 import com.apple.iossystems.smp.domain.device.AbstractPass;
 import com.apple.iossystems.smp.persistence.entity.PassbookPass;
 import com.apple.iossystems.smp.persistence.entity.SecureElement;
-import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -30,6 +29,31 @@ public class SMPEventDataServiceProxy
     public static SecureElement getSecureElementBySeId(String seId)
     {
         return (seId != null) ? SMPEventDataService.getSecureElementBySeId(seId) : null;
+    }
+
+    public static int getProvisionCount(SecureElement secureElement)
+    {
+        return (secureElement != null) ? secureElement.getProvisioningCount() : 0;
+    }
+
+    public static boolean isFirstProvision(ProvisionCardEvent provisionCardEvent)
+    {
+        return (provisionCardEvent != null) && provisionCardEvent.isFirstProvision();
+    }
+
+    public static String getDeviceImageUrl(ManageCardEvent manageCardEvent)
+    {
+        return (manageCardEvent != null) ? manageCardEvent.getDeviceImageUrl() : null;
+    }
+
+    public static String getCardDisplayNumberFromPassbookPass(PassbookPass passbookPass)
+    {
+        return (passbookPass != null) ? passbookPass.getFpanSuffix() : null;
+    }
+
+    private static String getCardDescriptionFromDpanId(String dpanId)
+    {
+        return (dpanId != null) ? getCardDescriptionFromPassbookPass(getPassbookPassByDpanId(dpanId)) : null;
     }
 
     public static SecureElement getSecureElement(ManageCardEvent manageCardEvent)
@@ -125,11 +149,6 @@ public class SMPEventDataServiceProxy
         return value;
     }
 
-    public static String getDeviceImageUrl(ManageCardEvent manageCardEvent)
-    {
-        return (manageCardEvent != null) ? manageCardEvent.getDeviceImageUrl() : null;
-    }
-
     public static String getDsid(ProvisionCardEvent provisionCardEvent, ManageCardEvent manageCardEvent)
     {
         String value = null;
@@ -164,16 +183,6 @@ public class SMPEventDataServiceProxy
         return value;
     }
 
-    public static int getProvisionCount(SecureElement secureElement)
-    {
-        return ((secureElement != null) ? secureElement.getProvisioningCount() : 0);
-    }
-
-    public static boolean isFirstProvision(ProvisionCardEvent provisionCardEvent)
-    {
-        return ((provisionCardEvent != null) && provisionCardEvent.isFirstProvision());
-    }
-
     private static String getCardDisplayNumber(ProvisionCardEvent provisionCardEvent, CardEvent cardEvent)
     {
         String value = null;
@@ -181,13 +190,11 @@ public class SMPEventDataServiceProxy
         if (provisionCardEvent != null)
         {
             value = provisionCardEvent.getCardDisplayNumber();
-            Logger.getLogger(EmailTestLogger.class).info("Number from ProvisionCardEvent: " + value);
         }
 
         if ((value == null) && (cardEvent != null))
         {
             value = cardEvent.getCardDisplayNumber();
-            Logger.getLogger(EmailTestLogger.class).info("Number from CardEvent: " + value);
         }
 
         return value;
@@ -200,26 +207,14 @@ public class SMPEventDataServiceProxy
         if (cardEvent != null)
         {
             value = cardEvent.getCardDescription();
-            Logger.getLogger(EmailTestLogger.class).info("Description from CardEvent: " + value);
 
             if (value == null)
             {
                 value = getCardDescriptionFromDpanId(cardEvent.getDpanId());
-                Logger.getLogger(EmailTestLogger.class).info("Description from CardEvent dpanId: " + value);
             }
         }
 
         return value;
-    }
-
-    public static String getCardDescriptionFromDpanId(String dpanId)
-    {
-        return ((dpanId != null) ? getCardDescriptionFromPassbookPass(SMPEventDataService.getPassByDpanId(dpanId)) : null);
-    }
-
-    public static String getCardDisplayNumberFromPassbookPass(PassbookPass passbookPass)
-    {
-        return ((passbookPass != null) ? passbookPass.getFpanSuffix() : null);
     }
 
     public static String getCardDescriptionFromPassbookPass(PassbookPass passbookPass)
@@ -229,12 +224,10 @@ public class SMPEventDataServiceProxy
         if (passbookPass != null)
         {
             value = SMPEventDataService.getValueFromPassbookPass(passbookPass, AbstractPass.PAYMENT_PASS_LONG_DESC_KEY);
-            Logger.getLogger(EmailTestLogger.class).info("Description (Long) from provisionCardEvent: " + value);
 
             if (value == null)
             {
                 value = SMPEventDataService.getValueFromPassbookPass(passbookPass, AbstractPass.PAYMENT_PASS_SHORT_DESC_KEY);
-                Logger.getLogger(EmailTestLogger.class).info("Description (Short) from provisionCardEvent: " + value);
             }
         }
 
@@ -245,8 +238,6 @@ public class SMPEventDataServiceProxy
     {
         String cardDisplayNumber = getCardDisplayNumber(provisionCardEvent, cardEvent);
         String cardDescription = getCardDescription(cardEvent);
-
-        Logger.getLogger(EmailTestLogger.class).info("Creating card - Number: " + cardDisplayNumber + "\tDescription: " + cardDescription);
 
         return Card.getInstance(cardDisplayNumber, cardDescription, cardEvent);
     }

@@ -12,7 +12,7 @@ public class SMPReportingApplication
 
     private SMPReportingApplication()
     {
-        if(ApplicationConfigurationManager.getSMPReportingEnable())
+        if (ApplicationConfigurationManager.getSMPReportingEnable())
         {
             init();
         }

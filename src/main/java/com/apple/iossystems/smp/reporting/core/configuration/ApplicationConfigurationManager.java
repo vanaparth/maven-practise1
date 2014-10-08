@@ -9,6 +9,11 @@ public class ApplicationConfigurationManager
     {
     }
 
+    public static boolean getSMPReportingEnable()
+    {
+        return ApplicationConfiguration.SMP_REPORTING_ENABLE;
+    }
+
     public static String getRabbitHostKey()
     {
         return ApplicationConfiguration.RABBIT_HOST_KEY;

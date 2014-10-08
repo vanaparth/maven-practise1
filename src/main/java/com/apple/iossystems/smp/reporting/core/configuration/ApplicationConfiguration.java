@@ -10,6 +10,8 @@ class ApplicationConfiguration
 {
     private static final PropertyManager PROPERTY_MANAGER = getPropertyManager();
 
+    private static final String SMP_REPORTING_ENABLE_KEY = "smp.reporting.enable";
+
     private static final String KEYSTONE_RABBIT_HOST_KEY = "keystone.rabbit.host";
     private static final String KEYSTONE_RABBIT_PORT_KEY = "keystone.rabbit.port";
     private static final String KEYSTONE_RABBIT_USER_KEY = "keystone.rabbit.user";
@@ -30,6 +32,8 @@ class ApplicationConfiguration
 
     private static final String FMIP_CERTIFICATE_KEY = "com.apple.iossystems.internal.fmip.app.cert";
     private static final String FMIP_REMOTE_CERTIFICATE_KEY = "com.apple.iossystems.internal.fmip.setup.cert";
+
+    static final boolean SMP_REPORTING_ENABLE = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault(SMP_REPORTING_ENABLE_KEY, true);
 
     static final String KEYSTONE_RABBIT_HOST = PROPERTY_MANAGER.valueForKeyWithDefault(KEYSTONE_RABBIT_HOST_KEY, "rabbit-np-amqp.corp.apple.com");
     static final String KEYSTONE_RABBIT_PORT = PROPERTY_MANAGER.valueForKeyWithDefault(KEYSTONE_RABBIT_PORT_KEY, "5672");

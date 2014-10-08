@@ -1,6 +1,5 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
-import com.apple.iossystems.smp.persistence.entity.PassbookPass;
 import com.apple.iossystems.smp.persistence.entity.SecureElement;
 import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
@@ -24,17 +23,16 @@ class EmailContentService
         ProvisionCardEvent provisionCardEvent = ProvisionCardEvent.fromJson(record.getAttributeValue(EventAttribute.PROVISION_CARD_EVENT.key()));
         ManageCardEvent manageCardEvent = ManageCardEvent.fromJson(record.getAttributeValue(EventAttribute.MANAGE_CARD_EVENT.key()));
 
-        PassbookPass passbookPass = SMPEventDataServiceProxy.getPassbookPass(manageCardEvent);
         SecureElement secureElement = SMPEventDataServiceProxy.getSecureElement(manageCardEvent);
 
-        String cardHolderName = SMPEventDataServiceProxy.getCardHolderName(provisionCardEvent, manageCardEvent, passbookPass);
+        String cardHolderName = SMPEventDataServiceProxy.getCardHolderName(provisionCardEvent, manageCardEvent);
         String cardHolderEmail = SMPEventDataServiceProxy.getCardHolderEmail(provisionCardEvent, manageCardEvent);
 
-        String deviceName = SMPEventDataServiceProxy.getDeviceName(provisionCardEvent, manageCardEvent, passbookPass, secureElement);
+        String deviceName = SMPEventDataServiceProxy.getDeviceName(provisionCardEvent, manageCardEvent);
         String deviceType = SMPEventDataServiceProxy.getDeviceType(provisionCardEvent, secureElement);
         String deviceImageUrl = SMPEventDataServiceProxy.getDeviceImageUrl(manageCardEvent);
 
-        String dsid = SMPEventDataServiceProxy.getDsid(provisionCardEvent, manageCardEvent, passbookPass);
+        String dsid = SMPEventDataServiceProxy.getDsid(provisionCardEvent, manageCardEvent);
         String locale = SMPEventDataServiceProxy.getLocale(provisionCardEvent, manageCardEvent);
 
         boolean isFirstProvision = (smpCardEvent == SMPCardEvent.PROVISION_CARD) && SMPEventDataServiceProxy.isFirstProvision(provisionCardEvent);
@@ -50,7 +48,7 @@ class EmailContentService
                 dsid(dsid).
                 locale(locale).
                 firstProvisionEvent(isFirstProvision).
-                cards(SMPEventDataServiceProxy.getCards(provisionCardEvent, manageCardEvent, passbookPass)).
+                cards(SMPEventDataServiceProxy.getCards(provisionCardEvent, manageCardEvent)).
                 manageCardEvent(manageCardEvent).
                 build();
     }

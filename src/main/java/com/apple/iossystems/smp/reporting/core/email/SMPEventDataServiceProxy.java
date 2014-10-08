@@ -17,7 +17,7 @@ public class SMPEventDataServiceProxy
     {
     }
 
-    private static PassbookPass getPassbookPassByDpanId(String dpanId)
+    public static PassbookPass getPassbookPassByDpanId(String dpanId)
     {
         return (dpanId != null) ? SMPEventDataService.getPassByDpanId(dpanId) : null;
     }
@@ -30,31 +30,6 @@ public class SMPEventDataServiceProxy
     public static SecureElement getSecureElementBySeId(String seId)
     {
         return (seId != null) ? SMPEventDataService.getSecureElementBySeId(seId) : null;
-    }
-
-    public static PassbookPass getPassbookPass(ManageCardEvent manageCardEvent)
-    {
-        PassbookPass passbookPass = null;
-
-        if (manageCardEvent != null)
-        {
-            List<CardEvent> cardEvents = manageCardEvent.getCardEvents();
-
-            if (cardEvents != null)
-            {
-                for (CardEvent cardEvent : cardEvents)
-                {
-                    passbookPass = getPassbookPassByDpanId(cardEvent.getDpanId());
-
-                    if (passbookPass != null)
-                    {
-                        break;
-                    }
-                }
-            }
-        }
-
-        return passbookPass;
     }
 
     public static SecureElement getSecureElement(ManageCardEvent manageCardEvent)
@@ -82,7 +57,7 @@ public class SMPEventDataServiceProxy
         return secureElement;
     }
 
-    public static String getCardHolderName(ProvisionCardEvent provisionCardEvent, ManageCardEvent manageCardEvent, PassbookPass passbookPass)
+    public static String getCardHolderName(ProvisionCardEvent provisionCardEvent, ManageCardEvent manageCardEvent)
     {
         String value = null;
 
@@ -94,11 +69,6 @@ public class SMPEventDataServiceProxy
         if ((value == null) && (manageCardEvent != null))
         {
             value = manageCardEvent.getCardHolderName();
-        }
-
-        if ((value == null) && (passbookPass != null))
-        {
-            value = passbookPass.getCardHolderName();
         }
 
         return value;
@@ -121,7 +91,7 @@ public class SMPEventDataServiceProxy
         return value;
     }
 
-    public static String getDeviceName(ProvisionCardEvent provisionCardEvent, ManageCardEvent manageCardEvent, PassbookPass passbookPass, SecureElement secureElement)
+    public static String getDeviceName(ProvisionCardEvent provisionCardEvent, ManageCardEvent manageCardEvent)
     {
         String value = null;
 
@@ -133,11 +103,6 @@ public class SMPEventDataServiceProxy
         if ((value == null) && (manageCardEvent != null))
         {
             value = manageCardEvent.getDeviceName();
-        }
-
-        if ((value == null) && (passbookPass != null) && (secureElement != null))
-        {
-            value = SMPEventDataService.getDeviceName(passbookPass, secureElement);
         }
 
         return value;
@@ -165,7 +130,7 @@ public class SMPEventDataServiceProxy
         return (manageCardEvent != null) ? manageCardEvent.getDeviceImageUrl() : null;
     }
 
-    public static String getDsid(ProvisionCardEvent provisionCardEvent, ManageCardEvent manageCardEvent, PassbookPass passbookPass)
+    public static String getDsid(ProvisionCardEvent provisionCardEvent, ManageCardEvent manageCardEvent)
     {
         String value = null;
 
@@ -177,11 +142,6 @@ public class SMPEventDataServiceProxy
         if ((value == null) && (manageCardEvent != null))
         {
             value = manageCardEvent.getDsid();
-        }
-
-        if ((value == null) && (passbookPass != null))
-        {
-            value = passbookPass.getUserPrincipal();
         }
 
         return value;
@@ -214,7 +174,7 @@ public class SMPEventDataServiceProxy
         return ((provisionCardEvent != null) && provisionCardEvent.isFirstProvision());
     }
 
-    private static String getCardDisplayNumber(ProvisionCardEvent provisionCardEvent, CardEvent cardEvent, PassbookPass passbookPass)
+    private static String getCardDisplayNumber(ProvisionCardEvent provisionCardEvent, CardEvent cardEvent)
     {
         String value = null;
 
@@ -230,16 +190,10 @@ public class SMPEventDataServiceProxy
             Logger.getLogger(EmailTestLogger.class).info("Number from CardEvent: " + value);
         }
 
-        if ((value == null) && (passbookPass != null))
-        {
-            value = passbookPass.getFpanSuffix();
-            Logger.getLogger(EmailTestLogger.class).info("Number from PassbookPass: " + value);
-        }
-
         return value;
     }
 
-    private static String getCardDescription(CardEvent cardEvent, PassbookPass passbookPass)
+    private static String getCardDescription(CardEvent cardEvent)
     {
         String value = null;
 
@@ -255,18 +209,17 @@ public class SMPEventDataServiceProxy
             }
         }
 
-        if ((value == null) && (passbookPass != null))
-        {
-            value = getCardDescriptionFromPassbookPass(passbookPass);
-            Logger.getLogger(EmailTestLogger.class).info("Description from PassbookPass: " + value);
-        }
-
         return value;
     }
 
     public static String getCardDescriptionFromDpanId(String dpanId)
     {
         return ((dpanId != null) ? getCardDescriptionFromPassbookPass(SMPEventDataService.getPassByDpanId(dpanId)) : null);
+    }
+
+    public static String getCardDisplayNumberFromPassbookPass(PassbookPass passbookPass)
+    {
+        return ((passbookPass != null) ? passbookPass.getFpanSuffix() : null);
     }
 
     public static String getCardDescriptionFromPassbookPass(PassbookPass passbookPass)
@@ -288,17 +241,17 @@ public class SMPEventDataServiceProxy
         return value;
     }
 
-    private static Card getCard(ProvisionCardEvent provisionCardEvent, CardEvent cardEvent, PassbookPass passbookPass)
+    private static Card getCard(ProvisionCardEvent provisionCardEvent, CardEvent cardEvent)
     {
-        String cardDisplayNumber = getCardDisplayNumber(provisionCardEvent, cardEvent, passbookPass);
-        String cardDescription = getCardDescription(cardEvent, passbookPass);
+        String cardDisplayNumber = getCardDisplayNumber(provisionCardEvent, cardEvent);
+        String cardDescription = getCardDescription(cardEvent);
 
         Logger.getLogger(EmailTestLogger.class).info("Creating card - Number: " + cardDisplayNumber + "\tDescription: " + cardDescription);
 
         return Card.getInstance(cardDisplayNumber, cardDescription, cardEvent);
     }
 
-    public static List<Card> getCards(ProvisionCardEvent provisionCardEvent, ManageCardEvent manageCardEvent, PassbookPass passbookPass)
+    public static List<Card> getCards(ProvisionCardEvent provisionCardEvent, ManageCardEvent manageCardEvent)
     {
         List<Card> cards = new ArrayList<Card>();
 
@@ -310,7 +263,7 @@ public class SMPEventDataServiceProxy
             {
                 for (CardEvent cardEvent : cardEvents)
                 {
-                    cards.add(getCard(provisionCardEvent, cardEvent, passbookPass));
+                    cards.add(getCard(provisionCardEvent, cardEvent));
                 }
             }
         }

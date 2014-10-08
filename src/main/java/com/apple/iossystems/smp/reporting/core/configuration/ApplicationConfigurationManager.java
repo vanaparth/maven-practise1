@@ -99,6 +99,11 @@ public class ApplicationConfigurationManager
         return ApplicationConfiguration.HASH_PASS;
     }
 
+    public static boolean getEmailLog()
+    {
+        return ApplicationConfiguration.EMAIL_LOG;
+    }
+
     public static boolean getEmailProvision()
     {
         return ApplicationConfiguration.EMAIL_PROVISION;

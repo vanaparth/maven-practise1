@@ -12,7 +12,7 @@ class EmailTestLogger
 {
     private static final Logger LOGGER = Logger.getLogger(EmailTestLogger.class);
 
-    private static final boolean LOG_TESTS = ApplicationConfigurationManager.getIReporterURL().contains("https://icloud4-e3.icloud.com");
+    private static final boolean LOG_TESTS = ApplicationConfigurationManager.getEmailLog();
 
     private EmailTestLogger()
     {

@@ -25,6 +25,7 @@ class ApplicationConfiguration
     private static final String IREPORTER_URL_KEY = "icloud.ireporter.url";
     private static final String HASH_PASS_KEY = "icloud.ireporter.pass";
 
+    private static final String EMAIL_LOG_KEY = "smp.reporting.email.log";
     private static final String EMAIL_PROVISION_KEY = "smp.reporting.email.provision";
     private static final String EMAIL_SUSPEND_KEY = "smp.reporting.email.suspend";
     private static final String EMAIL_UNLINK_KEY = "smp.reporting.email.unlink";
@@ -48,6 +49,7 @@ class ApplicationConfiguration
     static final String IREPORTER_URL = PROPERTY_MANAGER.valueForKeyWithDefault(IREPORTER_URL_KEY, "https://icloud4-e3.icloud.com");
     static final String HASH_PASS = PROPERTY_MANAGER.valueForKeyWithDefault(HASH_PASS_KEY, "pLijzg2e2QNspdhOyNWdOSScPszmZBryJ0L8BcQ116BhkT6p0iHyNcwnlFIwhLun");
 
+    static final boolean EMAIL_LOG = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault(EMAIL_LOG_KEY, false);
     static final boolean EMAIL_PROVISION = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault(EMAIL_PROVISION_KEY, true);
     static final boolean EMAIL_SUSPEND = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault(EMAIL_SUSPEND_KEY, true);
     static final boolean EMAIL_UNLINK = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault(EMAIL_UNLINK_KEY, true);

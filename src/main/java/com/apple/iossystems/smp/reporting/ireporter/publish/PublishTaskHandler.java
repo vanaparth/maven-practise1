@@ -6,6 +6,7 @@ import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledTaskHandler;
 import com.apple.iossystems.smp.reporting.core.email.EmailPublishService;
 import com.apple.iossystems.smp.reporting.core.event.*;
 import com.apple.iossystems.smp.reporting.core.hubble.HubbleAnalytics;
+import com.apple.iossystems.smp.reporting.core.timer.StopWatch;
 import com.apple.iossystems.smp.reporting.ireporter.json.IReporterJsonBuilder;
 
 import java.util.List;
@@ -127,13 +128,20 @@ public class PublishTaskHandler implements ScheduledTaskHandler
 
     private void handlePublishEvent(IReporterPublishService publishService, BlockingQueue<EventRecord> queue, PublishMetric publishMetric)
     {
+        StopWatch stopWatch = StopWatch.getInstance();
+        stopWatch.start();
+
         int count = publish(publishService, queue);
+
+        stopWatch.stop();
 
         if (count > 0)
         {
-            // Hubble
+            // Hubble for IReporter
             HubbleAnalytics.incrementCountForEvent(publishMetric.getMessagesSentMetric());
             HubbleAnalytics.incrementCountForEvent(publishMetric.getRecordsSentMetric(), count);
+            // Hubble for SMP
+            HubbleAnalytics.logTimingForEvent(publishMetric.getIReporterTiming(), stopWatch.getTimeMillis());
             // IReporter
             statistics.increment(publishMetric.getIReporterRecordsSent(), count);
         }
@@ -143,6 +151,8 @@ public class PublishTaskHandler implements ScheduledTaskHandler
             // Hubble
             HubbleAnalytics.incrementCountForEvent(publishMetric.getMessagesFailedMetric());
             HubbleAnalytics.incrementCountForEvent(publishMetric.getRecordsFailedMetric(), count);
+            // Hubble for SMP
+            HubbleAnalytics.logTimingForEvent(publishMetric.getIReporterTiming(), stopWatch.getTimeMillis());
             // IReporter
             statistics.increment(publishMetric.getIReporterRecordsFailed(), count);
         }

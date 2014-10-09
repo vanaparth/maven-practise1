@@ -33,13 +33,25 @@ public class HubbleAnalytics
             {
                 incrementCountForEvent(kpi);
             }
-        }
 
-        LOGGER.info("Posted to Hubble " + metric.getKpi() + " : " + count);
+            LOGGER.info("Posted to Hubble " + kpi + " : " + count);
+        }
     }
 
     public static void incrementCountForEvent(Metric metric)
     {
         incrementCountForEvent(metric, 1);
+    }
+
+    public static void logTimingForEvent(Metric metric, long time)
+    {
+        if (metric.hasKpi())
+        {
+            String kpi = metric.getKpi();
+
+            OPERATIONAL_ANALYTICS.logTimingForEvent(time, kpi);
+
+            LOGGER.info("Posted to Hubble " + kpi + " : " + time);
+        }
     }
 }

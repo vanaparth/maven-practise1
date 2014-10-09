@@ -38,7 +38,7 @@ public class EmailPublishService
     {
         try
         {
-            EmailRecord emailRecord = EmailContentService.getEmailRecord(record);
+            EmailRecord emailRecord = getEmailRecord(record);
 
             boolean requestSent = false;
 
@@ -70,6 +70,22 @@ public class EmailPublishService
         {
             LOGGER.error(e);
         }
+    }
+
+    private static EmailRecord getEmailRecord(EventRecord record)
+    {
+        EmailRecord emailRecord = null;
+
+        if (EmailRecordFilter.isProvisionEventRecord(record))
+        {
+            emailRecord = ProvisionCardEvent.getEmailRecord(record);
+        }
+        else if (EmailRecordFilter.isManageCardEventRecord(record))
+        {
+            emailRecord = ManageCardEvent.getEmailRecord(record);
+        }
+
+        return emailRecord;
     }
 
     private static void doSendRequest(EmailRecord emailRecord) throws Exception

@@ -23,7 +23,7 @@ public enum SMPCardEvent
         this.code = code;
     }
 
-    public String getCode()
+    private String getCode()
     {
         return code;
     }
@@ -46,7 +46,7 @@ public enum SMPCardEvent
         }
     }
 
-    public static SMPCardEvent getSMPCardEvent(String code)
+    private static SMPCardEvent getSMPCardEvent(String code)
     {
         for (SMPCardEvent smpCardEvent : SMPCardEvent.values())
         {
@@ -57,5 +57,15 @@ public enum SMPCardEvent
         }
 
         return UNKNOWN;
+    }
+
+    public static SMPCardEvent getSMPCardEvent(EventRecord record)
+    {
+        return getSMPCardEvent(record.getAttributeValue(EventAttribute.CARD_EVENT.key()));
+    }
+
+    public void setSMPCardEvent(EventRecord record)
+    {
+        record.setAttributeValue(EventAttribute.CARD_EVENT.key(), getCode());
     }
 }

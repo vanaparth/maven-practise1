@@ -54,9 +54,9 @@ class CardEventRecord
 
     public static CardEventRecord getCardEventRecord(EmailRecord emailRecord)
     {
-        if ((emailRecord != null) && (emailRecord.getCards() != null))
+        if ((emailRecord != null) && (emailRecord.getCardEvents() != null))
         {
-            return CardEventRecord.getCardEventRecord(emailRecord.getCards());
+            return getCardEventRecord(emailRecord.getCardEvents());
         }
         else
         {
@@ -64,23 +64,21 @@ class CardEventRecord
         }
     }
 
-    private static CardEventRecord getCardEventRecord(List<Card> cards)
+    private static CardEventRecord getCardEventRecord(List<CardEvent> cardEvents)
     {
         CardEventRecord cardEventRecord = new CardEventRecord();
 
-        if (cards != null)
+        if (cardEvents != null)
         {
-            for (Card card : cards)
+            for (CardEvent cardEvent : cardEvents)
             {
-                CardEvent cardEvent = card.getCardEvent();
-
-                if ((cardEvent == null) || (cardEvent.getEventStatus()))
+                if (cardEvent.getEventStatus())
                 {
-                    cardEventRecord.addSuccessCard(new SMPEmailCardData(EmailRecordFormat.getValidValue(card.getDisplayNumber()), EmailRecordFormat.getValidValue(card.getDescription())));
+                    cardEventRecord.addSuccessCard(new SMPEmailCardData(EmailRecordFormat.getValidValue(cardEvent.getCardDisplayNumber()), EmailRecordFormat.getValidValue(cardEvent.getCardDescription())));
                 }
                 else
                 {
-                    cardEventRecord.addFailedCard(new SMPEmailCardData(EmailRecordFormat.getValidValue(card.getDisplayNumber()), EmailRecordFormat.getValidValue(card.getDescription())));
+                    cardEventRecord.addFailedCard(new SMPEmailCardData(EmailRecordFormat.getValidValue(cardEvent.getCardDisplayNumber()), EmailRecordFormat.getValidValue(cardEvent.getCardDescription())));
                 }
             }
         }

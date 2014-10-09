@@ -1,6 +1,9 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.iossystems.smp.domain.AthenaCardDescriptor;
+import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
+import com.apple.iossystems.smp.reporting.core.event.EventRecord;
+import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
 import com.google.gson.GsonBuilder;
 import org.apache.log4j.Logger;
 
@@ -190,5 +193,21 @@ public class ProvisionCardEvent
         }
 
         return firstProvision;
+    }
+
+    public static EmailRecord getEmailRecord(EventRecord record)
+    {
+        ProvisionCardEvent provisionCardEvent = ProvisionCardEvent.fromJson(record.getAttributeValue(EventAttribute.PROVISION_CARD_EVENT.key()));
+
+        return EmailRecord.getBuilder().smpCardEvent(SMPCardEvent.getSMPCardEvent(record)).
+                conversationId(record.getAttributeValue(EventAttribute.CONVERSATION_ID.key())).
+                timestamp(record.getAttributeValue(EventAttribute.TIMESTAMP.key())).
+                cardHolderName(provisionCardEvent.getCardHolderName()).
+                cardHolderEmail(provisionCardEvent.getCardHolderEmail()).
+                deviceName(provisionCardEvent.getDeviceName()).
+                deviceType(provisionCardEvent.getDeviceType()).
+                dsid(provisionCardEvent.getDsid()).
+                locale(provisionCardEvent.getLocale()).
+                firstProvisionEvent(provisionCardEvent.isFirstProvision()).build();
     }
 }

@@ -1,12 +1,9 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.cds.keystone.spring.AppContext;
-import com.apple.iossystems.smp.domain.icloud.FetchDeviceResponse;
-import com.apple.iossystems.smp.icloud.util.iCloudService;
 import com.apple.iossystems.smp.persistence.entity.*;
 import com.apple.iossystems.smp.service.PassManagementService;
 import com.apple.iossystems.smp.service.SecureElementService;
-import org.apache.log4j.Logger;
 
 import java.util.Collection;
 
@@ -15,35 +12,11 @@ import java.util.Collection;
  */
 class SMPEventDataService
 {
-    private static final Logger LOGGER = Logger.getLogger(SMPEventDataService.class);
-
-    private static final iCloudService ICLOUD_SERVICE = (iCloudService) AppContext.getApplicationContext().getBean("iCloudServiceImpl");
     private static final PassManagementService PASS_MANAGEMENT_SERVICE = AppContext.getApplicationContext().getBean(PassManagementService.class);
     private static final SecureElementService SECURE_ELEMENT_SERVICE = AppContext.getApplicationContext().getBean(SecureElementService.class);
 
     private SMPEventDataService()
     {
-    }
-
-    public static String getDeviceName(PassbookPass passbookPass, SecureElement secureElement)
-    {
-        String deviceName = null;
-
-        try
-        {
-            FetchDeviceResponse fetchDeviceResponse = ICLOUD_SERVICE.fetchDeviceResponse(passbookPass.getUserPrincipal(), secureElement.getDeviceSerialNumber());
-
-            if (fetchDeviceResponse != null)
-            {
-                deviceName = fetchDeviceResponse.getDeviceName();
-            }
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e);
-        }
-
-        return deviceName;
     }
 
     public static String getDeviceType(SecureElement secureElement)

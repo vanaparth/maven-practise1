@@ -79,7 +79,7 @@ public class SMPEvent
 
         if (smpCardEvent != null)
         {
-            record.setAttributeValue(EventAttribute.CARD_EVENT.key(), smpCardEvent.getCode());
+            smpCardEvent.setSMPCardEvent(record);
         }
 
         if (pno != null)

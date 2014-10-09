@@ -1,5 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
+import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
 
 /**
@@ -17,21 +18,26 @@ class EmailRecordFilter
 
         boolean doFilter = ((smpCardEvent == SMPCardEvent.SUSPEND_CARD) || (smpCardEvent == SMPCardEvent.UNLINK_CARD) || (smpCardEvent == SMPCardEvent.RESUME_CARD));
 
-        return ((!doFilter || hasValidCardEventSource(record)) && hasRequiredValues(record));
+        return ((!doFilter || hasValidManageCardEventSource(record)) && hasRequiredValues(record));
     }
 
-    private static boolean hasValidCardEventSource(EmailRecord record)
+    public static boolean isProvisionEventRecord(EventRecord record)
+    {
+        return (SMPCardEvent.getSMPCardEvent(record) == SMPCardEvent.PROVISION_CARD);
+    }
+
+    public static boolean isManageCardEventRecord(EventRecord record)
+    {
+        SMPCardEvent smpCardEvent = SMPCardEvent.getSMPCardEvent(record);
+
+        return ((smpCardEvent == SMPCardEvent.SUSPEND_CARD) || (smpCardEvent == SMPCardEvent.UNLINK_CARD) || (smpCardEvent == SMPCardEvent.RESUME_CARD));
+    }
+
+    private static boolean hasValidManageCardEventSource(EmailRecord record)
     {
         ManageCardEvent manageCardEvent = record.getManageCardEvent();
 
-        if (manageCardEvent != null)
-        {
-            return (manageCardEvent.getCardEventSource() == CardEventSource.FMIP);
-        }
-        else
-        {
-            return true;
-        }
+        return ((manageCardEvent == null) || (manageCardEvent.getCardEventSource() == CardEventSource.FMIP));
     }
 
     public static boolean hasRequiredValues(EmailRecord record)

@@ -35,19 +35,19 @@ public class CardEventStatus
 
     public static boolean hasValidCardStatus(EventRecord record)
     {
-        SMPCardEvent cardEvent = SMPCardEvent.getSMPCardEvent(record.getAttributeValue(EventAttribute.CARD_EVENT.key()));
+        SMPCardEvent smpCardEvent = SMPCardEvent.getSMPCardEvent(record);
 
         Card.CardStatus[] validCardStatusList = null;
 
-        if (cardEvent == SMPCardEvent.SUSPEND_CARD)
+        if (smpCardEvent == SMPCardEvent.SUSPEND_CARD)
         {
             validCardStatusList = VALID_SUSPEND_STATUS;
         }
-        else if (cardEvent == SMPCardEvent.UNLINK_CARD)
+        else if (smpCardEvent == SMPCardEvent.UNLINK_CARD)
         {
             validCardStatusList = VALID_UNLINKED_STATUS;
         }
-        else if (cardEvent == SMPCardEvent.RESUME_CARD)
+        else if (smpCardEvent == SMPCardEvent.RESUME_CARD)
         {
             validCardStatusList = VALID_RESUME_STATUS;
         }
@@ -59,19 +59,19 @@ public class CardEventStatus
 
     public static Card.CardStatus getDefaultValidCardStatus(EventRecord record)
     {
-        SMPCardEvent cardEvent = SMPCardEvent.getSMPCardEvent(record.getAttributeValue(EventAttribute.CARD_EVENT.key()));
+        SMPCardEvent smpCardEvent = SMPCardEvent.getSMPCardEvent(record);
 
         Card.CardStatus defaultValidCardStatus;
 
-        if (cardEvent == SMPCardEvent.SUSPEND_CARD)
+        if (smpCardEvent == SMPCardEvent.SUSPEND_CARD)
         {
             defaultValidCardStatus = Card.CardStatus.SUSPENDED;
         }
-        else if (cardEvent == SMPCardEvent.UNLINK_CARD)
+        else if (smpCardEvent == SMPCardEvent.UNLINK_CARD)
         {
             defaultValidCardStatus = Card.CardStatus.UNLINKED;
         }
-        else if (cardEvent == SMPCardEvent.RESUME_CARD)
+        else if (smpCardEvent == SMPCardEvent.RESUME_CARD)
         {
             defaultValidCardStatus = Card.CardStatus.ACTIVE;
         }

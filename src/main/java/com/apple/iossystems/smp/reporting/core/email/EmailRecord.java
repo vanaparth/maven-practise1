@@ -24,9 +24,8 @@ class EmailRecord
     private final String locale;
 
     private final boolean firstProvisionEvent;
-    private final List<Card> cards;
-
     private final ManageCardEvent manageCardEvent;
+    private final List<CardEvent> cardEvents;
 
     private EmailRecord(Builder builder)
     {
@@ -43,9 +42,8 @@ class EmailRecord
         locale = builder.locale;
 
         firstProvisionEvent = builder.firstProvisionEvent;
-        cards = builder.cards;
-
         manageCardEvent = builder.manageCardEvent;
+        cardEvents = builder.cardEvents;
     }
 
     public SMPCardEvent getSMPCardEvent()
@@ -98,14 +96,14 @@ class EmailRecord
         return firstProvisionEvent;
     }
 
-    public List<Card> getCards()
-    {
-        return cards;
-    }
-
     public ManageCardEvent getManageCardEvent()
     {
         return manageCardEvent;
+    }
+
+    public List<CardEvent> getCardEvents()
+    {
+        return cardEvents;
     }
 
     public Date getDate()
@@ -136,9 +134,8 @@ class EmailRecord
         private String locale;
 
         private boolean firstProvisionEvent;
-        private List<Card> cards;
-
         private ManageCardEvent manageCardEvent;
+        private List<CardEvent> cardEvents;
 
         private Builder()
         {
@@ -210,15 +207,15 @@ class EmailRecord
             return this;
         }
 
-        public Builder cards(List<Card> value)
-        {
-            cards = value;
-            return this;
-        }
-
         public Builder manageCardEvent(ManageCardEvent value)
         {
             manageCardEvent = value;
+            return this;
+        }
+
+        public Builder cardEvents(List<CardEvent> value)
+        {
+            cardEvents = value;
             return this;
         }
 

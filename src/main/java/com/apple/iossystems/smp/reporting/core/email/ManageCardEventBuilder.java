@@ -1,6 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.iossystems.smp.domain.Actor;
+import com.apple.iossystems.smp.persistence.entity.SecureElement;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -96,6 +97,7 @@ public class ManageCardEventBuilder
                 dsid(dsid).
                 locale(locale).
                 deviceName(deviceName).
+                deviceType(getDeviceType(cardEvents)).
                 deviceImageUrl(deviceImageUrl).
                 cardEventSource(CardEventSource.getCardEventSource(actor)).
                 fmipSource(fmipSource).
@@ -125,5 +127,22 @@ public class ManageCardEventBuilder
         }
 
         return cardHolderName;
+    }
+
+    private String getDeviceType(List<CardEvent> cardEvents)
+    {
+        SecureElement secureElement = null;
+
+        for (CardEvent cardEvent : cardEvents)
+        {
+            secureElement = SMPEventDataServiceProxy.getSecureElementByDpanId(cardEvent.getDpanId());
+
+            if (secureElement != null)
+            {
+                break;
+            }
+        }
+
+        return (secureElement != null) ? SMPEventDataServiceProxy.getDeviceType(secureElement) : null;
     }
 }

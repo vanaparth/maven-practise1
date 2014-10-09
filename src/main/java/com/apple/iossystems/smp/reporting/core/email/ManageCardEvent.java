@@ -1,5 +1,8 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
+import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
+import com.apple.iossystems.smp.reporting.core.event.EventRecord;
+import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
 import com.apple.iossystems.smp.reporting.core.util.JsonObjectReader;
 import com.apple.iossystems.smp.reporting.core.util.JsonObjectWriter;
 import com.google.gson.*;
@@ -18,6 +21,7 @@ public class ManageCardEvent
     private final String dsid;
     private final String locale;
     private final String deviceName;
+    private final String deviceType;
     private final String deviceImageUrl;
     private final CardEventSource cardEventSource;
     private final FmipSource fmipSource;
@@ -31,6 +35,7 @@ public class ManageCardEvent
         dsid = builder.dsid;
         locale = builder.locale;
         deviceName = builder.deviceName;
+        deviceType = builder.deviceType;
         deviceImageUrl = builder.deviceImageUrl;
         cardEventSource = builder.cardEventSource;
         fmipSource = builder.fmipSource;
@@ -61,6 +66,11 @@ public class ManageCardEvent
     public String getDeviceName()
     {
         return deviceName;
+    }
+
+    public String getDeviceType()
+    {
+        return deviceType;
     }
 
     public String getDeviceImageUrl()
@@ -100,6 +110,7 @@ public class ManageCardEvent
         private String dsid;
         private String locale;
         private String deviceName;
+        private String deviceType;
         private String deviceImageUrl;
         private CardEventSource cardEventSource;
         private FmipSource fmipSource;
@@ -140,6 +151,12 @@ public class ManageCardEvent
             return this;
         }
 
+        public Builder deviceType(String value)
+        {
+            deviceType = value;
+            return this;
+        }
+
         public Builder deviceImageUrl(String value)
         {
             deviceImageUrl = value;
@@ -174,6 +191,25 @@ public class ManageCardEvent
         {
             return new ManageCardEvent(this);
         }
+    }
+
+    public static EmailRecord getEmailRecord(EventRecord record)
+    {
+        ManageCardEvent manageCardEvent = ManageCardEvent.fromJson(record.getAttributeValue(EventAttribute.MANAGE_CARD_EVENT.key()));
+
+        return EmailRecord.getBuilder().smpCardEvent(SMPCardEvent.getSMPCardEvent(record)).
+                conversationId(record.getAttributeValue(EventAttribute.CONVERSATION_ID.key())).
+                timestamp(record.getAttributeValue(EventAttribute.TIMESTAMP.key())).
+                cardHolderName(manageCardEvent.getCardHolderName()).
+                cardHolderEmail(manageCardEvent.getCardHolderEmail()).
+                deviceName(manageCardEvent.getDeviceName()).
+                deviceType(manageCardEvent.getDeviceType()).
+                deviceImageUrl(manageCardEvent.getDeviceImageUrl()).
+                dsid(manageCardEvent.getDsid()).
+                locale(manageCardEvent.getLocale()).
+                firstProvisionEvent(false).
+                manageCardEvent(manageCardEvent).
+                cardEvents(manageCardEvent.getCardEvents()).build();
     }
 
     private static Gson getGson()
@@ -215,6 +251,7 @@ public class ManageCardEvent
             JsonObjectWriter.addProperty(jsonObject, "dsid", manageCardEvent.dsid);
             JsonObjectWriter.addProperty(jsonObject, "locale", manageCardEvent.locale);
             JsonObjectWriter.addProperty(jsonObject, "deviceName", manageCardEvent.deviceName);
+            JsonObjectWriter.addProperty(jsonObject, "deviceType", manageCardEvent.deviceType);
             JsonObjectWriter.addProperty(jsonObject, "deviceImageURL", manageCardEvent.deviceImageUrl);
 
             if (manageCardEvent.cardEventSource != null)
@@ -250,6 +287,7 @@ public class ManageCardEvent
             String dsid = JsonObjectReader.getAsString(jsonObject, "dsid");
             String locale = JsonObjectReader.getAsString(jsonObject, "locale");
             String deviceName = JsonObjectReader.getAsString(jsonObject, "deviceName");
+            String deviceType = JsonObjectReader.getAsString(jsonObject, "deviceType");
             String deviceImageUrl = JsonObjectReader.getAsString(jsonObject, "deviceImageURL");
 
             CardEventSource cardEventSource = null;
@@ -293,6 +331,7 @@ public class ManageCardEvent
                     dsid(dsid).
                     locale(locale).
                     deviceName(deviceName).
+                    deviceType(deviceType).
                     deviceImageUrl(deviceImageUrl).
                     cardEventSource(cardEventSource).
                     fmipSource(fmipSource).

@@ -41,7 +41,7 @@ public enum Metric
     PAYMENT_IREPORTER_REPORTS_RECORDS_PENDING(""),
     PAYMENT_IREPORTER_REPORTS_RECORDS_LOST(""),
 
-    // Stockholm/Oslo Performance monitoring
+    // Stockholm/Oslo Performance Monitoring
     IREPORTER_TIMING("kpi.smp.ireporter.timing"),
     PAYMENT_IREPORTER_TIMING("kpi.smp.ireporter.timing.oslo");
 

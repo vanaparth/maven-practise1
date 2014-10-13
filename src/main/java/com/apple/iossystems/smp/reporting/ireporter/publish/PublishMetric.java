@@ -23,6 +23,8 @@ class PublishMetric
     private final Metric auditRecordsSent;
     private final Metric auditRecordsFailed;
 
+    private final Metric iReporterTiming;
+
     private final Metric[] auditMetrics;
 
     private PublishMetric(Builder builder)
@@ -39,6 +41,8 @@ class PublishMetric
 
         auditRecordsSent = builder.auditRecordsSent;
         auditRecordsFailed = builder.auditRecordsFailed;
+
+        iReporterTiming = builder.iReporterTiming;
 
         auditMetrics = builder.auditMetrics;
     }
@@ -103,6 +107,11 @@ class PublishMetric
         return auditRecordsFailed;
     }
 
+    public Metric getIReporterTiming()
+    {
+        return iReporterTiming;
+    }
+
     public Metric[] getAuditMetrics()
     {
         return auditMetrics;
@@ -122,6 +131,8 @@ class PublishMetric
 
         private Metric auditRecordsSent;
         private Metric auditRecordsFailed;
+
+        private Metric iReporterTiming;
 
         private Metric[] auditMetrics;
 
@@ -189,6 +200,12 @@ class PublishMetric
             return this;
         }
 
+        private Builder iReporterTiming(Metric value)
+        {
+            iReporterTiming = value;
+            return this;
+        }
+
         private Builder auditMetrics(Metric[] value)
         {
             auditMetrics = value;
@@ -213,6 +230,7 @@ class PublishMetric
                 iReporterRecordsLost(Metric.IREPORTER_REPORTS_RECORDS_LOST).
                 auditRecordsSent(Metric.AUDIT_RECORDS_SENT).
                 auditRecordsFailed(Metric.AUDIT_RECORDS_FAILED).
+                iReporterTiming(Metric.IREPORTER_TIMING).
                 auditMetrics(new Metric[]{
                         Metric.IREPORTER_REPORTS_RECORDS_SENT,
                         Metric.IREPORTER_REPORTS_RECORDS_FAILED,
@@ -233,6 +251,7 @@ class PublishMetric
                 iReporterRecordsLost(Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_LOST).
                 auditRecordsSent(Metric.PAYMENT_AUDIT_RECORDS_SENT).
                 auditRecordsFailed(Metric.PAYMENT_AUDIT_RECORDS_FAILED).
+                iReporterTiming(Metric.PAYMENT_IREPORTER_TIMING).
                 auditMetrics(new Metric[]{
                         Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_SENT,
                         Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_FAILED,

@@ -6,6 +6,7 @@ import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledTaskHandler;
 import com.apple.iossystems.smp.reporting.core.email.EmailPublishService;
 import com.apple.iossystems.smp.reporting.core.event.*;
 import com.apple.iossystems.smp.reporting.core.hubble.HubbleAnalytics;
+import com.apple.iossystems.smp.reporting.core.timer.StopWatch;
 import com.apple.iossystems.smp.reporting.ireporter.json.IReporterJsonBuilder;
 
 import java.util.List;
@@ -23,13 +24,14 @@ public class PublishTaskHandler implements ScheduledTaskHandler
     private IReporterPublishService paymentAuditPublishService = PaymentAuditPublishService.getInstance();
 
     private Statistics statistics = Statistics.getInstance();
+    private StopWatch stopWatch = StopWatch.getInstance();
 
     private BlockingQueue<EventRecord> reportsQueue = new LinkedBlockingQueue<EventRecord>(1000);
     private BlockingQueue<EventRecord> paymentReportsQueue = new LinkedBlockingQueue<EventRecord>(1000);
     private BlockingQueue<EventRecord> emailReportsQueue = new LinkedBlockingQueue<EventRecord>(1000);
 
-    private static final PublishMetric REPORTS_METRICS = PublishMetric.getReportsMetrics();
-    private static final PublishMetric PAYMENT_REPORTS_METRICS = PublishMetric.getPaymentReportsMetrics();
+    private PublishMetric reportsMetrics = PublishMetric.getReportsMetrics();
+    private PublishMetric paymentReportsMetrics = PublishMetric.getPaymentReportsMetrics();
 
     private PublishTaskHandler()
     {
@@ -115,25 +117,31 @@ public class PublishTaskHandler implements ScheduledTaskHandler
 
     private void handlePublishEvent()
     {
-        handlePublishEvent(reportsPublishService, reportsQueue, REPORTS_METRICS);
-        handlePublishEvent(paymentReportsPublishService, paymentReportsQueue, PAYMENT_REPORTS_METRICS);
+        handlePublishEvent(reportsPublishService, reportsQueue, reportsMetrics);
+        handlePublishEvent(paymentReportsPublishService, paymentReportsQueue, paymentReportsMetrics);
     }
 
     private void handleAuditEvent()
     {
-        handleAuditEvent(auditPublishService, REPORTS_METRICS);
-        handleAuditEvent(paymentAuditPublishService, PAYMENT_REPORTS_METRICS);
+        handleAuditEvent(auditPublishService, reportsMetrics);
+        handleAuditEvent(paymentAuditPublishService, paymentReportsMetrics);
     }
 
     private void handlePublishEvent(IReporterPublishService publishService, BlockingQueue<EventRecord> queue, PublishMetric publishMetric)
     {
+        stopWatch.start();
+
         int count = publish(publishService, queue);
+
+        stopWatch.stop();
 
         if (count > 0)
         {
-            // Hubble
+            // Hubble for IReporter
             HubbleAnalytics.incrementCountForEvent(publishMetric.getMessagesSentMetric());
             HubbleAnalytics.incrementCountForEvent(publishMetric.getRecordsSentMetric(), count);
+            // Hubble for SMP
+            HubbleAnalytics.logTimingForEvent(publishMetric.getIReporterTiming(), stopWatch.getTimeMillis());
             // IReporter
             statistics.increment(publishMetric.getIReporterRecordsSent(), count);
         }
@@ -143,6 +151,8 @@ public class PublishTaskHandler implements ScheduledTaskHandler
             // Hubble
             HubbleAnalytics.incrementCountForEvent(publishMetric.getMessagesFailedMetric());
             HubbleAnalytics.incrementCountForEvent(publishMetric.getRecordsFailedMetric(), count);
+            // Hubble for SMP
+            HubbleAnalytics.logTimingForEvent(publishMetric.getIReporterTiming(), stopWatch.getTimeMillis());
             // IReporter
             statistics.increment(publishMetric.getIReporterRecordsFailed(), count);
         }

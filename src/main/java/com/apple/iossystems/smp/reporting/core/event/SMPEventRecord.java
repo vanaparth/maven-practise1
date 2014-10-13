@@ -21,7 +21,6 @@ public class SMPEventRecord
         setHash(record, EventAttribute.DPAN_ID);
         setHash(record, EventAttribute.DSID);
         setHash(record, EventAttribute.FPAN_ID);
-        setHash(record, EventAttribute.MERCHANT_ID);
         setHash(record, EventAttribute.TRANSACTION_ID);
 
         return record;

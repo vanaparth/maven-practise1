@@ -20,6 +20,7 @@ public class ManageCardEvent
     private final String cardHolderEmail;
     private final String dsid;
     private final String locale;
+    private final String timezone;
     private final String deviceName;
     private final String deviceType;
     private final String deviceImageUrl;
@@ -34,6 +35,7 @@ public class ManageCardEvent
         cardHolderEmail = builder.cardHolderEmail;
         dsid = builder.dsid;
         locale = builder.locale;
+        timezone = builder.timezone;
         deviceName = builder.deviceName;
         deviceType = builder.deviceType;
         deviceImageUrl = builder.deviceImageUrl;
@@ -61,6 +63,11 @@ public class ManageCardEvent
     public String getLocale()
     {
         return locale;
+    }
+
+    public String getTimezone()
+    {
+        return timezone;
     }
 
     public String getDeviceName()
@@ -109,6 +116,7 @@ public class ManageCardEvent
         private String cardHolderEmail;
         private String dsid;
         private String locale;
+        private String timezone;
         private String deviceName;
         private String deviceType;
         private String deviceImageUrl;
@@ -142,6 +150,12 @@ public class ManageCardEvent
         public Builder locale(String value)
         {
             locale = value;
+            return this;
+        }
+
+        public Builder timezone(String value)
+        {
+            timezone = value;
             return this;
         }
 
@@ -250,6 +264,7 @@ public class ManageCardEvent
             JsonObjectWriter.addProperty(jsonObject, "cardHolderEmail", manageCardEvent.cardHolderEmail);
             JsonObjectWriter.addProperty(jsonObject, "dsid", manageCardEvent.dsid);
             JsonObjectWriter.addProperty(jsonObject, "locale", manageCardEvent.locale);
+            JsonObjectWriter.addProperty(jsonObject, "timezone", manageCardEvent.timezone);
             JsonObjectWriter.addProperty(jsonObject, "deviceName", manageCardEvent.deviceName);
             JsonObjectWriter.addProperty(jsonObject, "deviceType", manageCardEvent.deviceType);
             JsonObjectWriter.addProperty(jsonObject, "deviceImageURL", manageCardEvent.deviceImageUrl);
@@ -286,6 +301,7 @@ public class ManageCardEvent
             String cardHolderEmail = JsonObjectReader.getAsString(jsonObject, "cardHolderEmail");
             String dsid = JsonObjectReader.getAsString(jsonObject, "dsid");
             String locale = JsonObjectReader.getAsString(jsonObject, "locale");
+            String timezone = JsonObjectReader.getAsString(jsonObject, "timezone");
             String deviceName = JsonObjectReader.getAsString(jsonObject, "deviceName");
             String deviceType = JsonObjectReader.getAsString(jsonObject, "deviceType");
             String deviceImageUrl = JsonObjectReader.getAsString(jsonObject, "deviceImageURL");
@@ -330,6 +346,7 @@ public class ManageCardEvent
                     cardHolderEmail(cardHolderEmail).
                     dsid(dsid).
                     locale(locale).
+                    timezone(timezone).
                     deviceName(deviceName).
                     deviceType(deviceType).
                     deviceImageUrl(deviceImageUrl).

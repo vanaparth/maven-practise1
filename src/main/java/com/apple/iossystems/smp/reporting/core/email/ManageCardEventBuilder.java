@@ -18,6 +18,7 @@ public class ManageCardEventBuilder
     private static final String LAST_NAME = "customerLastName";
     private static final String CARD_HOLDER_EMAIL = "customerEmail";
     private static final String LOCALE = "customerLocale";
+    private static final String TIMEZONE = "customerTZ";
     private static final String DEVICE_NAME = "deviceName";
     private static final String DEVICE_IMAGE_URL = "deviceImageURL";
 
@@ -89,6 +90,7 @@ public class ManageCardEventBuilder
         String lastName = cardData.get(LAST_NAME);
         String cardHolderEmail = cardData.get(CARD_HOLDER_EMAIL);
         String locale = cardData.get(LOCALE);
+        String timezone = cardData.get(TIMEZONE);
         String deviceName = cardData.get(DEVICE_NAME);
         String deviceImageUrl = cardData.get(DEVICE_IMAGE_URL);
 
@@ -96,6 +98,7 @@ public class ManageCardEventBuilder
                 cardHolderEmail(cardHolderEmail).
                 dsid(dsid).
                 locale(locale).
+                timezone(timezone).
                 deviceName(deviceName).
                 deviceType(getDeviceType(cardEvents)).
                 deviceImageUrl(deviceImageUrl).

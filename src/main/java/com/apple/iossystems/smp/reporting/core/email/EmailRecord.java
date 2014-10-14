@@ -5,6 +5,7 @@ import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
+import java.util.TimeZone;
 
 /**
  * @author Toch
@@ -106,12 +107,31 @@ class EmailRecord
         return cardEvents;
     }
 
-    public Date getDate()
+    private TimeZone getTimeZone()
     {
-        Calendar calendar = Calendar.getInstance();
+        TimeZone timezone = null;
+
+        if (manageCardEvent != null)
+        {
+            String tz = manageCardEvent.getTimezone();
+
+            if (tz != null)
+            {
+                timezone = TimeZone.getTimeZone(tz);
+            }
+        }
+
+        return timezone;
+    }
+
+    public Calendar getCalendar()
+    {
+        TimeZone timezone = getTimeZone();
+        Calendar calendar = (timezone != null) ? Calendar.getInstance(timezone) : Calendar.getInstance();
+
         calendar.setTimeInMillis(Long.valueOf(timestamp));
 
-        return calendar.getTime();
+        return calendar;
     }
 
     public static Builder getBuilder()

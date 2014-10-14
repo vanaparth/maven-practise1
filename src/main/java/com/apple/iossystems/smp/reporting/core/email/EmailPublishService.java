@@ -106,7 +106,7 @@ public class EmailPublishService
                     SuspendEmailRequest request = new SuspendEmailRequest(
                             EmailRecordFormat.getValidValue(emailRecord.getDeviceName()),
                             successCards,
-                            null,
+                            emailRecord.getCalendar(),
                             EmailRecordFormat.getValidValue(emailRecord.getCardHolderName()),
                             EmailRecordFormat.getValidValue(emailRecord.getConversationId()),
                             EmailRecordFormat.getValidValue(emailRecord.getCardHolderEmail()),
@@ -122,7 +122,7 @@ public class EmailPublishService
                     PartialSuspendEmailRequest request = new PartialSuspendEmailRequest(
                             EmailRecordFormat.getValidValue(emailRecord.getDeviceName()),
                             successCards,
-                            null,
+                            emailRecord.getCalendar(),
                             EmailRecordFormat.getValidValue(emailRecord.getCardHolderName()),
                             EmailRecordFormat.getValidValue(emailRecord.getConversationId()),
                             EmailRecordFormat.getValidValue(emailRecord.getCardHolderEmail()),
@@ -139,7 +139,7 @@ public class EmailPublishService
                     SuspendEmailRequest request = new SuspendEmailRequest(
                             EmailRecordFormat.getValidValue(emailRecord.getDeviceName()),
                             failedCards,
-                            null,
+                            emailRecord.getCalendar(),
                             EmailRecordFormat.getValidValue(emailRecord.getCardHolderName()),
                             EmailRecordFormat.getValidValue(emailRecord.getConversationId()),
                             EmailRecordFormat.getValidValue(emailRecord.getCardHolderEmail()),
@@ -161,7 +161,7 @@ public class EmailPublishService
                     RemoveEmailRequest request = new RemoveEmailRequest(
                             EmailRecordFormat.getValidValue(emailRecord.getDeviceName()),
                             successCards,
-                            null,
+                            emailRecord.getCalendar(),
                             EmailRecordFormat.getValidValue(emailRecord.getCardHolderName()),
                             EmailRecordFormat.getValidValue(emailRecord.getConversationId()),
                             EmailRecordFormat.getValidValue(emailRecord.getCardHolderEmail()),
@@ -178,7 +178,7 @@ public class EmailPublishService
                     PartialRemoveEmailRequest request = new PartialRemoveEmailRequest(
                             EmailRecordFormat.getValidValue(emailRecord.getDeviceName()),
                             successCards,
-                            null,
+                            emailRecord.getCalendar(),
                             EmailRecordFormat.getValidValue(emailRecord.getCardHolderName()),
                             EmailRecordFormat.getValidValue(emailRecord.getConversationId()),
                             EmailRecordFormat.getValidValue(emailRecord.getCardHolderEmail()),
@@ -196,7 +196,7 @@ public class EmailPublishService
                     RemoveEmailRequest request = new RemoveEmailRequest(
                             EmailRecordFormat.getValidValue(emailRecord.getDeviceName()),
                             failedCards,
-                            null,
+                            emailRecord.getCalendar(),
                             EmailRecordFormat.getValidValue(emailRecord.getCardHolderName()),
                             EmailRecordFormat.getValidValue(emailRecord.getConversationId()),
                             EmailRecordFormat.getValidValue(emailRecord.getCardHolderEmail()),

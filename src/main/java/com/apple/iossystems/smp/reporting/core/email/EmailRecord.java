@@ -3,7 +3,6 @@ package com.apple.iossystems.smp.reporting.core.email;
 import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
 
 import java.util.Calendar;
-import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 

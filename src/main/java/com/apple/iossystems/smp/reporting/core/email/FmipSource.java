@@ -17,6 +17,10 @@ public enum FmipSource
     private final String description;
     private final BigInteger certificate;
 
+    private static final Logger LOGGER = Logger.getLogger(FmipSource.class);
+
+    private static final String[] REMOTE_REQUEST_REASONS = {"Remove all cards."};
+
     private FmipSource(String code, String description, BigInteger certificate)
     {
         this.code = code;
@@ -65,7 +69,33 @@ public enum FmipSource
         return getUnknownSource();
     }
 
-    private static final Logger LOGGER = Logger.getLogger(FmipSource.class);
+    public static FmipSource getFmipSourceFromRequestReason(String requestReason)
+    {
+        if (requestReason != null)
+        {
+            requestReason = requestReason.trim();
+
+            if (requestReasonInRequestReasonList(requestReason, REMOTE_REQUEST_REASONS))
+            {
+                return REMOTE;
+            }
+        }
+
+        return FMIP;
+    }
+
+    private static boolean requestReasonInRequestReasonList(String requestReason, String[] requestReasons)
+    {
+        for (String entry : requestReasons)
+        {
+            if (entry.equalsIgnoreCase(requestReason))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
 
     private static BigInteger initFmipSourceCertificate(String certificate, String defaultValue)
     {

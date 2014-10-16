@@ -61,6 +61,12 @@ public class ManageCardEventBuilder
         return this;
     }
 
+    public ManageCardEventBuilder fmipSourceFromRequestReason(String value)
+    {
+        fmipSource = FmipSource.getFmipSourceFromRequestReason(value);
+        return this;
+    }
+
     public ManageCardEventBuilder cardData(Map<String, String> value)
     {
         cardData = value;

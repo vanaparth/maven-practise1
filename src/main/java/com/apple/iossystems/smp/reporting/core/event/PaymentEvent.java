@@ -13,6 +13,7 @@ public class PaymentEvent
     private static final Logger LOGGER = Logger.getLogger(PaymentEvent.class);
 
     private final String merchantId;
+    private final String merchantName;
     private final String transactionId;
     private final float transactionAmount;
     private final PaymentTransactionStatus transactionStatus;
@@ -20,6 +21,7 @@ public class PaymentEvent
     private PaymentEvent(Builder builder)
     {
         merchantId = builder.merchantId;
+        merchantName = builder.merchantName;
         transactionId = builder.transactionId;
         transactionAmount = builder.transactionAmount;
         transactionStatus = builder.transactionStatus;
@@ -38,6 +40,7 @@ public class PaymentEvent
     public static class Builder
     {
         private String merchantId;
+        private String merchantName;
         private String transactionId;
         private float transactionAmount;
         private PaymentTransactionStatus transactionStatus;
@@ -49,6 +52,12 @@ public class PaymentEvent
         public Builder merchantId(String value)
         {
             merchantId = value;
+            return this;
+        }
+
+        public Builder merchantName(String value)
+        {
+            merchantName = value;
             return this;
         }
 
@@ -104,7 +113,7 @@ public class PaymentEvent
         record.setAttributeValue(EventAttribute.EVENT_TYPE.key(), EventType.PAYMENT.getKey());
 
         record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(Calendar.getCurrentHourMillis()));
-        record.setAttributeValue(EventAttribute.MERCHANT_ID.key(), merchantId);
+        record.setAttributeValue(EventAttribute.MERCHANT_ID.key(), getMerchantInfo());
         record.setAttributeValue(EventAttribute.TRANSACTION_ID.key(), transactionId);
         record.setAttributeValue(EventAttribute.TRANSACTION_AMOUNT.key(), formatTransactionAmount(transactionAmount));
 
@@ -123,6 +132,30 @@ public class PaymentEvent
         records.add(record);
 
         return records;
+    }
+
+    private String getMerchantInfo()
+    {
+        String merchantInfo = null;
+
+        if (merchantId != null)
+        {
+            merchantInfo = merchantId;
+        }
+
+        if (merchantName != null)
+        {
+            if (merchantInfo != null)
+            {
+                merchantInfo += "\t" + merchantName;
+            }
+            else
+            {
+                merchantInfo = merchantName;
+            }
+        }
+
+        return merchantInfo;
     }
 
     private enum PaymentTransactionStatus

@@ -240,7 +240,7 @@ public class IReporterConfiguration
             int defaultMaxBatchSize = 1000;
             int minPublishFrequency = 60 * 1000;
             int maxPublishFrequency = 60 * 60 * 1000;
-            int minConfigurationReloadFrequency = 60 * 60 * 1000;
+            int minConfigurationReloadFrequency = 15 * 60 * 1000;
             int maxConfigurationReloadFrequency = 60 * 60 * 1000;
 
             if ((maxBatchSize < defaultMinBatchSize) || (maxBatchSize > defaultMaxBatchSize))

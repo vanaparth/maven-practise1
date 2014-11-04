@@ -6,17 +6,15 @@ import org.apache.log4j.Logger;
 /**
  * @author Toch
  */
-public class SMPEvent
+public class PutPendingCommandSMPEvent
 {
-    private static final Logger LOGGER = Logger.getLogger(SMPEvent.class);
+    private static final Logger LOGGER = Logger.getLogger(PutPendingCommandSMPEvent.class);
 
-    private final SMPCardEvent smpCardEvent;
     private final String conversationId;
     private final PNO pno;
 
-    private SMPEvent(Builder builder)
+    private PutPendingCommandSMPEvent(Builder builder)
     {
-        smpCardEvent = builder.smpCardEvent;
         conversationId = builder.conversationId;
         pno = builder.pno;
     }
@@ -28,18 +26,11 @@ public class SMPEvent
 
     public static class Builder
     {
-        private SMPCardEvent smpCardEvent;
         private String conversationId;
         private PNO pno;
 
         private Builder()
         {
-        }
-
-        public Builder smpCardEvent(SMPCardEvent value)
-        {
-            smpCardEvent = value;
-            return this;
         }
 
         public Builder conversationId(String value)
@@ -59,7 +50,7 @@ public class SMPEvent
             // Prevent any side effects
             try
             {
-                return new SMPEvent(this).buildRecords();
+                return new PutPendingCommandSMPEvent(this).buildRecords();
             }
             catch (Exception e)
             {
@@ -77,10 +68,7 @@ public class SMPEvent
         record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(System.currentTimeMillis()));
         record.setAttributeValue(EventAttribute.CONVERSATION_ID.key(), conversationId);
 
-        if (smpCardEvent != null)
-        {
-            smpCardEvent.setSMPCardEvent(record);
-        }
+        SMPCardEvent.PUT_PENDING.setSMPCardEvent(record);
 
         if (pno != null)
         {

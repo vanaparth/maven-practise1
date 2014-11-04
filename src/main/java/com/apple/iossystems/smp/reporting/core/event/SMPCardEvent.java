@@ -14,6 +14,7 @@ public enum SMPCardEvent
     RESUME_CARD("104"),
     PUT_PENDING("105"),
     POST_COMMAND("106"),
+    REGISTER_DEVICE("107"),
     UNKNOWN("000");
 
     private final String code;

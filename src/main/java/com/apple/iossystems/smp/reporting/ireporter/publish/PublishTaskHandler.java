@@ -199,11 +199,11 @@ public class PublishTaskHandler implements ScheduledTaskHandler
 
         if (eventType == EventType.REPORTS)
         {
-            return reportsQueue.offer(SMPEventRecord.maskSelectedAttributes(SMPEventRecord.removeEmailAttributes(record)));
+            return reportsQueue.offer(SMPEventRecord.maskSelectedAttributes(IReporterEventRecord.removeAttributes(record)));
         }
         else if (eventType == EventType.PAYMENT)
         {
-            return paymentReportsQueue.offer(SMPEventRecord.maskSelectedAttributes(SMPEventRecord.removeEmailAttributes(record)));
+            return paymentReportsQueue.offer(SMPEventRecord.maskSelectedAttributes(IReporterEventRecord.removeAttributes(record)));
         }
         else if (eventType == EventType.EMAIL)
         {

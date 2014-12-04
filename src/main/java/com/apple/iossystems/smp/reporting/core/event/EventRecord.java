@@ -2,7 +2,6 @@ package com.apple.iossystems.smp.reporting.core.event;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 
 /**
  * @author Toch
@@ -53,9 +52,7 @@ public class EventRecord
     {
         StringBuilder strBuilder = new StringBuilder();
 
-        Set<Map.Entry<String, String>> entrySet = data.entrySet();
-
-        for (Map.Entry<String, String> entry : entrySet)
+        for (Map.Entry<String, String> entry : data.entrySet())
         {
             strBuilder.append(entry.getKey()).append(":").append(entry.getValue()).append("\n");
         }

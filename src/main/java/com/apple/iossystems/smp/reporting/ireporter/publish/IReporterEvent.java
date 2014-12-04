@@ -2,23 +2,23 @@ package com.apple.iossystems.smp.reporting.ireporter.publish;
 
 import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
+import com.apple.iossystems.smp.reporting.core.event.SMPEventRecord;
 
 import java.util.HashSet;
-import java.util.Map;
 import java.util.Set;
 
 /**
  * @author Toch
  */
-public class IReporterEventRecord
+public class IReporterEvent
 {
-    private static final Set<String> EVENT_ATTRIBUTES = getAttributes();
+    private static final Set<String> EVENT_ATTRIBUTES = getEventAttributes();
 
-    private IReporterEventRecord()
+    private IReporterEvent()
     {
     }
 
-    private static Set<String> getAttributes()
+    private static Set<String> getEventAttributes()
     {
         Set<String> eventAttributes = new HashSet<String>();
 
@@ -53,17 +53,11 @@ public class IReporterEventRecord
         return eventAttributes;
     }
 
-    public static EventRecord removeAttributes(EventRecord record)
+    public static EventRecord processEventRecord(EventRecord record)
     {
-        for (Map.Entry<String, String> entry : record.getData().entrySet())
-        {
-            String key = entry.getKey();
+        record.removeAttributesIfAbsent(EVENT_ATTRIBUTES);
 
-            if (!EVENT_ATTRIBUTES.contains(key))
-            {
-                record.removeAttributeValue(key);
-            }
-        }
+        SMPEventRecord.maskAttributes(record);
 
         return record;
     }

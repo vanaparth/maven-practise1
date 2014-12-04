@@ -12,38 +12,38 @@ import java.util.Map;
 public class IReporterConfiguration
 {
     // URLs
-    public static final String BASE_URL = ApplicationConfigurationManager.getIReporterURL();
+    private static final String BASE_URL = ApplicationConfigurationManager.getIReporterURL();
 
-    public static final String DEFAULT_REPORTS_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/stockholm";
+    private static final String DEFAULT_REPORTS_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/stockholm";
 
-    public static final String DEFAULT_AUDIT_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/stockholm_audit";
+    private static final String DEFAULT_AUDIT_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/stockholm_audit";
 
-    public static final String DEFAULT_REPORTS_URL = BASE_URL + "/e3/rest/1/stockholm";
+    private static final String DEFAULT_REPORTS_URL = BASE_URL + "/e3/rest/1/stockholm";
 
-    public static final String DEFAULT_AUDIT_URL = BASE_URL + "/e3/rest/1/stockholm_audit";
+    private static final String DEFAULT_AUDIT_URL = BASE_URL + "/e3/rest/1/stockholm_audit";
 
-    public static final String DEFAULT_PAYMENT_REPORTS_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/oslo";
+    private static final String DEFAULT_PAYMENT_REPORTS_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/oslo";
 
-    public static final String DEFAULT_PAYMENT_AUDIT_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/oslo_audit";
+    private static final String DEFAULT_PAYMENT_AUDIT_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/oslo_audit";
 
-    public static final String DEFAULT_PAYMENT_REPORTS_URL = BASE_URL + "/e3/rest/1/oslo";
+    private static final String DEFAULT_PAYMENT_REPORTS_URL = BASE_URL + "/e3/rest/1/oslo";
 
-    public static final String DEFAULT_PAYMENT_AUDIT_URL = BASE_URL + "/e3/rest/1/oslo_audit";
+    private static final String DEFAULT_PAYMENT_AUDIT_URL = BASE_URL + "/e3/rest/1/oslo_audit";
 
     // Other configuration settings
-    public static final String DEFAULT_PUBLISH_KEY = "QWERTYUIOPASDF12";
+    private static final String DEFAULT_PUBLISH_KEY = "QWERTYUIOPASDF12";
 
-    public static final String DEFAULT_CONTENT_TYPE = "application/json";
+    private static final String DEFAULT_CONTENT_TYPE = "application/json";
 
-    public static final boolean DEFAULT_PUBLISH_ENABLED = true;
+    private static final boolean DEFAULT_PUBLISH_ENABLED = true;
 
-    public static final int DEFAULT_MAX_BATCH_SIZE = 100;
+    private static final int DEFAULT_MAX_BATCH_SIZE = 100;
 
     // Publish frequency in milliseconds
-    public static final int DEFAULT_PUBLISH_FREQUENCY = 2 * 60 * 1000;
+    private static final int DEFAULT_PUBLISH_FREQUENCY = 2 * 60 * 1000;
 
     // Configuration reload frequency in milliseconds
-    public static final int DEFAULT_CONFIGURATION_RELOAD_FREQUENCY = 60 * 60 * 1000;
+    private static final int DEFAULT_CONFIGURATION_RELOAD_FREQUENCY = 60 * 60 * 1000;
 
 
     private final String publishURL;

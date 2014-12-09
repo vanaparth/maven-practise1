@@ -16,9 +16,9 @@ class EmailRecordFilter
     {
         SMPCardEvent smpCardEvent = record.getSMPCardEvent();
 
-        boolean doFilter = ((smpCardEvent == SMPCardEvent.SUSPEND_CARD) || (smpCardEvent == SMPCardEvent.UNLINK_CARD) || (smpCardEvent == SMPCardEvent.RESUME_CARD));
+        boolean isManageCardEvent = ((smpCardEvent == SMPCardEvent.SUSPEND_CARD) || (smpCardEvent == SMPCardEvent.UNLINK_CARD) || (smpCardEvent == SMPCardEvent.RESUME_CARD));
 
-        return ((!doFilter || hasValidManageCardEventSource(record)) && hasRequiredValues(record));
+        return ((!isManageCardEvent || hasValidManageCardEventSource(record)) && hasRequiredValues(record));
     }
 
     public static boolean isProvisionEventRecord(EventRecord record)

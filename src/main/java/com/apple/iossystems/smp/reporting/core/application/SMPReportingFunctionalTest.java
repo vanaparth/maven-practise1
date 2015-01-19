@@ -33,7 +33,7 @@ public class SMPReportingFunctionalTest
         setSystemProperties();
         initPropertyManager();
 
-        //testICloudProdConfig();
+        // testICloudProdConfig();
         // testICloudProdPublish();
 
         // test1();
@@ -224,7 +224,7 @@ public class SMPReportingFunctionalTest
 
     private static void testICloudProdConfig()
     {
-        //String url = "https://icloud4-e3.icloud.com";
+        // String url = "https://icloud4-e3.icloud.com";
         String url = "https://mr-e3sh.icloud.com";
 
         HttpRequest httpRequest = HttpRequest.getInstance(url + "/e3/rest/1/config/stockholm", "GET", null, null, null, null);

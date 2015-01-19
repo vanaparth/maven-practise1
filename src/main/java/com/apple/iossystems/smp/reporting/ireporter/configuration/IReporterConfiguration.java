@@ -40,10 +40,10 @@ public class IReporterConfiguration
     private static final int DEFAULT_MAX_BATCH_SIZE = 100;
 
     // Publish frequency in milliseconds
-    private static final int DEFAULT_PUBLISH_FREQUENCY = 2 * 60 * 1000;
+    private static final int DEFAULT_PUBLISH_FREQUENCY = 60 * 1000;
 
     // Configuration reload frequency in milliseconds
-    private static final int DEFAULT_CONFIGURATION_RELOAD_FREQUENCY = 60 * 60 * 1000;
+    private static final int DEFAULT_CONFIGURATION_RELOAD_FREQUENCY = 60 * 1000;
 
 
     private final String publishURL;
@@ -240,7 +240,7 @@ public class IReporterConfiguration
             int defaultMaxBatchSize = 1000;
             int minPublishFrequency = 60 * 1000;
             int maxPublishFrequency = 60 * 60 * 1000;
-            int minConfigurationReloadFrequency = 15 * 60 * 1000;
+            int minConfigurationReloadFrequency = 60 * 1000;
             int maxConfigurationReloadFrequency = 60 * 60 * 1000;
 
             if ((maxBatchSize < defaultMinBatchSize) || (maxBatchSize > defaultMaxBatchSize))
@@ -322,11 +322,11 @@ public class IReporterConfiguration
 
                 JsonObject endPointObject = jsonObject.getAsJsonObject("endpoint");
 
-                // String protocol = endPointObject.get("protocol").getAsString();
-                // String hostname = endPointObject.get("hostname").getAsString();
+                String protocol = endPointObject.get("protocol").getAsString();
+                String hostname = endPointObject.get("hostname").getAsString();
                 String uri = endPointObject.get("uri").getAsString();
 
-                return new Builder().publishURL(getURL(uri)).
+                return new Builder().publishURL(getURL(protocol, hostname, uri)).
                         publishKey(xLoadText).
                         contentType(contentType).
                         publishEnabled(shouldPublishFlag).
@@ -335,10 +335,10 @@ public class IReporterConfiguration
                         configurationReloadFrequency(configReloadFrequencyInMinutes * 60 * 1000);
             }
 
-            private String getURL(String uri)
+            private String getURL(String protocol, String hostname, String uri)
             {
-                //return protocol + "://" + hostname + uri;
-                return BASE_URL + uri;
+                return protocol + "://" + hostname + uri;
+                // return BASE_URL + uri;
             }
         }
     }

@@ -3,13 +3,14 @@ package com.apple.iossystems.smp.reporting.core.event;
 import com.apple.iossystems.smp.domain.CardSource;
 import com.apple.iossystems.smp.domain.FpanType;
 import com.apple.iossystems.smp.domain.device.CardEligibilityStatus;
+import com.apple.iossystems.smp.utils.SMPErrorEnum;
 
 /**
  * @author Toch
  */
 public class SMPEventCode
 {
-    private static final String UNKNOWN_CODE = "000";
+    private static final String EMPTY_CODE = "";
 
     private SMPEventCode()
     {
@@ -25,7 +26,7 @@ public class SMPEventCode
 
     private static boolean isValid(String code)
     {
-        return (!code.equals(UNKNOWN_CODE));
+        return (!code.equals(EMPTY_CODE));
     }
 
     public static String getCardEligibilityStatusCode(CardEligibilityStatus cardStatus)
@@ -45,7 +46,7 @@ public class SMPEventCode
                 return "10";
 
             default:
-                return UNKNOWN_CODE;
+                return EMPTY_CODE;
         }
     }
 
@@ -66,7 +67,7 @@ public class SMPEventCode
                 return "4";
 
             default:
-                return UNKNOWN_CODE;
+                return EMPTY_CODE;
         }
     }
 
@@ -81,7 +82,7 @@ public class SMPEventCode
                 return "2";
 
             default:
-                return UNKNOWN_CODE;
+                return EMPTY_CODE;
         }
     }
 
@@ -105,7 +106,7 @@ public class SMPEventCode
         }
         else
         {
-            return UNKNOWN_CODE;
+            return EMPTY_CODE;
         }
     }
 
@@ -117,7 +118,7 @@ public class SMPEventCode
         }
         else
         {
-            return UNKNOWN_CODE;
+            return EMPTY_CODE;
         }
     }
 
@@ -137,7 +138,36 @@ public class SMPEventCode
         }
         else
         {
-            return UNKNOWN_CODE;
+            return EMPTY_CODE;
+        }
+    }
+
+    public static String getResponseStatus(String statusCode)
+    {
+        SMPErrorEnum errorEnum = SMPErrorEnum.fromErrorCode(statusCode);
+
+        switch (errorEnum)
+        {
+            case NO_ERROR:
+                return EMPTY_CODE;
+
+            case PAN_INELIGIBLE:
+            case INELIGIBLE_PAN:
+            case INVALID_PAN:
+                return "51";
+
+            case CVV_VERIFICATION_FAILED:
+            case CVV_VERIFICATION_FAILED_LEGACY:
+                return "52";
+
+            case FPAN_EXPIRED:
+                return "53";
+
+            case NAME_VERIFICATION_FAILED:
+                return "54";
+
+            default:
+                return "55";
         }
     }
 }

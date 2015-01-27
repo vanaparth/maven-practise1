@@ -287,7 +287,7 @@ public class SMPReportingFunctionalTest
         data.put(EventAttribute.PNO.key(), "15");
         data.put(EventAttribute.PROVISION_STATUS.key(), "16");
 
-        data.put(EventAttribute.SUPPORTS_IN_APP_PAYMENT.key(), "17");
+        data.put(EventAttribute.PROVISION_RESPONSE.key(), "17");
         data.put(EventAttribute.TIMESTAMP.key(), "18");
         data.put(EventAttribute.USE_CASE_TYPE.key(), "19");
 

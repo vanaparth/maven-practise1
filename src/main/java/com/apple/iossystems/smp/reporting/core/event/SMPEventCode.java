@@ -154,20 +154,20 @@ public class SMPEventCode
             case PAN_INELIGIBLE:
             case INELIGIBLE_PAN:
             case INVALID_PAN:
-                return "51";
+                return "1";
 
             case CVV_VERIFICATION_FAILED:
             case CVV_VERIFICATION_FAILED_LEGACY:
-                return "52";
+                return "2";
 
             case FPAN_EXPIRED:
-                return "53";
+                return "3";
 
             case NAME_VERIFICATION_FAILED:
-                return "54";
+                return "4";
 
             default:
-                return "55";
+                return "5";
         }
     }
 }

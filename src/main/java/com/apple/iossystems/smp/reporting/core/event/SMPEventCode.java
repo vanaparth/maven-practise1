@@ -4,6 +4,7 @@ import com.apple.iossystems.smp.domain.CardSource;
 import com.apple.iossystems.smp.domain.FpanType;
 import com.apple.iossystems.smp.domain.device.CardEligibilityStatus;
 import com.apple.iossystems.smp.utils.SMPErrorEnum;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Toch
@@ -144,6 +145,11 @@ public class SMPEventCode
 
     public static String getResponseStatus(String statusCode)
     {
+        if (StringUtils.isBlank(statusCode))
+        {
+            return EMPTY_CODE;
+        }
+
         SMPErrorEnum errorEnum = SMPErrorEnum.fromErrorCode(statusCode);
 
         switch (errorEnum)

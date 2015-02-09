@@ -3,6 +3,7 @@ package com.apple.iossystems.smp.reporting.core.event;
 import com.apple.iossystems.smp.domain.CardSource;
 import com.apple.iossystems.smp.domain.FpanType;
 import com.apple.iossystems.smp.domain.device.CardEligibilityStatus;
+import com.apple.iossystems.smp.domain.device.PaymentTypeEnum;
 import com.apple.iossystems.smp.utils.SMPErrorEnum;
 import org.apache.commons.lang.StringUtils;
 
@@ -72,14 +73,14 @@ public class SMPEventCode
         }
     }
 
-    public static String getFpanTypeCode(FpanType fpanType)
+    public static String getFpanTypeCode(PaymentTypeEnum fpanType)
     {
         switch (fpanType)
         {
-            case Credit:
+            case CREDIT:
                 return "1";
 
-            case Debit:
+            case DEBIT:
                 return "2";
 
             default:

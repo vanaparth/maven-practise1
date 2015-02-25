@@ -23,19 +23,9 @@ public class SMPEventDataServiceProxy
         return (dpanId != null) ? SMPEventDataService.getSecureElementByDpanId(dpanId) : null;
     }
 
-    public static SecureElement getSecureElementBySeId(String seId)
-    {
-        return (seId != null) ? SMPEventDataService.getSecureElementBySeId(seId) : null;
-    }
-
     public static String getDeviceType(SecureElement secureElement)
     {
         return (secureElement != null) ? SMPEventDataService.getDeviceType(secureElement) : null;
-    }
-
-    public static int getProvisionCount(SecureElement secureElement)
-    {
-        return (secureElement != null) ? secureElement.getProvisioningCount() : 0;
     }
 
     public static String getCardDisplayNumberFromPassbookPass(PassbookPass passbookPass)

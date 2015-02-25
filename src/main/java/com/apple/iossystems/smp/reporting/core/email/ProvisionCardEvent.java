@@ -1,11 +1,11 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.iossystems.smp.domain.AthenaCardDescriptor;
+import com.apple.iossystems.smp.domain.ProvisionCount;
 import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
 import com.google.gson.GsonBuilder;
-import org.apache.log4j.Logger;
 
 /**
  * @author Toch
@@ -177,22 +177,11 @@ public class ProvisionCardEvent
         return new GsonBuilder().create().toJson(provisionCardEvent);
     }
 
-    private static final Logger LOGGER = Logger.getLogger(ProvisionCardEvent.class);
-
-    public static boolean getFirstProvisionStatusFromSeId(String seId)
+    public static boolean isFirstProvision(String dsid)
     {
-        boolean firstProvision = false;
+        ProvisionCount provisionCount = SMPEventDataService.getProvisionCount(dsid);
 
-        try
-        {
-            firstProvision = ((SMPEventDataServiceProxy.getProvisionCount(SMPEventDataServiceProxy.getSecureElementBySeId(seId))) == 0);
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e);
-        }
-
-        return firstProvision;
+        return ((provisionCount != null) && (provisionCount.equals(ProvisionCount.ZERO)));
     }
 
     public static EmailRecord getEmailRecord(EventRecord record)

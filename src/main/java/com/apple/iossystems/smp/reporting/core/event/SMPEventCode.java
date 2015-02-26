@@ -46,6 +46,9 @@ public class SMPEventCode
             case PROVISIONED:
                 return "10";
 
+            case MORE_INPUT_NEEDED:
+                return "11";
+
             default:
                 return EMPTY_CODE;
         }
@@ -82,6 +85,12 @@ public class SMPEventCode
             case DEBIT:
                 return "2";
 
+            case PRE_PAID:
+                return "3";
+
+            case PRIVATE_LABEL:
+                return "4";
+
             default:
                 return EMPTY_CODE;
         }
@@ -104,6 +113,10 @@ public class SMPEventCode
         else if (name.equalsIgnoreCase("krypton"))
         {
             return "204";
+        }
+        else if (name.equalsIgnoreCase("xenon"))
+        {
+            return "205";
         }
         else
         {

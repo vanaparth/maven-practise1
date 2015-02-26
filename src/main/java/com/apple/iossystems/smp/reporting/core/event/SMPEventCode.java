@@ -1,7 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.event;
 
 import com.apple.iossystems.smp.domain.CardSource;
-import com.apple.iossystems.smp.domain.FpanType;
 import com.apple.iossystems.smp.domain.device.CardEligibilityStatus;
 import com.apple.iossystems.smp.domain.device.PaymentTypeEnum;
 import com.apple.iossystems.smp.utils.SMPErrorEnum;

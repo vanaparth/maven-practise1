@@ -5,7 +5,7 @@ package com.apple.iossystems.smp.reporting.core.email;
  */
 public class SMPEventCache
 {
-    private static final long CACHE_TIMEOUT = 15 * 60 * 1000;
+    private static final long CACHE_TIMEOUT = 30 * 60 * 1000;
 
     private SMPEventCache()
     {
@@ -17,7 +17,7 @@ public class SMPEventCache
 
         if (conversationId != null)
         {
-            key = "smp_reporting_event_" + attribute.key + "_" + conversationId;
+            key = "SMPReporting_" + attribute.key + "_" + conversationId;
         }
 
         return key;
@@ -35,10 +35,7 @@ public class SMPEventCache
 
     public enum Attribute
     {
-        DEVICE_TYPE("device_type"),
-        EMAIL("email"),
-        FIRST_PROVISION("first_provision"),
-        LOCALE("locale");
+        PROVISION_EVENT("ProvisionEvent");
 
         private final String key;
 

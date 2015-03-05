@@ -72,15 +72,26 @@ public class EmailPublishService
         }
     }
 
+    static void sendProvisionEventRequest(ProvisionCardEvent provisionCardEvent)
+    {
+        if (provisionCardEvent != null)
+        {
+            try
+            {
+                doSendRequest(provisionCardEvent.getEmailRecord());
+            }
+            catch (Exception e)
+            {
+                LOGGER.error(e);
+            }
+        }
+    }
+
     private static EmailRecord getEmailRecord(EventRecord record)
     {
         EmailRecord emailRecord = null;
 
-        if (EmailRecordFilter.isProvisionEventRecord(record))
-        {
-            emailRecord = ProvisionCardEvent.getEmailRecord(record);
-        }
-        else if (EmailRecordFilter.isManageCardEventRecord(record))
+        if (EmailRecordFilter.isManageCardEventRecord(record))
         {
             emailRecord = ManageCardEvent.getEmailRecord(record);
         }

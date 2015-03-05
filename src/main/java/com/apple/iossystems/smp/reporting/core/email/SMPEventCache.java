@@ -5,7 +5,7 @@ package com.apple.iossystems.smp.reporting.core.email;
  */
 public class SMPEventCache
 {
-    private static final long CACHE_TIMEOUT = 30 * 60 * 1000;
+    private static final long CACHE_TIMEOUT = 72 * 60 * 60 * 1000;
 
     private SMPEventCache()
     {

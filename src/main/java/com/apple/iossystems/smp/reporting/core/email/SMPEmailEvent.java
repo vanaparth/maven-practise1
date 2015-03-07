@@ -22,8 +22,10 @@ public class SMPEmailEvent
     {
         EventRecords outputRecords = EventRecords.getInstance();
 
-        for (EventRecord record : records.getList())
+        if (!records.getList().isEmpty())
         {
+            EventRecord record = records.getList().get(0);
+
             if (isEmailRecord(record))
             {
                 record.setAttributeValue(EventAttribute.EVENT_TYPE.key(), EventType.EMAIL.getKey());

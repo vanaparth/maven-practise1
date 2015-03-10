@@ -61,6 +61,23 @@ public class SMPEventNotificationService
         }
     }
 
+    private void retryPublishEventRecord(EventRecord record)
+    {
+        if (logService == null)
+        {
+            initLogService();
+        }
+
+        try
+        {
+            logService.logEvent("event", EventType.getLogLevel(record), MapToPair.toPairs(record.getData()));
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+        }
+    }
+
     private void publishEventRecord(EventRecord record)
     {
         try
@@ -70,6 +87,8 @@ public class SMPEventNotificationService
         catch (Exception e)
         {
             LOGGER.error(e);
+
+            retryPublishEventRecord(record);
         }
     }
 

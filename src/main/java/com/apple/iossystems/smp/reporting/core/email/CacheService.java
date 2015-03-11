@@ -76,7 +76,10 @@ class CacheService
     {
         try
         {
-            CACHE.removeValueForKey(key);
+            if (key != null)
+            {
+                CACHE.removeValueForKey(key);
+            }
         }
         catch (Exception e)
         {

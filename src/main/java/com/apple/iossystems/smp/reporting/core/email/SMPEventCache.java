@@ -33,6 +33,11 @@ public class SMPEventCache
         return CacheService.get(getCacheKey(attribute, conversationId));
     }
 
+    public static void remove(Attribute attribute, String conversationId)
+    {
+        CacheService.remove(getCacheKey(attribute, conversationId));
+    }
+
     public enum Attribute
     {
         PROVISION_EVENT("ProvisionEvent");

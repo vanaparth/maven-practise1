@@ -71,4 +71,16 @@ class CacheService
 
         return value;
     }
+
+    public static void remove(String key)
+    {
+        try
+        {
+            CACHE.removeValueForKey(key);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+        }
+    }
 }

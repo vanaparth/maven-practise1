@@ -61,6 +61,8 @@ public class ProvisionEmailPublishService
                         firstProvision(true).build();
 
                 EmailPublishService.sendProvisionEventRequest(updatedProvisionCardEvent);
+
+                SMPEventCache.remove(SMPEventCache.Attribute.PROVISION_EVENT, conversationId);
             }
         }
     }

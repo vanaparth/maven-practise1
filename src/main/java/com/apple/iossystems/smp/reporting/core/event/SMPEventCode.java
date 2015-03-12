@@ -1,6 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.event;
 
-import com.apple.iossystems.smp.domain.CardSource;
+import com.apple.iossystems.smp.domain.ProvisioningCardSource;
 import com.apple.iossystems.smp.domain.device.CardEligibilityStatus;
 import com.apple.iossystems.smp.domain.device.PaymentTypeEnum;
 import com.apple.iossystems.smp.utils.SMPErrorEnum;
@@ -54,21 +54,18 @@ public class SMPEventCode
         }
     }
 
-    public static String getCardSourceCode(CardSource cardSource)
+    public static String getCardSourceCode(ProvisioningCardSource cardSource)
     {
         switch (cardSource)
         {
-            case USER_INPUT:
+            case MANUAL:
                 return "1";
 
             case ON_FILE:
                 return "2";
 
-            case CLIENT_SDK:
+            case BANKING_APP:
                 return "3";
-
-            case ON_PASS:
-                return "4";
 
             default:
                 return EMPTY_CODE;

@@ -5,7 +5,7 @@ import com.apple.iossystems.smp.domain.Actor;
 /**
  * @author Toch
  */
-public enum CardEventSource
+public enum ManageDeviceEventSource
 {
     DEVICE(Actor.DEVICE, "1"),
     FMIP(Actor.FMIP, "2"),
@@ -15,13 +15,13 @@ public enum CardEventSource
     private final Actor actor;
     private final String code;
 
-    private CardEventSource(Actor actor, String code)
+    private ManageDeviceEventSource(Actor actor, String code)
     {
         this.actor = actor;
         this.code = code;
     }
 
-    private static CardEventSource getUnknownSource()
+    private static ManageDeviceEventSource getUnknownSource()
     {
         return DEVICE;
     }
@@ -31,11 +31,11 @@ public enum CardEventSource
         return code;
     }
 
-    public static CardEventSource getCardEventSource(Actor actor)
+    public static ManageDeviceEventSource fromActor(Actor actor)
     {
-        for (CardEventSource e : CardEventSource.values())
+        for (ManageDeviceEventSource e : values())
         {
-            if (e.actor == actor)
+            if (e.actor.equals(actor))
             {
                 return e;
             }
@@ -44,9 +44,9 @@ public enum CardEventSource
         return getUnknownSource();
     }
 
-    public static CardEventSource getCardEventSource(String code)
+    public static ManageDeviceEventSource fromCode(String code)
     {
-        for (CardEventSource e : CardEventSource.values())
+        for (ManageDeviceEventSource e : values())
         {
             if (e.code.equals(code))
             {

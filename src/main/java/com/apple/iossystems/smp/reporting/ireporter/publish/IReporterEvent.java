@@ -31,6 +31,7 @@ public class IReporterEvent
         eventAttributes.add(EventAttribute.CARD_STATUS.key());
         eventAttributes.add(EventAttribute.CARD_TYPE.key());
         eventAttributes.add(EventAttribute.CONVERSATION_ID.key());
+        eventAttributes.add(EventAttribute.COUNTRY_CODE.key());
         eventAttributes.add(EventAttribute.DEVICE_LANGUAGE.key());
         eventAttributes.add(EventAttribute.DEVICE_LOCATION.key());
         eventAttributes.add(EventAttribute.DEVICE_SERIAL_NUMBER.key());
@@ -38,6 +39,7 @@ public class IReporterEvent
         eventAttributes.add(EventAttribute.DPAN_ID.key());
         eventAttributes.add(EventAttribute.DSID.key());
         eventAttributes.add(EventAttribute.FPAN_ID.key());
+        eventAttributes.add(EventAttribute.OTP.key());
         eventAttributes.add(EventAttribute.PNO.key());
         eventAttributes.add(EventAttribute.PROVISION_RESPONSE.key());
         eventAttributes.add(EventAttribute.PROVISION_STATUS.key());
@@ -49,6 +51,8 @@ public class IReporterEvent
         eventAttributes.add(EventAttribute.TRANSACTION_AMOUNT.key());
         eventAttributes.add(EventAttribute.TRANSACTION_ID.key());
         eventAttributes.add(EventAttribute.TRANSACTION_STATUS.key());
+        eventAttributes.add(EventAttribute.WATCH_DEVICE_SERIAL_NUMBER.key());
+        eventAttributes.add(EventAttribute.WATCH_USER_AGENT.key());
 
         return eventAttributes;
     }

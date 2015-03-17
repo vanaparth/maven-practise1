@@ -16,9 +16,9 @@ class EmailRecordFilter
     {
         SMPCardEvent smpCardEvent = record.getSMPCardEvent();
 
-        boolean isManageCardEvent = ((smpCardEvent == SMPCardEvent.SUSPEND_CARD) || (smpCardEvent == SMPCardEvent.UNLINK_CARD) || (smpCardEvent == SMPCardEvent.RESUME_CARD));
+        boolean isManageDeviceEvent = ((smpCardEvent == SMPCardEvent.SUSPEND_CARD) || (smpCardEvent == SMPCardEvent.UNLINK_CARD) || (smpCardEvent == SMPCardEvent.RESUME_CARD));
 
-        return ((!isManageCardEvent || hasValidManageCardEventSource(record)) && hasRequiredValues(record));
+        return ((!isManageDeviceEvent || hasValidManageDeviceEventSource(record)) && hasRequiredValues(record));
     }
 
     public static boolean isProvisionEventRecord(EventRecord record)
@@ -26,18 +26,18 @@ class EmailRecordFilter
         return (SMPCardEvent.getSMPCardEvent(record) == SMPCardEvent.PROVISION_CARD);
     }
 
-    public static boolean isManageCardEventRecord(EventRecord record)
+    public static boolean isManageDeviceEventRecord(EventRecord record)
     {
         SMPCardEvent smpCardEvent = SMPCardEvent.getSMPCardEvent(record);
 
         return ((smpCardEvent == SMPCardEvent.SUSPEND_CARD) || (smpCardEvent == SMPCardEvent.UNLINK_CARD) || (smpCardEvent == SMPCardEvent.RESUME_CARD));
     }
 
-    private static boolean hasValidManageCardEventSource(EmailRecord record)
+    private static boolean hasValidManageDeviceEventSource(EmailRecord record)
     {
-        ManageCardEvent manageCardEvent = record.getManageCardEvent();
+        ManageDeviceEvent manageDeviceEvent = record.getManageDeviceEvent();
 
-        return ((manageCardEvent == null) || (manageCardEvent.getCardEventSource() == CardEventSource.FMIP));
+        return ((manageDeviceEvent == null) || (manageDeviceEvent.getManageDeviceEventSource() == ManageDeviceEventSource.FMIP));
     }
 
     public static boolean hasRequiredValues(EmailRecord record)

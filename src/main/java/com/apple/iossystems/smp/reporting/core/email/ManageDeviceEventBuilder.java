@@ -12,7 +12,7 @@ import java.util.Map;
 /**
  * @author Toch
  */
-public class ManageCardEventBuilder
+public class ManageDeviceEventBuilder
 {
     private static final String FIRST_NAME = "customerFirstName";
     private static final String LAST_NAME = "customerLastName";
@@ -23,64 +23,57 @@ public class ManageCardEventBuilder
     private static final String DEVICE_IMAGE_URL = "deviceImageURL";
 
     private String dsid;
-    private ManageCardAPI manageCardAPI;
     private Actor actor;
     private FmipSource fmipSource;
     private Map<String, String> cardData;
     private List<CardEvent> cardEvents;
 
-    private ManageCardEventBuilder()
+    private ManageDeviceEventBuilder()
     {
     }
 
-    public static ManageCardEventBuilder getInstance()
+    public static ManageDeviceEventBuilder getInstance()
     {
-        return new ManageCardEventBuilder();
+        return new ManageDeviceEventBuilder();
     }
 
-    public ManageCardEventBuilder dsid(String value)
+    public ManageDeviceEventBuilder dsid(String value)
     {
         dsid = value;
         return this;
     }
 
-    public ManageCardEventBuilder manageCardAPI(ManageCardAPI value)
-    {
-        manageCardAPI = value;
-        return this;
-    }
-
-    public ManageCardEventBuilder actor(Actor value)
+    public ManageDeviceEventBuilder actor(Actor value)
     {
         actor = value;
         return this;
     }
 
-    public ManageCardEventBuilder fmipSource(BigInteger value)
+    public ManageDeviceEventBuilder fmipSource(BigInteger value)
     {
-        fmipSource = FmipSource.getFmipSourceFromCertificate(value);
+        fmipSource = FmipSource.fromCertificate(value);
         return this;
     }
 
-    public ManageCardEventBuilder fmipSourceFromRequestReason(String value)
+    public ManageDeviceEventBuilder fmipSourceFromRequestReason(String value)
     {
-        fmipSource = FmipSource.getFmipSourceFromRequestReason(value);
+        fmipSource = FmipSource.fromRequestReason(value);
         return this;
     }
 
-    public ManageCardEventBuilder cardData(Map<String, String> value)
+    public ManageDeviceEventBuilder cardData(Map<String, String> value)
     {
         cardData = value;
         return this;
     }
 
-    public ManageCardEventBuilder cardEvents(List<CardEvent> value)
+    public ManageDeviceEventBuilder cardEvents(List<CardEvent> value)
     {
         cardEvents = value;
         return this;
     }
 
-    public ManageCardEvent build()
+    public ManageDeviceEvent build()
     {
         if (cardData == null)
         {
@@ -100,7 +93,7 @@ public class ManageCardEventBuilder
         String deviceName = cardData.get(DEVICE_NAME);
         String deviceImageUrl = cardData.get(DEVICE_IMAGE_URL);
 
-        return ManageCardEvent.getBuilder().cardHolderName(getCardHolderName(firstName, lastName)).
+        return ManageDeviceEvent.getBuilder().cardHolderName(getCardHolderName(firstName, lastName)).
                 cardHolderEmail(cardHolderEmail).
                 dsid(dsid).
                 locale(locale).
@@ -108,9 +101,8 @@ public class ManageCardEventBuilder
                 deviceName(deviceName).
                 deviceType(getDeviceType(cardEvents)).
                 deviceImageUrl(deviceImageUrl).
-                cardEventSource(CardEventSource.getCardEventSource(actor)).
+                manageDeviceEventSource(ManageDeviceEventSource.fromActor(actor)).
                 fmipSource(fmipSource).
-                manageCardAPI(manageCardAPI).
                 cardEvents(cardEvents).build();
     }
 

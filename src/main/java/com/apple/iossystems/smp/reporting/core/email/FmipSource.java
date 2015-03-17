@@ -43,9 +43,9 @@ public enum FmipSource
         return description;
     }
 
-    public static FmipSource getFmipSourceFromCode(String code)
+    public static FmipSource fromCode(String code)
     {
-        for (FmipSource e : FmipSource.values())
+        for (FmipSource e : values())
         {
             if (e.code.equals(code))
             {
@@ -56,9 +56,9 @@ public enum FmipSource
         return getUnknownSource();
     }
 
-    public static FmipSource getFmipSourceFromCertificate(BigInteger certificate)
+    public static FmipSource fromCertificate(BigInteger certificate)
     {
-        for (FmipSource e : FmipSource.values())
+        for (FmipSource e : values())
         {
             if (e.certificate.equals(certificate))
             {
@@ -69,22 +69,12 @@ public enum FmipSource
         return getUnknownSource();
     }
 
-    public static FmipSource getFmipSourceFromRequestReason(String requestReason)
+    public static FmipSource fromRequestReason(String requestReason)
     {
-        if (requestReason != null)
-        {
-            requestReason = requestReason.trim();
-
-            if (requestReasonInRequestReasonList(requestReason, REMOTE_REQUEST_REASONS))
-            {
-                return REMOTE;
-            }
-        }
-
-        return FMIP;
+        return ((requestReason != null) && listContainsRequestReason(REMOTE_REQUEST_REASONS, requestReason.trim())) ? REMOTE : FMIP;
     }
 
-    private static boolean requestReasonInRequestReasonList(String requestReason, String[] requestReasons)
+    private static boolean listContainsRequestReason(String[] requestReasons, String requestReason)
     {
         for (String entry : requestReasons)
         {

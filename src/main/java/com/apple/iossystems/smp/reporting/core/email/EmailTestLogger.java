@@ -52,21 +52,20 @@ class EmailTestLogger
         SMPCardEvent smpCardEvent = record.getSMPCardEvent();
         String smpCardEventName = (smpCardEvent != null) ? smpCardEvent.name() : "Unknown Event";
 
-        ManageCardEvent manageCardEvent = record.getManageCardEvent();
-        String manageCardEventValue = "";
+        ManageDeviceEvent manageDeviceEvent = record.getManageDeviceEvent();
+        String manageDeviceEventValue = "";
 
-        if (manageCardEvent != null)
+        if (manageDeviceEvent != null)
         {
-            manageCardEventValue =
-                    "[ Cardholder name: " + manageCardEvent.getCardHolderName() +
-                            "\tCardholder email: " + manageCardEvent.getCardHolderEmail() +
-                            "\tDsid: " + manageCardEvent.getDsid() +
-                            "\tDevice name: " + manageCardEvent.getDeviceName() +
-                            "\tDevice image url:" + manageCardEvent.getDeviceImageUrl() +
-                            "\tLocale: " + manageCardEvent.getLocale() +
-                            "\tManage card api: " + manageCardEvent.getManageCardAPI() +
-                            "\tCard event source: " + manageCardEvent.getCardEventSource() +
-                            "\tFmip source: " + manageCardEvent.getFmipSource() + " ]";
+            manageDeviceEventValue =
+                    "[ Cardholder name: " + manageDeviceEvent.getCardHolderName() +
+                            "\tCardholder email: " + manageDeviceEvent.getCardHolderEmail() +
+                            "\tDsid: " + manageDeviceEvent.getDsid() +
+                            "\tDevice name: " + manageDeviceEvent.getDeviceName() +
+                            "\tDevice image url:" + manageDeviceEvent.getDeviceImageUrl() +
+                            "\tLocale: " + manageDeviceEvent.getLocale() +
+                            "\tCard event source: " + manageDeviceEvent.getManageDeviceEventSource() +
+                            "\tFmip source: " + manageDeviceEvent.getFmipSource() + " ]";
         }
 
         return "Name: " + record.getCardHolderName() +
@@ -79,7 +78,7 @@ class EmailTestLogger
                 "\tDevice name: " + record.getDeviceName() +
                 "\tDevice type: " + record.getDeviceType() +
                 "\tDevice image url: " + record.getDeviceImageUrl() +
-                "\tManage card event: " + manageCardEventValue;
+                "\tManage card event: " + manageDeviceEventValue;
 
     }
 }

@@ -17,6 +17,7 @@ public enum EventAttribute
     CARD_STATUS("cst"),
     CARD_TYPE("ctp"),
     CONVERSATION_ID("con"),
+    COUNTRY_CODE("ccd"),
     DEVICE_LANGUAGE("lcd"),
     DEVICE_LOCATION("llg"),
     DEVICE_SERIAL_NUMBER("sno"),
@@ -24,20 +25,23 @@ public enum EventAttribute
     DPAN_ID("dpn"),
     DSID("did"),
     FPAN_ID("fpn"),
+    OTP("otp"),
     PNO("pno"),
-    PROVISION_RESPONSE("osl"),
+    PROVISION_RESPONSE("prs"),
     PROVISION_STATUS("pst"),
     REGION("reg"),
     TIMESTAMP("tim"),
     USE_CASE_TYPE("psr"),
     USER_AGENT("dua"),
+    WATCH_DEVICE_SERIAL_NUMBER("wsn"),
+    WATCH_USER_AGENT("wua"),
     // Oslo
     MERCHANT_ID("mid"),
     TRANSACTION_AMOUNT("tmt"),
     TRANSACTION_ID("tid"),
     TRANSACTION_STATUS("tst"),
     // Email
-    MANAGE_CARD_EVENT("manage_card_event"),
+    MANAGE_DEVICE_EVENT("manage_device_event"),
     PROVISION_CARD_EVENT("provision_card_event");
 
     private final String key;

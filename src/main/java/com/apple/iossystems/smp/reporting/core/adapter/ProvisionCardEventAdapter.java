@@ -1,6 +1,7 @@
-package com.apple.iossystems.smp.reporting.core.email;
+package com.apple.iossystems.smp.reporting.core.adapter;
 
 import com.apple.iossystems.smp.domain.jsonAdapter.JsonAdapter;
+import com.apple.iossystems.smp.reporting.core.email.ProvisionCardEvent;
 import com.apple.iossystems.smp.utils.JSONUtils;
 import com.google.gson.*;
 import org.springframework.stereotype.Component;

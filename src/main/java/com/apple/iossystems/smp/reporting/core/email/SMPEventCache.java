@@ -11,35 +11,36 @@ public class SMPEventCache
     {
     }
 
-    private static String getCacheKey(Attribute attribute, String conversationId)
+    private static String getCacheKey(Attribute attribute, String key)
     {
-        String key = null;
+        String cacheKey = null;
 
-        if (conversationId != null)
+        if (key != null)
         {
-            key = "SMPReporting_" + attribute.key + "_" + conversationId;
+            cacheKey = "SMPReporting_" + attribute.key + "_" + key;
         }
 
-        return key;
+        return cacheKey;
     }
 
-    public static void put(Attribute attribute, String conversationId, String value)
+    public static void put(Attribute attribute, String key, String value)
     {
-        CacheService.put(getCacheKey(attribute, conversationId), value, CACHE_TIMEOUT);
+        CacheService.put(getCacheKey(attribute, key), value, CACHE_TIMEOUT);
     }
 
-    public static String get(Attribute attribute, String conversationId)
+    public static String get(Attribute attribute, String key)
     {
-        return CacheService.get(getCacheKey(attribute, conversationId));
+        return CacheService.get(getCacheKey(attribute, key));
     }
 
-    public static void remove(Attribute attribute, String conversationId)
+    public static String remove(Attribute attribute, String key)
     {
-        CacheService.remove(getCacheKey(attribute, conversationId));
+        return CacheService.remove(getCacheKey(attribute, key));
     }
 
     public enum Attribute
     {
+        GET_OTP_RESOLUTION_METHODS("GetOtpResolutionMethods"),
         PROVISION_EVENT("ProvisionEvent");
 
         private final String key;

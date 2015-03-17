@@ -14,7 +14,8 @@ public enum SMPCardEvent
     RESUME_CARD("104"),
     PUT_PENDING("105"),
     POST_COMMAND("106"),
-    REGISTER_DEVICE("107"),
+    GET_OTP("107"),
+    SEND_OTP("108"),
     UNKNOWN("000");
 
     private final String code;
@@ -49,7 +50,7 @@ public enum SMPCardEvent
 
     private static SMPCardEvent getSMPCardEvent(String code)
     {
-        for (SMPCardEvent smpCardEvent : SMPCardEvent.values())
+        for (SMPCardEvent smpCardEvent : values())
         {
             if (smpCardEvent.code.equals(code))
             {

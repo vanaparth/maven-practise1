@@ -20,11 +20,11 @@ class EmailRecordFormat
     {
         String value = null;
 
-        ManageCardEvent manageCardEvent = record.getManageCardEvent();
+        ManageDeviceEvent manageDeviceEvent = record.getManageDeviceEvent();
 
-        if (manageCardEvent != null)
+        if (manageDeviceEvent != null)
         {
-            FmipSource fmipSource = manageCardEvent.getFmipSource();
+            FmipSource fmipSource = manageDeviceEvent.getFmipSource();
 
             if (fmipSource != null)
             {

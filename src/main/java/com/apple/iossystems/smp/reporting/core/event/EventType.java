@@ -39,7 +39,7 @@ public enum EventType
 
     public static EventType getEventType(String value)
     {
-        for (EventType eventType : EventType.values())
+        for (EventType eventType : values())
         {
             if (eventType.keyEquals(value))
             {

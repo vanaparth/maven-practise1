@@ -91,9 +91,9 @@ public class EmailPublishService
     {
         EmailRecord emailRecord = null;
 
-        if (EmailRecordFilter.isManageCardEventRecord(record))
+        if (EmailRecordFilter.isManageDeviceEventRecord(record))
         {
-            emailRecord = ManageCardEvent.getEmailRecord(record);
+            emailRecord = ManageDeviceEvent.getEmailRecord(record);
         }
 
         return emailRecord;

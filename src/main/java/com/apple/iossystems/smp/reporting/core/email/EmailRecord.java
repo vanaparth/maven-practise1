@@ -24,7 +24,7 @@ class EmailRecord
     private final String locale;
 
     private final boolean firstProvisionEvent;
-    private final ManageCardEvent manageCardEvent;
+    private final ManageDeviceEvent manageDeviceEvent;
     private final List<CardEvent> cardEvents;
 
     private EmailRecord(Builder builder)
@@ -42,7 +42,7 @@ class EmailRecord
         locale = builder.locale;
 
         firstProvisionEvent = builder.firstProvisionEvent;
-        manageCardEvent = builder.manageCardEvent;
+        manageDeviceEvent = builder.manageDeviceEvent;
         cardEvents = builder.cardEvents;
     }
 
@@ -96,9 +96,9 @@ class EmailRecord
         return firstProvisionEvent;
     }
 
-    public ManageCardEvent getManageCardEvent()
+    public ManageDeviceEvent getManageDeviceEvent()
     {
-        return manageCardEvent;
+        return manageDeviceEvent;
     }
 
     public List<CardEvent> getCardEvents()
@@ -110,9 +110,9 @@ class EmailRecord
     {
         TimeZone timezone = null;
 
-        if (manageCardEvent != null)
+        if (manageDeviceEvent != null)
         {
-            String tz = manageCardEvent.getTimezone();
+            String tz = manageDeviceEvent.getTimezone();
 
             if (tz != null)
             {
@@ -153,7 +153,7 @@ class EmailRecord
         private String locale;
 
         private boolean firstProvisionEvent;
-        private ManageCardEvent manageCardEvent;
+        private ManageDeviceEvent manageDeviceEvent;
         private List<CardEvent> cardEvents;
 
         private Builder()
@@ -226,9 +226,9 @@ class EmailRecord
             return this;
         }
 
-        public Builder manageCardEvent(ManageCardEvent value)
+        public Builder manageDeviceEvent(ManageDeviceEvent value)
         {
-            manageCardEvent = value;
+            manageDeviceEvent = value;
             return this;
         }
 

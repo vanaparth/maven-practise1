@@ -42,7 +42,7 @@ public class ProvisionEmailPublishService
     {
         if (firstProvision)
         {
-            String json = SMPEventCache.get(SMPEventCache.Attribute.PROVISION_EVENT, conversationId);
+            String json = SMPEventCache.remove(SMPEventCache.Attribute.PROVISION_EVENT, conversationId);
 
             if (json != null)
             {
@@ -61,8 +61,6 @@ public class ProvisionEmailPublishService
                         firstProvision(true).build();
 
                 EmailPublishService.sendProvisionEventRequest(updatedProvisionCardEvent);
-
-                SMPEventCache.remove(SMPEventCache.Attribute.PROVISION_EVENT, conversationId);
             }
         }
     }

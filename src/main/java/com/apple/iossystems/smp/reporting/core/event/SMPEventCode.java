@@ -1,13 +1,12 @@
 package com.apple.iossystems.smp.reporting.core.event;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
-
 import com.apple.iossystems.smp.domain.ProvisioningCardSource;
 import com.apple.iossystems.smp.domain.device.CardEligibilityStatus;
 import com.apple.iossystems.smp.utils.SMPErrorEnum;
+import org.apache.commons.lang.StringUtils;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Toch
@@ -16,15 +15,51 @@ public class SMPEventCode
 {
     private static final String EMPTY_CODE = "";
 
+    private static final Map<String, String> PNO_MAP = new HashMap<>();
+    private static final Map<String, String> COLOR_MAP = new HashMap<>();
+    private static final Map<String, String> USE_CASE_TYPE = new HashMap<>();
     private static final Map<String, String> FPAN_TYPE_MAP = new HashMap<>();
-    static {
-    	FPAN_TYPE_MAP.put("Credit", "1");
-    	FPAN_TYPE_MAP.put("Debit", "2");
-    	FPAN_TYPE_MAP.put("PrePaid", "3");
-    	FPAN_TYPE_MAP.put("PrivateLabel", "4");
+    private static final Map<String, String> CARD_ELIGIBILITY_STATUS_MAP = new HashMap<>();
+    private static final Map<String, String> PROVISIONING_CARD_SOURCE_MAP = new HashMap<>();
+
+    static
+    {
+        addToMap(PNO_MAP, "helium", "201");
+        addToMap(PNO_MAP, "neon", "202");
+        addToMap(PNO_MAP, "argon", "203");
+        addToMap(PNO_MAP, "krypton", "204");
+        addToMap(PNO_MAP, "xenon", "205");
+        //
+        addToMap(COLOR_MAP, "green", "1");
+        addToMap(COLOR_MAP, "yellow", "2");
+        addToMap(COLOR_MAP, "red", "3");
+        //
+        addToMap(USE_CASE_TYPE, "Passbook", "1");
+        //
+        addToMap(FPAN_TYPE_MAP, "Credit", "1");
+        addToMap(FPAN_TYPE_MAP, "Debit", "2");
+        addToMap(FPAN_TYPE_MAP, "PrePaid", "3");
+        addToMap(FPAN_TYPE_MAP, "PrivateLabel", "4");
+        //
+        addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.INELIGIBLE.getId()), "7");
+        addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.ELIGIBLE.getId()), "8");
+        addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.NETWORK_UNAVAILABLE.getId()), "9");
+        addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.PROVISIONED.getId()), "10");
+        addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.MORE_INPUT_NEEDED.getId()), "11");
+        addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.MORE_THAN_ONE_MATCH.getId()), "12");
+        //
+        addToMap(PROVISIONING_CARD_SOURCE_MAP, String.valueOf(ProvisioningCardSource.MANUAL.getId()), "1");
+        addToMap(PROVISIONING_CARD_SOURCE_MAP, String.valueOf(ProvisioningCardSource.ON_FILE.getId()), "2");
+        addToMap(PROVISIONING_CARD_SOURCE_MAP, String.valueOf(ProvisioningCardSource.BANKING_APP.getId()), "3");
     }
+
     private SMPEventCode()
     {
+    }
+
+    private static void addToMap(Map<String, String> map, String key, String value)
+    {
+        map.put(key.toLowerCase(), value);
     }
 
     public static void writeCode(EventRecord record, EventAttribute attribute, String code)
@@ -40,113 +75,46 @@ public class SMPEventCode
         return (!code.equals(EMPTY_CODE));
     }
 
-    public static String getCardEligibilityStatusCode(CardEligibilityStatus cardStatus)
+    private static String getCode(Map<String, String> map, String key)
     {
-        switch (cardStatus)
+        if (key != null)
         {
-            case INELIGIBLE:
-                return "7";
-
-            case ELIGIBLE:
-                return "8";
-
-            case NETWORK_UNAVAILABLE:
-                return "9";
-
-            case PROVISIONED:
-                return "10";
-
-            case MORE_INPUT_NEEDED:
-                return "11";
-
-            default:
-                return EMPTY_CODE;
+            key = key.toLowerCase();
         }
-    }
 
-    public static String getCardSourceCode(ProvisioningCardSource cardSource)
-    {
-        switch (cardSource)
-        {
-            case MANUAL:
-                return "1";
+        String value = map.get(key);
 
-            case ON_FILE:
-                return "2";
-
-            case BANKING_APP:
-                return "3";
-
-            default:
-                return EMPTY_CODE;
-        }
-    }
-
-    public static String getFpanTypeCode(String fpanType)
-    {
-    	String result = FPAN_TYPE_MAP.get(fpanType);
-       
-        return result == null ? EMPTY_CODE : result;
+        return ((value != null) ? value : EMPTY_CODE);
     }
 
     public static String getPNONameCode(String name)
     {
-        if (name.equalsIgnoreCase("helium"))
-        {
-            return "201";
-        }
-        else if (name.equalsIgnoreCase("neon"))
-        {
-            return "202";
-        }
-        else if (name.equalsIgnoreCase("argon"))
-        {
-            return "203";
-        }
-        else if (name.equalsIgnoreCase("krypton"))
-        {
-            return "204";
-        }
-        else if (name.equalsIgnoreCase("xenon"))
-        {
-            return "205";
-        }
-        else
-        {
-            return EMPTY_CODE;
-        }
-    }
-
-    public static String getUseCaseTypeCode(String useCaseType)
-    {
-        if (useCaseType.equalsIgnoreCase("Passbook"))
-        {
-            return "1";
-        }
-        else
-        {
-            return EMPTY_CODE;
-        }
+        return getCode(PNO_MAP, name);
     }
 
     public static String getProvisioningColorCode(String color)
     {
-        if (color.equalsIgnoreCase("green"))
-        {
-            return "1";
-        }
-        else if (color.equalsIgnoreCase("yellow"))
-        {
-            return "2";
-        }
-        else if (color.equalsIgnoreCase("red"))
-        {
-            return "3";
-        }
-        else
-        {
-            return EMPTY_CODE;
-        }
+        return getCode(COLOR_MAP, color);
+    }
+
+    public static String getUseCaseTypeCode(String useCaseType)
+    {
+        return getCode(USE_CASE_TYPE, useCaseType);
+    }
+
+    public static String getFpanTypeCode(String fpanType)
+    {
+        return getCode(FPAN_TYPE_MAP, fpanType);
+    }
+
+    public static String getCardEligibilityStatusCode(CardEligibilityStatus cardStatus)
+    {
+        return ((cardStatus != null) ? getCode(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(cardStatus.getId())) : EMPTY_CODE);
+    }
+
+    public static String getCardSourceCode(ProvisioningCardSource cardSource)
+    {
+        return ((cardSource != null) ? getCode(PROVISIONING_CARD_SOURCE_MAP, String.valueOf(cardSource.getId())) : EMPTY_CODE);
     }
 
     public static String getResponseStatus(String statusCode)

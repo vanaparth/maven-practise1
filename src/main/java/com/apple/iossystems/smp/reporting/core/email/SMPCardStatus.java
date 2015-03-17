@@ -41,7 +41,7 @@ public enum SMPCardStatus
 
     public static String getCode(Card.CardStatus cardStatus)
     {
-        for (SMPCardStatus e : SMPCardStatus.values())
+        for (SMPCardStatus e : values())
         {
             if (e.cardStatus == cardStatus)
             {
@@ -54,7 +54,7 @@ public enum SMPCardStatus
 
     public static SMPCardStatus getSMPCardStatus(String code)
     {
-        for (SMPCardStatus e : SMPCardStatus.values())
+        for (SMPCardStatus e : values())
         {
             if (e.code.equals(code))
             {

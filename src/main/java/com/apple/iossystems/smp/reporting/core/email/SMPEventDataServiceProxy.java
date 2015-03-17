@@ -1,6 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.iossystems.smp.domain.device.AbstractPass;
+import com.apple.iossystems.smp.persistence.entity.PassPan;
 import com.apple.iossystems.smp.persistence.entity.PassbookPass;
 import com.apple.iossystems.smp.persistence.entity.SecureElement;
 
@@ -48,5 +49,10 @@ public class SMPEventDataServiceProxy
         }
 
         return value;
+    }
+
+    public static PassPan getPassPanByPassSerialAndSeid(String passSerial, String seid)
+    {
+        return SMPEventDataService.getPassPanByPassSerialAndSeid(passSerial, seid);
     }
 }

@@ -72,12 +72,16 @@ class CacheService
         return value;
     }
 
-    public static void remove(String key)
+    public static String remove(String key)
     {
+        String value = null;
+
         try
         {
             if (key != null)
             {
+                value = get(key);
+
                 CACHE.removeValueForKey(key);
             }
         }
@@ -85,5 +89,7 @@ class CacheService
         {
             LOGGER.error(e);
         }
+
+        return value;
     }
 }

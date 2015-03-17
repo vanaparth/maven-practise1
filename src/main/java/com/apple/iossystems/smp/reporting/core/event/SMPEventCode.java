@@ -1,10 +1,13 @@
 package com.apple.iossystems.smp.reporting.core.event;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import org.apache.commons.lang.StringUtils;
+
 import com.apple.iossystems.smp.domain.ProvisioningCardSource;
 import com.apple.iossystems.smp.domain.device.CardEligibilityStatus;
-import com.apple.iossystems.smp.domain.device.PaymentTypeEnum;
 import com.apple.iossystems.smp.utils.SMPErrorEnum;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Toch
@@ -13,6 +16,13 @@ public class SMPEventCode
 {
     private static final String EMPTY_CODE = "";
 
+    private static final Map<String, String> FPAN_TYPE_MAP = new HashMap<>();
+    static {
+    	FPAN_TYPE_MAP.put("Credit", "1");
+    	FPAN_TYPE_MAP.put("Debit", "2");
+    	FPAN_TYPE_MAP.put("PrePaid", "3");
+    	FPAN_TYPE_MAP.put("PrivateLabel", "4");
+    }
     private SMPEventCode()
     {
     }
@@ -72,25 +82,11 @@ public class SMPEventCode
         }
     }
 
-    public static String getFpanTypeCode(PaymentTypeEnum fpanType)
+    public static String getFpanTypeCode(String fpanType)
     {
-        switch (fpanType)
-        {
-            case CREDIT:
-                return "1";
-
-            case DEBIT:
-                return "2";
-
-            case PRE_PAID:
-                return "3";
-
-            case PRIVATE_LABEL:
-                return "4";
-
-            default:
-                return EMPTY_CODE;
-        }
+    	String result = FPAN_TYPE_MAP.get(fpanType);
+       
+        return result == null ? EMPTY_CODE : result;
     }
 
     public static String getPNONameCode(String name)

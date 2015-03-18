@@ -1,6 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
-import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
+import com.apple.iossystems.smp.reporting.core.event.SMPDeviceEvent;
 import org.apache.log4j.Logger;
 
 /**
@@ -53,10 +53,10 @@ class EmailPublishServiceLogger
     {
         StringBuilder message = new StringBuilder();
 
-        SMPCardEvent smpCardEvent = record.getSMPCardEvent();
-        String smpCardEventName = (smpCardEvent != null) ? smpCardEvent.toString() : "Unknown Event";
+        SMPDeviceEvent smpEvent = record.getSMPEvent();
+        String smpEventName = (smpEvent != null) ? smpEvent.toString() : "Unknown Event";
 
-        appendMessage(message, "event", smpCardEventName);
+        appendMessage(message, "event", smpEventName);
         appendMessage(message, "conversationId", record.getConversationId());
         appendMessage(message, "dsid", record.getDsid());
 
@@ -70,8 +70,8 @@ class EmailPublishServiceLogger
 
     public static boolean doLog(EmailRecord record)
     {
-        SMPCardEvent smpCardEvent = record.getSMPCardEvent();
+        SMPDeviceEvent smpEvent = record.getSMPEvent();
 
-        return ((smpCardEvent == SMPCardEvent.PROVISION_CARD) || (smpCardEvent == SMPCardEvent.SUSPEND_CARD) || (smpCardEvent == SMPCardEvent.UNLINK_CARD) || (smpCardEvent == SMPCardEvent.RESUME_CARD));
+        return ((smpEvent == SMPDeviceEvent.PROVISION_CARD) || (smpEvent == SMPDeviceEvent.SUSPEND_CARD) || (smpEvent == SMPDeviceEvent.UNLINK_CARD) || (smpEvent == SMPDeviceEvent.RESUME_CARD));
     }
 }

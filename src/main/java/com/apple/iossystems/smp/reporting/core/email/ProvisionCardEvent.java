@@ -1,6 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
-import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
+import com.apple.iossystems.smp.reporting.core.event.SMPDeviceEvent;
 
 /**
  * @author Toch
@@ -89,7 +89,7 @@ public class ProvisionCardEvent
 
     public EmailRecord getEmailRecord()
     {
-        return EmailRecord.getBuilder().smpCardEvent(SMPCardEvent.PROVISION_CARD).
+        return EmailRecord.getBuilder().smpEvent(SMPDeviceEvent.PROVISION_CARD).
                 conversationId(conversationId).
                 timestamp(timestamp).
                 cardHolderName(cardHolderName).

@@ -1,7 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
-import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
+import com.apple.iossystems.smp.reporting.core.event.SMPDeviceEvent;
 
 /**
  * @author Toch
@@ -14,23 +14,18 @@ class EmailRecordFilter
 
     public static boolean isValidEmailRecord(EmailRecord record)
     {
-        SMPCardEvent smpCardEvent = record.getSMPCardEvent();
+        SMPDeviceEvent smpEvent = record.getSMPEvent();
 
-        boolean isManageDeviceEvent = ((smpCardEvent == SMPCardEvent.SUSPEND_CARD) || (smpCardEvent == SMPCardEvent.UNLINK_CARD) || (smpCardEvent == SMPCardEvent.RESUME_CARD));
+        boolean isManageDeviceEvent = ((smpEvent == SMPDeviceEvent.SUSPEND_CARD) || (smpEvent == SMPDeviceEvent.UNLINK_CARD) || (smpEvent == SMPDeviceEvent.RESUME_CARD));
 
         return ((!isManageDeviceEvent || hasValidManageDeviceEventSource(record)) && hasRequiredValues(record));
     }
 
-    public static boolean isProvisionEventRecord(EventRecord record)
-    {
-        return (SMPCardEvent.getSMPCardEvent(record) == SMPCardEvent.PROVISION_CARD);
-    }
-
     public static boolean isManageDeviceEventRecord(EventRecord record)
     {
-        SMPCardEvent smpCardEvent = SMPCardEvent.getSMPCardEvent(record);
+        SMPDeviceEvent smpEvent = SMPDeviceEvent.getSMPEvent(record);
 
-        return ((smpCardEvent == SMPCardEvent.SUSPEND_CARD) || (smpCardEvent == SMPCardEvent.UNLINK_CARD) || (smpCardEvent == SMPCardEvent.RESUME_CARD));
+        return ((smpEvent == SMPDeviceEvent.SUSPEND_CARD) || (smpEvent == SMPDeviceEvent.UNLINK_CARD) || (smpEvent == SMPDeviceEvent.RESUME_CARD));
     }
 
     private static boolean hasValidManageDeviceEventSource(EmailRecord record)

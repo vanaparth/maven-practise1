@@ -5,7 +5,7 @@ import com.apple.iossystems.smp.utils.PnoApi;
 /**
  * @author Toch
  */
-public enum SMPCardEvent
+public enum SMPDeviceEvent
 {
     CHECK_CARD("100"),
     PROVISION_CARD("101"),
@@ -21,7 +21,7 @@ public enum SMPCardEvent
 
     private final String code;
 
-    private SMPCardEvent(String code)
+    private SMPDeviceEvent(String code)
     {
         this.code = code;
     }
@@ -31,7 +31,7 @@ public enum SMPCardEvent
         return code;
     }
 
-    public static SMPCardEvent pnoApiToCardEvent(PnoApi pnoApi)
+    public static SMPDeviceEvent pnoApiToCardEvent(PnoApi pnoApi)
     {
         switch (pnoApi)
         {
@@ -49,26 +49,26 @@ public enum SMPCardEvent
         }
     }
 
-    private static SMPCardEvent getSMPCardEvent(String code)
+    private static SMPDeviceEvent fromCode(String code)
     {
-        for (SMPCardEvent smpCardEvent : values())
+        for (SMPDeviceEvent smpEvent : values())
         {
-            if (smpCardEvent.code.equals(code))
+            if (smpEvent.code.equals(code))
             {
-                return smpCardEvent;
+                return smpEvent;
             }
         }
 
         return UNKNOWN;
     }
 
-    public static SMPCardEvent getSMPCardEvent(EventRecord record)
+    public static SMPDeviceEvent getSMPEvent(EventRecord record)
     {
-        return getSMPCardEvent(record.getAttributeValue(EventAttribute.CARD_EVENT.key()));
+        return fromCode(record.getAttributeValue(EventAttribute.EVENT.key()));
     }
 
-    public void setSMPCardEvent(EventRecord record)
+    public void setEvent(EventRecord record)
     {
-        record.setAttributeValue(EventAttribute.CARD_EVENT.key(), getCode());
+        record.setAttributeValue(EventAttribute.EVENT.key(), getCode());
     }
 }

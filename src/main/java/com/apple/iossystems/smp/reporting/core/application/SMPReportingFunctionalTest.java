@@ -281,7 +281,7 @@ public class SMPReportingFunctionalTest
         data.put(EventAttribute.DEVICE_SERIAL_NUMBER.key(), "10");
         data.put(EventAttribute.DPAN_ID.key(), "11");
         data.put(EventAttribute.DSID.key(), "12");
-        data.put(EventAttribute.CARD_EVENT.key(), "13");
+        data.put(EventAttribute.EVENT.key(), "13");
 
         data.put(EventAttribute.FPAN_ID.key(), "14");
         data.put(EventAttribute.PNO.key(), "15");

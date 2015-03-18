@@ -10,7 +10,6 @@ public enum EventAttribute
     // Stockholm
     ATHENA_COLOR("ast"),
     CARD_BIN("bin"),
-    CARD_EVENT("evt"),
     CARD_ID("cid"),
     CARD_ISSUER("bnm"),
     CARD_SOURCE("ptp"),
@@ -26,6 +25,7 @@ public enum EventAttribute
     DEVICE_TYPE("dty"),
     DPAN_ID("dpn"),
     DSID("did"),
+    EVENT("evt"),
     FPAN_ID("fpn"),
     OTP("otp"),
     PNO("pno"),

@@ -3,7 +3,7 @@ package com.apple.iossystems.smp.reporting.core.email;
 import com.apple.iossystems.smp.domain.clm.Card;
 import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
-import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
+import com.apple.iossystems.smp.reporting.core.event.SMPDeviceEvent;
 
 /**
  * @author Toch
@@ -35,19 +35,19 @@ public class CardEventStatus
 
     public static boolean hasValidCardStatus(EventRecord record)
     {
-        SMPCardEvent smpCardEvent = SMPCardEvent.getSMPCardEvent(record);
+        SMPDeviceEvent smpEvent = SMPDeviceEvent.getSMPEvent(record);
 
         Card.CardStatus[] validCardStatusList = null;
 
-        if (smpCardEvent == SMPCardEvent.SUSPEND_CARD)
+        if (smpEvent == SMPDeviceEvent.SUSPEND_CARD)
         {
             validCardStatusList = VALID_SUSPEND_STATUS;
         }
-        else if (smpCardEvent == SMPCardEvent.UNLINK_CARD)
+        else if (smpEvent == SMPDeviceEvent.UNLINK_CARD)
         {
             validCardStatusList = VALID_UNLINKED_STATUS;
         }
-        else if (smpCardEvent == SMPCardEvent.RESUME_CARD)
+        else if (smpEvent == SMPDeviceEvent.RESUME_CARD)
         {
             validCardStatusList = VALID_RESUME_STATUS;
         }
@@ -59,19 +59,19 @@ public class CardEventStatus
 
     public static Card.CardStatus getDefaultValidCardStatus(EventRecord record)
     {
-        SMPCardEvent smpCardEvent = SMPCardEvent.getSMPCardEvent(record);
+        SMPDeviceEvent smpEvent = SMPDeviceEvent.getSMPEvent(record);
 
         Card.CardStatus defaultValidCardStatus;
 
-        if (smpCardEvent == SMPCardEvent.SUSPEND_CARD)
+        if (smpEvent == SMPDeviceEvent.SUSPEND_CARD)
         {
             defaultValidCardStatus = Card.CardStatus.SUSPENDED;
         }
-        else if (smpCardEvent == SMPCardEvent.UNLINK_CARD)
+        else if (smpEvent == SMPDeviceEvent.UNLINK_CARD)
         {
             defaultValidCardStatus = Card.CardStatus.UNLINKED;
         }
-        else if (smpCardEvent == SMPCardEvent.RESUME_CARD)
+        else if (smpEvent == SMPDeviceEvent.RESUME_CARD)
         {
             defaultValidCardStatus = Card.CardStatus.ACTIVE;
         }

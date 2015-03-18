@@ -1,6 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
-import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
+import com.apple.iossystems.smp.reporting.core.event.SMPDeviceEvent;
 
 import java.util.Calendar;
 import java.util.List;
@@ -11,7 +11,7 @@ import java.util.TimeZone;
  */
 class EmailRecord
 {
-    private final SMPCardEvent smpCardEvent;
+    private final SMPDeviceEvent smpEvent;
     private final String conversationId;
     private final String timestamp;
 
@@ -29,7 +29,7 @@ class EmailRecord
 
     private EmailRecord(Builder builder)
     {
-        smpCardEvent = builder.smpCardEvent;
+        smpEvent = builder.smpEvent;
         conversationId = builder.conversationId;
         timestamp = builder.timestamp;
 
@@ -46,9 +46,9 @@ class EmailRecord
         cardEvents = builder.cardEvents;
     }
 
-    public SMPCardEvent getSMPCardEvent()
+    public SMPDeviceEvent getSMPEvent()
     {
-        return smpCardEvent;
+        return smpEvent;
     }
 
     public String getConversationId()
@@ -140,7 +140,7 @@ class EmailRecord
 
     public static class Builder
     {
-        private SMPCardEvent smpCardEvent;
+        private SMPDeviceEvent smpEvent;
         private String conversationId;
         private String timestamp;
 
@@ -160,9 +160,9 @@ class EmailRecord
         {
         }
 
-        public Builder smpCardEvent(SMPCardEvent value)
+        public Builder smpEvent(SMPDeviceEvent value)
         {
-            smpCardEvent = value;
+            smpEvent = value;
             return this;
         }
 

@@ -5,7 +5,7 @@ import com.apple.iossystems.smp.email.service.impl.ssp.handler.*;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
-import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
+import com.apple.iossystems.smp.reporting.core.event.SMPDeviceEvent;
 import org.apache.log4j.Logger;
 
 import java.util.List;
@@ -101,14 +101,14 @@ public class EmailPublishService
 
     private static void doSendRequest(EmailRecord emailRecord) throws Exception
     {
-        SMPCardEvent smpCardEvent = emailRecord.getSMPCardEvent();
+        SMPDeviceEvent smpEvent = emailRecord.getSMPEvent();
 
         CardEventRecord cardEventRecord = CardEventRecord.getCardEventRecord(emailRecord);
 
         List<SMPEmailCardData> successCards = cardEventRecord.getSuccessCards();
         List<SMPEmailCardData> failedCards = cardEventRecord.getFailedCards();
 
-        if (smpCardEvent == SMPCardEvent.PROVISION_CARD)
+        if (smpEvent == SMPDeviceEvent.PROVISION_CARD)
         {
             if (EMAIL_PROVISION && emailRecord.isFirstProvisionEvent())
             {
@@ -124,7 +124,7 @@ public class EmailPublishService
                 new SMPFirstTimeProvisionMailHandler(request).sendEmail();
             }
         }
-        else if (smpCardEvent == SMPCardEvent.SUSPEND_CARD)
+        else if (smpEvent == SMPDeviceEvent.SUSPEND_CARD)
         {
             if (EMAIL_SUSPEND)
             {
@@ -179,7 +179,7 @@ public class EmailPublishService
                 }
             }
         }
-        else if (smpCardEvent == SMPCardEvent.UNLINK_CARD)
+        else if (smpEvent == SMPDeviceEvent.UNLINK_CARD)
         {
             if (EMAIL_UNLINK)
             {

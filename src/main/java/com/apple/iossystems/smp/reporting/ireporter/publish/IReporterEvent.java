@@ -24,7 +24,7 @@ public class IReporterEvent
 
         eventAttributes.add(EventAttribute.ATHENA_COLOR.key());
         eventAttributes.add(EventAttribute.CARD_BIN.key());
-        eventAttributes.add(EventAttribute.CARD_EVENT.key());
+        eventAttributes.add(EventAttribute.EVENT.key());
         eventAttributes.add(EventAttribute.CARD_ID.key());
         eventAttributes.add(EventAttribute.CARD_ISSUER.key());
         eventAttributes.add(EventAttribute.CARD_SOURCE.key());

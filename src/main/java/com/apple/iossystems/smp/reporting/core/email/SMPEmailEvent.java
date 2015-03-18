@@ -13,9 +13,9 @@ public class SMPEmailEvent
 
     private static boolean isEmailRecord(EventRecord record)
     {
-        SMPCardEvent smpCardEvent = SMPCardEvent.getSMPCardEvent(record);
+        SMPDeviceEvent smpEvent = SMPDeviceEvent.getSMPEvent(record);
 
-        return ((smpCardEvent.equals(SMPCardEvent.SUSPEND_CARD)) || (smpCardEvent.equals(SMPCardEvent.UNLINK_CARD)) || (smpCardEvent.equals(SMPCardEvent.RESUME_CARD)));
+        return ((smpEvent.equals(SMPDeviceEvent.SUSPEND_CARD)) || (smpEvent.equals(SMPDeviceEvent.UNLINK_CARD)) || (smpEvent.equals(SMPDeviceEvent.RESUME_CARD)));
     }
 
     public static EventRecords getEventRecords(EventRecords records)

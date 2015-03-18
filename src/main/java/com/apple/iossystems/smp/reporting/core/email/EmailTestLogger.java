@@ -2,7 +2,7 @@ package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.iossystems.smp.email.service.impl.ssp.domain.SMPEmailCardData;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
-import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
+import com.apple.iossystems.smp.reporting.core.event.SMPDeviceEvent;
 import org.apache.log4j.Logger;
 
 /**
@@ -49,8 +49,8 @@ class EmailTestLogger
 
     private static String getEmailRecordString(EmailRecord record)
     {
-        SMPCardEvent smpCardEvent = record.getSMPCardEvent();
-        String smpCardEventName = (smpCardEvent != null) ? smpCardEvent.name() : "Unknown Event";
+        SMPDeviceEvent smpEvent = record.getSMPEvent();
+        String smpCardEventName = (smpEvent != null) ? smpEvent.name() : "Unknown Event";
 
         ManageDeviceEvent manageDeviceEvent = record.getManageDeviceEvent();
         String manageDeviceEventValue = "";

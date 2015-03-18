@@ -3,7 +3,7 @@ package com.apple.iossystems.smp.reporting.core.email;
 import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
 import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
-import com.apple.iossystems.smp.reporting.core.event.SMPCardEvent;
+import com.apple.iossystems.smp.reporting.core.event.SMPDeviceEvent;
 
 import java.util.List;
 
@@ -193,7 +193,7 @@ public class ManageDeviceEvent
     {
         ManageDeviceEvent manageDeviceEvent = GsonBuilderFactory.getInstance().fromJson(record.getAttributeValue(EventAttribute.MANAGE_DEVICE_EVENT.key()), ManageDeviceEvent.class);
 
-        return EmailRecord.getBuilder().smpCardEvent(SMPCardEvent.getSMPCardEvent(record)).
+        return EmailRecord.getBuilder().smpEvent(SMPDeviceEvent.getSMPEvent(record)).
                 conversationId(record.getAttributeValue(EventAttribute.CONVERSATION_ID.key())).
                 timestamp(record.getAttributeValue(EventAttribute.TIMESTAMP.key())).
                 cardHolderName(manageDeviceEvent.getCardHolderName()).

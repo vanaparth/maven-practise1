@@ -68,7 +68,7 @@ public class PutPendingCommandSMPEvent
         record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(System.currentTimeMillis()));
         record.setAttributeValue(EventAttribute.CONVERSATION_ID.key(), conversationId);
 
-        SMPCardEvent.PUT_PENDING.setSMPCardEvent(record);
+        SMPDeviceEvent.PUT_PENDING.setEvent(record);
 
         if (pno != null)
         {

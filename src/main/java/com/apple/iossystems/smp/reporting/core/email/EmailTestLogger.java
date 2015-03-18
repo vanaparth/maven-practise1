@@ -50,7 +50,7 @@ class EmailTestLogger
     private static String getEmailRecordString(EmailRecord record)
     {
         SMPDeviceEvent smpEvent = record.getSMPEvent();
-        String smpCardEventName = (smpEvent != null) ? smpEvent.name() : "Unknown Event";
+        String smpEventName = (smpEvent != null) ? smpEvent.name() : "Unknown Event";
 
         ManageDeviceEvent manageDeviceEvent = record.getManageDeviceEvent();
         String manageDeviceEventValue = "";
@@ -69,7 +69,7 @@ class EmailTestLogger
         }
 
         return "Name: " + record.getCardHolderName() +
-                "\tEvent: " + smpCardEventName +
+                "\tEvent: " + smpEventName +
                 "\tEmail: " + record.getCardHolderEmail() +
                 "\tFirst provision: " + record.isFirstProvisionEvent() +
                 "\tConversation id: " + record.getConversationId() +

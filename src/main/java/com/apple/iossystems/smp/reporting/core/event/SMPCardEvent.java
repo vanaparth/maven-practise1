@@ -16,6 +16,7 @@ public enum SMPCardEvent
     POST_COMMAND("106"),
     GET_OTP("107"),
     SEND_OTP("108"),
+    REGISTER_DEVICE("109"),
     UNKNOWN("000");
 
     private final String code;

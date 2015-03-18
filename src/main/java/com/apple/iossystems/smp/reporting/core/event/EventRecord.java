@@ -1,5 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.event;
 
+import org.apache.commons.lang.StringUtils;
+
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -23,7 +25,7 @@ public class EventRecord
 
     public void setAttributeValue(String key, String value)
     {
-        if (value != null)
+        if (StringUtils.isNotBlank(value))
         {
             data.put(key, value);
         }

@@ -51,8 +51,8 @@ public class IReporterEvent
         eventAttributes.add(EventAttribute.TRANSACTION_AMOUNT.key());
         eventAttributes.add(EventAttribute.TRANSACTION_ID.key());
         eventAttributes.add(EventAttribute.TRANSACTION_STATUS.key());
-        eventAttributes.add(EventAttribute.WATCH_DEVICE_SERIAL_NUMBER.key());
-        eventAttributes.add(EventAttribute.WATCH_USER_AGENT.key());
+        eventAttributes.add(EventAttribute.COMPANION_DEVICE_SERIAL_NUMBER.key());
+        eventAttributes.add(EventAttribute.COMPANION_USER_AGENT.key());
 
         return eventAttributes;
     }

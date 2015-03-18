@@ -16,6 +16,8 @@ public enum EventAttribute
     CARD_SOURCE("ptp"),
     CARD_STATUS("cst"),
     CARD_TYPE("ctp"),
+    COMPANION_DEVICE_SERIAL_NUMBER("wsn"),
+    COMPANION_USER_AGENT("wua"),
     CONVERSATION_ID("con"),
     COUNTRY_CODE("ccd"),
     DEVICE_LANGUAGE("lcd"),
@@ -33,8 +35,6 @@ public enum EventAttribute
     TIMESTAMP("tim"),
     USE_CASE_TYPE("psr"),
     USER_AGENT("dua"),
-    WATCH_DEVICE_SERIAL_NUMBER("wsn"),
-    WATCH_USER_AGENT("wua"),
     // Oslo
     MERCHANT_ID("mid"),
     TRANSACTION_AMOUNT("tmt"),

@@ -1,7 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
-import org.apache.log4j.Logger;
 
 import java.math.BigInteger;
 
@@ -10,14 +9,12 @@ import java.math.BigInteger;
  */
 public enum FmipSource
 {
-    FMIP("1", "FMIP", initFmipSourceCertificate(ApplicationConfigurationManager.getFmipCertificate(), "1")),
-    REMOTE("2", "SETUP_SERVICE", initFmipSourceCertificate(ApplicationConfigurationManager.getFmipRemoteCertificate(), "2"));
+    FMIP("1", "FMIP", getFmipSourceCertificate(ApplicationConfigurationManager.getFmipCertificate(), "1")),
+    REMOTE("2", "SETUP_SERVICE", getFmipSourceCertificate(ApplicationConfigurationManager.getFmipRemoteCertificate(), "2"));
 
     private final String code;
     private final String description;
     private final BigInteger certificate;
-
-    private static final Logger LOGGER = Logger.getLogger(FmipSource.class);
 
     private static final String[] REMOTE_REQUEST_REASONS = {"Remove all cards."};
 
@@ -28,7 +25,7 @@ public enum FmipSource
         this.certificate = certificate;
     }
 
-    private static FmipSource getUnknownSource()
+    private static FmipSource getDefaultSource()
     {
         return FMIP;
     }
@@ -53,7 +50,7 @@ public enum FmipSource
             }
         }
 
-        return getUnknownSource();
+        return getDefaultSource();
     }
 
     public static FmipSource fromCertificate(BigInteger certificate)
@@ -66,7 +63,7 @@ public enum FmipSource
             }
         }
 
-        return getUnknownSource();
+        return getDefaultSource();
     }
 
     public static FmipSource fromRequestReason(String requestReason)
@@ -87,7 +84,7 @@ public enum FmipSource
         return false;
     }
 
-    private static BigInteger initFmipSourceCertificate(String certificate, String defaultValue)
+    private static BigInteger getFmipSourceCertificate(String certificate, String defaultValue)
     {
         return (!certificate.equals("0")) ? certificateToBigInteger(certificate) : certificateToBigInteger(defaultValue);
     }
@@ -103,8 +100,6 @@ public enum FmipSource
         catch (Exception e)
         {
             value = new BigInteger("0");
-
-            LOGGER.error(e);
         }
 
         return value;

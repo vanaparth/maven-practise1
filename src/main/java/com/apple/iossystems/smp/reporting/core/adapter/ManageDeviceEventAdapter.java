@@ -11,6 +11,7 @@ import org.springframework.stereotype.Component;
 
 import java.lang.reflect.Type;
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -23,8 +24,9 @@ public class ManageDeviceEventAdapter implements JsonSerializer<ManageDeviceEven
     private static final String CARD_HOLDER_NAME = "cardHolderName";
     private static final String CARD_HOLDER_EMAIL = "cardHolderEmail";
     private static final String DSID = "dsid";
-    private static final String LOCALE = "locale";
+    private static final String TIMESTAMP = "timestamp";
     private static final String TIMEZONE = "timezone";
+    private static final String LOCALE = "locale";
     private static final String DEVICE_NAME = "deviceName";
     private static final String DEVICE_TYPE = "deviceType";
     private static final String DEVICE_IMAGE_URL = "deviceImageURL";
@@ -41,27 +43,32 @@ public class ManageDeviceEventAdapter implements JsonSerializer<ManageDeviceEven
         JSONUtils.setAttributeValue(root, CARD_HOLDER_NAME, src.getCardHolderName());
         JSONUtils.setAttributeValue(root, CARD_HOLDER_EMAIL, src.getCardHolderEmail());
         JSONUtils.setAttributeValue(root, DSID, src.getDsid());
-        JSONUtils.setAttributeValue(root, LOCALE, src.getLocale());
+        JSONUtils.setAttributeValue(root, TIMESTAMP, src.getTimestamp());
         JSONUtils.setAttributeValue(root, TIMEZONE, src.getTimezone());
+        JSONUtils.setAttributeValue(root, LOCALE, src.getLocale());
         JSONUtils.setAttributeValue(root, DEVICE_NAME, src.getDeviceName());
         JSONUtils.setAttributeValue(root, DEVICE_TYPE, src.getDeviceType());
         JSONUtils.setAttributeValue(root, DEVICE_IMAGE_URL, src.getDeviceImageUrl());
 
-        if (src.getManageDeviceEventSource() != null)
+        ManageDeviceEventSource manageDeviceEventSource = src.getManageDeviceEventSource();
+
+        if (manageDeviceEventSource != null)
         {
-            JSONUtils.setAttributeValue(root, MANAGE_DEVICE_EVENT_SOURCE, src.getManageDeviceEventSource().getCode());
+            JSONUtils.setAttributeValue(root, MANAGE_DEVICE_EVENT_SOURCE, manageDeviceEventSource.getCode());
         }
 
-        if (src.getFmipSource() != null)
+        FmipSource fmipSource = src.getFmipSource();
+
+        if (fmipSource != null)
         {
-            JSONUtils.setAttributeValue(root, FMIP_SOURCE, src.getFmipSource().getCode());
+            JSONUtils.setAttributeValue(root, FMIP_SOURCE, fmipSource.getCode());
         }
 
         List<CardEvent> cardEvents = src.getCardEvents();
 
         if ((cardEvents != null) && (!cardEvents.isEmpty()))
         {
-            root.add(CARD_EVENTS, context.serialize(src.getCardEvents(), List.class));
+            root.add(CARD_EVENTS, context.serialize(cardEvents, List.class));
         }
 
         return root;
@@ -72,18 +79,23 @@ public class ManageDeviceEventAdapter implements JsonSerializer<ManageDeviceEven
     {
         JsonObject root = json.getAsJsonObject();
 
+        JsonElement jsonElement = root.get(CARD_EVENTS);
+
+        List<CardEvent> cardEvents = (jsonElement != null) ? Arrays.asList((CardEvent[]) context.deserialize(jsonElement, CardEvent[].class)) : Collections.<CardEvent>emptyList();
+
         return ManageDeviceEvent.getBuilder().
                 cardHolderName(JSONUtils.getAttributeValueAsString(root, CARD_HOLDER_NAME)).
                 cardHolderEmail(JSONUtils.getAttributeValueAsString(root, CARD_HOLDER_EMAIL)).
                 dsid(JSONUtils.getAttributeValueAsString(root, DSID)).
-                locale(JSONUtils.getAttributeValueAsString(root, LOCALE)).
+                timestamp(JSONUtils.getAttributeValueAsString(root, TIMESTAMP)).
                 timezone(JSONUtils.getAttributeValueAsString(root, TIMEZONE)).
+                locale(JSONUtils.getAttributeValueAsString(root, LOCALE)).
                 deviceName(JSONUtils.getAttributeValueAsString(root, DEVICE_NAME)).
                 deviceType(JSONUtils.getAttributeValueAsString(root, DEVICE_TYPE)).
                 deviceImageUrl(JSONUtils.getAttributeValueAsString(root, DEVICE_IMAGE_URL)).
                 manageDeviceEventSource(ManageDeviceEventSource.fromCode(JSONUtils.getAttributeValueAsString(root, MANAGE_DEVICE_EVENT_SOURCE))).
-                fmipSource(FmipSource.fromCode(JSONUtils.getAttributeValueAsString(root, CARD_EVENTS))).
-                cardEvents(Arrays.asList((CardEvent[]) context.deserialize(root.get(CARD_EVENTS), CardEvent[].class))).
+                fmipSource(FmipSource.fromCode(JSONUtils.getAttributeValueAsString(root, FMIP_SOURCE))).
+                cardEvents(cardEvents).
                 build();
     }
 }

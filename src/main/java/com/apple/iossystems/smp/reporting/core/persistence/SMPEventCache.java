@@ -1,11 +1,11 @@
-package com.apple.iossystems.smp.reporting.core.email;
+package com.apple.iossystems.smp.reporting.core.persistence;
 
 /**
  * @author Toch
  */
 public class SMPEventCache
 {
-    private static final long CACHE_TIMEOUT = 72 * 60 * 60 * 1000;
+    private static final long DEFAULT_CACHE_TIMEOUT_MILLISECONDS = 72 * 60 * 60 * 1000;
 
     private SMPEventCache()
     {
@@ -25,7 +25,7 @@ public class SMPEventCache
 
     public static void put(Attribute attribute, String key, String value)
     {
-        CacheService.put(getCacheKey(attribute, key), value, CACHE_TIMEOUT);
+        CacheService.put(getCacheKey(attribute, key), value, attribute.cacheTimeout);
     }
 
     public static String get(Attribute attribute, String key)
@@ -40,14 +40,16 @@ public class SMPEventCache
 
     public enum Attribute
     {
-        GET_OTP_RESOLUTION_METHODS("GetOtpResolutionMethods"),
-        PROVISION_EVENT("ProvisionEvent");
+        GET_OTP_RESOLUTION_METHODS("GetOtpResolutionMethods", DEFAULT_CACHE_TIMEOUT_MILLISECONDS),
+        PROVISION_EVENT("ProvisionEvent", DEFAULT_CACHE_TIMEOUT_MILLISECONDS);
 
         private final String key;
+        private final long cacheTimeout;
 
-        private Attribute(String key)
+        private Attribute(String key, long cacheTimeout)
         {
             this.key = key;
+            this.cacheTimeout = cacheTimeout;
         }
     }
 }

@@ -22,6 +22,7 @@ public class ManageDeviceEventBuilder
     private static final String DEVICE_NAME = "deviceName";
     private static final String DEVICE_IMAGE_URL = "deviceImageURL";
 
+    private String timestamp;
     private String dsid;
     private Actor actor;
     private FmipSource fmipSource;
@@ -35,6 +36,12 @@ public class ManageDeviceEventBuilder
     public static ManageDeviceEventBuilder getInstance()
     {
         return new ManageDeviceEventBuilder();
+    }
+
+    public ManageDeviceEventBuilder timestamp(String value)
+    {
+        timestamp = value;
+        return this;
     }
 
     public ManageDeviceEventBuilder dsid(String value)
@@ -96,6 +103,7 @@ public class ManageDeviceEventBuilder
         return ManageDeviceEvent.getBuilder().cardHolderName(getCardHolderName(firstName, lastName)).
                 cardHolderEmail(cardHolderEmail).
                 dsid(dsid).
+                timestamp(timestamp).
                 locale(locale).
                 timezone(timezone).
                 deviceName(deviceName).
@@ -136,7 +144,7 @@ public class ManageDeviceEventBuilder
 
         for (CardEvent cardEvent : cardEvents)
         {
-            secureElement = SMPEventDataServiceProxy.getSecureElementByDpanId(cardEvent.getDpanId());
+            secureElement = SMPEventDataServiceClient.getSecureElementByDpanId(cardEvent.getDpanId());
 
             if (secureElement != null)
             {
@@ -144,6 +152,6 @@ public class ManageDeviceEventBuilder
             }
         }
 
-        return (secureElement != null) ? SMPEventDataServiceProxy.getDeviceType(secureElement) : null;
+        return (secureElement != null) ? SMPEventDataServiceClient.getDeviceType(secureElement) : null;
     }
 }

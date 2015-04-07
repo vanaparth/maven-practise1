@@ -1,6 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.event;
 
 import com.apple.iossystems.smp.domain.ProvisioningCardSource;
+import com.apple.iossystems.smp.domain.clm.Card;
 import com.apple.iossystems.smp.domain.device.CardEligibilityStatus;
 import com.apple.iossystems.smp.utils.SMPErrorEnum;
 import org.apache.commons.lang.StringUtils;
@@ -17,9 +18,10 @@ public class SMPEventCode
 
     private static final Map<String, String> PNO_MAP = new HashMap<>();
     private static final Map<String, String> COLOR_MAP = new HashMap<>();
-    private static final Map<String, String> USE_CASE_TYPE = new HashMap<>();
+    private static final Map<String, String> USE_CASE_TYPE_MAP = new HashMap<>();
     private static final Map<String, String> FPAN_TYPE_MAP = new HashMap<>();
     private static final Map<String, String> CARD_ELIGIBILITY_STATUS_MAP = new HashMap<>();
+    private static final Map<String, String> CARD_STATUS_MAP = new HashMap<>();
     private static final Map<String, String> PROVISIONING_CARD_SOURCE_MAP = new HashMap<>();
 
     static
@@ -34,7 +36,7 @@ public class SMPEventCode
         addToMap(COLOR_MAP, "yellow", "2");
         addToMap(COLOR_MAP, "red", "3");
         //
-        addToMap(USE_CASE_TYPE, "Passbook", "1");
+        addToMap(USE_CASE_TYPE_MAP, "Passbook", "1");
         //
         addToMap(FPAN_TYPE_MAP, "Credit", "1");
         addToMap(FPAN_TYPE_MAP, "Debit", "2");
@@ -45,8 +47,13 @@ public class SMPEventCode
         addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.ELIGIBLE.getId()), "8");
         addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.NETWORK_UNAVAILABLE.getId()), "9");
         addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.PROVISIONED.getId()), "10");
-        addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.MORE_INPUT_NEEDED.getId()), "11");
-        addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.MORE_THAN_ONE_MATCH.getId()), "12");
+        //
+        addToMap(CARD_STATUS_MAP, Card.CardStatus.ACTIVE.toString(), "1");
+        addToMap(CARD_STATUS_MAP, Card.CardStatus.SUSPENDED.toString(), "2");
+        addToMap(CARD_STATUS_MAP, Card.CardStatus.UNLINKED.toString(), "3");
+        addToMap(CARD_STATUS_MAP, Card.CardStatus.SUSPENDED_OTP.toString(), "4");
+        addToMap(CARD_STATUS_MAP, Card.CardStatus.SUSPENDED_ISSUER.toString(), "5");
+        addToMap(CARD_STATUS_MAP, Card.CardStatus.SUSPENDED_WALLET.toString(), "6");
         //
         addToMap(PROVISIONING_CARD_SOURCE_MAP, String.valueOf(ProvisioningCardSource.MANUAL.getId()), "1");
         addToMap(PROVISIONING_CARD_SOURCE_MAP, String.valueOf(ProvisioningCardSource.ON_FILE.getId()), "2");
@@ -99,7 +106,7 @@ public class SMPEventCode
 
     public static String getUseCaseTypeCode(String useCaseType)
     {
-        return getCode(USE_CASE_TYPE, useCaseType);
+        return getCode(USE_CASE_TYPE_MAP, useCaseType);
     }
 
     public static String getFpanTypeCode(String fpanType)
@@ -107,47 +114,63 @@ public class SMPEventCode
         return getCode(FPAN_TYPE_MAP, fpanType);
     }
 
-    public static String getCardEligibilityStatusCode(CardEligibilityStatus cardStatus)
+    public static String getCardEligibilityStatusCode(CardEligibilityStatus cardEligibilityStatus)
     {
-        return ((cardStatus != null) ? getCode(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(cardStatus.getId())) : EMPTY_CODE);
+        return ((cardEligibilityStatus != null) ? getCode(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(cardEligibilityStatus.getId())) : EMPTY_CODE);
     }
 
-    public static String getCardSourceCode(ProvisioningCardSource cardSource)
+    public static String getCardStatusCode(Card.CardStatus cardStatus)
     {
-        return ((cardSource != null) ? getCode(PROVISIONING_CARD_SOURCE_MAP, String.valueOf(cardSource.getId())) : EMPTY_CODE);
+        return ((cardStatus != null) ? getCode(CARD_STATUS_MAP, cardStatus.toString()) : EMPTY_CODE);
     }
 
-    public static String getResponseStatus(String statusCode)
+    public static String getProvisioningCardSourceCode(ProvisioningCardSource provisioningCardSource)
     {
-        if (StringUtils.isBlank(statusCode))
+        return ((provisioningCardSource != null) ? getCode(PROVISIONING_CARD_SOURCE_MAP, String.valueOf(provisioningCardSource.getId())) : EMPTY_CODE);
+    }
+
+    public static String getResponseStatus(String errorCode)
+    {
+        String responseStatusCode = null;
+
+        if (StringUtils.isNotBlank(errorCode))
         {
-            return EMPTY_CODE;
+            SMPErrorEnum errorEnum = SMPErrorEnum.fromErrorCode(errorCode);
+
+            if (errorEnum != null)
+            {
+                switch (errorEnum)
+                {
+                    case NO_ERROR:
+                        responseStatusCode = EMPTY_CODE;
+                        break;
+
+                    case PAN_INELIGIBLE:
+                    case INELIGIBLE_PAN:
+                    case INVALID_PAN:
+                        responseStatusCode = "1";
+                        break;
+
+                    case CVV_VERIFICATION_FAILED:
+                    case CVV_VERIFICATION_FAILED_LEGACY:
+                        responseStatusCode = "2";
+                        break;
+
+                    case FPAN_EXPIRED:
+                        responseStatusCode = "3";
+                        break;
+
+                    case NAME_VERIFICATION_FAILED:
+                        responseStatusCode = "4";
+                        break;
+
+                    default:
+                        responseStatusCode = "5";
+                        break;
+                }
+            }
         }
 
-        SMPErrorEnum errorEnum = SMPErrorEnum.fromErrorCode(statusCode);
-
-        switch (errorEnum)
-        {
-            case NO_ERROR:
-                return EMPTY_CODE;
-
-            case PAN_INELIGIBLE:
-            case INELIGIBLE_PAN:
-            case INVALID_PAN:
-                return "1";
-
-            case CVV_VERIFICATION_FAILED:
-            case CVV_VERIFICATION_FAILED_LEGACY:
-                return "2";
-
-            case FPAN_EXPIRED:
-                return "3";
-
-            case NAME_VERIFICATION_FAILED:
-                return "4";
-
-            default:
-                return "5";
-        }
+        return ((responseStatusCode != null) ? responseStatusCode : EMPTY_CODE);
     }
 }

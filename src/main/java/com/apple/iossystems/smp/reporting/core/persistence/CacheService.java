@@ -1,4 +1,4 @@
-package com.apple.iossystems.smp.reporting.core.email;
+package com.apple.iossystems.smp.reporting.core.persistence;
 
 import com.apple.cds.cache.Cache;
 import com.apple.iossystems.persistence.cache.StockholmCacheFactory;

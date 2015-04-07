@@ -1,5 +1,9 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
+import com.apple.iossystems.smp.email.service.impl.ssp.domain.SMPEmailCardData;
+import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
+import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
+import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.SMPDeviceEvent;
 import org.apache.log4j.Logger;
 
@@ -10,68 +14,70 @@ class EmailPublishServiceLogger
 {
     private static final Logger LOGGER = Logger.getLogger(EmailPublishServiceLogger.class);
 
+    private static final boolean EMAIL_LOGGING_ENABLED = ApplicationConfigurationManager.isEmailLoggingEnabled();
+
     private EmailPublishServiceLogger()
     {
     }
 
-    public static void log(EmailRecord emailRecord, boolean requestSent)
+    private static void log(String message)
     {
-        log(emailRecord);
-        EmailTestLogger.log(emailRecord, requestSent);
-    }
-
-    public static void log(EmailRecord record)
-    {
-        if ((record != null) && doLog(record))
+        if (EMAIL_LOGGING_ENABLED)
         {
-            String message = getLogMessage(record);
-
-            if ((message != null) && (!message.isEmpty()))
-            {
-                LOGGER.info(message);
-            }
+            LOGGER.info(message);
         }
     }
 
-    private static String getLogMessage(EmailRecord record)
+    public static void log(ProvisionCardEvent provisionCardEvent)
     {
-        String message = getMessage(record);
+        log("PROVISION_CARD " +
+                ", conversationId=" + provisionCardEvent.getConversationId() +
+                ", timestamp=" + provisionCardEvent.getTimestamp() +
+                ", cardHolderName= " + provisionCardEvent.getCardHolderName() +
+                ", cardHolderEmail= " + provisionCardEvent.getCardHolderEmail() +
+                ", cardDisplayNumber= " + provisionCardEvent.getCardDisplayNumber() +
+                ", dsid= " + provisionCardEvent.getDsid() +
+                ", deviceName= " + provisionCardEvent.getDeviceName() +
+                ", deviceType= " + provisionCardEvent.getDeviceType() +
+                ", locale= " + provisionCardEvent.getLocale());
 
-        if (EmailRecordFilter.hasRequiredValues(record))
-        {
-            message = "Sending email " + message;
-        }
-        else
-        {
-            message = "Not sending email " + message;
-        }
-
-        return message;
     }
 
-    private static String getMessage(EmailRecord record)
+    public static void log(EventRecord record, ManageDeviceEvent manageDeviceEvent, CardEventRecord cardEventRecord)
+    {
+        SMPDeviceEvent smpEvent = SMPDeviceEvent.getSMPEvent(record);
+
+        log(smpEvent +
+                ", conversationId=" + record.getAttributeValue(EventAttribute.CONVERSATION_ID.key()) +
+                ", timestamp=" + manageDeviceEvent.getTimestamp() +
+                ", cardHolderName= " + manageDeviceEvent.getCardHolderName() +
+                ", cardHolderEmail= " + manageDeviceEvent.getCardHolderEmail() +
+                ", dsid= " + manageDeviceEvent.getDsid() +
+                ", deviceName= " + manageDeviceEvent.getDeviceName() +
+                ", deviceType= " + manageDeviceEvent.getDeviceType() +
+                ", deviceImageUrl= " + manageDeviceEvent.getDeviceImageUrl() +
+                ", locale= " + manageDeviceEvent.getLocale() +
+                ", fmipSource= " + manageDeviceEvent.getFmipSource() +
+                ", manageDeviceEventSource=" + manageDeviceEvent.getManageDeviceEventSource() +
+                ", " + getCardEventRecordString(cardEventRecord));
+    }
+
+    private static String getCardEventRecordString(CardEventRecord record)
     {
         StringBuilder message = new StringBuilder();
 
-        SMPDeviceEvent smpEvent = record.getSMPEvent();
-        String smpEventName = (smpEvent != null) ? smpEvent.toString() : "Unknown Event";
+        message.append("SuccessCards=").append(record.getSuccessCards().size()).append(", FailedCards=").append(record.getFailedCards().size());
 
-        appendMessage(message, "event", smpEventName);
-        appendMessage(message, "conversationId", record.getConversationId());
-        appendMessage(message, "dsid", record.getDsid());
+        for (SMPEmailCardData smpEmailCardData : record.getSuccessCards())
+        {
+            message.append(", SuccessCard=").append(smpEmailCardData.getCardLastFour()).append(", ").append(smpEmailCardData.getCardShortDescription());
+        }
 
-        return message.toString().trim();
-    }
+        for (SMPEmailCardData smpEmailCardData : record.getFailedCards())
+        {
+            message.append(", FailedCard=").append(smpEmailCardData.getCardLastFour()).append(", ").append(smpEmailCardData.getCardShortDescription());
+        }
 
-    private static void appendMessage(StringBuilder message, String key, String value)
-    {
-        message.append(key + "=" + value + " ");
-    }
-
-    public static boolean doLog(EmailRecord record)
-    {
-        SMPDeviceEvent smpEvent = record.getSMPEvent();
-
-        return ((smpEvent == SMPDeviceEvent.PROVISION_CARD) || (smpEvent == SMPDeviceEvent.SUSPEND_CARD) || (smpEvent == SMPDeviceEvent.UNLINK_CARD) || (smpEvent == SMPDeviceEvent.RESUME_CARD));
+        return message.toString();
     }
 }

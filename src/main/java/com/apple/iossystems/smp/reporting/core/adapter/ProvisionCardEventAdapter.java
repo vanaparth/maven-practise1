@@ -24,7 +24,6 @@ public class ProvisionCardEventAdapter implements JsonSerializer<ProvisionCardEv
     private static final String DEVICE_TYPE = "deviceType";
     private static final String DSID = "dsid";
     private static final String LOCALE = "locale";
-    private static final String FIRST_PROVISION = "firstProvision";
 
     @Override
     public JsonElement serialize(ProvisionCardEvent src, Type typeOfSrc, JsonSerializationContext context)
@@ -40,7 +39,6 @@ public class ProvisionCardEventAdapter implements JsonSerializer<ProvisionCardEv
         JSONUtils.setAttributeValue(root, DEVICE_TYPE, src.getDeviceType());
         JSONUtils.setAttributeValue(root, DSID, src.getDsid());
         JSONUtils.setAttributeValue(root, LOCALE, src.getLocale());
-        JSONUtils.setAttributeValue(root, FIRST_PROVISION, src.isFirstProvision());
 
         return root;
     }
@@ -59,7 +57,6 @@ public class ProvisionCardEventAdapter implements JsonSerializer<ProvisionCardEv
                 deviceName(JSONUtils.getAttributeValueAsString(root, DEVICE_NAME)).
                 deviceType(JSONUtils.getAttributeValueAsString(root, DEVICE_TYPE)).
                 dsid(JSONUtils.getAttributeValueAsString(root, DSID)).
-                locale(JSONUtils.getAttributeValueAsString(root, LOCALE)).
-                firstProvision(Boolean.TRUE.equals(JSONUtils.getAttributeValueAsBoolean(root, FIRST_PROVISION))).build();
+                locale(JSONUtils.getAttributeValueAsString(root, LOCALE)).build();
     }
 }

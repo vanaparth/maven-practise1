@@ -9,11 +9,6 @@ public class ApplicationConfigurationManager
     {
     }
 
-    public static boolean getSMPReportingEnable()
-    {
-        return ApplicationConfiguration.SMP_REPORTING_ENABLE;
-    }
-
     public static String getRabbitHostKey()
     {
         return ApplicationConfiguration.RABBIT_HOST_KEY;
@@ -99,29 +94,29 @@ public class ApplicationConfigurationManager
         return ApplicationConfiguration.HASH_PASS;
     }
 
-    public static boolean getEmailLog()
+    public static boolean isEmailLoggingEnabled()
     {
-        return ApplicationConfiguration.EMAIL_LOG;
+        return ApplicationConfiguration.EMAIL_LOGGING_ENABLED;
     }
 
-    public static boolean getEmailProvision()
+    public static boolean isProvisionEmailEnabled()
     {
-        return ApplicationConfiguration.EMAIL_PROVISION;
+        return ApplicationConfiguration.PROVISION_EMAIL_ENABLED;
     }
 
-    public static boolean getEmailSuspend()
+    public static boolean isSuspendEmailEnabled()
     {
-        return ApplicationConfiguration.EMAIL_SUSPEND;
+        return ApplicationConfiguration.SUSPEND_EMAIL_ENABLED;
     }
 
-    public static boolean getEmailUnlink()
+    public static boolean isUnlinkEmailEnabled()
     {
-        return ApplicationConfiguration.EMAIL_UNLINK;
+        return ApplicationConfiguration.UNLINK_EMAIL_ENABLED;
     }
 
-    public static boolean getEmailLocale()
+    public static boolean useDefaultEmailLocale()
     {
-        return ApplicationConfiguration.EMAIL_LOCALE;
+        return ApplicationConfiguration.USE_EMAIL_DEFAULT_LOCALE;
     }
 
     public static String getFmipCertificate()

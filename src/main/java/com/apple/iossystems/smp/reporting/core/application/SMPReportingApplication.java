@@ -12,10 +12,7 @@ public class SMPReportingApplication
 
     private SMPReportingApplication()
     {
-        if (ApplicationConfigurationManager.getSMPReportingEnable())
-        {
-            init();
-        }
+        init();
     }
 
     public static SMPReportingApplication getInstance()

@@ -52,11 +52,11 @@ class CardEventRecord
         return (successCards.isEmpty() && !failedCards.isEmpty());
     }
 
-    public static CardEventRecord getCardEventRecord(EmailRecord emailRecord)
+    public static CardEventRecord getCardEventRecord(ManageDeviceEvent manageDeviceEvent)
     {
-        if ((emailRecord != null) && (emailRecord.getCardEvents() != null))
+        if ((manageDeviceEvent != null) && (manageDeviceEvent.getCardEvents() != null))
         {
-            return getCardEventRecord(emailRecord.getCardEvents());
+            return getCardEventRecord(manageDeviceEvent.getCardEvents());
         }
         else
         {
@@ -74,11 +74,11 @@ class CardEventRecord
             {
                 if (cardEvent.getEventStatus())
                 {
-                    cardEventRecord.addSuccessCard(new SMPEmailCardData(EmailRecordFormat.getValidValue(cardEvent.getCardDisplayNumber()), EmailRecordFormat.getValidValue(cardEvent.getCardDescription())));
+                    cardEventRecord.addSuccessCard(new SMPEmailCardData(cardEvent.getCardDisplayNumber(), cardEvent.getCardDescription()));
                 }
                 else
                 {
-                    cardEventRecord.addFailedCard(new SMPEmailCardData(EmailRecordFormat.getValidValue(cardEvent.getCardDisplayNumber()), EmailRecordFormat.getValidValue(cardEvent.getCardDescription())));
+                    cardEventRecord.addFailedCard(new SMPEmailCardData(cardEvent.getCardDisplayNumber(), cardEvent.getCardDescription()));
                 }
             }
         }

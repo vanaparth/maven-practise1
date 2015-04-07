@@ -1,7 +1,5 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
-import com.apple.iossystems.smp.reporting.core.event.SMPDeviceEvent;
-
 /**
  * @author Toch
  */
@@ -16,7 +14,6 @@ public class ProvisionCardEvent
     private final String deviceType;
     private final String dsid;
     private final String locale;
-    private final boolean firstProvision;
 
     private ProvisionCardEvent(Builder builder)
     {
@@ -29,7 +26,6 @@ public class ProvisionCardEvent
         deviceType = builder.deviceType;
         dsid = builder.dsid;
         locale = builder.locale;
-        firstProvision = builder.firstProvision;
     }
 
     public String getConversationId()
@@ -77,28 +73,9 @@ public class ProvisionCardEvent
         return locale;
     }
 
-    public boolean isFirstProvision()
-    {
-        return firstProvision;
-    }
-
     public static Builder getBuilder()
     {
         return new Builder();
-    }
-
-    public EmailRecord getEmailRecord()
-    {
-        return EmailRecord.getBuilder().smpEvent(SMPDeviceEvent.PROVISION_CARD).
-                conversationId(conversationId).
-                timestamp(timestamp).
-                cardHolderName(cardHolderName).
-                cardHolderEmail(cardHolderEmail).
-                deviceName(deviceName).
-                deviceType(deviceType).
-                dsid(dsid).
-                locale(locale).
-                firstProvisionEvent(firstProvision).build();
     }
 
     public static class Builder
@@ -112,7 +89,6 @@ public class ProvisionCardEvent
         private String deviceType;
         private String dsid;
         private String locale;
-        private boolean firstProvision;
 
         private Builder()
         {
@@ -169,12 +145,6 @@ public class ProvisionCardEvent
         public Builder locale(String value)
         {
             locale = value;
-            return this;
-        }
-
-        public Builder firstProvision(boolean value)
-        {
-            firstProvision = value;
             return this;
         }
 

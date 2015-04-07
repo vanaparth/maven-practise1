@@ -8,9 +8,9 @@ import com.apple.iossystems.smp.persistence.entity.SecureElement;
 /**
  * @author Toch
  */
-public class SMPEventDataServiceProxy
+public class SMPEventDataServiceClient
 {
-    private SMPEventDataServiceProxy()
+    private SMPEventDataServiceClient()
     {
     }
 

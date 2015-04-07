@@ -4,6 +4,7 @@ import com.apple.cds.keystone.spring.AppContext;
 import com.apple.iossystems.smp.domain.DSIDInfo;
 import com.apple.iossystems.smp.domain.ProvisionCount;
 import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
+import com.apple.iossystems.smp.reporting.core.persistence.SMPEventCache;
 import com.apple.iossystems.smp.service.StoreManagementService;
 import org.apache.log4j.Logger;
 
@@ -40,28 +41,11 @@ public class ProvisionEmailPublishService
 
     private static void publishEvent(String conversationId, boolean firstProvision)
     {
-        if (firstProvision)
+        String json = SMPEventCache.remove(SMPEventCache.Attribute.PROVISION_EVENT, conversationId);
+
+        if (firstProvision && (json != null))
         {
-            String json = SMPEventCache.remove(SMPEventCache.Attribute.PROVISION_EVENT, conversationId);
-
-            if (json != null)
-            {
-                ProvisionCardEvent provisionCardEvent = GsonBuilderFactory.getInstance().fromJson(json, ProvisionCardEvent.class);
-
-                ProvisionCardEvent updatedProvisionCardEvent = ProvisionCardEvent.getBuilder().
-                        conversationId(provisionCardEvent.getConversationId()).
-                        timestamp(provisionCardEvent.getTimestamp()).
-                        cardHolderName(provisionCardEvent.getCardHolderName()).
-                        cardHolderEmail(provisionCardEvent.getCardHolderEmail()).
-                        cardDisplayNumber(provisionCardEvent.getCardDisplayNumber()).
-                        deviceName(provisionCardEvent.getDeviceName()).
-                        deviceType(provisionCardEvent.getDeviceType()).
-                        dsid(provisionCardEvent.getDsid()).
-                        locale(provisionCardEvent.getLocale()).
-                        firstProvision(true).build();
-
-                EmailPublishService.sendProvisionEventRequest(updatedProvisionCardEvent);
-            }
+            EmailPublishService.publishProvisionEvent(GsonBuilderFactory.getInstance().fromJson(json, ProvisionCardEvent.class));
         }
     }
 }

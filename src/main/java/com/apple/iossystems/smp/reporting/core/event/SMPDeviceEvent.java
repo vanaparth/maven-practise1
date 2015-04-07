@@ -26,11 +26,6 @@ public enum SMPDeviceEvent
         this.code = code;
     }
 
-    private String getCode()
-    {
-        return code;
-    }
-
     public static SMPDeviceEvent pnoApiToCardEvent(PnoApi pnoApi)
     {
         switch (pnoApi)
@@ -69,6 +64,6 @@ public enum SMPDeviceEvent
 
     public void setEvent(EventRecord record)
     {
-        record.setAttributeValue(EventAttribute.EVENT.key(), getCode());
+        record.setAttributeValue(EventAttribute.EVENT.key(), code);
     }
 }

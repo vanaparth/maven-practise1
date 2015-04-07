@@ -15,7 +15,7 @@ public class SMPEmailEvent
     {
         SMPDeviceEvent smpEvent = SMPDeviceEvent.getSMPEvent(record);
 
-        return ((smpEvent.equals(SMPDeviceEvent.SUSPEND_CARD)) || (smpEvent.equals(SMPDeviceEvent.UNLINK_CARD)) || (smpEvent.equals(SMPDeviceEvent.RESUME_CARD)));
+        return ((smpEvent == SMPDeviceEvent.PROVISION_CARD) || (smpEvent == SMPDeviceEvent.SUSPEND_CARD) || (smpEvent == SMPDeviceEvent.UNLINK_CARD) || (smpEvent == SMPDeviceEvent.RESUME_CARD));
     }
 
     public static EventRecords getEventRecords(EventRecords records)

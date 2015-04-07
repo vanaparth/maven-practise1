@@ -1,10 +1,5 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
-import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
-import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
-import com.apple.iossystems.smp.reporting.core.event.EventRecord;
-import com.apple.iossystems.smp.reporting.core.event.SMPDeviceEvent;
-
 import java.util.List;
 
 /**
@@ -15,8 +10,9 @@ public class ManageDeviceEvent
     private final String cardHolderName;
     private final String cardHolderEmail;
     private final String dsid;
-    private final String locale;
+    private final String timestamp;
     private final String timezone;
+    private final String locale;
     private final String deviceName;
     private final String deviceType;
     private final String deviceImageUrl;
@@ -29,8 +25,9 @@ public class ManageDeviceEvent
         cardHolderName = builder.cardHolderName;
         cardHolderEmail = builder.cardHolderEmail;
         dsid = builder.dsid;
-        locale = builder.locale;
+        timestamp = builder.timestamp;
         timezone = builder.timezone;
+        locale = builder.locale;
         deviceName = builder.deviceName;
         deviceType = builder.deviceType;
         deviceImageUrl = builder.deviceImageUrl;
@@ -54,14 +51,20 @@ public class ManageDeviceEvent
         return dsid;
     }
 
-    public String getLocale()
+    public String getTimestamp()
     {
-        return locale;
+        return timestamp;
+
     }
 
     public String getTimezone()
     {
         return timezone;
+    }
+
+    public String getLocale()
+    {
+        return locale;
     }
 
     public String getDeviceName()
@@ -104,8 +107,9 @@ public class ManageDeviceEvent
         private String cardHolderName;
         private String cardHolderEmail;
         private String dsid;
-        private String locale;
+        private String timestamp;
         private String timezone;
+        private String locale;
         private String deviceName;
         private String deviceType;
         private String deviceImageUrl;
@@ -135,15 +139,21 @@ public class ManageDeviceEvent
             return this;
         }
 
-        public Builder locale(String value)
+        public Builder timestamp(String value)
         {
-            locale = value;
+            timestamp = value;
             return this;
         }
 
         public Builder timezone(String value)
         {
             timezone = value;
+            return this;
+        }
+
+        public Builder locale(String value)
+        {
+            locale = value;
             return this;
         }
 
@@ -187,24 +197,5 @@ public class ManageDeviceEvent
         {
             return new ManageDeviceEvent(this);
         }
-    }
-
-    public static EmailRecord getEmailRecord(EventRecord record)
-    {
-        ManageDeviceEvent manageDeviceEvent = GsonBuilderFactory.getInstance().fromJson(record.getAttributeValue(EventAttribute.MANAGE_DEVICE_EVENT.key()), ManageDeviceEvent.class);
-
-        return EmailRecord.getBuilder().smpEvent(SMPDeviceEvent.getSMPEvent(record)).
-                conversationId(record.getAttributeValue(EventAttribute.CONVERSATION_ID.key())).
-                timestamp(record.getAttributeValue(EventAttribute.TIMESTAMP.key())).
-                cardHolderName(manageDeviceEvent.getCardHolderName()).
-                cardHolderEmail(manageDeviceEvent.getCardHolderEmail()).
-                deviceName(manageDeviceEvent.getDeviceName()).
-                deviceType(manageDeviceEvent.getDeviceType()).
-                deviceImageUrl(manageDeviceEvent.getDeviceImageUrl()).
-                dsid(manageDeviceEvent.getDsid()).
-                locale(manageDeviceEvent.getLocale()).
-                firstProvisionEvent(false).
-                manageDeviceEvent(manageDeviceEvent).
-                cardEvents(manageDeviceEvent.getCardEvents()).build();
     }
 }

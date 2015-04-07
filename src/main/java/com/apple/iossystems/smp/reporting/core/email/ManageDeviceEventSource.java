@@ -21,7 +21,7 @@ public enum ManageDeviceEventSource
         this.code = code;
     }
 
-    private static ManageDeviceEventSource getUnknownSource()
+    private static ManageDeviceEventSource getDefaultSource()
     {
         return DEVICE;
     }
@@ -41,7 +41,7 @@ public enum ManageDeviceEventSource
             }
         }
 
-        return getUnknownSource();
+        return getDefaultSource();
     }
 
     public static ManageDeviceEventSource fromCode(String code)
@@ -54,6 +54,6 @@ public enum ManageDeviceEventSource
             }
         }
 
-        return getUnknownSource();
+        return getDefaultSource();
     }
 }

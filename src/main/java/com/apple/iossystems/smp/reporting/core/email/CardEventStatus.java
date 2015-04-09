@@ -1,12 +1,8 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.iossystems.smp.domain.clm.Card;
-import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.SMPDeviceEvent;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Toch
@@ -19,24 +15,8 @@ public class CardEventStatus
 
     private static final Card.CardStatus[] VALID_RESUME_STATUS = {Card.CardStatus.ACTIVE};
 
-    private static final Map<String, Card.CardStatus> CARD_STATUS_MAP = getCardStatusMap();
-
     private CardEventStatus()
     {
-    }
-
-    private static Map<String, Card.CardStatus> getCardStatusMap()
-    {
-        Map<String, Card.CardStatus> map = new HashMap<>();
-
-        map.put("1", Card.CardStatus.ACTIVE);
-        map.put("2", Card.CardStatus.SUSPENDED);
-        map.put("3", Card.CardStatus.UNLINKED);
-        map.put("4", Card.CardStatus.SUSPENDED_OTP);
-        map.put("5", Card.CardStatus.SUSPENDED_ISSUER);
-        map.put("6", Card.CardStatus.SUSPENDED_WALLET);
-
-        return map;
     }
 
     private static boolean isValidStatus(Card.CardStatus cardStatus, Card.CardStatus[] validCardStatusList)
@@ -52,14 +32,7 @@ public class CardEventStatus
         return false;
     }
 
-    private static Card.CardStatus getCardStatus(String code)
-    {
-        Card.CardStatus cardStatus = CARD_STATUS_MAP.get(code);
-
-        return ((cardStatus != null) ? cardStatus : Card.CardStatus.UNKNOWN);
-    }
-
-    public static boolean hasValidCardStatus(EventRecord record)
+    public static boolean hasValidCardStatus(EventRecord record, Card card)
     {
         SMPDeviceEvent smpEvent = SMPDeviceEvent.getSMPEvent(record);
 
@@ -78,9 +51,7 @@ public class CardEventStatus
             validCardStatusList = VALID_RESUME_STATUS;
         }
 
-        Card.CardStatus cardStatus = getCardStatus(record.getAttributeValue(EventAttribute.CARD_STATUS.key()));
-
-        return ((validCardStatusList == null) || isValidStatus(cardStatus, validCardStatusList));
+        return ((validCardStatusList == null) || isValidStatus(card.getCurrentStatus(), validCardStatusList));
     }
 
     public static Card.CardStatus getDefaultValidCardStatus(EventRecord record)

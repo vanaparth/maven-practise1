@@ -76,7 +76,7 @@ public class PutPendingCommandSMPEvent
 
             if (pnoName != null)
             {
-                SMPEventCode.writeCode(record, EventAttribute.PNO, SMPEventCode.getPNONameCode(pnoName));
+                SMPEventCode.writePNOName(record, EventAttribute.PNO, pnoName);
             }
         }
 

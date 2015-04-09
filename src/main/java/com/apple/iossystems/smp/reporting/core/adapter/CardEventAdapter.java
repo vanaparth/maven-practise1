@@ -28,7 +28,7 @@ public class CardEventAdapter implements JsonSerializer<CardEvent>, JsonDeserial
         JSONUtils.setAttributeValue(root, DPAN_ID, src.getDpanId());
         JSONUtils.setAttributeValue(root, CARD_DISPLAY_NUMBER, src.getCardDisplayNumber());
         JSONUtils.setAttributeValue(root, CARD_DESCRIPTION, src.getCardDescription());
-        JSONUtils.setAttributeValue(root, EVENT_STATUS, src.getEventStatus());
+        JSONUtils.setAttributeValue(root, EVENT_STATUS, src.isSuccessful());
 
         return root;
     }

@@ -69,17 +69,22 @@ public class SMPEventCode
         map.put(key.toLowerCase(), value);
     }
 
-    public static void writeCode(EventRecord record, EventAttribute attribute, String code)
+    private static boolean isValid(String code)
+    {
+        return (!code.equals(EMPTY_CODE));
+    }
+
+    private static void writeCode(EventRecord record, EventAttribute attribute, Map<String, String> map, String key)
+    {
+        writeCode(record, attribute, getCode(map, key));
+    }
+
+    private static void writeCode(EventRecord record, EventAttribute attribute, String code)
     {
         if (isValid(code))
         {
             record.setAttributeValue(attribute.key(), code);
         }
-    }
-
-    private static boolean isValid(String code)
-    {
-        return (!code.equals(EMPTY_CODE));
     }
 
     private static String getCode(Map<String, String> map, String key)
@@ -94,42 +99,42 @@ public class SMPEventCode
         return ((value != null) ? value : EMPTY_CODE);
     }
 
-    public static String getPNONameCode(String name)
+    public static void writePNOName(EventRecord record, EventAttribute attribute, String pnoName)
     {
-        return getCode(PNO_MAP, name);
+        writeCode(record, attribute, PNO_MAP, pnoName);
     }
 
-    public static String getProvisioningColorCode(String color)
+    public static void writeProvisioningColor(EventRecord record, EventAttribute attribute, String color)
     {
-        return getCode(COLOR_MAP, color);
+        writeCode(record, attribute, COLOR_MAP, color);
     }
 
-    public static String getUseCaseTypeCode(String useCaseType)
+    public static void writeUseCaseType(EventRecord record, EventAttribute attribute, String useCaseType)
     {
-        return getCode(USE_CASE_TYPE_MAP, useCaseType);
+        writeCode(record, attribute, USE_CASE_TYPE_MAP, useCaseType);
     }
 
-    public static String getFpanTypeCode(String fpanType)
+    public static void writeFpanType(EventRecord record, EventAttribute attribute, String fpanType)
     {
-        return getCode(FPAN_TYPE_MAP, fpanType);
+        writeCode(record, attribute, FPAN_TYPE_MAP, fpanType);
     }
 
-    public static String getCardEligibilityStatusCode(CardEligibilityStatus cardEligibilityStatus)
+    public static void writeCardEligibilityStatus(EventRecord record, EventAttribute attribute, CardEligibilityStatus cardEligibilityStatus)
     {
-        return ((cardEligibilityStatus != null) ? getCode(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(cardEligibilityStatus.getId())) : EMPTY_CODE);
+        writeCode(record, attribute, CARD_ELIGIBILITY_STATUS_MAP, (cardEligibilityStatus != null) ? String.valueOf(cardEligibilityStatus.getId()) : "");
     }
 
-    public static String getCardStatusCode(Card.CardStatus cardStatus)
+    public static void writeCardStatus(EventRecord record, EventAttribute attribute, Card.CardStatus cardStatus)
     {
-        return ((cardStatus != null) ? getCode(CARD_STATUS_MAP, cardStatus.toString()) : EMPTY_CODE);
+        writeCode(record, attribute, CARD_STATUS_MAP, (cardStatus != null) ? cardStatus.toString() : "");
     }
 
-    public static String getProvisioningCardSourceCode(ProvisioningCardSource provisioningCardSource)
+    public static void writeProvisioningCardSource(EventRecord record, EventAttribute attribute, ProvisioningCardSource provisioningCardSource)
     {
-        return ((provisioningCardSource != null) ? getCode(PROVISIONING_CARD_SOURCE_MAP, String.valueOf(provisioningCardSource.getId())) : EMPTY_CODE);
+        writeCode(record, attribute, PROVISIONING_CARD_SOURCE_MAP, (provisioningCardSource != null) ? String.valueOf(provisioningCardSource.getId()) : "");
     }
 
-    public static String getResponseStatus(String errorCode)
+    public static void writeResponseStatus(EventRecord record, EventAttribute attribute, String errorCode)
     {
         String responseStatusCode = null;
 
@@ -171,6 +176,6 @@ public class SMPEventCode
             }
         }
 
-        return ((responseStatusCode != null) ? responseStatusCode : EMPTY_CODE);
+        writeCode(record, attribute, (responseStatusCode != null) ? responseStatusCode : EMPTY_CODE);
     }
 }

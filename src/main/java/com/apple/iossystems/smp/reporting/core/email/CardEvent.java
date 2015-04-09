@@ -8,19 +8,19 @@ public class CardEvent
     private final String dpanId;
     private final String cardDisplayNumber;
     private final String cardDescription;
-    private final boolean eventStatus;
+    private final boolean isSuccessful;
 
-    private CardEvent(String dpanId, String cardDisplayNumber, String cardDescription, boolean eventStatus)
+    private CardEvent(String dpanId, String cardDisplayNumber, String cardDescription, boolean isSuccessful)
     {
         this.dpanId = dpanId;
         this.cardDisplayNumber = cardDisplayNumber;
         this.cardDescription = cardDescription;
-        this.eventStatus = eventStatus;
+        this.isSuccessful = isSuccessful;
     }
 
-    public static CardEvent getInstance(String dpanId, String cardDisplayNumber, String cardDescription, boolean eventStatus)
+    public static CardEvent getInstance(String dpanId, String cardDisplayNumber, String cardDescription, boolean isSuccessful)
     {
-        return new CardEvent(dpanId, cardDisplayNumber, cardDescription, eventStatus);
+        return new CardEvent(dpanId, cardDisplayNumber, cardDescription, isSuccessful);
     }
 
     public String getDpanId()
@@ -38,8 +38,8 @@ public class CardEvent
         return cardDescription;
     }
 
-    public boolean getEventStatus()
+    public boolean isSuccessful()
     {
-        return eventStatus;
+        return isSuccessful;
     }
 }

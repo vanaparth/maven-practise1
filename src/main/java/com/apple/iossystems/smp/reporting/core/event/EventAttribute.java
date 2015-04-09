@@ -31,7 +31,6 @@ public enum EventAttribute
     PNO("pno"),
     PROVISION_RESPONSE("prs"),
     PROVISION_STATUS("pst"),
-    REGION("reg"),
     TIMESTAMP("tim"),
     USE_CASE_TYPE("psr"),
     USER_AGENT("dua"),

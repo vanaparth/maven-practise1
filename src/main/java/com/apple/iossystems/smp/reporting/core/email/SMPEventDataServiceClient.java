@@ -55,4 +55,11 @@ public class SMPEventDataServiceClient
     {
         return SMPEventDataService.getPassPanByPassSerialAndSeid(passSerial, seid);
     }
+
+    public static String getDpanIdByPassSerialAndSeid(String passSerial, String seid)
+    {
+        PassPan passPan = getPassPanByPassSerialAndSeid(passSerial, seid);
+
+        return ((passPan != null) ? passPan.getDpanId() : null);
+    }
 }

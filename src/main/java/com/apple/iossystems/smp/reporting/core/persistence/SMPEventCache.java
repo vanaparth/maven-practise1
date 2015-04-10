@@ -7,6 +7,8 @@ public class SMPEventCache
 {
     private static final long DEFAULT_CACHE_TIMEOUT_MILLISECONDS = 72 * 60 * 60 * 1000;
 
+    private static final CacheService CACHE_SERVICE = CacheService.getInstance();
+
     private SMPEventCache()
     {
     }
@@ -25,17 +27,17 @@ public class SMPEventCache
 
     public static void put(Attribute attribute, String key, String value)
     {
-        CacheService.put(getCacheKey(attribute, key), value, attribute.cacheTimeout);
+        CACHE_SERVICE.put(getCacheKey(attribute, key), value, attribute.cacheTimeout);
     }
 
     public static String get(Attribute attribute, String key)
     {
-        return CacheService.get(getCacheKey(attribute, key));
+        return CACHE_SERVICE.get(getCacheKey(attribute, key));
     }
 
     public static String remove(Attribute attribute, String key)
     {
-        return CacheService.remove(getCacheKey(attribute, key));
+        return CACHE_SERVICE.remove(getCacheKey(attribute, key));
     }
 
     public enum Attribute

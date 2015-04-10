@@ -3,9 +3,9 @@ package com.apple.iossystems.smp.reporting.core.geo;
 /**
  * @author Toch
  */
-public class DeviceLocation
+public class GeoLocation
 {
-    private DeviceLocation()
+    private GeoLocation()
     {
     }
 

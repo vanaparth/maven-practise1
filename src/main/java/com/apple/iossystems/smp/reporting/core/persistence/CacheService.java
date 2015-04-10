@@ -11,35 +11,49 @@ class CacheService
 {
     private static final Logger LOGGER = Logger.getLogger(CacheService.class);
 
-    private static final Cache CACHE = getCache();
+    private static final CacheService INSTANCE = new CacheService();
+
+    private Cache CACHE;
 
     private CacheService()
     {
+        initCache();
     }
 
-    private static Cache getCache()
+    public static CacheService getInstance()
     {
-        Cache cache = null;
+        return INSTANCE;
+    }
 
+    private void initCache()
+    {
         try
         {
-            cache = StockholmCacheFactory.getInstance().getDefaultCache();
+            CACHE = StockholmCacheFactory.getInstance().getDefaultCache();
         }
         catch (Exception e)
         {
             LOGGER.error(e);
         }
-
-        return cache;
     }
 
-    public static void put(String key, String value, long timeout)
+    private Cache getCache()
+    {
+        if (CACHE == null)
+        {
+            initCache();
+        }
+
+        return CACHE;
+    }
+
+    public void put(String key, String value, long timeout)
     {
         try
         {
             if ((key != null) && (value != null))
             {
-                CACHE.setValueForKeyWithTimeout(value, key, timeout);
+                getCache().setValueForKeyWithTimeout(value, key, timeout);
             }
         }
         catch (Exception e)
@@ -48,7 +62,7 @@ class CacheService
         }
     }
 
-    public static String get(String key)
+    public String get(String key)
     {
         String value = null;
 
@@ -56,7 +70,7 @@ class CacheService
         {
             if (key != null)
             {
-                Object cacheValue = CACHE.valueForKey(key);
+                Object cacheValue = getCache().valueForKey(key);
 
                 if (cacheValue != null)
                 {
@@ -72,7 +86,7 @@ class CacheService
         return value;
     }
 
-    public static String remove(String key)
+    public String remove(String key)
     {
         String value = null;
 
@@ -82,7 +96,7 @@ class CacheService
             {
                 value = get(key);
 
-                CACHE.removeValueForKey(key);
+                getCache().removeValueForKey(key);
             }
         }
         catch (Exception e)

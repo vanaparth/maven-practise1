@@ -19,16 +19,16 @@ import java.util.TimeZone;
 /**
  * @author Toch
  */
-public class EmailPublishService
+public class EmailService
 {
-    private static final Logger LOGGER = Logger.getLogger(EmailPublishService.class);
+    private static final Logger LOGGER = Logger.getLogger(EmailService.class);
 
     private static final boolean PROVISION_EMAIL_ENABLED = ApplicationConfigurationManager.isProvisionEmailEnabled();
     private static final boolean SUSPEND_EMAIL_ENABLED = ApplicationConfigurationManager.isSuspendEmailEnabled();
     private static final boolean UNLINK_EMAIL_ENABLED = ApplicationConfigurationManager.isUnlinkEmailEnabled();
-    private static final boolean USE_DEFAULT_EMAIL_LOCALE = ApplicationConfigurationManager.useDefaultEmailLocale();
+    private static final boolean DEFAULT_EMAIL_LOCALE_ENABLED = ApplicationConfigurationManager.isDefaultEmailLocaleEnabled();
 
-    private EmailPublishService()
+    private EmailService()
     {
     }
 
@@ -59,7 +59,7 @@ public class EmailPublishService
 
     private static String getLocale(String locale)
     {
-        return (USE_DEFAULT_EMAIL_LOCALE ? "en_US" : locale);
+        return (DEFAULT_EMAIL_LOCALE_ENABLED ? "en_US" : locale);
     }
 
     private static Calendar getCalendar(ManageDeviceEvent manageDeviceEvent)
@@ -101,7 +101,7 @@ public class EmailPublishService
                         format(provisionCardEvent.getDeviceType()),
                         format(provisionCardEvent.getDsid()))).sendEmail();
 
-                EmailPublishServiceLogger.log(provisionCardEvent);
+                EmailServiceLogger.log(provisionCardEvent);
             }
             catch (Exception e)
             {
@@ -118,29 +118,28 @@ public class EmailPublishService
         {
             ManageDeviceEvent manageDeviceEvent = GsonBuilderFactory.getInstance().fromJson(json, ManageDeviceEvent.class);
 
-            SMPDeviceEvent smpEvent = SMPDeviceEvent.getSMPEvent(record);
+            SMPDeviceEvent smpDeviceEvent = SMPDeviceEvent.getEvent(record);
 
-            if (isValidManageDeviceEventRecord(smpEvent, manageDeviceEvent))
+            if (isValidManageDeviceEventRecord(smpDeviceEvent, manageDeviceEvent))
             {
                 CardEventRecord cardEventRecord = CardEventRecord.getCardEventRecord(manageDeviceEvent);
                 List<SMPEmailCardData> successCards = cardEventRecord.getSuccessCards();
                 List<SMPEmailCardData> failedCards = cardEventRecord.getFailedCards();
 
                 String conversationId = format(record.getAttributeValue(EventAttribute.CONVERSATION_ID.key()));
-                Calendar calendar = getCalendar(manageDeviceEvent);
                 String deviceName = format(manageDeviceEvent.getDeviceName());
                 String cardHolderName = format(manageDeviceEvent.getCardHolderName());
                 String cardHolderEmail = format(manageDeviceEvent.getCardHolderEmail());
+                String dsid = format(manageDeviceEvent.getDsid());
                 String locale = format(getLocale(manageDeviceEvent.getLocale()));
                 String deviceType = format(manageDeviceEvent.getDeviceType());
-                String dsid = format(manageDeviceEvent.getDsid());
                 String deviceImageUrl = format(manageDeviceEvent.getDeviceImageUrl());
+                Calendar calendar = getCalendar(manageDeviceEvent);
 
                 FmipSource fmipSource = manageDeviceEvent.getFmipSource();
-
                 String fmipSourceDescription = format((fmipSource != null) ? fmipSource.getDescription() : "");
 
-                if (smpEvent == SMPDeviceEvent.SUSPEND_CARD)
+                if (smpDeviceEvent == SMPDeviceEvent.SUSPEND_CARD)
                 {
                     if (SUSPEND_EMAIL_ENABLED)
                     {
@@ -158,7 +157,7 @@ public class EmailPublishService
                         }
                     }
                 }
-                else if (smpEvent == SMPDeviceEvent.UNLINK_CARD)
+                else if (smpDeviceEvent == SMPDeviceEvent.UNLINK_CARD)
                 {
                     if (UNLINK_EMAIL_ENABLED)
                     {
@@ -177,7 +176,7 @@ public class EmailPublishService
                     }
                 }
 
-                EmailPublishServiceLogger.log(record, manageDeviceEvent, cardEventRecord);
+                EmailServiceLogger.log(record, manageDeviceEvent, cardEventRecord);
             }
         }
     }

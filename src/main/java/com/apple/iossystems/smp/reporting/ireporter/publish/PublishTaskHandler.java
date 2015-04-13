@@ -3,7 +3,7 @@ package com.apple.iossystems.smp.reporting.ireporter.publish;
 import com.apple.iossystems.smp.reporting.core.analytics.Statistics;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledNotification;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledTaskHandler;
-import com.apple.iossystems.smp.reporting.core.email.EmailPublishService;
+import com.apple.iossystems.smp.reporting.core.email.EmailService;
 import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
@@ -191,7 +191,7 @@ public class PublishTaskHandler implements ScheduledTaskHandler
 
         if (records.size() > 0)
         {
-            EmailPublishService.send(records);
+            EmailService.send(records);
         }
     }
 

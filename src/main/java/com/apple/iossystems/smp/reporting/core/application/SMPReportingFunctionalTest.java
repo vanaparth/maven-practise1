@@ -7,9 +7,9 @@ import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 import com.apple.iossystems.smp.reporting.core.http.HttpRequest;
 import com.apple.iossystems.smp.reporting.core.http.SMPHttpClient;
+import com.apple.iossystems.smp.reporting.core.messaging.SMPReportingService;
 import com.apple.iossystems.smp.reporting.ireporter.configuration.IReporterConfiguration;
 import com.apple.iossystems.smp.reporting.ireporter.json.IReporterJsonBuilder;
-import com.apple.iossystems.smp.reporting.ireporter.publish.IReporterService;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -33,19 +33,19 @@ public class SMPReportingFunctionalTest
         setSystemProperties();
         initPropertyManager();
 
-        // testICloudProdConfig();
-        // testICloudProdPublish();
+        testICloudProdConfig();
+        testICloudProdPublish();
 
-        // test1();
-        // test2();
-        // test3();
-        // test4();
-        // test5();
-        // test6();
-        // test7();
-        // test8();
-        // test9();
-        // test10();
+        test1();
+        test2();
+        test3();
+        test4();
+        test5();
+        test6();
+        test7();
+        test8();
+        test9();
+        test10();
     }
 
     private static void setSystemProperties()
@@ -195,18 +195,18 @@ public class SMPReportingFunctionalTest
 
     private static void postRecords(EventRecords records)
     {
-        IReporterService iReporterService = IReporterService.getInstance();
+        SMPReportingService smpReportingService = SMPReportingService.getInstance();
 
-        postRecords(iReporterService, records);
+        postRecords(smpReportingService, records);
     }
 
-    private static void postRecords(IReporterService iReporterService, EventRecords records)
+    private static void postRecords(SMPReportingService smpReportingService, EventRecords records)
     {
         List<EventRecord> list = records.getList();
 
         for (EventRecord record : list)
         {
-            iReporterService.postSMPEvent(record);
+            smpReportingService.postSMPEvent(record);
         }
     }
 

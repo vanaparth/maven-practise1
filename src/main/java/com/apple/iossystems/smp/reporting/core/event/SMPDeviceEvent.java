@@ -45,18 +45,18 @@ public enum SMPDeviceEvent
 
     private static SMPDeviceEvent fromCode(String code)
     {
-        for (SMPDeviceEvent smpEvent : values())
+        for (SMPDeviceEvent event : values())
         {
-            if (smpEvent.code.equals(code))
+            if (event.code.equals(code))
             {
-                return smpEvent;
+                return event;
             }
         }
 
         return UNKNOWN;
     }
 
-    public static SMPDeviceEvent getSMPEvent(EventRecord record)
+    public static SMPDeviceEvent getEvent(EventRecord record)
     {
         return fromCode(record.getAttributeValue(EventAttribute.EVENT.key()));
     }

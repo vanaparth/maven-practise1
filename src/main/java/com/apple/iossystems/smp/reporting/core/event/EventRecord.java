@@ -51,6 +51,15 @@ public class EventRecord
         data.putAll(map);
     }
 
+    public EventRecord getCopy()
+    {
+        EventRecord copy = new EventRecord();
+
+        copy.putAll(data);
+
+        return copy;
+    }
+
     public void removeAttributesIfAbsent(Set<String> keys)
     {
         Iterator<Map.Entry<String, String>> iterator = data.entrySet().iterator();

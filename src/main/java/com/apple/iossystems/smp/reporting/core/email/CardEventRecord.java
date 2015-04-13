@@ -54,14 +54,14 @@ class CardEventRecord
 
     public static CardEventRecord getCardEventRecord(ManageDeviceEvent manageDeviceEvent)
     {
-        if ((manageDeviceEvent != null) && (manageDeviceEvent.getCardEvents() != null))
+        List<CardEvent> cardEvents = null;
+
+        if (manageDeviceEvent != null)
         {
-            return getCardEventRecord(manageDeviceEvent.getCardEvents());
+            cardEvents = manageDeviceEvent.getCardEvents();
         }
-        else
-        {
-            return new CardEventRecord();
-        }
+
+        return (cardEvents != null) ? getCardEventRecord(cardEvents) : new CardEventRecord();
     }
 
     private static CardEventRecord getCardEventRecord(List<CardEvent> cardEvents)

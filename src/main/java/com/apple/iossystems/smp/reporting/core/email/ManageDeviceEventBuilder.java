@@ -2,6 +2,7 @@ package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.iossystems.smp.domain.Actor;
 import com.apple.iossystems.smp.persistence.entity.SecureElement;
+import org.apache.commons.lang.StringUtils;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
@@ -16,7 +17,7 @@ public class ManageDeviceEventBuilder
 {
     private static final String FIRST_NAME = "customerFirstName";
     private static final String LAST_NAME = "customerLastName";
-    private static final String CARD_HOLDER_EMAIL = "customerEmail";
+    private static final String EMAIL = "customerEmail";
     private static final String LOCALE = "customerLocale";
     private static final String TIMEZONE = "customerTZ";
     private static final String DEVICE_NAME = "deviceName";
@@ -94,9 +95,9 @@ public class ManageDeviceEventBuilder
 
         String firstName = cardData.get(FIRST_NAME);
         String lastName = cardData.get(LAST_NAME);
-        String cardHolderEmail = cardData.get(CARD_HOLDER_EMAIL);
-        String locale = cardData.get(LOCALE);
+        String cardHolderEmail = cardData.get(EMAIL);
         String timezone = cardData.get(TIMEZONE);
+        String locale = cardData.get(LOCALE);
         String deviceName = cardData.get(DEVICE_NAME);
         String deviceImageUrl = cardData.get(DEVICE_IMAGE_URL);
 
@@ -104,8 +105,8 @@ public class ManageDeviceEventBuilder
                 cardHolderEmail(cardHolderEmail).
                 dsid(dsid).
                 timestamp(timestamp).
-                locale(locale).
                 timezone(timezone).
+                locale(locale).
                 deviceName(deviceName).
                 deviceType(getDeviceType(cardEvents)).
                 deviceImageUrl(deviceImageUrl).
@@ -116,26 +117,24 @@ public class ManageDeviceEventBuilder
 
     private String getCardHolderName(String firstName, String lastName)
     {
-        String cardHolderName = null;
+        StringBuilder cardHolderName = new StringBuilder();
 
-        if (firstName != null)
+        if (StringUtils.isNotBlank(firstName))
         {
-            cardHolderName = firstName;
+            cardHolderName.append(firstName);
         }
 
-        if (lastName != null)
+        if (StringUtils.isNotBlank(lastName))
         {
-            if (cardHolderName != null)
+            if (cardHolderName.length() > 0)
             {
-                cardHolderName += " " + lastName;
+                cardHolderName.append(" ");
             }
-            else
-            {
-                cardHolderName = lastName;
-            }
+
+            cardHolderName.append(lastName);
         }
 
-        return cardHolderName;
+        return cardHolderName.toString();
     }
 
     private String getDeviceType(List<CardEvent> cardEvents)

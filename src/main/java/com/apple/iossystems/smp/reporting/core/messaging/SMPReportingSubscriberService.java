@@ -4,32 +4,31 @@ import com.apple.cds.messaging.client.impl.SMPEventSubscriberService;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledNotification;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledTaskHandler;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
-import com.apple.iossystems.smp.reporting.ireporter.publish.IReporterService;
 import org.apache.log4j.Logger;
 
 /**
  * @author Toch
  */
-class IReporterEventSubscriberService<LogEvent> extends SMPEventSubscriberService<LogEvent>
+class SMPReportingSubscriberService<LogEvent> extends SMPEventSubscriberService<LogEvent>
 {
-    private static final Logger LOGGER = Logger.getLogger(IReporterEventSubscriberService.class);
+    private static final Logger LOGGER = Logger.getLogger(SMPReportingSubscriberService.class);
 
-    private IReporterService iReporterService;
+    private SMPReportingService smpReportingService;
 
     private TaskHandler taskHandler;
 
     private EventRecord pendingEventRecord;
 
-    private IReporterEventSubscriberService(String queueName, IReporterService iReporterService)
+    private SMPReportingSubscriberService(String queueName, SMPReportingService smpReportingService)
     {
         super(queueName);
 
-        this.iReporterService = iReporterService;
+        this.smpReportingService = smpReportingService;
     }
 
-    static IReporterEventSubscriberService getInstance(String queueName, IReporterService iReporterService)
+    static SMPReportingSubscriberService getInstance(String queueName, SMPReportingService smpReportingService)
     {
-        return new IReporterEventSubscriberService(queueName, iReporterService);
+        return new SMPReportingSubscriberService(queueName, smpReportingService);
     }
 
     @Override
@@ -39,7 +38,7 @@ class IReporterEventSubscriberService<LogEvent> extends SMPEventSubscriberServic
 
         record.putAll(logEvent.getMetadata());
 
-        if (!iReporterService.postSMPEvent(record))
+        if (!smpReportingService.postSMPEvent(record))
         {
             handleFailedRequest(record);
         }
@@ -91,11 +90,11 @@ class IReporterEventSubscriberService<LogEvent> extends SMPEventSubscriberServic
         return handler;
     }
 
-    private void checkIReporterService()
+    private void checkSMPReportingService()
     {
         try
         {
-            if ((pendingEventRecord != null) && (iReporterService.postSMPEvent(pendingEventRecord)))
+            if ((pendingEventRecord != null) && (smpReportingService.postSMPEvent(pendingEventRecord)))
             {
                 pendingEventRecord = null;
 
@@ -131,7 +130,7 @@ class IReporterEventSubscriberService<LogEvent> extends SMPEventSubscriberServic
         @Override
         public void handleEvent()
         {
-            checkIReporterService();
+            checkSMPReportingService();
         }
 
         private void shutdown()

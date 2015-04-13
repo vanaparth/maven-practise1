@@ -10,17 +10,12 @@ public class CardEvent
     private final String cardDescription;
     private final boolean isSuccessful;
 
-    private CardEvent(String dpanId, String cardDisplayNumber, String cardDescription, boolean isSuccessful)
+    public CardEvent(String dpanId, String cardDisplayNumber, String cardDescription, boolean isSuccessful)
     {
         this.dpanId = dpanId;
         this.cardDisplayNumber = cardDisplayNumber;
         this.cardDescription = cardDescription;
         this.isSuccessful = isSuccessful;
-    }
-
-    public static CardEvent getInstance(String dpanId, String cardDisplayNumber, String cardDescription, boolean isSuccessful)
-    {
-        return new CardEvent(dpanId, cardDisplayNumber, cardDescription, isSuccessful);
     }
 
     public String getDpanId()

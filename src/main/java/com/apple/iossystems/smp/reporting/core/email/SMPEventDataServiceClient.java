@@ -60,6 +60,6 @@ public class SMPEventDataServiceClient
     {
         PassPan passPan = getPassPanByPassSerialAndSeid(passSerial, seid);
 
-        return ((passPan != null) ? passPan.getDpanId() : null);
+        return (passPan != null) ? passPan.getDpanId() : null;
     }
 }

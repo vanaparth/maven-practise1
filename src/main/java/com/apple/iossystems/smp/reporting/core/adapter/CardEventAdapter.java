@@ -38,7 +38,7 @@ public class CardEventAdapter implements JsonSerializer<CardEvent>, JsonDeserial
     {
         JsonObject root = json.getAsJsonObject();
 
-        return CardEvent.getInstance(JSONUtils.getAttributeValueAsString(root, DPAN_ID),
+        return new CardEvent(JSONUtils.getAttributeValueAsString(root, DPAN_ID),
                 JSONUtils.getAttributeValueAsString(root, CARD_DISPLAY_NUMBER),
                 JSONUtils.getAttributeValueAsString(root, CARD_DESCRIPTION),
                 Boolean.TRUE.equals(JSONUtils.getAttributeValueAsBoolean(root, EVENT_STATUS)));

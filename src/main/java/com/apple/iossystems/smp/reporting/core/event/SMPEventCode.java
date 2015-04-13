@@ -20,8 +20,8 @@ public class SMPEventCode
     private static final Map<String, String> COLOR_MAP = new HashMap<>();
     private static final Map<String, String> USE_CASE_TYPE_MAP = new HashMap<>();
     private static final Map<String, String> FPAN_TYPE_MAP = new HashMap<>();
-    private static final Map<String, String> CARD_ELIGIBILITY_STATUS_MAP = new HashMap<>();
     private static final Map<String, String> CARD_STATUS_MAP = new HashMap<>();
+    private static final Map<String, String> CARD_ELIGIBILITY_STATUS_MAP = new HashMap<>();
     private static final Map<String, String> PROVISIONING_CARD_SOURCE_MAP = new HashMap<>();
 
     static
@@ -43,17 +43,17 @@ public class SMPEventCode
         addToMap(FPAN_TYPE_MAP, "PrePaid", "3");
         addToMap(FPAN_TYPE_MAP, "PrivateLabel", "4");
         //
-        addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.INELIGIBLE.getId()), "7");
-        addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.ELIGIBLE.getId()), "8");
-        addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.NETWORK_UNAVAILABLE.getId()), "9");
-        addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.PROVISIONED.getId()), "10");
-        //
         addToMap(CARD_STATUS_MAP, Card.CardStatus.ACTIVE.toString(), "1");
         addToMap(CARD_STATUS_MAP, Card.CardStatus.SUSPENDED.toString(), "2");
         addToMap(CARD_STATUS_MAP, Card.CardStatus.UNLINKED.toString(), "3");
         addToMap(CARD_STATUS_MAP, Card.CardStatus.SUSPENDED_OTP.toString(), "4");
         addToMap(CARD_STATUS_MAP, Card.CardStatus.SUSPENDED_ISSUER.toString(), "5");
         addToMap(CARD_STATUS_MAP, Card.CardStatus.SUSPENDED_WALLET.toString(), "6");
+        //
+        addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.INELIGIBLE.getId()), "7");
+        addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.ELIGIBLE.getId()), "8");
+        addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.NETWORK_UNAVAILABLE.getId()), "9");
+        addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.PROVISIONED.getId()), "10");
         //
         addToMap(PROVISIONING_CARD_SOURCE_MAP, String.valueOf(ProvisioningCardSource.MANUAL.getId()), "1");
         addToMap(PROVISIONING_CARD_SOURCE_MAP, String.valueOf(ProvisioningCardSource.ON_FILE.getId()), "2");
@@ -119,14 +119,14 @@ public class SMPEventCode
         writeCode(record, attribute, FPAN_TYPE_MAP, fpanType);
     }
 
-    public static void writeCardEligibilityStatus(EventRecord record, EventAttribute attribute, CardEligibilityStatus cardEligibilityStatus)
-    {
-        writeCode(record, attribute, CARD_ELIGIBILITY_STATUS_MAP, (cardEligibilityStatus != null) ? String.valueOf(cardEligibilityStatus.getId()) : "");
-    }
-
     public static void writeCardStatus(EventRecord record, EventAttribute attribute, Card.CardStatus cardStatus)
     {
         writeCode(record, attribute, CARD_STATUS_MAP, (cardStatus != null) ? cardStatus.toString() : "");
+    }
+
+    public static void writeCardEligibilityStatus(EventRecord record, EventAttribute attribute, CardEligibilityStatus cardEligibilityStatus)
+    {
+        writeCode(record, attribute, CARD_ELIGIBILITY_STATUS_MAP, (cardEligibilityStatus != null) ? String.valueOf(cardEligibilityStatus.getId()) : "");
     }
 
     public static void writeProvisioningCardSource(EventRecord record, EventAttribute attribute, ProvisioningCardSource provisioningCardSource)

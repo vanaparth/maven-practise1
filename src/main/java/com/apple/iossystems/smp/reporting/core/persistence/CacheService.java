@@ -37,29 +37,38 @@ class CacheService
         }
     }
 
-    private Cache getCache()
+    private void resetCache()
     {
         if (CACHE == null)
         {
             initCache();
         }
-
-        return CACHE;
     }
 
-    public void put(String key, String value, long timeout)
+    private void put(String key, String value, long timeoutInMilliseconds, boolean retryOnError)
     {
         try
         {
             if ((key != null) && (value != null))
             {
-                getCache().setValueForKeyWithTimeout(value, key, timeout);
+                CACHE.setValueForKeyWithTimeout(value, key, timeoutInMilliseconds);
             }
         }
         catch (Exception e)
         {
             LOGGER.error(e);
+
+            if (retryOnError)
+            {
+                resetCache();
+                put(key, value, timeoutInMilliseconds, false);
+            }
         }
+    }
+
+    public void put(String key, String value, long timeoutInMilliseconds)
+    {
+        put(key, value, timeoutInMilliseconds, true);
     }
 
     public String get(String key)
@@ -70,7 +79,7 @@ class CacheService
         {
             if (key != null)
             {
-                Object cacheValue = getCache().valueForKey(key);
+                Object cacheValue = CACHE.valueForKey(key);
 
                 if (cacheValue != null)
                 {
@@ -96,7 +105,7 @@ class CacheService
             {
                 value = get(key);
 
-                getCache().removeValueForKey(key);
+                CACHE.removeValueForKey(key);
             }
         }
         catch (Exception e)

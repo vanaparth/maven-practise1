@@ -9,41 +9,6 @@ public class ApplicationConfigurationManager
     {
     }
 
-    public static String getRabbitHostKey()
-    {
-        return ApplicationConfiguration.RABBIT_HOST_KEY;
-    }
-
-    public static String getRabbitPortKey()
-    {
-        return ApplicationConfiguration.RABBIT_PORT_KEY;
-    }
-
-    public static String getRabbitUserKey()
-    {
-        return ApplicationConfiguration.RABBIT_USER_KEY;
-    }
-
-    public static String getRabbitPassKey()
-    {
-        return ApplicationConfiguration.RABBIT_PASS_KEY;
-    }
-
-    public static String getRabbitVHostKey()
-    {
-        return ApplicationConfiguration.RABBIT_VHOST_KEY;
-    }
-
-    public static String getRabbitConsumerThreadsCountKey()
-    {
-        return ApplicationConfiguration.RABBIT_CONSUMER_THREADS_COUNT_KEY;
-    }
-
-    public static String getRabbitConsumerThreadsPrefetchCountKey()
-    {
-        return ApplicationConfiguration.RABBIT_CONSUMER_THREADS_PREFETCH_COUNT_KEY;
-    }
-
     public static String getKeystoneRabbitHost()
     {
         return ApplicationConfiguration.KEYSTONE_RABBIT_HOST;
@@ -59,14 +24,14 @@ public class ApplicationConfigurationManager
         return ApplicationConfiguration.KEYSTONE_RABBIT_USER;
     }
 
-    public static String getKeystoneRabbitPass()
+    public static String getKeystoneRabbitPassword()
     {
-        return ApplicationConfiguration.KEYSTONE_RABBIT_PASS;
+        return ApplicationConfiguration.KEYSTONE_RABBIT_PASSWORD;
     }
 
-    public static String getKeystoneRabbitVHost()
+    public static String getKeystoneRabbitVirtualHost()
     {
-        return ApplicationConfiguration.KEYSTONE_RABBIT_VHOST;
+        return ApplicationConfiguration.KEYSTONE_RABBIT_VIRTUAL_HOST;
     }
 
     public static int getRabbitConsumerThreadsCount()
@@ -84,6 +49,36 @@ public class ApplicationConfigurationManager
         return ApplicationConfiguration.SMP_EVENTS_EXCHANGE;
     }
 
+    public static String getLogServiceOwner()
+    {
+        return ApplicationConfiguration.LOG_SERVICE_OWNER;
+    }
+
+    public static String getLogServicePath()
+    {
+        return ApplicationConfiguration.LOG_SERVICE_PATH;
+    }
+
+    public static String getLogServiceCategory()
+    {
+        return ApplicationConfiguration.LOG_SERVICE_CATEGORY;
+    }
+
+    public static String getLogServiceStore()
+    {
+        return ApplicationConfiguration.LOG_SERVICE_STORE;
+    }
+
+    public static String getLogServiceEventFinderClass()
+    {
+        return ApplicationConfiguration.LOG_SERVICE_EVENT_FINDER_CLASS;
+    }
+
+    public static String getLogServiceClass()
+    {
+        return ApplicationConfiguration.LOG_SERVICE_CLASS;
+    }
+
     public static String getIReporterURL()
     {
         return ApplicationConfiguration.IREPORTER_URL;
@@ -91,7 +86,7 @@ public class ApplicationConfigurationManager
 
     public static String getHashPassword()
     {
-        return ApplicationConfiguration.HASH_PASS;
+        return ApplicationConfiguration.HASH_PASSWORD;
     }
 
     public static boolean isEmailLoggingEnabled()
@@ -114,9 +109,9 @@ public class ApplicationConfigurationManager
         return ApplicationConfiguration.UNLINK_EMAIL_ENABLED;
     }
 
-    public static boolean useDefaultEmailLocale()
+    public static boolean isDefaultEmailLocaleEnabled()
     {
-        return ApplicationConfiguration.USE_EMAIL_DEFAULT_LOCALE;
+        return ApplicationConfiguration.DEFAULT_EMAIL_LOCALE_ENABLED;
     }
 
     public static String getFmipCertificate()

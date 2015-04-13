@@ -45,7 +45,7 @@ public class ProvisionEmailPublishService
 
         if (firstProvision && (json != null))
         {
-            EmailPublishService.publishProvisionEvent(GsonBuilderFactory.getInstance().fromJson(json, ProvisionCardEvent.class));
+            EmailService.publishProvisionEvent(GsonBuilderFactory.getInstance().fromJson(json, ProvisionCardEvent.class));
         }
     }
 }

@@ -54,7 +54,6 @@ public class ManageDeviceEvent
     public String getTimestamp()
     {
         return timestamp;
-
     }
 
     public String getTimezone()

@@ -23,13 +23,18 @@ public class SMPEventNotificationService
 
     private SMPEventNotificationService()
     {
-        setSystemProperties();
-        initLogService();
+        init();
     }
 
     public static SMPEventNotificationService getInstance()
     {
         return INSTANCE;
+    }
+
+    private void init()
+    {
+        setSystemProperties();
+        initLogService();
     }
 
     private void setSystemProperties()
@@ -61,7 +66,15 @@ public class SMPEventNotificationService
         }
     }
 
-    private void publishEventRecord(EventRecord record)
+    private void resetLogService()
+    {
+        if (logService == null)
+        {
+            init();
+        }
+    }
+
+    private void publishEventRecord(EventRecord record, boolean retryOnError)
     {
         try
         {
@@ -70,7 +83,18 @@ public class SMPEventNotificationService
         catch (Exception e)
         {
             LOGGER.error(e);
+
+            if (retryOnError)
+            {
+                resetLogService();
+                publishEventRecord(record, false);
+            }
         }
+    }
+
+    private void publishEventRecord(EventRecord record)
+    {
+        publishEventRecord(record, true);
     }
 
     private void publishEventRecords(EventRecords records)

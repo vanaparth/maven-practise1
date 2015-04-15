@@ -1,10 +1,5 @@
 package com.apple.iossystems.smp.reporting.core.event;
 
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.commons.lang.StringUtils;
-
 import com.apple.iossystems.smp.domain.ProvisioningCardSource;
 import com.apple.iossystems.smp.domain.device.CardEligibilityStatus;
 import com.apple.iossystems.smp.utils.SMPErrorEnum;
@@ -16,13 +11,6 @@ public class SMPEventCode
 {
     private static final String EMPTY_CODE = "";
 
-    private static final Map<String, String> FPAN_TYPE_MAP = new HashMap<>();
-    static {
-    	FPAN_TYPE_MAP.put("Credit", "1");
-    	FPAN_TYPE_MAP.put("Debit", "2");
-    	FPAN_TYPE_MAP.put("PrePaid", "3");
-    	FPAN_TYPE_MAP.put("PrivateLabel", "4");
-    }
     private SMPEventCode()
     {
     }
@@ -40,146 +28,206 @@ public class SMPEventCode
         return (!code.equals(EMPTY_CODE));
     }
 
-    public static String getCardEligibilityStatusCode(CardEligibilityStatus cardStatus)
-    {
-        switch (cardStatus)
-        {
-            case INELIGIBLE:
-                return "7";
-
-            case ELIGIBLE:
-                return "8";
-
-            case NETWORK_UNAVAILABLE:
-                return "9";
-
-            case PROVISIONED:
-                return "10";
-
-            case MORE_INPUT_NEEDED:
-                return "11";
-
-            default:
-                return EMPTY_CODE;
-        }
-    }
-
-    public static String getCardSourceCode(ProvisioningCardSource cardSource)
-    {
-        switch (cardSource)
-        {
-            case MANUAL:
-                return "1";
-
-            case ON_FILE:
-                return "2";
-
-            case BANKING_APP:
-                return "3";
-
-            default:
-                return EMPTY_CODE;
-        }
-    }
-
     public static String getFpanTypeCode(String fpanType)
     {
-    	String result = FPAN_TYPE_MAP.get(fpanType);
-       
-        return result == null ? EMPTY_CODE : result;
+        String code = EMPTY_CODE;
+
+        if (fpanType != null)
+        {
+            if (fpanType.equalsIgnoreCase("Credit"))
+            {
+                code = "1";
+            }
+            else if (fpanType.equalsIgnoreCase("Debit"))
+            {
+                code = "2";
+            }
+            else if (fpanType.equalsIgnoreCase("PrePaid"))
+            {
+                code = "3";
+            }
+            else if (fpanType.equalsIgnoreCase("PrivateLabel"))
+            {
+                code = "4";
+            }
+        }
+
+        return code;
     }
 
     public static String getPNONameCode(String name)
     {
-        if (name.equalsIgnoreCase("helium"))
+        String code = EMPTY_CODE;
+
+        if (name != null)
         {
-            return "201";
+            if (name.equalsIgnoreCase("helium"))
+            {
+                code = "201";
+            }
+            else if (name.equalsIgnoreCase("neon"))
+            {
+                code = "202";
+            }
+            else if (name.equalsIgnoreCase("argon"))
+            {
+                code = "203";
+            }
+            else if (name.equalsIgnoreCase("krypton"))
+            {
+                code = "204";
+            }
+            else if (name.equalsIgnoreCase("xenon"))
+            {
+                code = "205";
+            }
         }
-        else if (name.equalsIgnoreCase("neon"))
-        {
-            return "202";
-        }
-        else if (name.equalsIgnoreCase("argon"))
-        {
-            return "203";
-        }
-        else if (name.equalsIgnoreCase("krypton"))
-        {
-            return "204";
-        }
-        else if (name.equalsIgnoreCase("xenon"))
-        {
-            return "205";
-        }
-        else
-        {
-            return EMPTY_CODE;
-        }
+
+        return code;
     }
 
     public static String getUseCaseTypeCode(String useCaseType)
     {
-        if (useCaseType.equalsIgnoreCase("Passbook"))
+        String code = EMPTY_CODE;
+
+        if (useCaseType != null)
         {
-            return "1";
+            if (useCaseType.equalsIgnoreCase("Passbook"))
+            {
+                code = "1";
+            }
         }
-        else
-        {
-            return EMPTY_CODE;
-        }
+
+        return code;
     }
 
     public static String getProvisioningColorCode(String color)
     {
-        if (color.equalsIgnoreCase("green"))
+        String code = EMPTY_CODE;
+
+        if (color != null)
         {
-            return "1";
+            if (color.equalsIgnoreCase("green"))
+            {
+                code = "1";
+            }
+            else if (color.equalsIgnoreCase("yellow"))
+            {
+                code = "2";
+            }
+            else if (color.equalsIgnoreCase("red"))
+            {
+                code = "3";
+            }
         }
-        else if (color.equalsIgnoreCase("yellow"))
+
+        return code;
+    }
+
+    public static String getCardEligibilityStatusCode(CardEligibilityStatus cardStatus)
+    {
+        String code = EMPTY_CODE;
+
+        if (cardStatus != null)
         {
-            return "2";
+            switch (cardStatus)
+            {
+                case INELIGIBLE:
+                    code = "7";
+                    break;
+
+                case ELIGIBLE:
+                    code = "8";
+                    break;
+
+                case NETWORK_UNAVAILABLE:
+                    code = "9";
+                    break;
+
+                case PROVISIONED:
+                    code = "10";
+                    break;
+
+                default:
+                    code = EMPTY_CODE;
+                    break;
+            }
         }
-        else if (color.equalsIgnoreCase("red"))
+
+        return code;
+    }
+
+    public static String getProvisioningCardSourceCode(ProvisioningCardSource provisioningCardSource)
+    {
+        String code = EMPTY_CODE;
+
+        if (provisioningCardSource != null)
         {
-            return "3";
+            switch (provisioningCardSource)
+            {
+                case MANUAL:
+                    code = "1";
+                    break;
+
+                case ON_FILE:
+                    code = "2";
+                    break;
+
+                case BANKING_APP:
+                    code = "3";
+                    break;
+
+                default:
+                    code = EMPTY_CODE;
+                    break;
+            }
         }
-        else
-        {
-            return EMPTY_CODE;
-        }
+
+        return code;
     }
 
     public static String getResponseStatus(String statusCode)
     {
-        if (StringUtils.isBlank(statusCode))
+        String code = EMPTY_CODE;
+
+        if (statusCode != null)
         {
-            return EMPTY_CODE;
+            SMPErrorEnum errorEnum = SMPErrorEnum.fromErrorCode(statusCode);
+
+            if (errorEnum != null)
+            {
+                switch (errorEnum)
+                {
+                    case NO_ERROR:
+                        code = EMPTY_CODE;
+                        break;
+
+                    case PAN_INELIGIBLE:
+                    case INELIGIBLE_PAN:
+                    case INVALID_PAN:
+                        code = "1";
+                        break;
+
+                    case CVV_VERIFICATION_FAILED:
+                    case CVV_VERIFICATION_FAILED_LEGACY:
+                        code = "2";
+                        break;
+
+                    case FPAN_EXPIRED:
+                        code = "3";
+                        break;
+
+                    case NAME_VERIFICATION_FAILED:
+                        code = "4";
+                        break;
+
+                    default:
+                        code = "5";
+                        break;
+                }
+            }
         }
 
-        SMPErrorEnum errorEnum = SMPErrorEnum.fromErrorCode(statusCode);
-
-        switch (errorEnum)
-        {
-            case NO_ERROR:
-                return EMPTY_CODE;
-
-            case PAN_INELIGIBLE:
-            case INELIGIBLE_PAN:
-            case INVALID_PAN:
-                return "1";
-
-            case CVV_VERIFICATION_FAILED:
-            case CVV_VERIFICATION_FAILED_LEGACY:
-                return "2";
-
-            case FPAN_EXPIRED:
-                return "3";
-
-            case NAME_VERIFICATION_FAILED:
-                return "4";
-
-            default:
-                return "5";
-        }
+        return code;
     }
 }

@@ -33,8 +33,14 @@ public class SMPEventCache
         return CacheService.get(getCacheKey(attribute, conversationId));
     }
 
+    public static String remove(Attribute attribute, String key)
+    {
+        return CacheService.remove(getCacheKey(attribute, key));
+    }
+
     public enum Attribute
     {
+        GET_OTP_RESOLUTION_METHODS("GetOtpResolutionMethods"),
         PROVISION_EVENT("ProvisionEvent");
 
         private final String key;

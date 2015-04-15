@@ -16,6 +16,7 @@ public enum EventAttribute
     CARD_SOURCE("ptp"),
     CARD_STATUS("cst"),
     CARD_TYPE("ctp"),
+    COMPANION_USER_AGENT("cua"),
     CONVERSATION_ID("con"),
     DEVICE_LANGUAGE("lcd"),
     DEVICE_LOCATION("llg"),

@@ -1,12 +1,8 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.cds.keystone.spring.AppContext;
-import com.apple.iossystems.smp.domain.DSIDInfo;
-import com.apple.iossystems.smp.domain.ProvisionCount;
 import com.apple.iossystems.smp.persistence.entity.*;
 import com.apple.iossystems.smp.service.PassManagementService;
-import com.apple.iossystems.smp.service.StoreManagementService;
-import org.apache.log4j.Logger;
 
 import java.util.Collection;
 
@@ -15,9 +11,7 @@ import java.util.Collection;
  */
 class SMPEventDataService
 {
-    private static final Logger LOGGER = Logger.getLogger(SMPEventDataService.class);
     private static final PassManagementService PASS_MANAGEMENT_SERVICE = AppContext.getApplicationContext().getBean(PassManagementService.class);
-    private static final StoreManagementService STORE_MANAGEMENT_SERVICE = AppContext.getApplicationContext().getBean(StoreManagementService.class);
 
     private SMPEventDataService()
     {
@@ -76,21 +70,5 @@ class SMPEventDataService
         }
 
         return value;
-    }
-
-    public static ProvisionCount getProvisionCount(String dsid)
-    {
-        DSIDInfo dsidInfo = null;
-
-        try
-        {
-            dsidInfo = STORE_MANAGEMENT_SERVICE.getDSIDInfo(dsid);
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e);
-        }
-
-        return ((dsidInfo != null) ? dsidInfo.getProvisionCount() : null);
     }
 }

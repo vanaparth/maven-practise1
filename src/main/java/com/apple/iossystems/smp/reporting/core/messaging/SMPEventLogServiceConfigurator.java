@@ -1,6 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
 import com.apple.cds.keystone.config.PropertyManager;
+import com.apple.iossystems.logging.LogService;
 import com.apple.iossystems.logging.LogServiceConfigurator;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
 
@@ -24,6 +25,7 @@ public class SMPEventLogServiceConfigurator implements LogServiceConfigurator
         map.put("rabbit.pass", ApplicationConfigurationManager.getKeystoneRabbitPassword());
         map.put("rabbit.vhost", ApplicationConfigurationManager.getKeystoneRabbitVirtualHost());
         map.put("rabbit.exchange", ApplicationConfigurationManager.getSMPEventsExchangeName());
+        map.put(LogService.EXCHANGE_NAME, ApplicationConfigurationManager.getSMPEventsExchangeName());
 
         map.put("logservice.owner", ApplicationConfigurationManager.getLogServiceOwner());
         map.put("logservice.path", ApplicationConfigurationManager.getLogServicePath());

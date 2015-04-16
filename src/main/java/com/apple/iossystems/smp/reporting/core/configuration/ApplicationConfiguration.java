@@ -1,14 +1,13 @@
 package com.apple.iossystems.smp.reporting.core.configuration;
 
 import com.apple.cds.keystone.config.PropertyManager;
-import org.apache.log4j.Logger;
 
 /**
  * @author Toch
  */
 class ApplicationConfiguration
 {
-    private static final PropertyManager PROPERTY_MANAGER = getPropertyManager();
+    private static final PropertyManager PROPERTY_MANAGER = PropertyManager.getInstance();
 
     static final String KEYSTONE_RABBIT_HOST = PROPERTY_MANAGER.valueForKeyWithDefault("keystone.rabbit.host", "rabbit-np-amqp.corp.apple.com");
     static final String KEYSTONE_RABBIT_PORT = PROPERTY_MANAGER.valueForKeyWithDefault("keystone.rabbit.port", "5672");
@@ -42,22 +41,5 @@ class ApplicationConfiguration
 
     private ApplicationConfiguration()
     {
-    }
-
-    private static PropertyManager getPropertyManager()
-    {
-        PropertyManager propertyManager = null;
-
-        try
-        {
-            propertyManager = PropertyManager.getInstance();
-            propertyManager.initializeProperties(true);
-        }
-        catch (Exception e)
-        {
-            Logger.getLogger(ApplicationConfiguration.class).error(e);
-        }
-
-        return propertyManager;
     }
 }

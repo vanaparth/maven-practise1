@@ -116,7 +116,7 @@ public class SMPEventNotificationService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error("ReportingException="+e.getMessage(), e);
         }
     }
 }

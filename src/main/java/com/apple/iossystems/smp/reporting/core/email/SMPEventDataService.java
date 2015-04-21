@@ -80,7 +80,7 @@ class SMPEventDataService
 
         try
         {
-            passPan = PASS_MANAGEMENT_SERVICE.getPassPanByPassSerialAndSeid(seid, passSerial);
+            passPan = PASS_MANAGEMENT_SERVICE.getPrimaryPassPanByPassSerialAndSeid(seid, passSerial);
         }
         catch (Exception e)
         {

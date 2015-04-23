@@ -62,7 +62,7 @@ public class SMPEventNotificationService
         }
         catch (Exception e)
         {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error(e);
         }
     }
 
@@ -82,7 +82,7 @@ public class SMPEventNotificationService
         }
         catch (Exception e)
         {
-            LOGGER.error(e.getMessage(), e);
+            LOGGER.error(e);
 
             if (retryOnError)
             {
@@ -116,12 +116,12 @@ public class SMPEventNotificationService
         }
         catch (Exception e)
         {
-            LOGGER.error("ReportingException="+e.getMessage(), e);
+            LOGGER.error(e);
         }
     }
 
     public boolean isOnline()
     {
-        return null != logService;
+        return (logService != null);
     }
 }

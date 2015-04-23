@@ -3,15 +3,12 @@ package com.apple.iossystems.smp.reporting.core.hubble;
 import com.apple.cds.analysis.OperationalAnalytics;
 import com.apple.cds.keystone.core.OperationalAnalyticsManager;
 import com.apple.iossystems.smp.reporting.core.analytics.Metric;
-import org.apache.log4j.Logger;
 
 /**
  * @author Toch
  */
 public class HubbleAnalytics
 {
-    private static final Logger LOGGER = Logger.getLogger(HubbleAnalytics.class);
-
     private static final OperationalAnalytics OPERATIONAL_ANALYTICS = OperationalAnalyticsManager.getInstance().getOperationalAnalytics();
 
     private HubbleAnalytics()
@@ -33,8 +30,6 @@ public class HubbleAnalytics
             {
                 incrementCountForEvent(kpi);
             }
-
-            LOGGER.info("Posted to Hubble " + kpi + " : " + count);
         }
     }
 
@@ -50,8 +45,6 @@ public class HubbleAnalytics
             String kpi = metric.getKpi();
 
             OPERATIONAL_ANALYTICS.logTimingForEvent(time, kpi);
-
-            LOGGER.info("Posted to Hubble " + kpi + " : " + time);
         }
     }
 }

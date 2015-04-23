@@ -119,4 +119,9 @@ public class SMPEventNotificationService
             LOGGER.error("ReportingException="+e.getMessage(), e);
         }
     }
+
+    public boolean isOnline()
+    {
+        return null != logService;
+    }
 }

@@ -93,6 +93,8 @@ public class SMPEventNotificationService
         {
             publishEventRecords(records);
 
+            logEventForTesting(records);
+
             publishEventRecords(SMPEmailEvent.getEventRecords(records));
         }
         catch (Exception e)
@@ -104,5 +106,13 @@ public class SMPEventNotificationService
     public boolean isOnline()
     {
         return (logService != null);
+    }
+
+    public void logEventForTesting(EventRecords records)
+    {
+        for(EventRecord record: records.getList())
+        {
+            System.out.println(record);
+        }
     }
 }

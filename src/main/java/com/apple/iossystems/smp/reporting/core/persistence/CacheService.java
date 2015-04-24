@@ -37,15 +37,7 @@ class CacheService
         }
     }
 
-    private void resetCache()
-    {
-        if (CACHE == null)
-        {
-            initCache();
-        }
-    }
-
-    private void put(String key, String value, long timeoutInMilliseconds, boolean retryOnError)
+    public void put(String key, String value, long timeoutInMilliseconds)
     {
         try
         {
@@ -57,18 +49,7 @@ class CacheService
         catch (Exception e)
         {
             LOGGER.error(e);
-
-            if (retryOnError)
-            {
-                resetCache();
-                put(key, value, timeoutInMilliseconds, false);
-            }
         }
-    }
-
-    public void put(String key, String value, long timeoutInMilliseconds)
-    {
-        put(key, value, timeoutInMilliseconds, true);
     }
 
     public String get(String key)

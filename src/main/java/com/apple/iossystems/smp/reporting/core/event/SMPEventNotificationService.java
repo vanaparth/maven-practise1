@@ -66,15 +66,7 @@ public class SMPEventNotificationService
         }
     }
 
-    private void resetLogService()
-    {
-        if (logService == null)
-        {
-            init();
-        }
-    }
-
-    private void publishEventRecord(EventRecord record, boolean retryOnError)
+    private void publishEventRecord(EventRecord record)
     {
         try
         {
@@ -83,18 +75,7 @@ public class SMPEventNotificationService
         catch (Exception e)
         {
             LOGGER.error(e);
-
-            if (retryOnError)
-            {
-                resetLogService();
-                publishEventRecord(record, false);
-            }
         }
-    }
-
-    private void publishEventRecord(EventRecord record)
-    {
-        publishEventRecord(record, true);
     }
 
     private void publishEventRecords(EventRecords records)

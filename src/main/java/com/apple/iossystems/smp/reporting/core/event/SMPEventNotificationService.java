@@ -108,11 +108,11 @@ public class SMPEventNotificationService
         return (logService != null);
     }
 
-    public void logEventForTesting(EventRecords records)
+    private void logEventForTesting(EventRecords records)
     {
-        for(EventRecord record: records.getList())
+        for (EventRecord record : records.getList())
         {
-            System.out.println(record);
+            LOGGER.info(record.toString());
         }
     }
 }

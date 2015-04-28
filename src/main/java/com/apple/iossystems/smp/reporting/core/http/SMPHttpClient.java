@@ -32,7 +32,7 @@ public class SMPHttpClient
             {
                 response = sendRequest(httpRequest);
 
-                if (response.isSuccessful())
+                if ((response != null) && response.isSuccessful())
                 {
                     return response;
                 }

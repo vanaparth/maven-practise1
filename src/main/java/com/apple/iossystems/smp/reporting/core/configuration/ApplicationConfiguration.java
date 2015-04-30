@@ -24,7 +24,6 @@ class ApplicationConfiguration
     static final String LOG_SERVICE_PATH = PROPERTY_MANAGER.valueForKeyWithDefault("smp.reporting.logging.path", "stockholm");
     static final String LOG_SERVICE_CATEGORY = PROPERTY_MANAGER.valueForKeyWithDefault("smp.reporting.logging.category", "events");
     static final String LOG_SERVICE_STORE = PROPERTY_MANAGER.valueForKeyWithDefault("smp.reporting.logging.store", "reporting");
-    static final String LOG_SERVICE_EVENT_FINDER_CLASS = PROPERTY_MANAGER.valueForKeyWithDefault("smp.reporting.logging.eventFinderClass", "com.apple.iossystems.logging.BufferedPubSubEventFinder");
     static final String LOG_SERVICE_CLASS = PROPERTY_MANAGER.valueForKeyWithDefault("smp.reporting.logging.classname", "com.apple.iossystems.logging.impl.pubsub.BufferedPubSub");
 
     static final String IREPORTER_URL = PROPERTY_MANAGER.valueForKeyWithDefault("icloud.ireporter.url", "https://icloud4-e3.icloud.com");

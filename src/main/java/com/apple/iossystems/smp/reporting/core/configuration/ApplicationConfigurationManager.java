@@ -69,11 +69,6 @@ public class ApplicationConfigurationManager
         return ApplicationConfiguration.LOG_SERVICE_STORE;
     }
 
-    public static String getLogServiceEventFinderClass()
-    {
-        return ApplicationConfiguration.LOG_SERVICE_EVENT_FINDER_CLASS;
-    }
-
     public static String getLogServiceClass()
     {
         return ApplicationConfiguration.LOG_SERVICE_CLASS;

@@ -27,7 +27,7 @@ public enum EventAttribute
     FPAN_ID("fpn"),
     OTP("otp"),
     PNO("pno"),
-    PROVISION_RESPONSE("osl"),
+    PROVISION_RESPONSE("prs"),
     PROVISION_STATUS("pst"),
     TIMESTAMP("tim"),
     USE_CASE_TYPE("psr"),

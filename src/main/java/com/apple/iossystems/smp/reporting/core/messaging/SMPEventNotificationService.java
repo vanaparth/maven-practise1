@@ -6,6 +6,8 @@ import com.apple.iossystems.smp.reporting.core.email.SMPEmailEvent;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 import com.apple.iossystems.smp.reporting.core.event.EventType;
+import com.apple.iossystems.smp.reporting.core.eventhandler.EventListener;
+import com.apple.iossystems.smp.reporting.core.eventhandler.EventListenerClient;
 import com.apple.iossystems.smp.reporting.core.util.MapToPair;
 import org.apache.log4j.Logger;
 
@@ -19,6 +21,8 @@ public class SMPEventNotificationService
     private static final SMPEventNotificationService INSTANCE = new SMPEventNotificationService();
 
     private LogService logService;
+
+    private EventListener eventListener = EventListenerClient.getSMPNotificationEventListener();
 
     private SMPEventNotificationService()
     {
@@ -54,12 +58,26 @@ public class SMPEventNotificationService
         }
     }
 
+    private void notifyEventListener(EventRecords records)
+    {
+        try
+        {
+            eventListener.handleEvent(records);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+        }
+    }
+
     private void publishEventRecords(EventRecords records)
     {
         for (EventRecord record : records.getList())
         {
             publishEventRecord(record);
         }
+
+        notifyEventListener(records);
     }
 
     public void publishEvents(EventRecords records)

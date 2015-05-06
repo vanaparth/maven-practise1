@@ -15,11 +15,20 @@ public class ProvisionEmailPublishService
 {
     private static final Logger LOGGER = Logger.getLogger(ProvisionEmailPublishService.class);
 
+    private EmailService emailService = EmailService.getInstance();
+
+    private static final ProvisionEmailPublishService INSTANCE = new ProvisionEmailPublishService();
+
     private ProvisionEmailPublishService()
     {
     }
 
-    public static void processProvisionEvent(String conversationId, String dsid)
+    public static ProvisionEmailPublishService getInstance()
+    {
+        return INSTANCE;
+    }
+
+    public void processProvisionEvent(String conversationId, String dsid)
     {
         StoreManagementService storeManagementService = AppContext.getApplicationContext().getBean(StoreManagementService.class);
 
@@ -39,13 +48,13 @@ public class ProvisionEmailPublishService
         storeManagementService.updateProvisionCount(dsid);
     }
 
-    private static void publishEvent(String conversationId, boolean firstProvision)
+    private void publishEvent(String conversationId, boolean firstProvision)
     {
         String json = SMPEventCache.remove(SMPEventCache.Attribute.PROVISION_EVENT, conversationId);
 
         if (firstProvision && (json != null))
         {
-            EmailService.publishProvisionEvent(GsonBuilderFactory.getInstance().fromJson(json, ProvisionCardEvent.class));
+            emailService.publishProvisionEvent(GsonBuilderFactory.getInstance().fromJson(json, ProvisionCardEvent.class));
         }
     }
 }

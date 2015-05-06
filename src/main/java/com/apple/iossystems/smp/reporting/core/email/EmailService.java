@@ -8,6 +8,8 @@ import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 import com.apple.iossystems.smp.reporting.core.event.SMPDeviceEvent;
+import com.apple.iossystems.smp.reporting.core.eventhandler.EventListener;
+import com.apple.iossystems.smp.reporting.core.eventhandler.EventListenerClient;
 import com.apple.iossystems.smp.reporting.core.util.ValidValue;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -28,11 +30,18 @@ public class EmailService
     private static final boolean UNLINK_EMAIL_ENABLED = ApplicationConfigurationManager.isUnlinkEmailEnabled();
     private static final boolean DEFAULT_EMAIL_LOCALE_ENABLED = ApplicationConfigurationManager.isDefaultEmailLocaleEnabled();
 
+    private EventListener eventListener = EventListenerClient.getEmailEventListener();
+
     private EmailService()
     {
     }
 
-    public static void send(EventRecords records)
+    public static EmailService getInstance()
+    {
+        return new EmailService();
+    }
+
+    public void send(EventRecords records)
     {
         for (EventRecord record : records.getList())
         {
@@ -40,7 +49,7 @@ public class EmailService
         }
     }
 
-    private static void sendEventRecord(EventRecord record)
+    private void sendEventRecord(EventRecord record)
     {
         try
         {
@@ -52,17 +61,17 @@ public class EmailService
         }
     }
 
-    private static String format(String value)
+    private String format(String value)
     {
         return ValidValue.getStringValueWithDefault(value, "");
     }
 
-    private static String getLocale(String locale)
+    private String getLocale(String locale)
     {
         return (DEFAULT_EMAIL_LOCALE_ENABLED ? "en_US" : locale);
     }
 
-    private static Calendar getCalendar(ManageDeviceEvent manageDeviceEvent)
+    private Calendar getCalendar(ManageDeviceEvent manageDeviceEvent)
     {
         String tz = manageDeviceEvent.getTimezone();
 
@@ -75,7 +84,7 @@ public class EmailService
         return calendar;
     }
 
-    private static boolean isValidManageDeviceEventRecord(SMPDeviceEvent smpDeviceEvent, ManageDeviceEvent manageDeviceEvent)
+    private boolean isValidManageDeviceEventRecord(SMPDeviceEvent smpDeviceEvent, ManageDeviceEvent manageDeviceEvent)
     {
         boolean isManageDeviceEvent = ((smpDeviceEvent == SMPDeviceEvent.SUSPEND_CARD) || (smpDeviceEvent == SMPDeviceEvent.UNLINK_CARD) || (smpDeviceEvent == SMPDeviceEvent.RESUME_CARD));
 
@@ -86,7 +95,7 @@ public class EmailService
         return (isManageDeviceEvent && hasRequiredSource && hasRequiredValues);
     }
 
-    public static void publishProvisionEvent(ProvisionCardEvent provisionCardEvent)
+    public void publishProvisionEvent(ProvisionCardEvent provisionCardEvent)
     {
         if (PROVISION_EMAIL_ENABLED && (provisionCardEvent != null))
         {
@@ -101,7 +110,7 @@ public class EmailService
                         format(provisionCardEvent.getDeviceType()),
                         format(provisionCardEvent.getDsid()))).sendEmail();
 
-                EmailServiceLogger.log(provisionCardEvent);
+                eventListener.handleEvent(provisionCardEvent);
             }
             catch (Exception e)
             {
@@ -110,7 +119,7 @@ public class EmailService
         }
     }
 
-    private static void publishManageDeviceEvent(EventRecord record) throws Exception
+    private void publishManageDeviceEvent(EventRecord record) throws Exception
     {
         String json = record.getAttributeValue(EventAttribute.MANAGE_DEVICE_EVENT.key());
 
@@ -176,7 +185,7 @@ public class EmailService
                     }
                 }
 
-                EmailServiceLogger.log(record, manageDeviceEvent, cardEventRecord);
+                eventListener.handleEvent(record, manageDeviceEvent, cardEventRecord);
             }
         }
     }

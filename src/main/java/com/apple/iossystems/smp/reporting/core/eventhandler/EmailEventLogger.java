@@ -1,7 +1,10 @@
-package com.apple.iossystems.smp.reporting.core.email;
+package com.apple.iossystems.smp.reporting.core.eventhandler;
 
 import com.apple.iossystems.smp.email.service.impl.ssp.domain.SMPEmailCardData;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
+import com.apple.iossystems.smp.reporting.core.email.CardEventRecord;
+import com.apple.iossystems.smp.reporting.core.email.ManageDeviceEvent;
+import com.apple.iossystems.smp.reporting.core.email.ProvisionCardEvent;
 import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.SMPDeviceEvent;
@@ -10,25 +13,25 @@ import org.apache.log4j.Logger;
 /**
  * @author Toch
  */
-class EmailServiceLogger
+class EmailEventLogger
 {
-    private static final Logger LOGGER = Logger.getLogger(EmailServiceLogger.class);
+    private static final Logger LOGGER = Logger.getLogger(EmailEventLogger.class);
 
-    private static final boolean EMAIL_LOGGING_ENABLED = ApplicationConfigurationManager.isEmailLoggingEnabled();
+    private boolean emailLoggingEnabled = ApplicationConfigurationManager.isEmailLoggingEnabled();
 
-    private EmailServiceLogger()
+    public EmailEventLogger()
     {
     }
 
-    private static void log(String message)
+    private void log(String message)
     {
-        if (EMAIL_LOGGING_ENABLED)
+        if (emailLoggingEnabled)
         {
             LOGGER.info(message);
         }
     }
 
-    public static void log(ProvisionCardEvent provisionCardEvent)
+    public void log(ProvisionCardEvent provisionCardEvent)
     {
         log("PROVISION_CARD" +
                 ", conversationId=" + provisionCardEvent.getConversationId() +
@@ -42,7 +45,7 @@ class EmailServiceLogger
                 ", locale=" + provisionCardEvent.getLocale());
     }
 
-    public static void log(EventRecord record, ManageDeviceEvent manageDeviceEvent, CardEventRecord cardEventRecord)
+    public void log(EventRecord record, ManageDeviceEvent manageDeviceEvent, CardEventRecord cardEventRecord)
     {
         SMPDeviceEvent smpEvent = SMPDeviceEvent.getEvent(record);
 
@@ -62,7 +65,7 @@ class EmailServiceLogger
                 ", cardEvents=[" + getCardEventRecordString(cardEventRecord) + "]");
     }
 
-    private static String getCardEventRecordString(CardEventRecord record)
+    private String getCardEventRecordString(CardEventRecord record)
     {
         StringBuilder message = new StringBuilder();
 

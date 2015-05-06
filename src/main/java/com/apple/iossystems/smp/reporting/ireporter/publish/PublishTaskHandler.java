@@ -26,6 +26,8 @@ public class PublishTaskHandler implements ScheduledTaskHandler
     private IReporterPublishService paymentReportsPublishService = PaymentReportsPublishService.getInstance();
     private IReporterPublishService paymentAuditPublishService = PaymentAuditPublishService.getInstance();
 
+    private EmailService emailService = EmailService.getInstance();
+
     private Statistics statistics = Statistics.getInstance();
     private StopWatch stopWatch = StopWatch.getInstance();
 
@@ -191,7 +193,7 @@ public class PublishTaskHandler implements ScheduledTaskHandler
 
         if (records.size() > 0)
         {
-            EmailService.send(records);
+            emailService.send(records);
         }
     }
 

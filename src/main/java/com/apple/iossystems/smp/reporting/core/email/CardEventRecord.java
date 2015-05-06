@@ -8,7 +8,7 @@ import java.util.List;
 /**
  * @author Toch
  */
-class CardEventRecord
+public class CardEventRecord
 {
     private List<SMPEmailCardData> successCards = new ArrayList<SMPEmailCardData>();
     private List<SMPEmailCardData> failedCards = new ArrayList<SMPEmailCardData>();

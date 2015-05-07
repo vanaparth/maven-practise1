@@ -93,7 +93,7 @@ public class IReporterAudit
         private final String version = "1.0";
 
         @SerializedName("txn")
-        private List<AuditRecord> list = new ArrayList<AuditRecord>();
+        private List<AuditRecord> list = new ArrayList<>();
 
         private AuditRequest()
         {

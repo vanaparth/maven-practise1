@@ -224,8 +224,7 @@ public class SMPReportingFunctionalTest
 
     private static void testICloudProdConfig()
     {
-        // String url = "https://icloud4-e3.icloud.com";
-        String url = "https://mr-e3sh.icloud.com";
+        String url = "https://icloud4-e3.icloud.com";
 
         HttpRequest httpRequest = HttpRequest.getInstance(url + "/e3/rest/1/config/stockholm", "GET", null, null, null, null);
 
@@ -238,8 +237,6 @@ public class SMPReportingFunctionalTest
         catch (Exception e)
         {
             LOGGER.error(e);
-
-            e.printStackTrace();
         }
     }
 
@@ -264,7 +261,7 @@ public class SMPReportingFunctionalTest
 
     private static EventRecord getRecord()
     {
-        Map<String, String> data = new HashMap<String, String>();
+        Map<String, String> data = new HashMap<>();
 
         data.put(EventAttribute.ATHENA_COLOR.key(), "1");
         data.put(EventAttribute.CARD_BIN.key(), "2");

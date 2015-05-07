@@ -12,7 +12,7 @@ import java.util.Set;
  */
 public class EventRecord
 {
-    private Map<String, String> data = new HashMap<String, String>();
+    private Map<String, String> data = new HashMap<>();
 
     private EventRecord()
     {

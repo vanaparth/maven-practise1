@@ -85,12 +85,12 @@ public class ManageDeviceEventBuilder
     {
         if (cardData == null)
         {
-            cardData = new HashMap<String, String>();
+            cardData = new HashMap<>();
         }
 
         if (cardEvents == null)
         {
-            cardEvents = new ArrayList<CardEvent>();
+            cardEvents = new ArrayList<>();
         }
 
         String firstName = cardData.get(FIRST_NAME);

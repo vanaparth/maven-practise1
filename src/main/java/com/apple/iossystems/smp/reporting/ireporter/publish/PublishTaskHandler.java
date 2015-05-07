@@ -31,9 +31,9 @@ public class PublishTaskHandler implements ScheduledTaskHandler
     private Statistics statistics = Statistics.getInstance();
     private StopWatch stopWatch = StopWatch.getInstance();
 
-    private BlockingQueue<EventRecord> reportsQueue = new LinkedBlockingQueue<EventRecord>(1000);
-    private BlockingQueue<EventRecord> paymentReportsQueue = new LinkedBlockingQueue<EventRecord>(1000);
-    private BlockingQueue<EventRecord> emailReportsQueue = new LinkedBlockingQueue<EventRecord>(1000);
+    private BlockingQueue<EventRecord> reportsQueue = new LinkedBlockingQueue<>(1000);
+    private BlockingQueue<EventRecord> paymentReportsQueue = new LinkedBlockingQueue<>(1000);
+    private BlockingQueue<EventRecord> emailReportsQueue = new LinkedBlockingQueue<>(1000);
 
     private PublishMetric reportsMetrics = PublishMetric.getReportsMetrics();
     private PublishMetric paymentReportsMetrics = PublishMetric.getPaymentReportsMetrics();

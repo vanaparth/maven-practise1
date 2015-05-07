@@ -1,7 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.eventhandler;
 
+import com.apple.cds.keystone.config.PropertyManager;
 import com.apple.iossystems.smp.email.service.impl.ssp.domain.SMPEmailCardData;
-import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
 import com.apple.iossystems.smp.reporting.core.email.CardEventRecord;
 import com.apple.iossystems.smp.reporting.core.email.ManageDeviceEvent;
 import com.apple.iossystems.smp.reporting.core.email.ProvisionCardEvent;
@@ -17,7 +17,7 @@ public class EmailEventLogger
 {
     private static final Logger LOGGER = Logger.getLogger(EmailEventLogger.class);
 
-    private boolean emailLoggingEnabled = ApplicationConfigurationManager.isEmailLoggingEnabled();
+    private boolean loggingEnabled = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.log", false);
 
     public EmailEventLogger()
     {
@@ -25,7 +25,7 @@ public class EmailEventLogger
 
     private void log(String message)
     {
-        if (emailLoggingEnabled)
+        if (loggingEnabled)
         {
             LOGGER.info(message);
         }

@@ -84,11 +84,6 @@ public class ApplicationConfigurationManager
         return ApplicationConfiguration.HASH_PASSWORD;
     }
 
-    public static boolean isEmailLoggingEnabled()
-    {
-        return ApplicationConfiguration.EMAIL_LOGGING_ENABLED;
-    }
-
     public static boolean isProvisionEmailEnabled()
     {
         return ApplicationConfiguration.PROVISION_EMAIL_ENABLED;

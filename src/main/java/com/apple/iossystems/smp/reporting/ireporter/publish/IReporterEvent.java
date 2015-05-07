@@ -20,7 +20,7 @@ public class IReporterEvent
 
     private static Set<String> getEventAttributes()
     {
-        Set<String> eventAttributes = new HashSet<String>();
+        Set<String> eventAttributes = new HashSet<>();
 
         eventAttributes.add(EventAttribute.ATHENA_COLOR.key());
         eventAttributes.add(EventAttribute.CARD_BIN.key());

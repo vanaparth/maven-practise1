@@ -114,7 +114,7 @@ public class IReporterConfiguration
 
     public Map<String, String> getRequestHeaders()
     {
-        Map<String, String> headers = new HashMap<String, String>();
+        Map<String, String> headers = new HashMap<>();
 
         headers.put("X-LoadText", getPublishKey());
         headers.put("Content-Type", getContentType());

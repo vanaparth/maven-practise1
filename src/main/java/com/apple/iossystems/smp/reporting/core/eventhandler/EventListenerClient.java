@@ -1,6 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.eventhandler;
 
 import com.apple.cds.keystone.config.PropertyManager;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 /**
@@ -26,7 +27,6 @@ public class EventListenerClient
         }
         catch (Exception e)
         {
-            e.printStackTrace();
             LOGGER.error(e);
         }
 
@@ -35,7 +35,7 @@ public class EventListenerClient
 
     private static String getFullClassName(String className)
     {
-        return ((className != null) ? "com.apple.iossystems.smp.reporting.core.eventhandler." + className : "");
+        return ((StringUtils.isNotBlank(className) && (!className.contains("."))) ? "com.apple.iossystems.smp.reporting.core.eventhandler." + className : className);
     }
 
     public static EventListener getEmailEventListener()

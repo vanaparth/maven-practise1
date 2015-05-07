@@ -11,7 +11,7 @@ public class EventRecords
 {
     private static final EventRecords EMPTY = getEmptyRecords();
 
-    private List<EventRecord> list = new ArrayList<EventRecord>();
+    private List<EventRecord> list = new ArrayList<>();
 
     private EventRecords()
     {

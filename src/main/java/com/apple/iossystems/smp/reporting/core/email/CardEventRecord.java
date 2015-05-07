@@ -10,8 +10,8 @@ import java.util.List;
  */
 public class CardEventRecord
 {
-    private List<SMPEmailCardData> successCards = new ArrayList<SMPEmailCardData>();
-    private List<SMPEmailCardData> failedCards = new ArrayList<SMPEmailCardData>();
+    private List<SMPEmailCardData> successCards = new ArrayList<>();
+    private List<SMPEmailCardData> failedCards = new ArrayList<>();
 
     private CardEventRecord()
     {

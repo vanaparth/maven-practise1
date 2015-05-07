@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public class Statistics
 {
-    private Map<Metric, String> data = new ConcurrentHashMap<Metric, String>();
+    private Map<Metric, String> data = new ConcurrentHashMap<>();
 
     private Statistics()
     {

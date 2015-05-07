@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 /**
  * @author Toch
  */
-class SMPNotificationEventLogger
+public class SMPNotificationEventLogger
 {
     private static final Logger LOGGER = Logger.getLogger(SMPNotificationEventLogger.class);
 

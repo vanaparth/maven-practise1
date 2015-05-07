@@ -19,6 +19,7 @@ public enum EventAttribute
     COMPANION_USER_AGENT("cua"),
     CONVERSATION_ID("con"),
     COUNTRY_CODE("ccd"),
+    CURRENCY("cur"),
     DEVICE_LANGUAGE("lcd"),
     DEVICE_LOCATION("llg"),
     DEVICE_SERIAL_NUMBER("sno"),

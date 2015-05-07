@@ -1,4 +1,4 @@
-package com.apple.iossystems.smp.reporting.core.application;
+package com.apple.iossystems.smp.reporting.core.tests;
 
 import com.apple.cds.keystone.config.PropertyManager;
 import com.apple.iossystems.smp.StockholmHTTPResponse;

@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 /**
  * @author Toch
  */
-class EmailEventLogger
+public class EmailEventLogger
 {
     private static final Logger LOGGER = Logger.getLogger(EmailEventLogger.class);
 
@@ -29,6 +29,28 @@ class EmailEventLogger
         {
             LOGGER.info(message);
         }
+    }
+
+    private String getCardEventRecordString(CardEventRecord record)
+    {
+        StringBuilder message = new StringBuilder();
+
+        if (record != null)
+        {
+            message.append("SuccessCards=").append(record.getSuccessCards().size()).append(", FailedCards=").append(record.getFailedCards().size());
+
+            for (SMPEmailCardData smpEmailCardData : record.getSuccessCards())
+            {
+                message.append(", SuccessCard=[").append(smpEmailCardData.getCardLastFour()).append(", ").append(smpEmailCardData.getCardShortDescription()).append("]");
+            }
+
+            for (SMPEmailCardData smpEmailCardData : record.getFailedCards())
+            {
+                message.append(", FailedCard=[").append(smpEmailCardData.getCardLastFour()).append(", ").append(smpEmailCardData.getCardShortDescription()).append("]");
+            }
+        }
+
+        return message.toString();
     }
 
     public void log(ProvisionCardEvent provisionCardEvent)
@@ -63,27 +85,5 @@ class EmailEventLogger
                 ", fmipSource=" + manageDeviceEvent.getFmipSource() +
                 ", manageDeviceEventSource=" + manageDeviceEvent.getManageDeviceEventSource() +
                 ", cardEvents=[" + getCardEventRecordString(cardEventRecord) + "]");
-    }
-
-    private String getCardEventRecordString(CardEventRecord record)
-    {
-        StringBuilder message = new StringBuilder();
-
-        if (record != null)
-        {
-            message.append("SuccessCards=").append(record.getSuccessCards().size()).append(", FailedCards=").append(record.getFailedCards().size());
-
-            for (SMPEmailCardData smpEmailCardData : record.getSuccessCards())
-            {
-                message.append(", SuccessCard=[").append(smpEmailCardData.getCardLastFour()).append(", ").append(smpEmailCardData.getCardShortDescription()).append("]");
-            }
-
-            for (SMPEmailCardData smpEmailCardData : record.getFailedCards())
-            {
-                message.append(", FailedCard=[").append(smpEmailCardData.getCardLastFour()).append(", ").append(smpEmailCardData.getCardShortDescription()).append("]");
-            }
-        }
-
-        return message.toString();
     }
 }

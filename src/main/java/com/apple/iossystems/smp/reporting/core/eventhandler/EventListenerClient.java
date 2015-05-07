@@ -1,5 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.eventhandler;
 
+import com.apple.cds.keystone.config.PropertyManager;
 import org.apache.log4j.Logger;
 
 /**
@@ -13,39 +14,37 @@ public class EventListenerClient
     {
     }
 
-    public static EventListener getEmailEventListener()
+    private static EventListener getEventListener(String propertyKey, String defaultClassName)
     {
-        EventListener eventListener;
+        EventListener eventListener = null;
 
         try
         {
-            //return (EventListener) Class.forName(PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.emailEventListener", "EmailEventListener"));
+            Class eventListenerClass = Class.forName(getFullClassName(PropertyManager.getInstance().valueForKeyWithDefault(propertyKey, defaultClassName)));
+
+            eventListener = (EventListener) eventListenerClass.newInstance();
         }
         catch (Exception e)
         {
+            e.printStackTrace();
             LOGGER.error(e);
-
-            eventListener = new EmailEventListener();
         }
 
-        return null;
+        return eventListener;
+    }
+
+    private static String getFullClassName(String className)
+    {
+        return ((className != null) ? "com.apple.iossystems.smp.reporting.core.eventhandler." + className : "");
+    }
+
+    public static EventListener getEmailEventListener()
+    {
+        return getEventListener("smp.reporting.emailEventListener", "EmailEventListener");
     }
 
     public static EventListener getSMPNotificationEventListener()
     {
-        SMPNotificationEventListener eventListener;
-
-        try
-        {
-            //return (EventListener) Class.forName(PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.emailEventListener", "EmailEventListener"));
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e);
-
-            eventListener = new SMPNotificationEventListener();
-        }
-
-        return null;
+        return getEventListener("smp.reporting.smpNotificationEventListener", "SMPNotificationEventListener");
     }
 }

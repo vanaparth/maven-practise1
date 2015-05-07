@@ -9,7 +9,7 @@ import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 /**
  * @author Toch
  */
-public abstract class SMPEventListener implements EventListener
+abstract class SMPEventListener implements EventListener
 {
     @Override
     public void handleEvent(EventRecords records)

@@ -32,6 +32,7 @@ public class IReporterEvent
         eventAttributes.add(EventAttribute.CARD_TYPE.key());
         eventAttributes.add(EventAttribute.COMPANION_USER_AGENT.key());
         eventAttributes.add(EventAttribute.CONVERSATION_ID.key());
+        eventAttributes.add(EventAttribute.CURRENCY.key());
         eventAttributes.add(EventAttribute.DEVICE_LANGUAGE.key());
         eventAttributes.add(EventAttribute.DEVICE_LOCATION.key());
         eventAttributes.add(EventAttribute.DEVICE_SERIAL_NUMBER.key());

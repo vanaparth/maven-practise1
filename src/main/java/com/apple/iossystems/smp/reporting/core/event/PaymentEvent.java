@@ -12,6 +12,7 @@ public class PaymentEvent
 {
     private static final Logger LOGGER = Logger.getLogger(PaymentEvent.class);
 
+    private final String currency;
     private final String merchantId;
     private final String merchantName;
     private final String transactionId;
@@ -20,6 +21,7 @@ public class PaymentEvent
 
     private PaymentEvent(Builder builder)
     {
+        currency = builder.currency;
         merchantId = builder.merchantId;
         merchantName = builder.merchantName;
         transactionId = builder.transactionId;
@@ -39,6 +41,7 @@ public class PaymentEvent
 
     public static class Builder
     {
+        private String currency;
         private String merchantId;
         private String merchantName;
         private String transactionId;
@@ -47,6 +50,12 @@ public class PaymentEvent
 
         private Builder()
         {
+        }
+
+        public Builder currency(String value)
+        {
+            currency = value;
+            return this;
         }
 
         public Builder merchantId(String value)
@@ -113,6 +122,7 @@ public class PaymentEvent
         record.setAttributeValue(EventAttribute.EVENT_TYPE.key(), EventType.PAYMENT.getKey());
 
         record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(Calendar.getCurrentHourMillis()));
+        record.setAttributeValue(EventAttribute.CURRENCY.key(), currency);
         record.setAttributeValue(EventAttribute.MERCHANT_ID.key(), getMerchantInfo());
         record.setAttributeValue(EventAttribute.TRANSACTION_ID.key(), transactionId);
         record.setAttributeValue(EventAttribute.TRANSACTION_AMOUNT.key(), formatTransactionAmount(transactionAmount));

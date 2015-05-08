@@ -8,7 +8,7 @@ import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 import com.apple.iossystems.smp.reporting.core.event.EventType;
-import com.apple.iossystems.smp.reporting.core.hubble.HubbleAnalytics;
+import com.apple.iossystems.smp.reporting.core.hubble.HubblePublisher;
 import com.apple.iossystems.smp.reporting.core.timer.StopWatch;
 import com.apple.iossystems.smp.reporting.ireporter.json.IReporterJsonBuilder;
 
@@ -25,6 +25,8 @@ public class PublishTaskHandler implements ScheduledTaskHandler
     private IReporterPublishService auditPublishService = AuditPublishService.getInstance();
     private IReporterPublishService paymentReportsPublishService = PaymentReportsPublishService.getInstance();
     private IReporterPublishService paymentAuditPublishService = PaymentAuditPublishService.getInstance();
+
+    private HubblePublisher hubblePublisher = HubblePublisher.getInstance();
 
     private EmailService emailService = EmailService.getInstance();
 
@@ -143,10 +145,10 @@ public class PublishTaskHandler implements ScheduledTaskHandler
         if (count > 0)
         {
             // Hubble for IReporter
-            HubbleAnalytics.incrementCountForEvent(publishMetric.getMessagesSentMetric());
-            HubbleAnalytics.incrementCountForEvent(publishMetric.getRecordsSentMetric(), count);
+            hubblePublisher.incrementCountForEvent(publishMetric.getMessagesSentMetric());
+            hubblePublisher.incrementCountForEvent(publishMetric.getRecordsSentMetric(), count);
             // Hubble for SMP
-            HubbleAnalytics.logTimingForEvent(publishMetric.getIReporterTiming(), stopWatch.getTimeMillis());
+            hubblePublisher.logTimingForEvent(publishMetric.getIReporterTiming(), stopWatch.getTimeMillis());
             // IReporter
             statistics.increment(publishMetric.getIReporterRecordsSent(), count);
         }
@@ -154,10 +156,10 @@ public class PublishTaskHandler implements ScheduledTaskHandler
         {
             count = -count;
             // Hubble
-            HubbleAnalytics.incrementCountForEvent(publishMetric.getMessagesFailedMetric());
-            HubbleAnalytics.incrementCountForEvent(publishMetric.getRecordsFailedMetric(), count);
+            hubblePublisher.incrementCountForEvent(publishMetric.getMessagesFailedMetric());
+            hubblePublisher.incrementCountForEvent(publishMetric.getRecordsFailedMetric(), count);
             // Hubble for SMP
-            HubbleAnalytics.logTimingForEvent(publishMetric.getIReporterTiming(), stopWatch.getTimeMillis());
+            hubblePublisher.logTimingForEvent(publishMetric.getIReporterTiming(), stopWatch.getTimeMillis());
             // IReporter
             statistics.increment(publishMetric.getIReporterRecordsFailed(), count);
         }
@@ -176,13 +178,13 @@ public class PublishTaskHandler implements ScheduledTaskHandler
 
             if (auditService.sendRequest(auditData.toJson()))
             {
-                HubbleAnalytics.incrementCountForEvent(publishMetric.getAuditRecordsSent());
+                hubblePublisher.incrementCountForEvent(publishMetric.getAuditRecordsSent());
 
                 statistics.clear(publishMetric.getAuditMetrics());
             }
             else
             {
-                HubbleAnalytics.incrementCountForEvent(publishMetric.getAuditRecordsFailed());
+                hubblePublisher.incrementCountForEvent(publishMetric.getAuditRecordsFailed());
             }
         }
     }

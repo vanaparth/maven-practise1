@@ -1,6 +1,6 @@
 package com.apple.iossystems.smp.reporting.ireporter.configuration;
 
-import com.apple.iossystems.smp.reporting.core.hubble.HubbleAnalytics;
+import com.apple.iossystems.smp.reporting.core.hubble.HubblePublisher;
 import com.apple.iossystems.smp.reporting.core.timer.Timer;
 
 /**
@@ -11,6 +11,8 @@ public abstract class IReporterConfigurationService
     private IReporterConfiguration configuration;
 
     private long timestamp;
+
+    private HubblePublisher hubblePublisher = HubblePublisher.getInstance();
 
     IReporterConfigurationService()
     {
@@ -56,11 +58,11 @@ public abstract class IReporterConfigurationService
     {
         ConfigurationMetric configurationMetric = getConfigurationMetric();
 
-        HubbleAnalytics.incrementCountForEvent(configurationMetric.getRequestedMetric());
+        hubblePublisher.incrementCountForEvent(configurationMetric.getRequestedMetric());
 
         if ((configuration1 != null) && (configuration2 != null) && (!configuration1.isEquals(configuration2)))
         {
-            HubbleAnalytics.incrementCountForEvent(configurationMetric.getChangedMetric());
+            hubblePublisher.incrementCountForEvent(configurationMetric.getChangedMetric());
         }
     }
 }

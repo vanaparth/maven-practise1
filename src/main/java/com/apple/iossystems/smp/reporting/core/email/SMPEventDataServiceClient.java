@@ -62,4 +62,9 @@ public class SMPEventDataServiceClient
 
         return (passPan != null) ? passPan.getDpanId() : null;
     }
+
+    public static String getCompanionSerialNumber(String serialNumber)
+    {
+        return (serialNumber != null) ? SMPEventDataService.getCompanionSerialNumber(serialNumber) : null;
+    }
 }

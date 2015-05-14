@@ -3,6 +3,7 @@ package com.apple.iossystems.smp.reporting.core.email;
 import com.apple.cds.keystone.spring.AppContext;
 import com.apple.iossystems.smp.persistence.entity.*;
 import com.apple.iossystems.smp.service.PassManagementService;
+import com.apple.iossystems.smp.service.SecureElementService;
 import org.apache.log4j.Logger;
 
 import java.util.Collection;
@@ -14,6 +15,7 @@ class SMPEventDataService
 {
     private static final Logger LOGGER = Logger.getLogger(SMPEventDataService.class);
     private static final PassManagementService PASS_MANAGEMENT_SERVICE = AppContext.getApplicationContext().getBean(PassManagementService.class);
+    private static final SecureElementService SECURE_ELEMENT_SERVICE = AppContext.getApplicationContext().getBean(SecureElementService.class);
 
     private SMPEventDataService()
     {
@@ -88,5 +90,12 @@ class SMPEventDataService
         }
 
         return passPan;
+    }
+
+    public static String getCompanionSerialNumber(String serialNumber)
+    {
+        SecureElement secureElement = SECURE_ELEMENT_SERVICE.findSecureElementBySerialNumber(serialNumber);
+
+        return (secureElement != null) ? secureElement.getCompanionDeviceSerialNumber() : null;
     }
 }

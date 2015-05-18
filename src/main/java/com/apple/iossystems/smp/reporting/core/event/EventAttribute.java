@@ -8,6 +8,7 @@ public enum EventAttribute
     // Reserved
     EVENT_TYPE("event_type"),
     // Stockholm
+    ADAM_ID("adm"),
     ATHENA_COLOR("ast"),
     CARD_BIN("bin"),
     CARD_ID("cid"),

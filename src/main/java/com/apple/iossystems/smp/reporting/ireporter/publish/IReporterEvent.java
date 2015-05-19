@@ -22,8 +22,8 @@ public class IReporterEvent
     {
         Set<String> eventAttributes = new HashSet<>();
 
-        eventAttributes.add(EventAttribute.ADAM_ID.key());
         eventAttributes.add(EventAttribute.ATHENA_COLOR.key());
+        eventAttributes.add(EventAttribute.BUNDLE_ID.key());
         eventAttributes.add(EventAttribute.CARD_BIN.key());
         eventAttributes.add(EventAttribute.EVENT.key());
         eventAttributes.add(EventAttribute.CARD_ID.key());

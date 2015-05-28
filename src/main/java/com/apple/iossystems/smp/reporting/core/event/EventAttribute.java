@@ -9,7 +9,6 @@ public enum EventAttribute
     EVENT_TYPE("event_type"),
     // Stockholm
     ATHENA_COLOR("ast"),
-    BUNDLE_ID("bdl"),
     CARD_BIN("bin"),
     CARD_ID("cid"),
     CARD_ISSUER("bnm"),

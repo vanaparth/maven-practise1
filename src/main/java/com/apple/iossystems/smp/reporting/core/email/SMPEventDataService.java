@@ -92,7 +92,7 @@ class SMPEventDataService
         return passPan;
     }
 
-    public static String getCompanionSerialNumber(String serialNumber)
+    public static String getCompanionDeviceSerialNumber(String serialNumber)
     {
         SecureElement secureElement = SECURE_ELEMENT_SERVICE.findSecureElementBySerialNumber(serialNumber);
 

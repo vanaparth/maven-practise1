@@ -45,7 +45,7 @@ public class ProvisionEmailPublishService
             LOGGER.error(e);
         }
 
-        publishEvent(conversationId, ((dsidInfo != null) && (ProvisionCount.ZERO.equals(dsidInfo.getProvisionCount()))));
+        publishEvent(conversationId, ((dsidInfo != null) && (dsidInfo.getProvisionCount() == ProvisionCount.ZERO)));
 
         storeManagementService.updateProvisionCount(dsid);
     }

@@ -40,7 +40,7 @@ public abstract class IReporterPublishService
 
     private boolean isRequestSuccessful(HttpResponseAction action)
     {
-        return (action.equals(HttpResponseAction.NO_ACTION_SUCCESS));
+        return (action == HttpResponseAction.NO_ACTION_SUCCESS);
     }
 
     public final IReporterConfiguration getConfiguration()

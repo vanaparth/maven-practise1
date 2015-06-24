@@ -45,21 +45,13 @@ public class IReporterConfiguration
     // Configuration reload frequency in milliseconds
     private static final int DEFAULT_CONFIGURATION_RELOAD_FREQUENCY = 60 * 1000;
 
-
     private final String publishURL;
-
     private final String publishKey;
-
     private final String contentType;
-
     private final boolean publishEnabled;
-
     private final int maxBatchSize;
-
     private final int publishFrequency;
-
     private final int configurationReloadFrequency;
-
 
     private IReporterConfiguration(Builder builder)
     {
@@ -170,17 +162,11 @@ public class IReporterConfiguration
     public static class Builder
     {
         private String publishURL;
-
         private String publishKey;
-
         private String contentType;
-
         private boolean publishEnabled;
-
         private int maxBatchSize;
-
         private int publishFrequency;
-
         private int configurationReloadFrequency;
 
         private Builder()

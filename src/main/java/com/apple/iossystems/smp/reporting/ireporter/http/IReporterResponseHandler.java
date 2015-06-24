@@ -16,7 +16,13 @@ public class IReporterResponseHandler implements HttpResponseHandler
     {
     }
 
-    public static HttpResponseAction getAction(StockholmHTTPResponse response)
+    public static IReporterResponseHandler getInstance()
+    {
+        return new IReporterResponseHandler();
+    }
+
+    @Override
+    public HttpResponseAction getAction(StockholmHTTPResponse response)
     {
         int responseCode = response.getStatus();
 
@@ -45,47 +51,47 @@ public class IReporterResponseHandler implements HttpResponseHandler
         }
     }
 
-    private static HttpResponseAction handleResponseCode200()
+    private HttpResponseAction handleResponseCode200()
     {
         return HttpResponseAction.NO_ACTION_SUCCESS;
     }
 
-    private static HttpResponseAction handleResponseCode400()
+    private HttpResponseAction handleResponseCode400()
     {
         LOGGER.error("Invalid Content-Type|URL format");
 
         return HttpResponseAction.NO_ACTION_ERROR;
     }
 
-    private static HttpResponseAction handleResponseCode403()
+    private HttpResponseAction handleResponseCode403()
     {
         LOGGER.error("No PList|ShouldPublish disabled|Invalid Publish Key");
 
         return HttpResponseAction.RELOAD_CONFIGURATION;
     }
 
-    private static HttpResponseAction handleResponseCode404()
+    private HttpResponseAction handleResponseCode404()
     {
         LOGGER.error("Invalid Request URL");
 
         return HttpResponseAction.RELOAD_CONFIGURATION;
     }
 
-    private static HttpResponseAction handleResponseCode405()
+    private HttpResponseAction handleResponseCode405()
     {
         LOGGER.error("Invalid Method in Header");
 
         return HttpResponseAction.NO_ACTION_ERROR;
     }
 
-    private static HttpResponseAction handleResponseCode415()
+    private HttpResponseAction handleResponseCode415()
     {
         LOGGER.error("Invalid Content-Encoding in Header");
 
         return HttpResponseAction.NO_ACTION_ERROR;
     }
 
-    private static HttpResponseAction handleResponseCodeUnknown(int responseCode)
+    private HttpResponseAction handleResponseCodeUnknown(int responseCode)
     {
         LOGGER.error("Unknown Response Code " + responseCode);
 

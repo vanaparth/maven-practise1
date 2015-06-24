@@ -12,6 +12,8 @@ public class IReporterConfigurationFactory
 {
     private static final Logger LOGGER = Logger.getLogger(IReporterConfigurationFactory.class);
 
+    private static final SMPHttpClient SMP_HTTP_CLIENT = SMPHttpClient.getInstance();
+
     private IReporterConfigurationFactory()
     {
     }
@@ -55,7 +57,7 @@ public class IReporterConfigurationFactory
     {
         try
         {
-            StockholmHTTPResponse response = SMPHttpClient.getInstance().request(HttpRequest.getInstance(configurationType.getConfigurationURL(), "GET", null, null, null, null));
+            StockholmHTTPResponse response = SMP_HTTP_CLIENT.request(HttpRequest.getInstance(configurationType.getConfigurationURL(), "GET", null, null, null, null));
 
             if (response != null)
             {

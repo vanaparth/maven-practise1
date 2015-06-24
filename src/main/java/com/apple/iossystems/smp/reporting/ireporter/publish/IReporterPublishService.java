@@ -21,6 +21,8 @@ public abstract class IReporterPublishService
 
     private SMPHttpClient smpHttpClient = SMPHttpClient.getInstance();
 
+    private IReporterResponseHandler iReporterResponseHandler = IReporterResponseHandler.getInstance();
+
     private long lastRequestTime;
 
     IReporterPublishService()
@@ -71,7 +73,7 @@ public abstract class IReporterPublishService
 
             if (response != null)
             {
-                success = isRequestSuccessful(IReporterResponseHandler.getAction(response));
+                success = isRequestSuccessful(iReporterResponseHandler.getAction(response));
             }
         }
         catch (Exception e)

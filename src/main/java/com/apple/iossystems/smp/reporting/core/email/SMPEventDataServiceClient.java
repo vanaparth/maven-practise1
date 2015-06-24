@@ -10,61 +10,68 @@ import com.apple.iossystems.smp.persistence.entity.SecureElement;
  */
 public class SMPEventDataServiceClient
 {
+    private SMPEventDataService smpEventDataService = SMPEventDataService.getInstance();
+
     private SMPEventDataServiceClient()
     {
     }
 
-    public static PassbookPass getPassbookPassByDpanId(String dpanId)
+    public static SMPEventDataServiceClient getInstance()
     {
-        return (dpanId != null) ? SMPEventDataService.getPassByDpanId(dpanId) : null;
+        return new SMPEventDataServiceClient();
     }
 
-    public static SecureElement getSecureElementByDpanId(String dpanId)
+    public PassbookPass getPassbookPassByDpanId(String dpanId)
     {
-        return (dpanId != null) ? SMPEventDataService.getSecureElementByDpanId(dpanId) : null;
+        return (dpanId != null) ? smpEventDataService.getPassByDpanId(dpanId) : null;
     }
 
-    public static String getDeviceType(SecureElement secureElement)
+    public SecureElement getSecureElementByDpanId(String dpanId)
     {
-        return (secureElement != null) ? SMPEventDataService.getDeviceType(secureElement) : null;
+        return (dpanId != null) ? smpEventDataService.getSecureElementByDpanId(dpanId) : null;
     }
 
-    public static String getCardDisplayNumberFromPassbookPass(PassbookPass passbookPass)
+    public String getDeviceType(SecureElement secureElement)
+    {
+        return (secureElement != null) ? smpEventDataService.getDeviceType(secureElement) : null;
+    }
+
+    public String getCardDisplayNumberFromPassbookPass(PassbookPass passbookPass)
     {
         return (passbookPass != null) ? passbookPass.getFpanSuffix() : null;
     }
 
-    public static String getCardDescriptionFromPassbookPass(PassbookPass passbookPass)
+    public String getCardDescriptionFromPassbookPass(PassbookPass passbookPass)
     {
         String value = null;
 
         if (passbookPass != null)
         {
-            value = SMPEventDataService.getValueFromPassbookPass(passbookPass, AbstractPass.PAYMENT_PASS_LONG_DESC_KEY);
+            value = smpEventDataService.getValueFromPassbookPass(passbookPass, AbstractPass.PAYMENT_PASS_LONG_DESC_KEY);
 
             if (value == null)
             {
-                value = SMPEventDataService.getValueFromPassbookPass(passbookPass, AbstractPass.PAYMENT_PASS_SHORT_DESC_KEY);
+                value = smpEventDataService.getValueFromPassbookPass(passbookPass, AbstractPass.PAYMENT_PASS_SHORT_DESC_KEY);
             }
         }
 
         return value;
     }
 
-    public static PassPan getPassPanByPassSerialAndSeid(String passSerial, String seid)
+    public PassPan getPassPanByPassSerialAndSeid(String passSerial, String seid)
     {
-        return SMPEventDataService.getPassPanByPassSerialAndSeid(passSerial, seid);
+        return smpEventDataService.getPassPanByPassSerialAndSeid(passSerial, seid);
     }
 
-    public static String getDpanIdByPassSerialAndSeid(String passSerial, String seid)
+    public String getDpanIdByPassSerialAndSeid(String passSerial, String seid)
     {
         PassPan passPan = getPassPanByPassSerialAndSeid(passSerial, seid);
 
         return (passPan != null) ? passPan.getDpanId() : null;
     }
 
-    public static String getCompanionDeviceSerialNumber(String serialNumber)
+    public String getCompanionDeviceSerialNumber(String serialNumber)
     {
-        return (serialNumber != null) ? SMPEventDataService.getCompanionDeviceSerialNumber(serialNumber) : null;
+        return (serialNumber != null) ? smpEventDataService.getCompanionDeviceSerialNumber(serialNumber) : null;
     }
 }

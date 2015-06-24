@@ -16,6 +16,11 @@ public class IReporterConfigurationFactory
     {
     }
 
+    public static IReporterConfigurationFactory getInstance()
+    {
+        return new IReporterConfigurationFactory();
+    }
+
     private static IReporterConfiguration getDefaultConfiguration(IReporterConfiguration.Type configurationType)
     {
         return IReporterConfiguration.Builder.fromDefault(configurationType);
@@ -50,7 +55,7 @@ public class IReporterConfigurationFactory
     {
         try
         {
-            StockholmHTTPResponse response = SMPHttpClient.request(HttpRequest.getInstance(configurationType.getConfigurationURL(), "GET", null, null, null, null));
+            StockholmHTTPResponse response = SMPHttpClient.getInstance().request(HttpRequest.getInstance(configurationType.getConfigurationURL(), "GET", null, null, null, null));
 
             if (response != null)
             {

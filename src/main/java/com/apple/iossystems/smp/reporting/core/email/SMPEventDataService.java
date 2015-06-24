@@ -19,26 +19,31 @@ class SMPEventDataService
     {
     }
 
-    public static String getDeviceType(SecureElement secureElement)
+    public static SMPEventDataService getInstance()
+    {
+        return new SMPEventDataService();
+    }
+
+    public String getDeviceType(SecureElement secureElement)
     {
         DeviceType deviceType = secureElement.getDeviceType();
 
         return (deviceType != null) ? deviceType.getDeviceTypeName() : null;
     }
 
-    public static PassbookPass getPassByDpanId(String dpanId)
+    public PassbookPass getPassByDpanId(String dpanId)
     {
         return PASS_MANAGEMENT_SERVICE.getPassByDpanId(dpanId);
     }
 
-    public static SecureElement getSecureElementByDpanId(String dpanId)
+    public SecureElement getSecureElementByDpanId(String dpanId)
     {
         PassPan passPan = PASS_MANAGEMENT_SERVICE.getPassPanByDpanId(dpanId);
 
         return (passPan != null) ? passPan.getSecureElementId() : null;
     }
 
-    public static String getValueFromPassbookPass(PassbookPass passbookPass, String key)
+    public String getValueFromPassbookPass(PassbookPass passbookPass, String key)
     {
         String value = null;
 
@@ -60,12 +65,12 @@ class SMPEventDataService
         return value;
     }
 
-    public static PassPan getPassPanByPassSerialAndSeid(String passSerial, String seid)
+    public PassPan getPassPanByPassSerialAndSeid(String passSerial, String seid)
     {
         return PASS_MANAGEMENT_SERVICE.getPrimaryPassPanByPassSerialAndSeid(seid, passSerial);
     }
 
-    public static String getCompanionDeviceSerialNumber(String serialNumber)
+    public String getCompanionDeviceSerialNumber(String serialNumber)
     {
         SecureElement secureElement = SECURE_ELEMENT_SERVICE.findSecureElementBySerialNumber(serialNumber);
 

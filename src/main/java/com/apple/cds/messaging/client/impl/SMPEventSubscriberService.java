@@ -6,7 +6,7 @@ import com.apple.cds.messaging.client.events.AbstractConsumerServiceEventListene
 import com.apple.cds.messaging.client.exception.ServiceException;
 import com.apple.iossystems.logging.pubsub.LogEventSerializer;
 import com.apple.iossystems.logging.pubsub.LoggingSubscriberServiceBase;
-import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
+import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import org.apache.log4j.Logger;
 
 /**
@@ -34,13 +34,13 @@ public abstract class SMPEventSubscriberService<LogEvent> extends LoggingSubscri
     {
         ConsumerServiceProperties properties = new ConsumerServicePropertiesImpl();
 
-        properties.setRabbitmqHost(ApplicationConfigurationManager.getKeystoneRabbitHost());
-        properties.setRabbitmqPort(Integer.valueOf(ApplicationConfigurationManager.getKeystoneRabbitPort()));
-        properties.setRabbitmqUser(ApplicationConfigurationManager.getKeystoneRabbitUser());
-        properties.setRabbitmqPassword(ApplicationConfigurationManager.getKeystoneRabbitPassword());
-        properties.setRabbitmqVirtualhost(ApplicationConfigurationManager.getKeystoneRabbitVirtualHost());
-        properties.setRabbitConnectionCount(ApplicationConfigurationManager.getRabbitConsumerThreadsCount());
-        properties.setServiceConsumerPrefetchCount(ApplicationConfigurationManager.getRabbitConsumerThreadsPrefetchCount());
+        properties.setRabbitmqHost(ApplicationConfiguration.getKeystoneRabbitHost());
+        properties.setRabbitmqPort(Integer.valueOf(ApplicationConfiguration.getKeystoneRabbitPort()));
+        properties.setRabbitmqUser(ApplicationConfiguration.getKeystoneRabbitUser());
+        properties.setRabbitmqPassword(ApplicationConfiguration.getKeystoneRabbitPassword());
+        properties.setRabbitmqVirtualhost(ApplicationConfiguration.getKeystoneRabbitVirtualHost());
+        properties.setRabbitConnectionCount(ApplicationConfiguration.getRabbitConsumerThreadsCount());
+        properties.setServiceConsumerPrefetchCount(ApplicationConfiguration.getRabbitConsumerThreadsPrefetchCount());
 
         properties.setServiceConsumerQueue(queueName);
         properties.setServiceName(serviceName);

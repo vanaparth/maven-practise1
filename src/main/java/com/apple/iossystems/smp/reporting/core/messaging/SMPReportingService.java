@@ -1,7 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
 import com.apple.cds.messaging.client.impl.PubSubUtil;
-import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
+import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventType;
 import com.apple.iossystems.smp.reporting.ireporter.publish.PublishTaskHandler;
@@ -35,7 +35,7 @@ public class SMPReportingService
 
     private void createSMPEventExchange()
     {
-        String exchangeName = ApplicationConfigurationManager.getSMPEventsExchangeName();
+        String exchangeName = ApplicationConfiguration.getSMPEventsExchangeName();
 
         createExchange(exchangeName);
 

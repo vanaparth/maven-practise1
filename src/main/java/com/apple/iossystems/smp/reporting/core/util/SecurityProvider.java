@@ -1,6 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.util;
 
-import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
+import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import com.apple.iossystems.smp.utils.CryptoUtils;
 import com.apple.iossystems.smp.utils.PBKDF2Util;
 import org.apache.log4j.Logger;
@@ -19,7 +19,7 @@ public class SecurityProvider
 
     private static final int HASH_ITERATIONS = 10;
 
-    private static final char[] PASSWORD = ApplicationConfigurationManager.getHashPassword().toCharArray();
+    private static final char[] PASSWORD = ApplicationConfiguration.getHashPassword().toCharArray();
 
     private SecurityProvider()
     {

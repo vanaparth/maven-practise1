@@ -117,6 +117,48 @@ class PublishMetric
         return auditMetrics;
     }
 
+    private static PublishMetric getReportsPublishMetrics()
+    {
+        return new Builder().messagesSent(Metric.REPORTS_MESSAGES_SENT).
+                recordsSent(Metric.REPORTS_RECORDS_SENT).
+                messagesFailed(Metric.REPORTS_MESSAGES_FAILED).
+                recordsFailed(Metric.REPORTS_RECORDS_FAILED).
+                iReporterRecordsSent(Metric.IREPORTER_REPORTS_RECORDS_SENT).
+                iReporterRecordsFailed(Metric.IREPORTER_REPORTS_RECORDS_FAILED).
+                iReporterRecordsPending(Metric.IREPORTER_REPORTS_RECORDS_PENDING).
+                iReporterRecordsLost(Metric.IREPORTER_REPORTS_RECORDS_LOST).
+                auditRecordsSent(Metric.AUDIT_RECORDS_SENT).
+                auditRecordsFailed(Metric.AUDIT_RECORDS_FAILED).
+                iReporterTiming(Metric.IREPORTER_TIMING).
+                auditMetrics(new Metric[]{
+                        Metric.IREPORTER_REPORTS_RECORDS_SENT,
+                        Metric.IREPORTER_REPORTS_RECORDS_FAILED,
+                        Metric.IREPORTER_REPORTS_RECORDS_PENDING,
+                        Metric.IREPORTER_REPORTS_RECORDS_LOST
+                }).build();
+    }
+
+    private static PublishMetric getPaymentReportsPublishMetrics()
+    {
+        return new Builder().messagesSent(Metric.PAYMENT_REPORTS_MESSAGES_SENT).
+                recordsSent(Metric.PAYMENT_REPORTS_RECORDS_SENT).
+                messagesFailed(Metric.PAYMENT_REPORTS_MESSAGES_FAILED).
+                recordsFailed(Metric.PAYMENT_REPORTS_RECORDS_FAILED).
+                iReporterRecordsSent(Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_SENT).
+                iReporterRecordsFailed(Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_FAILED).
+                iReporterRecordsPending(Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_PENDING).
+                iReporterRecordsLost(Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_LOST).
+                auditRecordsSent(Metric.PAYMENT_AUDIT_RECORDS_SENT).
+                auditRecordsFailed(Metric.PAYMENT_AUDIT_RECORDS_FAILED).
+                iReporterTiming(Metric.PAYMENT_IREPORTER_TIMING).
+                auditMetrics(new Metric[]{
+                        Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_SENT,
+                        Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_FAILED,
+                        Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_PENDING,
+                        Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_LOST
+                }).build();
+    }
+
     private static class Builder
     {
         private Metric messagesSent;
@@ -216,47 +258,5 @@ class PublishMetric
         {
             return new PublishMetric(this);
         }
-    }
-
-    private static PublishMetric getReportsPublishMetrics()
-    {
-        return new Builder().messagesSent(Metric.REPORTS_MESSAGES_SENT).
-                recordsSent(Metric.REPORTS_RECORDS_SENT).
-                messagesFailed(Metric.REPORTS_MESSAGES_FAILED).
-                recordsFailed(Metric.REPORTS_RECORDS_FAILED).
-                iReporterRecordsSent(Metric.IREPORTER_REPORTS_RECORDS_SENT).
-                iReporterRecordsFailed(Metric.IREPORTER_REPORTS_RECORDS_FAILED).
-                iReporterRecordsPending(Metric.IREPORTER_REPORTS_RECORDS_PENDING).
-                iReporterRecordsLost(Metric.IREPORTER_REPORTS_RECORDS_LOST).
-                auditRecordsSent(Metric.AUDIT_RECORDS_SENT).
-                auditRecordsFailed(Metric.AUDIT_RECORDS_FAILED).
-                iReporterTiming(Metric.IREPORTER_TIMING).
-                auditMetrics(new Metric[]{
-                        Metric.IREPORTER_REPORTS_RECORDS_SENT,
-                        Metric.IREPORTER_REPORTS_RECORDS_FAILED,
-                        Metric.IREPORTER_REPORTS_RECORDS_PENDING,
-                        Metric.IREPORTER_REPORTS_RECORDS_LOST
-                }).build();
-    }
-
-    private static PublishMetric getPaymentReportsPublishMetrics()
-    {
-        return new Builder().messagesSent(Metric.PAYMENT_REPORTS_MESSAGES_SENT).
-                recordsSent(Metric.PAYMENT_REPORTS_RECORDS_SENT).
-                messagesFailed(Metric.PAYMENT_REPORTS_MESSAGES_FAILED).
-                recordsFailed(Metric.PAYMENT_REPORTS_RECORDS_FAILED).
-                iReporterRecordsSent(Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_SENT).
-                iReporterRecordsFailed(Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_FAILED).
-                iReporterRecordsPending(Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_PENDING).
-                iReporterRecordsLost(Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_LOST).
-                auditRecordsSent(Metric.PAYMENT_AUDIT_RECORDS_SENT).
-                auditRecordsFailed(Metric.PAYMENT_AUDIT_RECORDS_FAILED).
-                iReporterTiming(Metric.PAYMENT_IREPORTER_TIMING).
-                auditMetrics(new Metric[]{
-                        Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_SENT,
-                        Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_FAILED,
-                        Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_PENDING,
-                        Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_LOST
-                }).build();
     }
 }

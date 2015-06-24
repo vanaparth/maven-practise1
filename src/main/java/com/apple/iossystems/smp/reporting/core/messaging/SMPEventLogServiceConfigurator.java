@@ -2,7 +2,7 @@ package com.apple.iossystems.smp.reporting.core.messaging;
 
 import com.apple.cds.keystone.config.PropertyManager;
 import com.apple.iossystems.logging.LogServiceConfigurator;
-import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
+import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -18,17 +18,17 @@ public class SMPEventLogServiceConfigurator implements LogServiceConfigurator
     {
         Map<String, String> map = new HashMap<>();
 
-        map.put("rabbit.host", ApplicationConfigurationManager.getKeystoneRabbitHost());
-        map.put("rabbit.port", ApplicationConfigurationManager.getKeystoneRabbitPort());
-        map.put("rabbit.user", ApplicationConfigurationManager.getKeystoneRabbitUser());
-        map.put("rabbit.pass", ApplicationConfigurationManager.getKeystoneRabbitPassword());
-        map.put("rabbit.vhost", ApplicationConfigurationManager.getKeystoneRabbitVirtualHost());
-        map.put("rabbit.exchange", ApplicationConfigurationManager.getSMPEventsExchangeName());
+        map.put("rabbit.host", ApplicationConfiguration.getKeystoneRabbitHost());
+        map.put("rabbit.port", ApplicationConfiguration.getKeystoneRabbitPort());
+        map.put("rabbit.user", ApplicationConfiguration.getKeystoneRabbitUser());
+        map.put("rabbit.pass", ApplicationConfiguration.getKeystoneRabbitPassword());
+        map.put("rabbit.vhost", ApplicationConfiguration.getKeystoneRabbitVirtualHost());
+        map.put("rabbit.exchange", ApplicationConfiguration.getSMPEventsExchangeName());
 
-        map.put("logservice.owner", ApplicationConfigurationManager.getLogServiceOwner());
-        map.put("logservice.path", ApplicationConfigurationManager.getLogServicePath());
-        map.put("logservice.category", ApplicationConfigurationManager.getLogServiceCategory());
-        map.put("logservice.localStoreName", ApplicationConfigurationManager.getLogServiceStore());
+        map.put("logservice.owner", ApplicationConfiguration.getLogServiceOwner());
+        map.put("logservice.path", ApplicationConfiguration.getLogServicePath());
+        map.put("logservice.category", ApplicationConfiguration.getLogServiceCategory());
+        map.put("logservice.localStoreName", ApplicationConfiguration.getLogServiceStore());
 
         return map;
     }

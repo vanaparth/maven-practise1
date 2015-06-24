@@ -1,6 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
-import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
+import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 
 import java.math.BigInteger;
 
@@ -9,8 +9,8 @@ import java.math.BigInteger;
  */
 public enum FmipSource
 {
-    FMIP("1", "FMIP", getFmipSourceCertificate(ApplicationConfigurationManager.getFmipCertificate(), "1")),
-    REMOTE("2", "SETUP_SERVICE", getFmipSourceCertificate(ApplicationConfigurationManager.getFmipRemoteCertificate(), "2"));
+    FMIP("1", "FMIP", getFmipSourceCertificate(ApplicationConfiguration.getFmipCertificate(), "1")),
+    REMOTE("2", "SETUP_SERVICE", getFmipSourceCertificate(ApplicationConfiguration.getFmipRemoteCertificate(), "2"));
 
     private final String code;
     private final String description;

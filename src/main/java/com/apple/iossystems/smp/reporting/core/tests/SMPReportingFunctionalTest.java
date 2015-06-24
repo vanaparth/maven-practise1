@@ -25,10 +25,10 @@ public class SMPReportingFunctionalTest
 
     public static void main(String[] args)
     {
-        integrationTests();
+        new SMPReportingFunctionalTest().integrationTests();
     }
 
-    private static void integrationTests()
+    private void integrationTests()
     {
         setSystemProperties();
         initPropertyManager();
@@ -48,12 +48,12 @@ public class SMPReportingFunctionalTest
         test10();
     }
 
-    private static void setSystemProperties()
+    private void setSystemProperties()
     {
         System.setProperty("enable.hubble", "true");
     }
 
-    private static void initPropertyManager()
+    private void initPropertyManager()
     {
         try
         {
@@ -66,17 +66,17 @@ public class SMPReportingFunctionalTest
         }
     }
 
-    private static void test1()
+    private void test1()
     {
         postRecords(getRecords(1));
     }
 
-    private static void test2()
+    private void test2()
     {
         postRecords(getRecords(1));
     }
 
-    private static void test3()
+    private void test3()
     {
         postRecords(getRecords(5));
         sleep(60 * 1000);
@@ -87,12 +87,12 @@ public class SMPReportingFunctionalTest
         postRecords(getRecords(20));
     }
 
-    private static void test4()
+    private void test4()
     {
         postRecords(getRecords(100));
     }
 
-    private static void test5()
+    private void test5()
     {
         // Test 3
         postRecords(getRecords(5));
@@ -108,7 +108,7 @@ public class SMPReportingFunctionalTest
         postRecords(getRecords(200));
     }
 
-    private static void test6()
+    private void test6()
     {
         IReporterConfiguration configuration = IReporterConfiguration.Builder.fromDefault(IReporterConfiguration.Type.REPORTS);
 
@@ -118,7 +118,7 @@ public class SMPReportingFunctionalTest
 
         try
         {
-            SMPHttpClient.request(httpRequest);
+            SMPHttpClient.getInstance().request(httpRequest);
         }
         catch (Exception e)
         {
@@ -126,11 +126,11 @@ public class SMPReportingFunctionalTest
         }
     }
 
-    private static void test7()
+    private void test7()
     {
         try
         {
-            SMPHttpClient.request(HttpRequest.getInstance(IReporterConfiguration.Type.REPORTS.getConfigurationURL(), "POST", null, null, "", null));
+            SMPHttpClient.getInstance().request(HttpRequest.getInstance(IReporterConfiguration.Type.REPORTS.getConfigurationURL(), "POST", null, null, "", null));
         }
         catch (Exception e)
         {
@@ -138,21 +138,21 @@ public class SMPReportingFunctionalTest
         }
     }
 
-    private static void test8()
+    private void test8()
     {
         testMissingHeader("X-LoadText");
     }
 
-    private static void test9()
+    private void test9()
     {
         testMissingHeader("Content-Type");
     }
 
-    private static void test10()
+    private void test10()
     {
         try
         {
-            SMPHttpClient.request(HttpRequest.getInstance(IReporterConfiguration.Type.REPORTS.getConfigurationURL(), "GET", null, null, null, null));
+            SMPHttpClient.getInstance().request(HttpRequest.getInstance(IReporterConfiguration.Type.REPORTS.getConfigurationURL(), "GET", null, null, null, null));
         }
         catch (Exception e)
         {
@@ -160,7 +160,7 @@ public class SMPReportingFunctionalTest
         }
     }
 
-    private static void testMissingHeader(String headerKey)
+    private void testMissingHeader(String headerKey)
     {
         IReporterConfiguration configuration = IReporterConfiguration.Builder.fromDefault(IReporterConfiguration.Type.REPORTS);
         Map<String, String> headers = configuration.getRequestHeaders();
@@ -173,7 +173,7 @@ public class SMPReportingFunctionalTest
 
         try
         {
-            SMPHttpClient.request(httpRequest);
+            SMPHttpClient.getInstance().request(httpRequest);
         }
         catch (Exception e)
         {
@@ -181,7 +181,7 @@ public class SMPReportingFunctionalTest
         }
     }
 
-    private static void sleep(long millis)
+    private void sleep(long millis)
     {
         try
         {
@@ -193,14 +193,14 @@ public class SMPReportingFunctionalTest
         }
     }
 
-    private static void postRecords(EventRecords records)
+    private void postRecords(EventRecords records)
     {
         SMPReportingService smpReportingService = SMPReportingService.getInstance();
 
         postRecords(smpReportingService, records);
     }
 
-    private static void postRecords(SMPReportingService smpReportingService, EventRecords records)
+    private void postRecords(SMPReportingService smpReportingService, EventRecords records)
     {
         List<EventRecord> list = records.getList();
 
@@ -210,7 +210,7 @@ public class SMPReportingFunctionalTest
         }
     }
 
-    private static EventRecords getRecords(int count)
+    private EventRecords getRecords(int count)
     {
         EventRecords records = EventRecords.getInstance();
 
@@ -222,7 +222,7 @@ public class SMPReportingFunctionalTest
         return records;
     }
 
-    private static void testICloudProdConfig()
+    private void testICloudProdConfig()
     {
         String url = "https://icloud4-e3.icloud.com";
 
@@ -230,7 +230,7 @@ public class SMPReportingFunctionalTest
 
         try
         {
-            StockholmHTTPResponse response = SMPHttpClient.request(httpRequest);
+            StockholmHTTPResponse response = SMPHttpClient.getInstance().request(httpRequest);
 
             System.out.println(response.getContent());
         }
@@ -240,7 +240,7 @@ public class SMPReportingFunctionalTest
         }
     }
 
-    private static void testICloudProdPublish()
+    private void testICloudProdPublish()
     {
         IReporterConfiguration configuration = IReporterConfiguration.Builder.fromDefault(IReporterConfiguration.Type.REPORTS);
         Map<String, String> headers = configuration.getRequestHeaders();
@@ -251,7 +251,7 @@ public class SMPReportingFunctionalTest
 
         try
         {
-            SMPHttpClient.request(httpRequest);
+            SMPHttpClient.getInstance().request(httpRequest);
         }
         catch (Exception e)
         {
@@ -259,7 +259,7 @@ public class SMPReportingFunctionalTest
         }
     }
 
-    private static EventRecord getRecord()
+    private EventRecord getRecord()
     {
         Map<String, String> data = new HashMap<>();
 

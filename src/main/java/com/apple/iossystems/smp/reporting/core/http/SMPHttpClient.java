@@ -15,12 +15,17 @@ public class SMPHttpClient
     {
     }
 
-    private static StockholmHTTPResponse sendRequest(HttpRequest httpRequest) throws Exception
+    public static SMPHttpClient getInstance()
+    {
+        return new SMPHttpClient();
+    }
+
+    private StockholmHTTPResponse sendRequest(HttpRequest httpRequest) throws Exception
     {
         return new HTTPClient().postData(httpRequest.getUrl(), httpRequest.getQueryString(), httpRequest.getData(), httpRequest.getContentType(), httpRequest.getHttpMethod(), httpRequest.getHeaders());
     }
 
-    private static StockholmHTTPResponse requestWithRetries(HttpRequest httpRequest, int maxRetryCount)
+    private StockholmHTTPResponse requestWithRetries(HttpRequest httpRequest, int maxRetryCount)
     {
         StockholmHTTPResponse response = null;
         int retryCount = 0;
@@ -53,7 +58,7 @@ public class SMPHttpClient
         return response;
     }
 
-    public static StockholmHTTPResponse request(HttpRequest httpRequest) throws Exception
+    public StockholmHTTPResponse request(HttpRequest httpRequest) throws Exception
     {
         return requestWithRetries(httpRequest, 0);
     }

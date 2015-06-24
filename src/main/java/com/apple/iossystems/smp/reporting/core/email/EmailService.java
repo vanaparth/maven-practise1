@@ -3,7 +3,7 @@ package com.apple.iossystems.smp.reporting.core.email;
 import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
 import com.apple.iossystems.smp.email.service.impl.ssp.domain.*;
 import com.apple.iossystems.smp.email.service.impl.ssp.handler.*;
-import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
+import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
@@ -25,10 +25,10 @@ public class EmailService
 {
     private static final Logger LOGGER = Logger.getLogger(EmailService.class);
 
-    private static final boolean PROVISION_EMAIL_ENABLED = ApplicationConfigurationManager.isProvisionEmailEnabled();
-    private static final boolean SUSPEND_EMAIL_ENABLED = ApplicationConfigurationManager.isSuspendEmailEnabled();
-    private static final boolean UNLINK_EMAIL_ENABLED = ApplicationConfigurationManager.isUnlinkEmailEnabled();
-    private static final boolean DEFAULT_EMAIL_LOCALE_ENABLED = ApplicationConfigurationManager.isDefaultEmailLocaleEnabled();
+    private static final boolean PROVISION_EMAIL_ENABLED = ApplicationConfiguration.isProvisionEmailEnabled();
+    private static final boolean SUSPEND_EMAIL_ENABLED = ApplicationConfiguration.isSuspendEmailEnabled();
+    private static final boolean UNLINK_EMAIL_ENABLED = ApplicationConfiguration.isUnlinkEmailEnabled();
+    private static final boolean DEFAULT_EMAIL_LOCALE_ENABLED = ApplicationConfiguration.isDefaultEmailLocaleEnabled();
 
     private EventListener eventListener = EventListenerClient.getEmailEventListener();
 

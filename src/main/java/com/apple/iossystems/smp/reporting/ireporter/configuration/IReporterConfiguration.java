@@ -1,6 +1,6 @@
 package com.apple.iossystems.smp.reporting.ireporter.configuration;
 
-import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
+import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import com.google.gson.*;
 
 import java.util.HashMap;
@@ -12,7 +12,7 @@ import java.util.Map;
 public class IReporterConfiguration
 {
     // URLs
-    private static final String BASE_URL = ApplicationConfigurationManager.getIReporterURL();
+    private static final String BASE_URL = ApplicationConfiguration.getIReporterURL();
 
     private static final String DEFAULT_REPORTS_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/stockholm";
 

@@ -11,8 +11,6 @@ class CacheService
 {
     private static final Logger LOGGER = Logger.getLogger(CacheService.class);
 
-    private static final CacheService INSTANCE = new CacheService();
-
     private Cache CACHE;
 
     private CacheService()
@@ -22,7 +20,7 @@ class CacheService
 
     public static CacheService getInstance()
     {
-        return INSTANCE;
+        return new CacheService();
     }
 
     private void initCache()

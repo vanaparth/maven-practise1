@@ -1,6 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.application;
 
-import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigurationManager;
+import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import com.apple.iossystems.smp.reporting.core.messaging.SMPReportingService;
 
 /**
@@ -29,13 +29,13 @@ public class SMPReportingApplication
 
     private void setSystemProperties()
     {
-        System.setProperty("rabbit.host", ApplicationConfigurationManager.getKeystoneRabbitHost());
-        System.setProperty("rabbit.port", ApplicationConfigurationManager.getKeystoneRabbitPort());
-        System.setProperty("rabbit.user", ApplicationConfigurationManager.getKeystoneRabbitUser());
-        System.setProperty("rabbit.pass", ApplicationConfigurationManager.getKeystoneRabbitPassword());
-        System.setProperty("rabbit.vhost", ApplicationConfigurationManager.getKeystoneRabbitVirtualHost());
-        System.setProperty("rabbit.consumerThreads", String.valueOf(ApplicationConfigurationManager.getRabbitConsumerThreadsCount()));
-        System.setProperty("rabbit.consumerThreads.prefetchCount", String.valueOf(ApplicationConfigurationManager.getRabbitConsumerThreadsPrefetchCount()));
+        System.setProperty("rabbit.host", ApplicationConfiguration.getKeystoneRabbitHost());
+        System.setProperty("rabbit.port", ApplicationConfiguration.getKeystoneRabbitPort());
+        System.setProperty("rabbit.user", ApplicationConfiguration.getKeystoneRabbitUser());
+        System.setProperty("rabbit.pass", ApplicationConfiguration.getKeystoneRabbitPassword());
+        System.setProperty("rabbit.vhost", ApplicationConfiguration.getKeystoneRabbitVirtualHost());
+        System.setProperty("rabbit.consumerThreads", String.valueOf(ApplicationConfiguration.getRabbitConsumerThreadsCount()));
+        System.setProperty("rabbit.consumerThreads.prefetchCount", String.valueOf(ApplicationConfiguration.getRabbitConsumerThreadsPrefetchCount()));
     }
 
     public void start()

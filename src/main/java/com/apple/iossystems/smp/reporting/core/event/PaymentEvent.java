@@ -39,6 +39,59 @@ public class PaymentEvent
         return new Builder();
     }
 
+    private EventRecords buildRecords()
+    {
+        EventRecord record = EventRecord.getInstance();
+
+        record.setAttributeValue(EventAttribute.EVENT_TYPE.key(), EventType.PAYMENT.getKey());
+
+        record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(Calendar.getCurrentHourMillis()));
+        record.setAttributeValue(EventAttribute.CURRENCY.key(), currency);
+        record.setAttributeValue(EventAttribute.MERCHANT_ID.key(), getMerchantInfo());
+        record.setAttributeValue(EventAttribute.TRANSACTION_ID.key(), transactionId);
+        record.setAttributeValue(EventAttribute.TRANSACTION_AMOUNT.key(), formatTransactionAmount(transactionAmount));
+
+        String transactionStatusKey = EventAttribute.TRANSACTION_STATUS.key();
+
+        if (transactionStatus != null)
+        {
+            record.setAttributeValue(transactionStatusKey, transactionStatus.getCode());
+        }
+        else
+        {
+            record.setAttributeValue(transactionStatusKey, PaymentTransactionStatus.SUCCESS.getCode());
+        }
+
+        EventRecords records = EventRecords.getInstance();
+        records.add(record);
+
+        return records;
+    }
+
+    private String getMerchantInfo()
+    {
+        String merchantInfo = null;
+
+        if (merchantId != null)
+        {
+            merchantInfo = merchantId;
+        }
+
+        if (merchantName != null)
+        {
+            if (merchantInfo != null)
+            {
+                merchantInfo += "\t" + merchantName;
+            }
+            else
+            {
+                merchantInfo = merchantName;
+            }
+        }
+
+        return merchantInfo;
+    }
+
     public static class Builder
     {
         private String currency;
@@ -112,77 +165,6 @@ public class PaymentEvent
                 LOGGER.error(e);
                 return EventRecords.getInstance();
             }
-        }
-    }
-
-    private EventRecords buildRecords()
-    {
-        EventRecord record = EventRecord.getInstance();
-
-        record.setAttributeValue(EventAttribute.EVENT_TYPE.key(), EventType.PAYMENT.getKey());
-
-        record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(Calendar.getCurrentHourMillis()));
-        record.setAttributeValue(EventAttribute.CURRENCY.key(), currency);
-        record.setAttributeValue(EventAttribute.MERCHANT_ID.key(), getMerchantInfo());
-        record.setAttributeValue(EventAttribute.TRANSACTION_ID.key(), transactionId);
-        record.setAttributeValue(EventAttribute.TRANSACTION_AMOUNT.key(), formatTransactionAmount(transactionAmount));
-
-        String transactionStatusKey = EventAttribute.TRANSACTION_STATUS.key();
-
-        if (transactionStatus != null)
-        {
-            record.setAttributeValue(transactionStatusKey, transactionStatus.getCode());
-        }
-        else
-        {
-            record.setAttributeValue(transactionStatusKey, PaymentTransactionStatus.SUCCESS.getCode());
-        }
-
-        EventRecords records = EventRecords.getInstance();
-        records.add(record);
-
-        return records;
-    }
-
-    private String getMerchantInfo()
-    {
-        String merchantInfo = null;
-
-        if (merchantId != null)
-        {
-            merchantInfo = merchantId;
-        }
-
-        if (merchantName != null)
-        {
-            if (merchantInfo != null)
-            {
-                merchantInfo += "\t" + merchantName;
-            }
-            else
-            {
-                merchantInfo = merchantName;
-            }
-        }
-
-        return merchantInfo;
-    }
-
-    private enum PaymentTransactionStatus
-    {
-        FAILED("0"),
-        SUCCESS("1");
-
-        private final String code;
-
-        private PaymentTransactionStatus(String code)
-        {
-            this.code = code;
-        }
-
-        private String getCode()
-        {
-            return code;
         }
     }
 }

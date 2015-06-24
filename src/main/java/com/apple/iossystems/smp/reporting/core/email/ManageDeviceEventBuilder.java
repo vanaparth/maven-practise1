@@ -30,6 +30,8 @@ public class ManageDeviceEventBuilder
     private Map<String, String> cardData;
     private List<CardEvent> cardEvents;
 
+    private static final SMPEventDataServiceClient SMP_EVENT_DATA_SERVICE_CLIENT = SMPEventDataServiceClient.getInstance();
+
     private ManageDeviceEventBuilder()
     {
     }
@@ -143,7 +145,7 @@ public class ManageDeviceEventBuilder
 
         for (CardEvent cardEvent : cardEvents)
         {
-            secureElement = SMPEventDataServiceClient.getSecureElementByDpanId(cardEvent.getDpanId());
+            secureElement = SMP_EVENT_DATA_SERVICE_CLIENT.getSecureElementByDpanId(cardEvent.getDpanId());
 
             if (secureElement != null)
             {
@@ -151,6 +153,6 @@ public class ManageDeviceEventBuilder
             }
         }
 
-        return (secureElement != null) ? SMPEventDataServiceClient.getDeviceType(secureElement) : null;
+        return (secureElement != null) ? SMP_EVENT_DATA_SERVICE_CLIENT.getDeviceType(secureElement) : null;
     }
 }

@@ -4,7 +4,6 @@ import com.apple.cds.keystone.spring.AppContext;
 import com.apple.iossystems.smp.persistence.entity.*;
 import com.apple.iossystems.smp.service.PassManagementService;
 import com.apple.iossystems.smp.service.SecureElementService;
-import org.apache.log4j.Logger;
 
 import java.util.Collection;
 
@@ -13,7 +12,6 @@ import java.util.Collection;
  */
 class SMPEventDataService
 {
-    private static final Logger LOGGER = Logger.getLogger(SMPEventDataService.class);
     private static final PassManagementService PASS_MANAGEMENT_SERVICE = AppContext.getApplicationContext().getBean(PassManagementService.class);
     private static final SecureElementService SECURE_ELEMENT_SERVICE = AppContext.getApplicationContext().getBean(SecureElementService.class);
 
@@ -23,16 +21,9 @@ class SMPEventDataService
 
     public static String getDeviceType(SecureElement secureElement)
     {
-        String deviceTypeName = null;
-
         DeviceType deviceType = secureElement.getDeviceType();
 
-        if (deviceType != null)
-        {
-            deviceTypeName = deviceType.getDeviceTypeName();
-        }
-
-        return deviceTypeName;
+        return (deviceType != null) ? deviceType.getDeviceTypeName() : null;
     }
 
     public static PassbookPass getPassByDpanId(String dpanId)
@@ -42,16 +33,9 @@ class SMPEventDataService
 
     public static SecureElement getSecureElementByDpanId(String dpanId)
     {
-        SecureElement secureElement = null;
-
         PassPan passPan = PASS_MANAGEMENT_SERVICE.getPassPanByDpanId(dpanId);
 
-        if (passPan != null)
-        {
-            secureElement = passPan.getSecureElementId();
-        }
-
-        return secureElement;
+        return (passPan != null) ? passPan.getSecureElementId() : null;
     }
 
     public static String getValueFromPassbookPass(PassbookPass passbookPass, String key)
@@ -78,18 +62,7 @@ class SMPEventDataService
 
     public static PassPan getPassPanByPassSerialAndSeid(String passSerial, String seid)
     {
-        PassPan passPan = null;
-
-        try
-        {
-            passPan = PASS_MANAGEMENT_SERVICE.getPrimaryPassPanByPassSerialAndSeid(seid, passSerial);
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e);
-        }
-
-        return passPan;
+        return PASS_MANAGEMENT_SERVICE.getPrimaryPassPanByPassSerialAndSeid(seid, passSerial);
     }
 
     public static String getCompanionDeviceSerialNumber(String serialNumber)

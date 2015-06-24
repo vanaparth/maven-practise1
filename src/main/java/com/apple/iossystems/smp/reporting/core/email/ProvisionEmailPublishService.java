@@ -17,6 +17,8 @@ public class ProvisionEmailPublishService
 
     private EmailService emailService = EmailService.getInstance();
 
+    private static final SMPEventCache SMP_EVENT_CACHE = SMPEventCache.getInstance();
+
     private static final ProvisionEmailPublishService INSTANCE = new ProvisionEmailPublishService();
 
     private ProvisionEmailPublishService()
@@ -50,7 +52,7 @@ public class ProvisionEmailPublishService
 
     private void publishEvent(String conversationId, boolean firstProvision)
     {
-        String json = SMPEventCache.remove(SMPEventCache.Attribute.PROVISION_EVENT, conversationId);
+        String json = SMP_EVENT_CACHE.remove(SMPEventCache.Attribute.PROVISION_EVENT, conversationId);
 
         if (firstProvision && (json != null))
         {

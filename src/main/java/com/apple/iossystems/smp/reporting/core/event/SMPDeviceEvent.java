@@ -20,7 +20,7 @@ public enum SMPDeviceEvent
 
     private final String code;
 
-    private SMPDeviceEvent(String code)
+    SMPDeviceEvent(String code)
     {
         this.code = code;
     }

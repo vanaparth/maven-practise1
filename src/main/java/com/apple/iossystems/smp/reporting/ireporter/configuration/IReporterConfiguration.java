@@ -150,7 +150,7 @@ public class IReporterConfiguration
         private final String configurationURL;
         private final String publishURL;
 
-        private Type(String configurationURL, String publishURL)
+        Type(String configurationURL, String publishURL)
         {
             this.configurationURL = configurationURL;
             this.publishURL = publishURL;

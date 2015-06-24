@@ -15,7 +15,7 @@ public enum ManageDeviceEventSource
     private final Actor actor;
     private final String code;
 
-    private ManageDeviceEventSource(Actor actor, String code)
+    ManageDeviceEventSource(Actor actor, String code)
     {
         this.actor = actor;
         this.code = code;

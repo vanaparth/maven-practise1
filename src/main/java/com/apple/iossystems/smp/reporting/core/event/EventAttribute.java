@@ -47,7 +47,7 @@ public enum EventAttribute
 
     private final String key;
 
-    private EventAttribute(String key)
+    EventAttribute(String key)
     {
         this.key = key;
     }

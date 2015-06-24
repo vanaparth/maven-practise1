@@ -16,7 +16,7 @@ public enum EventType
     private final String key;
     private final LogLevel logLevel;
 
-    private EventType(String key, LogLevel logLevel)
+    EventType(String key, LogLevel logLevel)
     {
         this.key = key;
         this.logLevel = logLevel;

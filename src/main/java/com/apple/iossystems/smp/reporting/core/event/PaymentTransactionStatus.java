@@ -10,7 +10,7 @@ public enum PaymentTransactionStatus
 
     private final String code;
 
-    private PaymentTransactionStatus(String code)
+    PaymentTransactionStatus(String code)
     {
         this.code = code;
     }

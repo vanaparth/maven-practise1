@@ -18,7 +18,7 @@ public enum FmipSource
 
     private static final String[] REMOTE_REQUEST_REASONS = {"Remove all cards."};
 
-    private FmipSource(String code, String description, BigInteger certificate)
+    FmipSource(String code, String description, BigInteger certificate)
     {
         this.code = code;
         this.description = description;

@@ -10,7 +10,7 @@ public enum HttpResponseAction
     RETRY,
     RELOAD_CONFIGURATION;
 
-    private HttpResponseAction()
+    HttpResponseAction()
     {
     }
 }

@@ -47,7 +47,7 @@ public enum Metric
 
     private final String kpi;
 
-    private Metric(String kpi)
+    Metric(String kpi)
     {
         this.kpi = kpi;
     }

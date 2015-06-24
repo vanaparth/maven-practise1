@@ -10,7 +10,7 @@ public enum WalletProvisioningDataSource
 
     private final EventAttribute eventAttribute;
 
-    private WalletProvisioningDataSource(EventAttribute eventAttribute)
+    WalletProvisioningDataSource(EventAttribute eventAttribute)
     {
         this.eventAttribute = eventAttribute;
     }

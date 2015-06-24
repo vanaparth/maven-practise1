@@ -15,7 +15,7 @@ public enum ConfigurationMetric
     private final Metric requestedMetric;
     private final Metric changedMetric;
 
-    private ConfigurationMetric(Metric requestedMetric, Metric changedMetric)
+    ConfigurationMetric(Metric requestedMetric, Metric changedMetric)
     {
         this.requestedMetric = requestedMetric;
         this.changedMetric = changedMetric;

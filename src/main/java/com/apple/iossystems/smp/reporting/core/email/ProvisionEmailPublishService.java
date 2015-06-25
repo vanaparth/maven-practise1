@@ -32,6 +32,19 @@ public class ProvisionEmailPublishService
 
     public void processProvisionEvent(String conversationId, String dsid)
     {
+        // Prevent any side effects
+        try
+        {
+            doProcessProvisionEvent(conversationId, dsid);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+        }
+    }
+
+    private void doProcessProvisionEvent(String conversationId, String dsid)
+    {
         StoreManagementService storeManagementService = AppContext.getApplicationContext().getBean(StoreManagementService.class);
 
         DSIDInfo dsidInfo = null;

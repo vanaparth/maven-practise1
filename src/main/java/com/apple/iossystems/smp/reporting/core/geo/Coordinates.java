@@ -31,12 +31,6 @@ public class Coordinates
         return latitude;
     }
 
-    @Override
-    public String toString()
-    {
-        return longitude + "," + latitude;
-    }
-
     public String getReverseString()
     {
         return latitude + "," + longitude;
@@ -45,5 +39,11 @@ public class Coordinates
     public static Coordinates getDefaultCoordinates()
     {
         return DEFAULT_COORDINATES;
+    }
+
+    @Override
+    public String toString()
+    {
+        return longitude + "," + latitude;
     }
 }

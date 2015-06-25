@@ -1,7 +1,7 @@
 package com.apple.iossystems.smp.reporting.ireporter.configuration;
 
+import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
-import com.google.gson.*;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -45,6 +45,9 @@ public class IReporterConfiguration
     // Configuration reload frequency in milliseconds
     private static final int DEFAULT_CONFIGURATION_RELOAD_FREQUENCY = 60 * 1000;
 
+    private final String protocol;
+    private final String hostname;
+    private final String uri;
     private final String publishURL;
     private final String publishKey;
     private final String contentType;
@@ -55,6 +58,9 @@ public class IReporterConfiguration
 
     private IReporterConfiguration(Builder builder)
     {
+        protocol = builder.protocol;
+        hostname = builder.hostname;
+        uri = builder.uri;
         publishURL = builder.publishURL;
         publishKey = builder.publishKey;
         contentType = builder.contentType;
@@ -64,9 +70,24 @@ public class IReporterConfiguration
         configurationReloadFrequency = builder.configurationReloadFrequency;
     }
 
-    private static IReporterConfiguration getInstance(Builder builder)
+    public static Builder getBuilder()
     {
-        return new IReporterConfiguration(builder);
+        return new Builder();
+    }
+
+    public String getProtocol()
+    {
+        return protocol;
+    }
+
+    public String getHostname()
+    {
+        return hostname;
+    }
+
+    public String getUri()
+    {
+        return uri;
     }
 
     public String getPublishURL()
@@ -132,6 +153,33 @@ public class IReporterConfiguration
                 (configurationReloadFrequency == configuration.configurationReloadFrequency));
     }
 
+    public static IReporterConfiguration getConfiguration(IReporterConfiguration.Type configurationType, String json)
+    {
+        try
+        {
+            return GsonBuilderFactory.getInstance().fromJson(json, IReporterConfiguration.class);
+        }
+        catch (Exception e)
+        {
+            return getDefaultConfiguration(configurationType);
+        }
+    }
+
+    public static IReporterConfiguration getDefaultConfiguration(Type configurationType)
+    {
+        Builder builder = new Builder();
+
+        builder.publishURL(configurationType.getPublishURL()).
+                publishKey(DEFAULT_PUBLISH_KEY).
+                contentType(DEFAULT_CONTENT_TYPE).
+                publishEnabled(DEFAULT_PUBLISH_ENABLED).
+                maxBatchSize(DEFAULT_MAX_BATCH_SIZE).
+                publishFrequency(DEFAULT_PUBLISH_FREQUENCY).
+                configurationReloadFrequency(DEFAULT_CONFIGURATION_RELOAD_FREQUENCY);
+
+        return builder.build();
+    }
+
     public enum Type
     {
         REPORTS(DEFAULT_REPORTS_CONFIGURATION_URL, DEFAULT_REPORTS_URL),
@@ -161,6 +209,9 @@ public class IReporterConfiguration
 
     public static class Builder
     {
+        private String protocol;
+        private String hostname;
+        private String uri;
         private String publishURL;
         private String publishKey;
         private String contentType;
@@ -173,9 +224,22 @@ public class IReporterConfiguration
         {
         }
 
-        private static Builder getInstance()
+        public Builder protocol(String value)
         {
-            return new Builder();
+            protocol = value;
+            return this;
+        }
+
+        public Builder hostname(String value)
+        {
+            hostname = value;
+            return this;
+        }
+
+        public Builder uri(String value)
+        {
+            uri = value;
+            return this;
         }
 
         public Builder publishURL(String value)
@@ -220,6 +284,22 @@ public class IReporterConfiguration
             return this;
         }
 
+        public IReporterConfiguration build()
+        {
+            completeBuild();
+
+            validate();
+
+            return new IReporterConfiguration(this);
+        }
+
+        public void completeBuild()
+        {
+            configurationReloadFrequency = configurationReloadFrequency * 60 * 1000;
+            publishFrequency = publishFrequency * 1000;
+            publishURL = getURL(protocol, hostname, uri);
+        }
+
         private void validate()
         {
             int defaultMinBatchSize = 1;
@@ -245,87 +325,9 @@ public class IReporterConfiguration
             }
         }
 
-        public IReporterConfiguration build()
+        private String getURL(String protocol, String hostname, String uri)
         {
-            validate();
-
-            return IReporterConfiguration.getInstance(this);
-        }
-
-        public static IReporterConfiguration fromDefault(Type configurationType)
-        {
-            Builder builder = Builder.getInstance();
-
-            builder.publishURL(configurationType.getPublishURL()).
-                    publishKey(DEFAULT_PUBLISH_KEY).
-                    contentType(DEFAULT_CONTENT_TYPE).
-                    publishEnabled(DEFAULT_PUBLISH_ENABLED).
-                    maxBatchSize(DEFAULT_MAX_BATCH_SIZE).
-                    publishFrequency(DEFAULT_PUBLISH_FREQUENCY).
-                    configurationReloadFrequency(DEFAULT_CONFIGURATION_RELOAD_FREQUENCY);
-
-            return builder.build();
-        }
-
-        public static IReporterConfiguration fromJson(IReporterConfiguration.Type configurationType, String json)
-        {
-            try
-            {
-                return getGson().fromJson(json, Builder.class).build();
-            }
-            catch (Exception e)
-            {
-                return fromDefault(configurationType);
-            }
-        }
-
-        private static Gson getGson()
-        {
-            GsonBuilder gsonBuilder = new GsonBuilder();
-
-            gsonBuilder.registerTypeAdapter(Builder.class, new BuilderDeserializer());
-
-            return gsonBuilder.create();
-        }
-
-        private static class BuilderDeserializer implements JsonDeserializer<Builder>
-        {
-            @Override
-            public Builder deserialize(JsonElement jsonElement, java.lang.reflect.Type type, JsonDeserializationContext context) throws JsonParseException
-            {
-                JsonObject jsonObject = jsonElement.getAsJsonObject();
-
-                // String method = jsonObject.get("method").getAsString();
-                boolean shouldPublishFlag = jsonObject.get("shouldPublishFlag").getAsBoolean();
-                int batchSize = jsonObject.get("batchSize").getAsInt();
-                int publishFrequencyInSeconds = jsonObject.get("publishFrequencyInSeconds").getAsInt();
-                int configReloadFrequencyInMinutes = jsonObject.get("configReloadFrequencyInMinutes").getAsInt();
-
-                JsonObject headersObject = jsonObject.get("headers").getAsJsonObject();
-
-                String xLoadText = headersObject.get("X-LoadText").getAsString();
-                String contentType = headersObject.get("Content-Type").getAsString();
-
-                JsonObject endPointObject = jsonObject.getAsJsonObject("endpoint");
-
-                String protocol = endPointObject.get("protocol").getAsString();
-                String hostname = endPointObject.get("hostname").getAsString();
-                String uri = endPointObject.get("uri").getAsString();
-
-                return new Builder().publishURL(getURL(protocol, hostname, uri)).
-                        publishKey(xLoadText).
-                        contentType(contentType).
-                        publishEnabled(shouldPublishFlag).
-                        maxBatchSize(batchSize).
-                        publishFrequency(publishFrequencyInSeconds * 1000).
-                        configurationReloadFrequency(configReloadFrequencyInMinutes * 60 * 1000);
-            }
-
-            private String getURL(String protocol, String hostname, String uri)
-            {
-                return protocol + "://" + hostname + uri;
-                // return BASE_URL + uri;
-            }
+            return protocol + "://" + hostname + uri;
         }
     }
 }

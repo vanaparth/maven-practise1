@@ -110,7 +110,7 @@ public class SMPReportingFunctionalTest
 
     private void test6()
     {
-        IReporterConfiguration configuration = IReporterConfiguration.Builder.fromDefault(IReporterConfiguration.Type.REPORTS);
+        IReporterConfiguration configuration = IReporterConfiguration.getDefaultConfiguration(IReporterConfiguration.Type.REPORTS);
 
         EventRecords records = getRecords(1);
 
@@ -162,7 +162,7 @@ public class SMPReportingFunctionalTest
 
     private void testMissingHeader(String headerKey)
     {
-        IReporterConfiguration configuration = IReporterConfiguration.Builder.fromDefault(IReporterConfiguration.Type.REPORTS);
+        IReporterConfiguration configuration = IReporterConfiguration.getDefaultConfiguration(IReporterConfiguration.Type.REPORTS);
         Map<String, String> headers = configuration.getRequestHeaders();
 
         headers.remove(headerKey);
@@ -242,7 +242,7 @@ public class SMPReportingFunctionalTest
 
     private void testICloudProdPublish()
     {
-        IReporterConfiguration configuration = IReporterConfiguration.Builder.fromDefault(IReporterConfiguration.Type.REPORTS);
+        IReporterConfiguration configuration = IReporterConfiguration.getDefaultConfiguration(IReporterConfiguration.Type.REPORTS);
         Map<String, String> headers = configuration.getRequestHeaders();
 
         EventRecords records = getRecords(10);

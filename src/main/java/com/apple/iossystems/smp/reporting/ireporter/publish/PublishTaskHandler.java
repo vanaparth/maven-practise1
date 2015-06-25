@@ -1,5 +1,6 @@
 package com.apple.iossystems.smp.reporting.ireporter.publish;
 
+import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
 import com.apple.iossystems.smp.reporting.core.analytics.Statistics;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledNotification;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledTaskHandler;
@@ -12,6 +13,7 @@ import com.apple.iossystems.smp.reporting.core.hubble.HubblePublisher;
 import com.apple.iossystems.smp.reporting.core.timer.StopWatch;
 import com.apple.iossystems.smp.reporting.ireporter.json.IReporterJsonBuilder;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.LinkedBlockingQueue;
@@ -174,9 +176,12 @@ public class PublishTaskHandler implements ScheduledTaskHandler
             int backLog = statistics.getIntValue(publishMetric.getIReporterRecordsPending());
             int lost = statistics.getIntValue(publishMetric.getIReporterRecordsLost());
 
-            IReporterAudit auditData = IReporterAudit.getBuilder().sentCount(sent).failedCount(failed).backlogCount(backLog).lostCount(lost).build();
+            List<AuditRecord> auditRecords = new ArrayList<>();
+            auditRecords.add(new AuditRecord(sent, failed, backLog, lost));
 
-            if (auditService.sendRequest(auditData.toJson()))
+            AuditRequest auditRequest = new AuditRequest(auditRecords);
+
+            if (auditService.sendRequest(GsonBuilderFactory.getInstance().toJson(auditRequest, AuditRequest.class)))
             {
                 hubblePublisher.incrementCountForEvent(publishMetric.getAuditRecordsSent());
 

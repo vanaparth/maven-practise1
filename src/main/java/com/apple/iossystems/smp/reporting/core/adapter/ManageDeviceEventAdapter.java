@@ -34,7 +34,6 @@ public class ManageDeviceEventAdapter implements JsonSerializer<ManageDeviceEven
     private static final String FMIP_SOURCE = "fmipSource";
     private static final String CARD_EVENTS = "cardEvents";
 
-
     @Override
     public JsonElement serialize(ManageDeviceEvent src, Type typeOfSrc, JsonSerializationContext context)
     {

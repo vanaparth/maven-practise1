@@ -11,9 +11,9 @@ import com.apple.iossystems.smp.reporting.core.event.EventRecords;
  */
 public interface EventListener
 {
-    public void handleEvent(EventRecords records);
+    void handleEvent(EventRecords records);
 
-    public void handleEvent(ProvisionCardEvent provisionCardEvent);
+    void handleEvent(ProvisionCardEvent provisionCardEvent);
 
-    public void handleEvent(EventRecord record, ManageDeviceEvent manageDeviceEvent, CardEventRecord cardEventRecord);
+    void handleEvent(EventRecord record, ManageDeviceEvent manageDeviceEvent, CardEventRecord cardEventRecord);
 }

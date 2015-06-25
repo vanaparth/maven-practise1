@@ -5,5 +5,5 @@ package com.apple.iossystems.smp.reporting.core.concurrent;
  */
 public interface ScheduledTaskHandler
 {
-    public void handleEvent();
+    void handleEvent();
 }

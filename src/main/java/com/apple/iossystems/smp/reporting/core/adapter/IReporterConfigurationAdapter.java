@@ -27,7 +27,6 @@ public class IReporterConfigurationAdapter implements JsonSerializer<IReporterCo
     private static final String URI = "uri";
     private static final String X_LOAD_TEXT = "X-LoadText";
 
-
     @Override
     public JsonElement serialize(IReporterConfiguration src, Type typeOfSrc, JsonSerializationContext context)
     {

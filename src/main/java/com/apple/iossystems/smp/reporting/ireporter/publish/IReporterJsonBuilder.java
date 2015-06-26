@@ -1,4 +1,4 @@
-package com.apple.iossystems.smp.reporting.ireporter.json;
+package com.apple.iossystems.smp.reporting.ireporter.publish;
 
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.google.gson.JsonArray;

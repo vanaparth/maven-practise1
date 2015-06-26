@@ -11,7 +11,6 @@ import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 import com.apple.iossystems.smp.reporting.core.event.EventType;
 import com.apple.iossystems.smp.reporting.core.hubble.HubblePublisher;
 import com.apple.iossystems.smp.reporting.core.timer.StopWatch;
-import com.apple.iossystems.smp.reporting.ireporter.json.IReporterJsonBuilder;
 
 import java.util.ArrayList;
 import java.util.List;

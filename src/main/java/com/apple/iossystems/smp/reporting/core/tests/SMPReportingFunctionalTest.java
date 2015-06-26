@@ -9,7 +9,7 @@ import com.apple.iossystems.smp.reporting.core.http.HttpRequest;
 import com.apple.iossystems.smp.reporting.core.http.SMPHttpClient;
 import com.apple.iossystems.smp.reporting.core.messaging.SMPReportingService;
 import com.apple.iossystems.smp.reporting.ireporter.configuration.IReporterConfiguration;
-import com.apple.iossystems.smp.reporting.ireporter.json.IReporterJsonBuilder;
+import com.apple.iossystems.smp.reporting.ireporter.publish.IReporterJsonBuilder;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;

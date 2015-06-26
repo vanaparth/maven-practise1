@@ -28,7 +28,7 @@ public class ProvisionEmailPublishService
         return INSTANCE;
     }
 
-    public void processProvisionEvent(String conversationId, String dsid)
+    public void processProvisionEvent(String dpanId, String dsid)
     {
         StoreManagementService storeManagementService = AppContext.getApplicationContext().getBean(StoreManagementService.class);
 
@@ -43,14 +43,14 @@ public class ProvisionEmailPublishService
             LOGGER.error(e);
         }
 
-        publishEvent(conversationId, ((dsidInfo != null) && (ProvisionCount.ZERO.equals(dsidInfo.getProvisionCount()))));
+        publishEvent(dpanId, ((dsidInfo != null) && (ProvisionCount.ZERO.equals(dsidInfo.getProvisionCount()))));
 
         storeManagementService.updateProvisionCount(dsid);
     }
 
-    private void publishEvent(String conversationId, boolean firstProvision)
+    private void publishEvent(String dpanId, boolean firstProvision)
     {
-        String json = SMPEventCache.remove(SMPEventCache.Attribute.PROVISION_EVENT, conversationId);
+        String json = SMPEventCache.remove(SMPEventCache.Attribute.PROVISION_EVENT, dpanId);
 
         if (firstProvision && (json != null))
         {

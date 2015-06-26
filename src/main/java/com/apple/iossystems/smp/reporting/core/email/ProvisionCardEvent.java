@@ -12,6 +12,7 @@ public class ProvisionCardEvent
     private final String cardDisplayNumber;
     private final String deviceName;
     private final String deviceType;
+    private final String dpanId;
     private final String dsid;
     private final String locale;
 
@@ -24,6 +25,7 @@ public class ProvisionCardEvent
         cardDisplayNumber = builder.cardDisplayNumber;
         deviceName = builder.deviceName;
         deviceType = builder.deviceType;
+        dpanId = builder.dpanId;
         dsid = builder.dsid;
         locale = builder.locale;
     }
@@ -63,6 +65,11 @@ public class ProvisionCardEvent
         return deviceType;
     }
 
+    public String getDpanId()
+    {
+        return dpanId;
+    }
+
     public String getDsid()
     {
         return dsid;
@@ -87,6 +94,7 @@ public class ProvisionCardEvent
         private String cardDisplayNumber;
         private String deviceName;
         private String deviceType;
+        private String dpanId;
         private String dsid;
         private String locale;
 
@@ -133,6 +141,12 @@ public class ProvisionCardEvent
         public Builder deviceType(String value)
         {
             deviceType = value;
+            return this;
+        }
+
+        public Builder dpanId(String value)
+        {
+            dpanId = value;
             return this;
         }
 

@@ -52,8 +52,12 @@ public class ProvisionEmailPublishService
     {
         String json = SMPEventCache.remove(SMPEventCache.Attribute.PROVISION_EVENT, dpanId);
 
+        LOGGER.info("Email Test - Searching L&P with key: " + dpanId + " " + firstProvision);
+
         if (firstProvision && (json != null))
         {
+            LOGGER.info("Email Test - Retrieving L&P with key: " + dpanId);
+
             emailService.publishProvisionEvent(GsonBuilderFactory.getInstance().fromJson(json, ProvisionCardEvent.class));
         }
     }

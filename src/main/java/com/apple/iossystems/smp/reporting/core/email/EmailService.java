@@ -114,7 +114,7 @@ public class EmailService
             }
             catch (Exception e)
             {
-                LOGGER.error(e);
+                LOGGER.error(e.getMessage(), e);
             }
         }
     }

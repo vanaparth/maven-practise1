@@ -1,9 +1,11 @@
-package com.apple.iossystems.smp.reporting.core.email;
+package com.apple.iossystems.smp.reporting.core.messaging;
 
 import com.apple.cds.keystone.spring.AppContext;
 import com.apple.iossystems.smp.domain.DSIDInfo;
 import com.apple.iossystems.smp.domain.ProvisionCount;
 import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
+import com.apple.iossystems.smp.reporting.core.email.EmailService;
+import com.apple.iossystems.smp.reporting.core.email.ProvisionCardEvent;
 import com.apple.iossystems.smp.reporting.core.persistence.SMPEventCache;
 import com.apple.iossystems.smp.service.StoreManagementService;
 import org.apache.log4j.Logger;
@@ -11,21 +13,21 @@ import org.apache.log4j.Logger;
 /**
  * @author Toch
  */
-public class ProvisionEmailPublishService
+public class ProvisionEventNotificationService
 {
-    private static final Logger LOGGER = Logger.getLogger(ProvisionEmailPublishService.class);
+    private static final Logger LOGGER = Logger.getLogger(ProvisionEventNotificationService.class);
 
     private EmailService emailService = EmailService.getInstance();
 
     private static final SMPEventCache SMP_EVENT_CACHE = SMPEventCache.getInstance();
 
-    private static final ProvisionEmailPublishService INSTANCE = new ProvisionEmailPublishService();
+    private static final ProvisionEventNotificationService INSTANCE = new ProvisionEventNotificationService();
 
-    private ProvisionEmailPublishService()
+    private ProvisionEventNotificationService()
     {
     }
 
-    public static ProvisionEmailPublishService getInstance()
+    public static ProvisionEventNotificationService getInstance()
     {
         return INSTANCE;
     }

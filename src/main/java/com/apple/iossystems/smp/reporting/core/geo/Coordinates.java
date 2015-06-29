@@ -16,11 +16,6 @@ public class Coordinates
         this.latitude = latitude;
     }
 
-    public static Coordinates getInstance(float longitude, float latitude)
-    {
-        return new Coordinates(longitude, latitude);
-    }
-
     public float getLongitude()
     {
         return longitude;
@@ -36,9 +31,26 @@ public class Coordinates
         return latitude + "," + longitude;
     }
 
-    public static Coordinates getDefaultCoordinates()
+    public Coordinates truncateToInteger()
     {
-        return DEFAULT_COORDINATES;
+        return new Coordinates((int) longitude, (int) latitude);
+    }
+
+    public static Coordinates parse(String value)
+    {
+        int index = value.indexOf('/');
+
+        if (index >= 0)
+        {
+            float lat = Float.parseFloat(value.substring(0, index));
+            float lon = Float.parseFloat(value.substring(index + 1, value.length()));
+
+            return new Coordinates(lon, lat);
+        }
+        else
+        {
+            return DEFAULT_COORDINATES;
+        }
     }
 
     @Override

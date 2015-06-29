@@ -35,7 +35,7 @@ public abstract class SMPEventSubscriberService<LogEvent> extends LoggingSubscri
         ConsumerServiceProperties properties = new ConsumerServicePropertiesImpl();
 
         properties.setRabbitmqHost(ApplicationConfiguration.getKeystoneRabbitHost());
-        properties.setRabbitmqPort(Integer.valueOf(ApplicationConfiguration.getKeystoneRabbitPort()));
+        properties.setRabbitmqPort(Integer.parseInt(ApplicationConfiguration.getKeystoneRabbitPort()));
         properties.setRabbitmqUser(ApplicationConfiguration.getKeystoneRabbitUser());
         properties.setRabbitmqPassword(ApplicationConfiguration.getKeystoneRabbitPassword());
         properties.setRabbitmqVirtualhost(ApplicationConfiguration.getKeystoneRabbitVirtualHost());

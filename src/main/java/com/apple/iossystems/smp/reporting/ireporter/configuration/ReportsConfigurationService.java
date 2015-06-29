@@ -17,7 +17,7 @@ public class ReportsConfigurationService extends IReporterConfigurationService
     @Override
     IReporterConfiguration loadConfiguration()
     {
-        return IReporterConfigurationFactory.loadReportsConfiguration();
+        return getIReporterConfigurationFactory().loadReportsConfiguration();
     }
 
     @Override

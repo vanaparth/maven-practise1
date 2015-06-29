@@ -1,4 +1,4 @@
-package com.apple.iossystems.smp.reporting.core.eventhandler;
+package com.apple.iossystems.smp.reporting.core.logging;
 
 import com.apple.cds.keystone.config.PropertyManager;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
@@ -8,13 +8,13 @@ import org.apache.log4j.Logger;
 /**
  * @author Toch
  */
-public class SMPNotificationEventLogger
+public class SMPEventLogger
 {
-    private static final Logger LOGGER = Logger.getLogger(SMPNotificationEventLogger.class);
+    private static final Logger LOGGER = Logger.getLogger(SMPEventLogger.class);
 
-    private boolean loggingEnabled = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.notificationEvent.log", false);
+    private boolean loggingEnabled = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.event.log", false);
 
-    public SMPNotificationEventLogger()
+    public SMPEventLogger()
     {
     }
 

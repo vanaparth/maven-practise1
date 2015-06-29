@@ -7,14 +7,14 @@ public class AuditRecord
 {
     private final int sent;
     private final int failed;
-    private final int backlog;
+    private final int pending;
     private final int lost;
 
-    public AuditRecord(int sent, int failed, int backlog, int lost)
+    public AuditRecord(int sent, int failed, int pending, int lost)
     {
         this.sent = sent;
         this.failed = failed;
-        this.backlog = backlog;
+        this.pending = pending;
         this.lost = lost;
     }
 
@@ -28,9 +28,9 @@ public class AuditRecord
         return failed;
     }
 
-    public int getBacklog()
+    public int getPending()
     {
-        return backlog;
+        return pending;
     }
 
     public int getLost()

@@ -5,16 +5,16 @@ import com.apple.iossystems.smp.reporting.core.email.ManageDeviceEvent;
 import com.apple.iossystems.smp.reporting.core.email.ProvisionCardEvent;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
-import com.apple.iossystems.smp.reporting.core.eventhandler.EmailEventLogger;
 import com.apple.iossystems.smp.reporting.core.eventhandler.EventListener;
-import com.apple.iossystems.smp.reporting.core.eventhandler.SMPNotificationEventLogger;
+import com.apple.iossystems.smp.reporting.core.logging.EmailEventLogger;
+import com.apple.iossystems.smp.reporting.core.logging.SMPEventLogger;
 
 /**
  * @author Toch
  */
 public class TestEventListener implements EventListener
 {
-    private SMPNotificationEventLogger smpNotificationEventLogger = new SMPNotificationEventLogger();
+    private SMPEventLogger smpNotificationEventLogger = new SMPEventLogger();
     private EmailEventLogger emailEventLogger = new EmailEventLogger();
 
     public TestEventListener()

@@ -17,7 +17,7 @@ public class PaymentAuditConfigurationService extends IReporterConfigurationServ
     @Override
     IReporterConfiguration loadConfiguration()
     {
-        return IReporterConfigurationFactory.loadPaymentAuditConfiguration();
+        return getIReporterConfigurationFactory().loadPaymentAuditConfiguration();
     }
 
     @Override

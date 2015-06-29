@@ -7,15 +7,20 @@ import org.apache.log4j.Logger;
 /**
  * @author Toch
  */
-public class EventListenerClient
+public class EventListenerFactory
 {
-    private static final Logger LOGGER = Logger.getLogger(EventListenerClient.class);
+    private static final Logger LOGGER = Logger.getLogger(EventListenerFactory.class);
 
-    public EventListenerClient()
+    private EventListenerFactory()
     {
     }
 
-    private static EventListener getEventListener(String propertyKey, String defaultClassName)
+    public static EventListenerFactory getInstance()
+    {
+        return new EventListenerFactory();
+    }
+
+    private EventListener getEventListener(String propertyKey, String defaultClassName)
     {
         EventListener eventListener = null;
 
@@ -33,18 +38,18 @@ public class EventListenerClient
         return eventListener;
     }
 
-    private static String getFullClassName(String className)
+    private String getFullClassName(String className)
     {
-        return ((StringUtils.isNotBlank(className) && (!className.contains("."))) ? "com.apple.iossystems.smp.reporting.core.eventhandler." + className : className);
+        return (StringUtils.isNotBlank(className) && (!className.contains("."))) ? "com.apple.iossystems.smp.reporting.core.eventhandler." + className : className;
     }
 
-    public static EventListener getEmailEventListener()
+    public EventListener getEmailEventListener()
     {
         return getEventListener("smp.reporting.emailEventListener", "EmailEventListener");
     }
 
-    public static EventListener getSMPNotificationEventListener()
+    public EventListener getSMPPublishEventListener()
     {
-        return getEventListener("smp.reporting.smpNotificationEventListener", "SMPNotificationEventListener");
+        return getEventListener("smp.reporting.smpPublishEventListener", "SMPPublishEventListener");
     }
 }

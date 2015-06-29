@@ -4,7 +4,9 @@ import com.apple.iossystems.logging.Pair;
 
 import java.util.Map;
 
-
+/**
+ * @author Toch
+ */
 public class MapToPair
 {
     private MapToPair()

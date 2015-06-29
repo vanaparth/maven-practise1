@@ -12,19 +12,19 @@ import java.util.Map;
 public class IReporterConfiguration
 {
     // URLs
-    private static final String BASE_URL = ApplicationConfiguration.getIReporterURL();
+    private static final String BASE_URL = ApplicationConfiguration.getIReporterUrl();
 
     private static final String DEFAULT_REPORTS_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/stockholm";
 
     private static final String DEFAULT_AUDIT_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/stockholm_audit";
 
-    private static final String DEFAULT_REPORTS_URL = BASE_URL + "/e3/rest/1/stockholm";
-
-    private static final String DEFAULT_AUDIT_URL = BASE_URL + "/e3/rest/1/stockholm_audit";
-
     private static final String DEFAULT_PAYMENT_REPORTS_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/oslo";
 
     private static final String DEFAULT_PAYMENT_AUDIT_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/oslo_audit";
+
+    private static final String DEFAULT_REPORTS_URL = BASE_URL + "/e3/rest/1/stockholm";
+
+    private static final String DEFAULT_AUDIT_URL = BASE_URL + "/e3/rest/1/stockholm_audit";
 
     private static final String DEFAULT_PAYMENT_REPORTS_URL = BASE_URL + "/e3/rest/1/oslo";
 
@@ -48,7 +48,7 @@ public class IReporterConfiguration
     private final String protocol;
     private final String hostname;
     private final String uri;
-    private final String publishURL;
+    private final String publishUrl;
     private final String publishKey;
     private final String contentType;
     private final boolean publishEnabled;
@@ -61,7 +61,7 @@ public class IReporterConfiguration
         protocol = builder.protocol;
         hostname = builder.hostname;
         uri = builder.uri;
-        publishURL = builder.publishURL;
+        publishUrl = builder.publishUrl;
         publishKey = builder.publishKey;
         contentType = builder.contentType;
         publishEnabled = builder.publishEnabled;
@@ -90,9 +90,9 @@ public class IReporterConfiguration
         return uri;
     }
 
-    public String getPublishURL()
+    public String getPublishUrl()
     {
-        return publishURL;
+        return publishUrl;
     }
 
     public String getPublishKey()
@@ -144,7 +144,7 @@ public class IReporterConfiguration
     private boolean configurationEquals(IReporterConfiguration configuration)
     {
         return ((configuration != null) &&
-                (publishURL.equalsIgnoreCase(configuration.publishURL)) &&
+                (publishUrl.equalsIgnoreCase(configuration.publishUrl)) &&
                 (publishKey.equalsIgnoreCase(configuration.publishKey)) &&
                 (contentType.equalsIgnoreCase(configuration.contentType)) &&
                 (publishEnabled == configuration.publishEnabled) &&
@@ -167,17 +167,13 @@ public class IReporterConfiguration
 
     public static IReporterConfiguration getDefaultConfiguration(Type configurationType)
     {
-        Builder builder = new Builder();
-
-        builder.publishURL(configurationType.getPublishURL()).
+        return new Builder().publishUrl(configurationType.getPublishUrl()).
                 publishKey(DEFAULT_PUBLISH_KEY).
                 contentType(DEFAULT_CONTENT_TYPE).
                 publishEnabled(DEFAULT_PUBLISH_ENABLED).
                 maxBatchSize(DEFAULT_MAX_BATCH_SIZE).
                 publishFrequency(DEFAULT_PUBLISH_FREQUENCY).
-                configurationReloadFrequency(DEFAULT_CONFIGURATION_RELOAD_FREQUENCY);
-
-        return builder.build();
+                configurationReloadFrequency(DEFAULT_CONFIGURATION_RELOAD_FREQUENCY).build();
     }
 
     public enum Type
@@ -187,23 +183,23 @@ public class IReporterConfiguration
         PAYMENT_REPORTS(DEFAULT_PAYMENT_REPORTS_CONFIGURATION_URL, DEFAULT_PAYMENT_REPORTS_URL),
         PAYMENT_AUDIT(DEFAULT_PAYMENT_AUDIT_CONFIGURATION_URL, DEFAULT_PAYMENT_AUDIT_URL);
 
-        private final String configurationURL;
-        private final String publishURL;
+        private final String configurationUrl;
+        private final String publishUrl;
 
-        Type(String configurationURL, String publishURL)
+        Type(String configurationUrl, String publishUrl)
         {
-            this.configurationURL = configurationURL;
-            this.publishURL = publishURL;
+            this.configurationUrl = configurationUrl;
+            this.publishUrl = publishUrl;
         }
 
-        public String getConfigurationURL()
+        public String getConfigurationUrl()
         {
-            return configurationURL;
+            return configurationUrl;
         }
 
-        public String getPublishURL()
+        public String getPublishUrl()
         {
-            return publishURL;
+            return publishUrl;
         }
     }
 
@@ -212,7 +208,7 @@ public class IReporterConfiguration
         private String protocol;
         private String hostname;
         private String uri;
-        private String publishURL;
+        private String publishUrl;
         private String publishKey;
         private String contentType;
         private boolean publishEnabled;
@@ -242,9 +238,9 @@ public class IReporterConfiguration
             return this;
         }
 
-        public Builder publishURL(String value)
+        public Builder publishUrl(String value)
         {
-            publishURL = value;
+            publishUrl = value;
             return this;
         }
 
@@ -297,7 +293,7 @@ public class IReporterConfiguration
         {
             configurationReloadFrequency = configurationReloadFrequency * 60 * 1000;
             publishFrequency = publishFrequency * 1000;
-            publishURL = getURL(protocol, hostname, uri);
+            publishUrl = getUrl(protocol, hostname, uri);
         }
 
         private void validate()
@@ -325,7 +321,7 @@ public class IReporterConfiguration
             }
         }
 
-        private String getURL(String protocol, String hostname, String uri)
+        private String getUrl(String protocol, String hostname, String uri)
         {
             return protocol + "://" + hostname + uri;
         }

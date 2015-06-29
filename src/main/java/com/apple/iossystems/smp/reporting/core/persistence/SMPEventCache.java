@@ -20,7 +20,7 @@ public class SMPEventCache
         return INSTANCE;
     }
 
-    private static String getCacheKey(Attribute attribute, String key)
+    private String getCacheKey(Attribute attribute, String key)
     {
         String cacheKey = null;
 

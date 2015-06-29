@@ -106,7 +106,7 @@ public class ApplicationConfiguration
         return ApplicationConfiguration.LOG_SERVICE_CLASS;
     }
 
-    public static String getIReporterURL()
+    public static String getIReporterUrl()
     {
         return ApplicationConfiguration.IREPORTER_URL;
     }

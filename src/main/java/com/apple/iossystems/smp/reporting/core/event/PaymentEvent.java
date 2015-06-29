@@ -45,7 +45,7 @@ public class PaymentEvent
 
         record.setAttributeValue(EventAttribute.EVENT_TYPE.key(), EventType.PAYMENT.getKey());
 
-        record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(Calendar.getCurrentHourMillis()));
+        record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(Calendar.getCurrentHourInMilliseconds()));
         record.setAttributeValue(EventAttribute.CURRENCY.key(), currency);
         record.setAttributeValue(EventAttribute.MERCHANT_ID.key(), getMerchantInfo());
         record.setAttributeValue(EventAttribute.TRANSACTION_ID.key(), transactionId);

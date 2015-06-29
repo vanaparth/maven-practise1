@@ -35,7 +35,7 @@ public abstract class IReporterPublishService
     {
         IReporterConfiguration configuration = getConfiguration();
 
-        return HttpRequest.getInstance(configuration.getPublishURL(), "POST", null, configuration.getContentType(), data, configuration.getRequestHeaders());
+        return HttpRequest.getInstance(configuration.getPublishUrl(), "POST", null, configuration.getContentType(), data, configuration.getRequestHeaders());
     }
 
     private boolean isRequestSuccessful(HttpResponseAction action)

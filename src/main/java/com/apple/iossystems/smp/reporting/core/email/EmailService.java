@@ -9,7 +9,7 @@ import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 import com.apple.iossystems.smp.reporting.core.event.SMPDeviceEvent;
 import com.apple.iossystems.smp.reporting.core.eventhandler.EventListener;
-import com.apple.iossystems.smp.reporting.core.eventhandler.EventListenerClient;
+import com.apple.iossystems.smp.reporting.core.eventhandler.EventListenerFactory;
 import com.apple.iossystems.smp.reporting.core.util.ValidValue;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -30,7 +30,7 @@ public class EmailService
     private static final boolean UNLINK_EMAIL_ENABLED = ApplicationConfiguration.isUnlinkEmailEnabled();
     private static final boolean DEFAULT_EMAIL_LOCALE_ENABLED = ApplicationConfiguration.isDefaultEmailLocaleEnabled();
 
-    private EventListener eventListener = EventListenerClient.getEmailEventListener();
+    private EventListener eventListener = EventListenerFactory.getInstance().getEmailEventListener();
 
     private EmailService()
     {
@@ -79,7 +79,7 @@ public class EmailService
 
         Calendar calendar = (timezone != null) ? Calendar.getInstance(timezone) : Calendar.getInstance();
 
-        calendar.setTimeInMillis(Long.valueOf(manageDeviceEvent.getTimestamp()));
+        calendar.setTimeInMillis(Long.parseLong(manageDeviceEvent.getTimestamp()));
 
         return calendar;
     }

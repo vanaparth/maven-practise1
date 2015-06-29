@@ -76,13 +76,13 @@ public class EventRecord
     @Override
     public String toString()
     {
-        StringBuilder strBuilder = new StringBuilder();
+        StringBuilder stringBuilder = new StringBuilder();
 
         for (Map.Entry<String, String> entry : data.entrySet())
         {
-            strBuilder.append(entry.getKey()).append(":").append(entry.getValue()).append("\n");
+            stringBuilder.append(entry.getKey()).append(":").append(entry.getValue()).append("\n");
         }
 
-        return strBuilder.toString();
+        return stringBuilder.toString();
     }
 }

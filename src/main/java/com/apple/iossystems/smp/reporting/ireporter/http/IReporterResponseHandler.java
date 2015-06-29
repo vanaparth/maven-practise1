@@ -34,7 +34,7 @@ public class IReporterResponseHandler implements HttpResponseHandler
         map.put(400, IReporterResponseAction.INVALID_CONTENT_TYPE);
         map.put(403, IReporterResponseAction.INVALID_PLIST);
         map.put(404, IReporterResponseAction.INVALID_REQUEST_URL);
-        map.put(405, IReporterResponseAction.INVALID_METHOD);
+        map.put(405, IReporterResponseAction.INVALID_REQUEST_METHOD);
         map.put(415, IReporterResponseAction.INVALID_CONTENT_ENCODING);
 
         return map;

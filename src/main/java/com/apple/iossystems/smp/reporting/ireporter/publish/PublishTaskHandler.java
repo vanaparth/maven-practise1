@@ -149,7 +149,7 @@ public class PublishTaskHandler implements ScheduledTaskHandler
             hubblePublisher.incrementCountForEvent(publishMetric.getMessagesSentMetric());
             hubblePublisher.incrementCountForEvent(publishMetric.getRecordsSentMetric(), count);
             // Hubble for SMP
-            hubblePublisher.logTimingForEvent(publishMetric.getIReporterTiming(), stopWatch.getTimeMillis());
+            hubblePublisher.logTimingForEvent(publishMetric.getIReporterTiming(), stopWatch.getTimeInMilliseconds());
             // IReporter
             statistics.increment(publishMetric.getIReporterRecordsSent(), count);
         }
@@ -160,7 +160,7 @@ public class PublishTaskHandler implements ScheduledTaskHandler
             hubblePublisher.incrementCountForEvent(publishMetric.getMessagesFailedMetric());
             hubblePublisher.incrementCountForEvent(publishMetric.getRecordsFailedMetric(), count);
             // Hubble for SMP
-            hubblePublisher.logTimingForEvent(publishMetric.getIReporterTiming(), stopWatch.getTimeMillis());
+            hubblePublisher.logTimingForEvent(publishMetric.getIReporterTiming(), stopWatch.getTimeInMilliseconds());
             // IReporter
             statistics.increment(publishMetric.getIReporterRecordsFailed(), count);
         }
@@ -172,11 +172,11 @@ public class PublishTaskHandler implements ScheduledTaskHandler
         {
             int sent = statistics.getIntValue(publishMetric.getIReporterRecordsSent());
             int failed = statistics.getIntValue(publishMetric.getIReporterRecordsFailed());
-            int backLog = statistics.getIntValue(publishMetric.getIReporterRecordsPending());
+            int pending = statistics.getIntValue(publishMetric.getIReporterRecordsPending());
             int lost = statistics.getIntValue(publishMetric.getIReporterRecordsLost());
 
             List<AuditRecord> auditRecords = new ArrayList<>();
-            auditRecords.add(new AuditRecord(sent, failed, backLog, lost));
+            auditRecords.add(new AuditRecord(sent, failed, pending, lost));
 
             AuditRequest auditRequest = new AuditRequest(auditRecords);
 

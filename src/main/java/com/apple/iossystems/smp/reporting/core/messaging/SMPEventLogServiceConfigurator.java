@@ -38,6 +38,6 @@ public class SMPEventLogServiceConfigurator implements LogServiceConfigurator
     {
         String value = PROPERTY_MAP.get(key);
 
-        return ((value != null) ? value : PropertyManager.getInstance().valueForKeyWithDefault(key, defaultValue));
+        return (value != null) ? value : PropertyManager.getInstance().valueForKeyWithDefault(key, defaultValue);
     }
 }

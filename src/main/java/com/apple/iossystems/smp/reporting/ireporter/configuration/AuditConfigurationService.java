@@ -17,7 +17,7 @@ public class AuditConfigurationService extends IReporterConfigurationService
     @Override
     IReporterConfiguration loadConfiguration()
     {
-        return IReporterConfigurationFactory.loadAuditConfiguration();
+        return getIReporterConfigurationFactory().loadAuditConfiguration();
     }
 
     @Override

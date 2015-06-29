@@ -1,7 +1,8 @@
 package com.apple.iossystems.smp.reporting.core.event;
 
-import com.apple.iossystems.smp.reporting.core.geo.GeoLocation;
+import com.apple.iossystems.smp.reporting.core.geo.Coordinates;
 import com.apple.iossystems.smp.reporting.core.util.SecurityProvider;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * @author Toch
@@ -30,9 +31,9 @@ public class SMPEventRecord
         String key = EventAttribute.DEVICE_LOCATION.key();
         String value = record.getAttributeValue(key);
 
-        if (value != null)
+        if (StringUtils.isNotBlank(value))
         {
-            record.setAttributeValue(key, GeoLocation.truncateCoordinates(GeoLocation.getCoordinates(value)).getReverseString());
+            record.setAttributeValue(key, Coordinates.parse(value).truncateToInteger().getReverseString());
         }
     }
 
@@ -41,7 +42,7 @@ public class SMPEventRecord
         String key = attribute.key();
         String value = record.getAttributeValue(key);
 
-        if (value != null)
+        if (StringUtils.isNotBlank(value))
         {
             record.setAttributeValue(key, SecurityProvider.getHash(value));
         }

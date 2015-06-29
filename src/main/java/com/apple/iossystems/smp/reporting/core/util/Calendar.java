@@ -9,15 +9,15 @@ public class Calendar
     {
     }
 
-    public static long getHourMillis(long time)
+    private static long getHourInMilliseconds(long timeInMilliseconds)
     {
         long hour = 60 * 60 * 1000;
 
-        return ((time / hour) * hour);
+        return ((timeInMilliseconds / hour) * hour);
     }
 
-    public static long getCurrentHourMillis()
+    public static long getCurrentHourInMilliseconds()
     {
-        return getHourMillis(System.currentTimeMillis());
+        return getHourInMilliseconds(System.currentTimeMillis());
     }
 }

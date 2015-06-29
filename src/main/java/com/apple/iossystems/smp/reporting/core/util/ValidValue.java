@@ -16,6 +16,6 @@ public class ValidValue
 
     public static int getIntValueWithDefault(String value, int defaultValue)
     {
-        return (value != null) ? Integer.valueOf(value) : defaultValue;
+        return (value != null) ? Integer.parseInt(value) : defaultValue;
     }
 }

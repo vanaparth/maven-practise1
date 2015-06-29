@@ -2,12 +2,13 @@ package com.apple.iossystems.smp.reporting.core.messaging;
 
 import com.apple.iossystems.logging.LogService;
 import com.apple.iossystems.logging.LogServiceFactory2;
+import com.apple.iossystems.smp.reporting.core.email.EmailService;
 import com.apple.iossystems.smp.reporting.core.email.SMPEmailEvent;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 import com.apple.iossystems.smp.reporting.core.event.EventType;
 import com.apple.iossystems.smp.reporting.core.eventhandler.EventListener;
-import com.apple.iossystems.smp.reporting.core.eventhandler.EventListenerClient;
+import com.apple.iossystems.smp.reporting.core.eventhandler.EventListenerFactory;
 import com.apple.iossystems.smp.reporting.core.util.MapToPair;
 import org.apache.log4j.Logger;
 
@@ -20,9 +21,11 @@ public class SMPEventNotificationService
 
     private static final SMPEventNotificationService INSTANCE = new SMPEventNotificationService();
 
-    private LogService logService;
+    private EmailService emailService = EmailService.getInstance();
 
-    private EventListener eventListener = EventListenerClient.getSMPNotificationEventListener();
+    private EventListener eventListener = EventListenerFactory.getInstance().getSMPPublishEventListener();
+
+    private LogService logService;
 
     private SMPEventNotificationService()
     {
@@ -70,6 +73,18 @@ public class SMPEventNotificationService
         }
     }
 
+    private void publishEmailRecords(EventRecords records)
+    {
+        try
+        {
+            emailService.send(SMPEmailEvent.getEventRecords(records));
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+        }
+    }
+
     private void publishEventRecords(EventRecords records)
     {
         for (EventRecord record : records.getList())
@@ -87,7 +102,7 @@ public class SMPEventNotificationService
         {
             publishEventRecords(records);
 
-            publishEventRecords(SMPEmailEvent.getEventRecords(records));
+            publishEmailRecords(records);
         }
         catch (Exception e)
         {

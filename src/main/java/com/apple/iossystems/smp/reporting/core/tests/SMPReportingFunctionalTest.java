@@ -94,14 +94,8 @@ public class SMPReportingFunctionalTest
 
     private void test5()
     {
-        // Test 3
-        postRecords(getRecords(5));
-        sleep(60 * 1000);
+        test3();
 
-        postRecords(getRecords(10));
-        sleep(60 * 1000);
-
-        postRecords(getRecords(20));
         sleep(5 * 60 * 1000);
 
         // Configuration changed
@@ -114,7 +108,7 @@ public class SMPReportingFunctionalTest
 
         EventRecords records = getRecords(1);
 
-        HttpRequest httpRequest = HttpRequest.getInstance(configuration.getPublishURL(), "GET", null, configuration.getContentType(), IReporterJsonBuilder.toJson(records.getList()), configuration.getRequestHeaders());
+        HttpRequest httpRequest = HttpRequest.getInstance(configuration.getPublishUrl(), "GET", null, configuration.getContentType(), IReporterJsonBuilder.toJson(records.getList()), configuration.getRequestHeaders());
 
         try
         {
@@ -130,7 +124,7 @@ public class SMPReportingFunctionalTest
     {
         try
         {
-            SMPHttpClient.getInstance().request(HttpRequest.getInstance(IReporterConfiguration.Type.REPORTS.getConfigurationURL(), "POST", null, null, "", null));
+            SMPHttpClient.getInstance().request(HttpRequest.getInstance(IReporterConfiguration.Type.REPORTS.getConfigurationUrl(), "POST", null, null, "", null));
         }
         catch (Exception e)
         {
@@ -152,7 +146,7 @@ public class SMPReportingFunctionalTest
     {
         try
         {
-            SMPHttpClient.getInstance().request(HttpRequest.getInstance(IReporterConfiguration.Type.REPORTS.getConfigurationURL(), "GET", null, null, null, null));
+            SMPHttpClient.getInstance().request(HttpRequest.getInstance(IReporterConfiguration.Type.REPORTS.getConfigurationUrl(), "GET", null, null, null, null));
         }
         catch (Exception e)
         {
@@ -169,7 +163,7 @@ public class SMPReportingFunctionalTest
 
         EventRecords records = getRecords(1);
 
-        HttpRequest httpRequest = HttpRequest.getInstance(configuration.getPublishURL(), "POST", null, configuration.getContentType(), IReporterJsonBuilder.toJson(records.getList()), headers);
+        HttpRequest httpRequest = HttpRequest.getInstance(configuration.getPublishUrl(), "POST", null, configuration.getContentType(), IReporterJsonBuilder.toJson(records.getList()), headers);
 
         try
         {

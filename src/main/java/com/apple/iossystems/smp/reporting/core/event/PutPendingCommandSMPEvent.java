@@ -24,6 +24,32 @@ public class PutPendingCommandSMPEvent
         return new Builder();
     }
 
+    private EventRecords buildRecords()
+    {
+        EventRecord record = EventRecord.getInstance();
+
+        record.setAttributeValue(EventAttribute.EVENT_TYPE.key(), EventType.REPORTS.getKey());
+        record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(System.currentTimeMillis()));
+        record.setAttributeValue(EventAttribute.CONVERSATION_ID.key(), conversationId);
+
+        SMPDeviceEvent.PUT_PENDING.setEvent(record);
+
+        if (pno != null)
+        {
+            String pnoName = pno.getPnoName();
+
+            if (pnoName != null)
+            {
+                SMPEventCode.writePNOName(record, EventAttribute.PNO, pnoName);
+            }
+        }
+
+        EventRecords records = EventRecords.getInstance();
+        records.add(record);
+
+        return records;
+    }
+
     public static class Builder
     {
         private String conversationId;
@@ -58,31 +84,5 @@ public class PutPendingCommandSMPEvent
                 return EventRecords.getInstance();
             }
         }
-    }
-
-    private EventRecords buildRecords()
-    {
-        EventRecord record = EventRecord.getInstance();
-
-        record.setAttributeValue(EventAttribute.EVENT_TYPE.key(), EventType.REPORTS.getKey());
-        record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(System.currentTimeMillis()));
-        record.setAttributeValue(EventAttribute.CONVERSATION_ID.key(), conversationId);
-
-        SMPDeviceEvent.PUT_PENDING.setEvent(record);
-
-        if (pno != null)
-        {
-            String pnoName = pno.getPnoName();
-
-            if (pnoName != null)
-            {
-                SMPEventCode.writePNOName(record, EventAttribute.PNO, pnoName);
-            }
-        }
-
-        EventRecords records = EventRecords.getInstance();
-        records.add(record);
-
-        return records;
     }
 }

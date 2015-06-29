@@ -27,7 +27,7 @@ public class StopWatch
         endTime = System.currentTimeMillis();
     }
 
-    public long getTimeMillis()
+    public long getTimeInMilliseconds()
     {
         return (endTime - startTime);
     }

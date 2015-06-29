@@ -98,7 +98,7 @@ public class SMPEventCode
 
         String value = map.get(key);
 
-        return ((value != null) ? value : EMPTY_CODE);
+        return (value != null) ? value : EMPTY_CODE;
     }
 
     public static void writePNOName(EventRecord record, EventAttribute attribute, String pnoName)

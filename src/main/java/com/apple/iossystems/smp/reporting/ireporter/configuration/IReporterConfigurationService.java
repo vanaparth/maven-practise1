@@ -10,9 +10,11 @@ public abstract class IReporterConfigurationService
 {
     private IReporterConfiguration configuration;
 
-    private long timestamp;
+    private IReporterConfigurationFactory iReporterConfigurationFactory = IReporterConfigurationFactory.getInstance();
 
     private HubblePublisher hubblePublisher = HubblePublisher.getInstance();
+
+    private long timestamp;
 
     IReporterConfigurationService()
     {
@@ -22,6 +24,11 @@ public abstract class IReporterConfigurationService
     abstract IReporterConfiguration loadConfiguration();
 
     abstract ConfigurationMetric getConfigurationMetric();
+
+    protected IReporterConfigurationFactory getIReporterConfigurationFactory()
+    {
+        return iReporterConfigurationFactory;
+    }
 
     private void updateConfiguration()
     {

@@ -17,7 +17,7 @@ public class AuditRecordAdapter implements JsonSerializer<AuditRecord>, JsonDese
 {
     private static final String SENT = "sent";
     private static final String FAILED = "failed";
-    private static final String BACKLOG = "backlog";
+    private static final String PENDING = "backlog";
     private static final String LOST = "lost";
 
     @Override
@@ -27,7 +27,7 @@ public class AuditRecordAdapter implements JsonSerializer<AuditRecord>, JsonDese
 
         JSONUtils.setAttributeValue(root, SENT, src.getSent());
         JSONUtils.setAttributeValue(root, FAILED, src.getFailed());
-        JSONUtils.setAttributeValue(root, BACKLOG, src.getBacklog());
+        JSONUtils.setAttributeValue(root, PENDING, src.getPending());
         JSONUtils.setAttributeValue(root, LOST, src.getLost());
 
         return root;
@@ -41,7 +41,7 @@ public class AuditRecordAdapter implements JsonSerializer<AuditRecord>, JsonDese
         return new AuditRecord(
                 Integer.parseInt(JSONUtils.getAttributeValueAsStringWithDefault(root, SENT, "0")),
                 Integer.parseInt(JSONUtils.getAttributeValueAsStringWithDefault(root, FAILED, "0")),
-                Integer.parseInt(JSONUtils.getAttributeValueAsStringWithDefault(root, BACKLOG, "0")),
+                Integer.parseInt(JSONUtils.getAttributeValueAsStringWithDefault(root, PENDING, "0")),
                 Integer.parseInt(JSONUtils.getAttributeValueAsStringWithDefault(root, LOST, "0")));
     }
 }

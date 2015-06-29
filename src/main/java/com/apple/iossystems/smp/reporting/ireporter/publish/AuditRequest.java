@@ -7,7 +7,6 @@ import java.util.List;
  */
 public class AuditRequest
 {
-    private static final String VERSION = "1.0";
     private List<AuditRecord> auditRecords;
 
     public AuditRequest(List<AuditRecord> auditRecords)
@@ -17,7 +16,7 @@ public class AuditRequest
 
     public String getVersion()
     {
-        return VERSION;
+        return "1.0";
     }
 
     public List<AuditRecord> getAuditRecords()

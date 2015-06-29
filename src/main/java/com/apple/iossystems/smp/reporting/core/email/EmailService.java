@@ -105,7 +105,7 @@ public class EmailService
                         format(provisionCardEvent.getCardHolderName()),
                         format(provisionCardEvent.getConversationId()),
                         format(provisionCardEvent.getCardHolderEmail()),
-                        format(getLocale(provisionCardEvent.getLocale())),
+                        format(provisionCardEvent.getLocale()),
                         format(provisionCardEvent.getDeviceName()),
                         format(provisionCardEvent.getDeviceType()),
                         format(provisionCardEvent.getDsid()))).sendEmail();

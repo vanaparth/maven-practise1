@@ -77,11 +77,14 @@ public class SMPReportingService
 
     private void startSubscribers()
     {
-        SMPReportingSubscriberService.getInstance(EventType.REPORTS.getQueueName(), this).begin();
+        if (ApplicationConfiguration.isRabbitConsumersEnabled())
+        {
+            SMPReportingSubscriberService.getInstance(EventType.REPORTS.getQueueName(), this).begin();
 
-        SMPReportingSubscriberService.getInstance(EventType.PAYMENT.getQueueName(), this).begin();
+            SMPReportingSubscriberService.getInstance(EventType.PAYMENT.getQueueName(), this).begin();
 
-        SMPReportingSubscriberService.getInstance(EventType.EMAIL.getQueueName(), this).begin();
+            SMPReportingSubscriberService.getInstance(EventType.EMAIL.getQueueName(), this).begin();
+        }
     }
 
     public boolean postSMPEvent(EventRecord eventRecord)

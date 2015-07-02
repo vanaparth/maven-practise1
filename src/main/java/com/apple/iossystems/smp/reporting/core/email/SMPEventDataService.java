@@ -12,8 +12,8 @@ import java.util.Collection;
  */
 class SMPEventDataService
 {
-    private static final PassManagementService PASS_MANAGEMENT_SERVICE = AppContext.getApplicationContext().getBean(PassManagementService.class);
-    private static final SecureElementService SECURE_ELEMENT_SERVICE = AppContext.getApplicationContext().getBean(SecureElementService.class);
+    private PassManagementService passManagementService = AppContext.getApplicationContext().getBean(PassManagementService.class);
+    private SecureElementService secureElementService = AppContext.getApplicationContext().getBean(SecureElementService.class);
 
     private SMPEventDataService()
     {
@@ -33,12 +33,12 @@ class SMPEventDataService
 
     public PassbookPass getPassByDpanId(String dpanId)
     {
-        return PASS_MANAGEMENT_SERVICE.getPassByDpanId(dpanId);
+        return passManagementService.getPassByDpanId(dpanId);
     }
 
     public SecureElement getSecureElementByDpanId(String dpanId)
     {
-        PassPan passPan = PASS_MANAGEMENT_SERVICE.getPassPanByDpanId(dpanId);
+        PassPan passPan = passManagementService.getPassPanByDpanId(dpanId);
 
         return (passPan != null) ? passPan.getSecureElementId() : null;
     }
@@ -67,12 +67,12 @@ class SMPEventDataService
 
     public PassPan getPassPanByPassSerialAndSeid(String passSerial, String seid)
     {
-        return PASS_MANAGEMENT_SERVICE.getPrimaryPassPanByPassSerialAndSeid(seid, passSerial);
+        return passManagementService.getPrimaryPassPanByPassSerialAndSeid(seid, passSerial);
     }
 
     public String getCompanionDeviceSerialNumber(String serialNumber)
     {
-        SecureElement secureElement = SECURE_ELEMENT_SERVICE.findSecureElementBySerialNumber(serialNumber);
+        SecureElement secureElement = secureElementService.findSecureElementBySerialNumber(serialNumber);
 
         return (secureElement != null) ? secureElement.getCompanionDeviceSerialNumber() : null;
     }

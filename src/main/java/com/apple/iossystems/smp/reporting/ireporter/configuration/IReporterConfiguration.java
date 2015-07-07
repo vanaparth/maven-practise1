@@ -291,9 +291,13 @@ public class IReporterConfiguration
 
         public void completeBuild()
         {
+            if (publishUrl == null)
+            {
+                publishUrl = getUrl(protocol, hostname, uri);
+            }
+
             configurationReloadFrequency = configurationReloadFrequency * 60 * 1000;
             publishFrequency = publishFrequency * 1000;
-            publishUrl = getUrl(protocol, hostname, uri);
         }
 
         private void validate()
@@ -323,6 +327,16 @@ public class IReporterConfiguration
 
         private String getUrl(String protocol, String hostname, String uri)
         {
+            if (protocol == null)
+            {
+                protocol = "https";
+            }
+
+            if (uri == null)
+            {
+                uri = "";
+            }
+
             return protocol + "://" + hostname + uri;
         }
     }

@@ -1,4 +1,4 @@
-package com.apple.iossystems.smp.reporting.core.email;
+package com.apple.iossystems.smp.reporting.core.event;
 
 import com.apple.iossystems.smp.domain.device.AbstractPass;
 import com.apple.iossystems.smp.persistence.entity.PassPan;

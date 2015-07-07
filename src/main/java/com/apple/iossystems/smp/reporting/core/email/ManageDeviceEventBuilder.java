@@ -2,6 +2,7 @@ package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.iossystems.smp.domain.Actor;
 import com.apple.iossystems.smp.persistence.entity.SecureElement;
+import com.apple.iossystems.smp.reporting.core.event.SMPEventDataServiceClient;
 import org.apache.commons.lang.StringUtils;
 
 import java.math.BigInteger;

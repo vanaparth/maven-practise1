@@ -1,5 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.tests;
 
+import com.apple.cds.keystone.config.PropertyManager;
 import com.apple.iossystems.smp.reporting.core.email.CardEventRecord;
 import com.apple.iossystems.smp.reporting.core.email.ManageDeviceEvent;
 import com.apple.iossystems.smp.reporting.core.email.ProvisionCardEvent;
@@ -14,7 +15,7 @@ import com.apple.iossystems.smp.reporting.core.logging.SMPEventLogger;
  */
 public class TestEventListener implements EventListener
 {
-    private SMPEventLogger smpNotificationEventLogger = new SMPEventLogger();
+    private SMPEventLogger smpEventLogger = new SMPEventLogger(PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.test.event.log", false));
     private EmailEventLogger emailEventLogger = new EmailEventLogger();
 
     public TestEventListener()
@@ -24,7 +25,7 @@ public class TestEventListener implements EventListener
     @Override
     public void handleEvent(EventRecords records)
     {
-        smpNotificationEventLogger.log(records);
+        smpEventLogger.log(records);
     }
 
     @Override

@@ -1,8 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.event;
 
 import com.apple.iossystems.smp.domain.clm.Card;
-import com.apple.iossystems.smp.reporting.core.event.EventRecord;
-import com.apple.iossystems.smp.reporting.core.event.SMPDeviceEvent;
 
 /**
  * @author Toch

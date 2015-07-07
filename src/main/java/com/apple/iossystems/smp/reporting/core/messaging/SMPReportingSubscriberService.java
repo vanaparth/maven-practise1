@@ -4,6 +4,9 @@ import com.apple.cds.messaging.client.impl.SMPEventSubscriberService;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledNotification;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledTaskHandler;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
+import com.apple.iossystems.smp.reporting.core.event.EventRecords;
+import com.apple.iossystems.smp.reporting.core.eventhandler.EventListener;
+import com.apple.iossystems.smp.reporting.core.eventhandler.EventListenerFactory;
 import org.apache.log4j.Logger;
 
 /**
@@ -12,6 +15,8 @@ import org.apache.log4j.Logger;
 class SMPReportingSubscriberService<LogEvent> extends SMPEventSubscriberService<LogEvent>
 {
     private static final Logger LOGGER = Logger.getLogger(SMPReportingSubscriberService.class);
+
+    private EventListener eventListener = EventListenerFactory.getInstance().getSMPConsumeEventListener();
 
     private SMPReportingService smpReportingService;
 
@@ -38,7 +43,11 @@ class SMPReportingSubscriberService<LogEvent> extends SMPEventSubscriberService<
 
         record.putAll(logEvent.getMetadata());
 
-        if (!smpReportingService.postSMPEvent(record))
+        if (smpReportingService.postSMPEvent(record))
+        {
+            notifyEventListener(record);
+        }
+        else
         {
             handleFailedRequest(record);
         }
@@ -102,6 +111,22 @@ class SMPReportingSubscriberService<LogEvent> extends SMPEventSubscriberService<
 
                 resume();
             }
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+        }
+    }
+
+    private void notifyEventListener(EventRecord record)
+    {
+        try
+        {
+            EventRecords records = EventRecords.getInstance();
+
+            records.add(record);
+
+            eventListener.handleEvent(records);
         }
         catch (Exception e)
         {

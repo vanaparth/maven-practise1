@@ -52,4 +52,9 @@ public class EventListenerFactory
     {
         return getEventListener("smp.reporting.smpPublishEventListener", "SMPPublishEventListener");
     }
+
+    public EventListener getSMPConsumeEventListener()
+    {
+        return getEventListener("smp.reporting.smpConsumeEventListener", "SMPConsumeEventListener");
+    }
 }

@@ -33,8 +33,8 @@ public class IReporterConfigurationAdapter implements JsonSerializer<IReporterCo
         JsonObject root = new JsonObject();
 
         JsonObject headers = new JsonObject();
-        JSONUtils.setAttributeValue(headers, X_LOAD_TEXT, src.getPublishKey());
         JSONUtils.setAttributeValue(headers, CONTENT_TYPE, src.getContentType());
+        JSONUtils.setAttributeValue(headers, X_LOAD_TEXT, src.getPublishKey());
 
         JsonObject endPoint = new JsonObject();
         JSONUtils.setAttributeValue(endPoint, PROTOCOL, src.getProtocol());
@@ -58,8 +58,8 @@ public class IReporterConfigurationAdapter implements JsonSerializer<IReporterCo
         JsonObject root = json.getAsJsonObject();
 
         JsonObject headers = root.getAsJsonObject(HEADERS);
-        String xLoadText = JSONUtils.getAttributeValueAsString(headers, X_LOAD_TEXT);
         String contentType = JSONUtils.getAttributeValueAsString(headers, CONTENT_TYPE);
+        String xLoadText = JSONUtils.getAttributeValueAsString(headers, X_LOAD_TEXT);
 
         JsonObject endPoint = root.getAsJsonObject(END_POINT);
         String protocol = JSONUtils.getAttributeValueAsString(endPoint, PROTOCOL);
@@ -67,14 +67,15 @@ public class IReporterConfigurationAdapter implements JsonSerializer<IReporterCo
         String uri = JSONUtils.getAttributeValueAsString(endPoint, URI);
 
         return IReporterConfiguration.getBuilder().
+                contentType(contentType).
+                publishKey(xLoadText).
                 protocol(protocol).
                 hostname(hostname).
                 uri(uri).
-                contentType(contentType).
                 maxBatchSize(Integer.parseInt(JSONUtils.getAttributeValueAsStringWithDefault(root, BATCH_SIZE, "0"))).
                 configurationReloadFrequency(Integer.parseInt(JSONUtils.getAttributeValueAsStringWithDefault(root, CONFIG_RELOAD_FREQUENCY, "0"))).
                 publishEnabled(JSONUtils.getAttributeValueAsBooleanWithDefault(root, PUBLISH_FLAG, true)).
                 publishFrequency(Integer.parseInt(JSONUtils.getAttributeValueAsStringWithDefault(root, PUBLISH_FREQUENCY, "0"))).
-                publishKey(xLoadText).build();
+                build();
     }
 }

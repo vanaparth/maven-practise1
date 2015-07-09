@@ -189,9 +189,7 @@ public class SMPReportingFunctionalTest
 
     private void postRecords(EventRecords records)
     {
-        SMPReportingService smpReportingService = SMPReportingService.getInstance();
-
-        postRecords(smpReportingService, records);
+        postRecords(SMPReportingService.getInstance(), records);
     }
 
     private void postRecords(SMPReportingService smpReportingService, EventRecords records)
@@ -272,16 +270,16 @@ public class SMPReportingFunctionalTest
         data.put(EventAttribute.DEVICE_SERIAL_NUMBER.key(), "10");
         data.put(EventAttribute.DPAN_ID.key(), "11");
         data.put(EventAttribute.DSID.key(), "12");
-        data.put(EventAttribute.EVENT.key(), "13");
 
+        data.put(EventAttribute.EVENT.key(), "13");
         data.put(EventAttribute.FPAN_ID.key(), "14");
         data.put(EventAttribute.PNO.key(), "15");
-        data.put(EventAttribute.PROVISION_STATUS.key(), "16");
 
-        data.put(EventAttribute.PROVISION_RESPONSE.key(), "17");
+        data.put(EventAttribute.PROVISION_RESPONSE.key(), "16");
+        data.put(EventAttribute.PROVISION_STATUS.key(), "17");
         data.put(EventAttribute.TIMESTAMP.key(), "18");
-        data.put(EventAttribute.USE_CASE_TYPE.key(), "19");
 
+        data.put(EventAttribute.USE_CASE_TYPE.key(), "19");
         data.put(EventAttribute.USER_AGENT.key(), "20");
 
         EventRecord record = EventRecord.getInstance();

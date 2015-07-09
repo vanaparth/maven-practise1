@@ -11,7 +11,6 @@ import java.util.Map;
  */
 public class IReporterConfiguration
 {
-    // URLs
     private static final String BASE_URL = ApplicationConfiguration.getIReporterUrl();
 
     private static final String DEFAULT_REPORTS_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/stockholm";
@@ -30,7 +29,6 @@ public class IReporterConfiguration
 
     private static final String DEFAULT_PAYMENT_AUDIT_URL = BASE_URL + "/e3/rest/1/oslo_audit";
 
-    // Other configuration settings
     private static final String DEFAULT_PUBLISH_KEY = "QWERTYUIOPASDF12";
 
     private static final String DEFAULT_CONTENT_TYPE = "application/json";
@@ -39,11 +37,9 @@ public class IReporterConfiguration
 
     private static final int DEFAULT_MAX_BATCH_SIZE = 100;
 
-    // Publish frequency in milliseconds
-    private static final int DEFAULT_PUBLISH_FREQUENCY = 60 * 1000;
+    private static final int DEFAULT_PUBLISH_FREQUENCY_SECONDS = 60;
 
-    // Configuration reload frequency in milliseconds
-    private static final int DEFAULT_CONFIGURATION_RELOAD_FREQUENCY = 60 * 1000;
+    private static final int DEFAULT_CONFIGURATION_RELOAD_FREQUENCY_MINUTES = 60;
 
     private final String protocol;
     private final String hostname;
@@ -172,8 +168,8 @@ public class IReporterConfiguration
                 contentType(DEFAULT_CONTENT_TYPE).
                 publishEnabled(DEFAULT_PUBLISH_ENABLED).
                 maxBatchSize(DEFAULT_MAX_BATCH_SIZE).
-                publishFrequency(DEFAULT_PUBLISH_FREQUENCY).
-                configurationReloadFrequency(DEFAULT_CONFIGURATION_RELOAD_FREQUENCY).build();
+                publishFrequency(DEFAULT_PUBLISH_FREQUENCY_SECONDS).
+                configurationReloadFrequency(DEFAULT_CONFIGURATION_RELOAD_FREQUENCY_MINUTES).build();
     }
 
     public enum Type

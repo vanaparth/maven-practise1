@@ -292,8 +292,8 @@ public class IReporterConfiguration
                 publishUrl = getUrl(protocol, hostname, uri);
             }
 
-            configurationReloadFrequency = configurationReloadFrequency * 60 * 1000;
             publishFrequency = publishFrequency * 1000;
+            configurationReloadFrequency = configurationReloadFrequency * 60 * 1000;
         }
 
         private void validate()

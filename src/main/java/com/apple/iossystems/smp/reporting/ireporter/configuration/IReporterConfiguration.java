@@ -37,9 +37,9 @@ public class IReporterConfiguration
 
     private static final int DEFAULT_MAX_BATCH_SIZE = 100;
 
-    private static final int DEFAULT_PUBLISH_FREQUENCY_SECONDS = 60;
+    private static final int DEFAULT_PUBLISH_FREQUENCY = 60 * 1000;
 
-    private static final int DEFAULT_CONFIGURATION_RELOAD_FREQUENCY_MINUTES = 60;
+    private static final int DEFAULT_CONFIGURATION_RELOAD_FREQUENCY = 60 * 60 * 1000;
 
     private final String protocol;
     private final String hostname;
@@ -168,8 +168,8 @@ public class IReporterConfiguration
                 contentType(DEFAULT_CONTENT_TYPE).
                 publishEnabled(DEFAULT_PUBLISH_ENABLED).
                 maxBatchSize(DEFAULT_MAX_BATCH_SIZE).
-                publishFrequency(DEFAULT_PUBLISH_FREQUENCY_SECONDS).
-                configurationReloadFrequency(DEFAULT_CONFIGURATION_RELOAD_FREQUENCY_MINUTES).build();
+                publishFrequency(DEFAULT_PUBLISH_FREQUENCY).
+                configurationReloadFrequency(DEFAULT_CONFIGURATION_RELOAD_FREQUENCY).build();
     }
 
     public enum Type
@@ -291,9 +291,6 @@ public class IReporterConfiguration
             {
                 publishUrl = getUrl(protocol, hostname, uri);
             }
-
-            publishFrequency = publishFrequency * 1000;
-            configurationReloadFrequency = configurationReloadFrequency * 60 * 1000;
         }
 
         private void validate()

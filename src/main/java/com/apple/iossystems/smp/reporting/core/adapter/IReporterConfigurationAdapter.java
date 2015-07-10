@@ -16,14 +16,14 @@ import java.lang.reflect.Type;
 public class IReporterConfigurationAdapter implements JsonSerializer<IReporterConfiguration>, JsonDeserializer<IReporterConfiguration>
 {
     private static final String BATCH_SIZE = "batchSize";
-    private static final String CONFIG_RELOAD_FREQUENCY = "configReloadFrequencyInMinutes";
+    private static final String CONFIG_RELOAD_FREQUENCY_IN_MINUTES = "configReloadFrequencyInMinutes";
     private static final String CONTENT_TYPE = "Content-Type";
     private static final String END_POINT = "endpoint";
     private static final String HEADERS = "headers";
     private static final String HOST_NAME = "hostname";
     private static final String PROTOCOL = "protocol";
     private static final String PUBLISH_FLAG = "shouldPublishFlag";
-    private static final String PUBLISH_FREQUENCY = "publishFrequencyInSeconds";
+    private static final String PUBLISH_FREQUENCY_IN_SECONDS = "publishFrequencyInSeconds";
     private static final String URI = "uri";
     private static final String X_LOAD_TEXT = "X-LoadText";
 
@@ -41,10 +41,10 @@ public class IReporterConfigurationAdapter implements JsonSerializer<IReporterCo
         JSONUtils.setAttributeValue(endPoint, HOST_NAME, src.getHostname());
         JSONUtils.setAttributeValue(endPoint, URI, src.getUri());
 
-        JSONUtils.setAttributeValue(root, BATCH_SIZE, src.getMaxBatchSize());
-        JSONUtils.setAttributeValue(root, CONFIG_RELOAD_FREQUENCY, src.getConfigurationReloadFrequency());
         JSONUtils.setAttributeValue(root, PUBLISH_FLAG, src.isPublishEnabled());
-        JSONUtils.setAttributeValue(root, PUBLISH_FREQUENCY, src.getPublishFrequency());
+        JSONUtils.setAttributeValue(root, BATCH_SIZE, src.getMaxBatchSize());
+        JSONUtils.setAttributeValue(root, CONFIG_RELOAD_FREQUENCY_IN_MINUTES, src.getConfigurationReloadFrequency() / (60 * 1000));
+        JSONUtils.setAttributeValue(root, PUBLISH_FREQUENCY_IN_SECONDS, src.getPublishFrequency() / 1000);
 
         root.add(HEADERS, headers);
         root.add(END_POINT, endPoint);
@@ -72,10 +72,10 @@ public class IReporterConfigurationAdapter implements JsonSerializer<IReporterCo
                 protocol(protocol).
                 hostname(hostname).
                 uri(uri).
-                maxBatchSize(Integer.parseInt(JSONUtils.getAttributeValueAsStringWithDefault(root, BATCH_SIZE, "0"))).
-                configurationReloadFrequency(Integer.parseInt(JSONUtils.getAttributeValueAsStringWithDefault(root, CONFIG_RELOAD_FREQUENCY, "0"))).
                 publishEnabled(JSONUtils.getAttributeValueAsBooleanWithDefault(root, PUBLISH_FLAG, true)).
-                publishFrequency(Integer.parseInt(JSONUtils.getAttributeValueAsStringWithDefault(root, PUBLISH_FREQUENCY, "0"))).
+                maxBatchSize(Integer.parseInt(JSONUtils.getAttributeValueAsStringWithDefault(root, BATCH_SIZE, "0"))).
+                configurationReloadFrequency(Integer.parseInt(JSONUtils.getAttributeValueAsStringWithDefault(root, CONFIG_RELOAD_FREQUENCY_IN_MINUTES, "0")) * 60 * 1000).
+                publishFrequency(Integer.parseInt(JSONUtils.getAttributeValueAsStringWithDefault(root, PUBLISH_FREQUENCY_IN_SECONDS, "0")) * 1000).
                 build();
     }
 }

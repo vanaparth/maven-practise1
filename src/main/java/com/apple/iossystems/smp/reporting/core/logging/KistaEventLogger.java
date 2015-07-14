@@ -51,7 +51,7 @@ public class KistaEventLogger
         String conversationId = record.getAttributeValue(EventAttribute.CONVERSATION_ID.key());
         String requestId = UUID.randomUUID().toString();
 
-        Map<String, String> data = SMPJournalHelper.buildMetadataMap("IReporter", null, null);
+        Map<String, String> data = SMPJournalHelper.buildMetadataMap("Reporting", null, null);
         String redactedRequestBody = KistaSanitizerFactory.getSanitizer().sanitize(GsonBuilderFactory.getInstance().toJson(record.getData(), Map.class), SMPReportingKistaRequest.class);
 
         journal.record(LogLevel.INFO, seid, requestId, conversationId, redactedRequestBody, JournalEntryType.REQUEST, data);

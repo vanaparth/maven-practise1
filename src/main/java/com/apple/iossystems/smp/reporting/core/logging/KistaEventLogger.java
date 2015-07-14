@@ -47,8 +47,8 @@ public class KistaEventLogger
 
     private void logEvent(EventRecord record)
     {
-        String seid = record.getAttributeValue(EventAttribute.SEID.key());
         String conversationId = record.getAttributeValue(EventAttribute.CONVERSATION_ID.key());
+        String seid = record.getAttributeValue(EventAttribute.SEID.key());
         String requestId = UUID.randomUUID().toString();
 
         Map<String, String> data = SMPJournalHelper.buildMetadataMap("Reporting", null, null);

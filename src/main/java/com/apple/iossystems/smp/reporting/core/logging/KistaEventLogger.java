@@ -2,7 +2,7 @@ package com.apple.iossystems.smp.reporting.core.logging;
 
 import com.apple.iossystems.logging.LogLevel;
 import com.apple.iossystems.smp.broker.sanitation.KistaSanitizerFactory;
-import com.apple.iossystems.smp.domain.IReporterKistaRequest;
+import com.apple.iossystems.smp.domain.SMPReportingKistaRequest;
 import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
 import com.apple.iossystems.smp.journal.SMPJournal;
 import com.apple.iossystems.smp.journal.SMPJournalHelper;
@@ -42,17 +42,17 @@ public class KistaEventLogger
 
     private void log(EventRecord record)
     {
-        logRequest(record);
+        logEvent(record);
     }
 
-    private void logRequest(EventRecord record)
+    private void logEvent(EventRecord record)
     {
         String seid = UUID.randomUUID().toString();
         String conversationId = record.getAttributeValue(EventAttribute.CONVERSATION_ID.key());
         String requestId = UUID.randomUUID().toString();
 
         Map<String, String> data = SMPJournalHelper.buildMetadataMap("IReporter", null, null);
-        String redactedRequestBody = KistaSanitizerFactory.getSanitizer().sanitize(GsonBuilderFactory.getInstance().toJson(record.getData(), Map.class), IReporterKistaRequest.class);
+        String redactedRequestBody = KistaSanitizerFactory.getSanitizer().sanitize(GsonBuilderFactory.getInstance().toJson(record.getData(), Map.class), SMPReportingKistaRequest.class);
 
         journal.record(LogLevel.INFO, seid, requestId, conversationId, redactedRequestBody, JournalEntryType.REQUEST, data);
     }

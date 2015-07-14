@@ -43,7 +43,9 @@ public enum EventAttribute
     TRANSACTION_STATUS("tst"),
     // Email
     MANAGE_DEVICE_EVENT("manage_device_event"),
-    PROVISION_CARD_EVENT("provision_card_event");
+    PROVISION_CARD_EVENT("provision_card_event"),
+    // Kista
+    SEID("seid");
 
     private final String key;
 

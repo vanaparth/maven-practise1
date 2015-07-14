@@ -47,7 +47,7 @@ public class KistaEventLogger
 
     private void logEvent(EventRecord record)
     {
-        String seid = UUID.randomUUID().toString();
+        String seid = record.getAttributeValue(EventAttribute.SEID.key());
         String conversationId = record.getAttributeValue(EventAttribute.CONVERSATION_ID.key());
         String requestId = UUID.randomUUID().toString();
 

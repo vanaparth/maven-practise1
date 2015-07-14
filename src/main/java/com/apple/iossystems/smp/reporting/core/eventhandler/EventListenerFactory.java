@@ -57,4 +57,9 @@ public class EventListenerFactory
     {
         return getEventListener("smp.reporting.smpConsumeEventListener", "SMPConsumeEventListener");
     }
+
+    public EventListener getSMPKistaEventListener()
+    {
+        return new SMPKistaEventListener();
+    }
 }

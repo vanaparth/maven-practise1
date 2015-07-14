@@ -25,6 +25,8 @@ public class SMPEventNotificationService
 
     private EventListener eventListener = EventListenerFactory.getInstance().getSMPPublishEventListener();
 
+    private EventListener kistaEventListener = EventListenerFactory.getInstance().getSMPKistaEventListener();
+
     private LogService logService;
 
     private SMPEventNotificationService()
@@ -73,6 +75,18 @@ public class SMPEventNotificationService
         }
     }
 
+    private void notifyKista(EventRecords records)
+    {
+        try
+        {
+            kistaEventListener.handleEvent(records);
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+        }
+    }
+
     private void publishEmailRecords(EventRecords records)
     {
         try
@@ -93,6 +107,8 @@ public class SMPEventNotificationService
         }
 
         notifyEventListener(records);
+
+        notifyKista(records);
     }
 
     public void publishEvents(EventRecords records)

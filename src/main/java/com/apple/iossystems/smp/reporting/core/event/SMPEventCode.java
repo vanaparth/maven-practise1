@@ -3,6 +3,7 @@ package com.apple.iossystems.smp.reporting.core.event;
 import com.apple.iossystems.smp.domain.ProvisioningCardSource;
 import com.apple.iossystems.smp.domain.clm.Card;
 import com.apple.iossystems.smp.domain.device.CardEligibilityStatus;
+import com.apple.iossystems.smp.pno.PNORepository;
 import com.apple.iossystems.smp.utils.SMPErrorEnum;
 import org.apache.commons.lang.StringUtils;
 
@@ -26,11 +27,13 @@ public class SMPEventCode
 
     static
     {
-        addToMap(PNO_MAP, "helium", "201");
-        addToMap(PNO_MAP, "neon", "202");
-        addToMap(PNO_MAP, "argon", "203");
-        addToMap(PNO_MAP, "krypton", "204");
-        addToMap(PNO_MAP, "xenon", "205");
+        addToMap(PNO_MAP, PNORepository.HELIUM_NAME, "201");
+        addToMap(PNO_MAP, PNORepository.NEON_NAME, "202");
+        addToMap(PNO_MAP, PNORepository.ARGON_NAME, "203");
+        addToMap(PNO_MAP, PNORepository.KRYPTON_NAME, "204");
+        addToMap(PNO_MAP, PNORepository.XENON_NAME, "205");
+        addToMap(PNO_MAP, PNORepository.SODIUM_NAME, "206");
+        addToMap(PNO_MAP, PNORepository.CORSICA_NAME, "207");
         //
         addToMap(COLOR_MAP, "green", "1");
         addToMap(COLOR_MAP, "yellow", "2");
@@ -43,6 +46,7 @@ public class SMPEventCode
         addToMap(FPAN_TYPE_MAP, "PrePaid", "3");
         addToMap(FPAN_TYPE_MAP, "PrivateLabel", "4");
         //
+        addToMap(CARD_STATUS_MAP, Card.CardStatus.UNKNOWN.toString(), "0");
         addToMap(CARD_STATUS_MAP, Card.CardStatus.ACTIVE.toString(), "1");
         addToMap(CARD_STATUS_MAP, Card.CardStatus.SUSPENDED.toString(), "2");
         addToMap(CARD_STATUS_MAP, Card.CardStatus.UNLINKED.toString(), "3");

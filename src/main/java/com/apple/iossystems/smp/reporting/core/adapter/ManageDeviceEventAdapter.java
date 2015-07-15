@@ -21,9 +21,12 @@ import java.util.List;
 @Component
 public class ManageDeviceEventAdapter implements JsonSerializer<ManageDeviceEvent>, JsonDeserializer<ManageDeviceEvent>
 {
+    private static final String EVENT_TYPE = "eventType";
     private static final String CARD_HOLDER_NAME = "cardHolderName";
     private static final String CARD_HOLDER_EMAIL = "cardHolderEmail";
+    private static final String CONVERSATION_ID = "conversationId";
     private static final String DSID = "dsid";
+    private static final String SEID = "seid";
     private static final String TIMESTAMP = "timestamp";
     private static final String TIMEZONE = "timezone";
     private static final String LOCALE = "locale";
@@ -39,9 +42,12 @@ public class ManageDeviceEventAdapter implements JsonSerializer<ManageDeviceEven
     {
         JsonObject root = new JsonObject();
 
+        JSONUtils.setAttributeValue(root, EVENT_TYPE, src.getEventType());
         JSONUtils.setAttributeValue(root, CARD_HOLDER_NAME, src.getCardHolderName());
         JSONUtils.setAttributeValue(root, CARD_HOLDER_EMAIL, src.getCardHolderEmail());
+        JSONUtils.setAttributeValue(root, CONVERSATION_ID, src.getConversationId());
         JSONUtils.setAttributeValue(root, DSID, src.getDsid());
+        JSONUtils.setAttributeValue(root, SEID, src.getSeid());
         JSONUtils.setAttributeValue(root, TIMESTAMP, src.getTimestamp());
         JSONUtils.setAttributeValue(root, TIMEZONE, src.getTimezone());
         JSONUtils.setAttributeValue(root, LOCALE, src.getLocale());
@@ -83,9 +89,12 @@ public class ManageDeviceEventAdapter implements JsonSerializer<ManageDeviceEven
         List<CardEvent> cardEvents = (jsonElement != null) ? Arrays.asList((CardEvent[]) context.deserialize(jsonElement, CardEvent[].class)) : Collections.<CardEvent>emptyList();
 
         return ManageDeviceEvent.getBuilder().
+                eventType(JSONUtils.getAttributeValueAsString(root, EVENT_TYPE)).
                 cardHolderName(JSONUtils.getAttributeValueAsString(root, CARD_HOLDER_NAME)).
                 cardHolderEmail(JSONUtils.getAttributeValueAsString(root, CARD_HOLDER_EMAIL)).
+                conversationId(JSONUtils.getAttributeValueAsString(root, CONVERSATION_ID)).
                 dsid(JSONUtils.getAttributeValueAsString(root, DSID)).
+                seid(JSONUtils.getAttributeValueAsString(root, SEID)).
                 timestamp(JSONUtils.getAttributeValueAsString(root, TIMESTAMP)).
                 timezone(JSONUtils.getAttributeValueAsString(root, TIMEZONE)).
                 locale(JSONUtils.getAttributeValueAsString(root, LOCALE)).

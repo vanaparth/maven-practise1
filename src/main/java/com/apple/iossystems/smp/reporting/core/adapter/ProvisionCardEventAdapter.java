@@ -25,6 +25,7 @@ public class ProvisionCardEventAdapter implements JsonSerializer<ProvisionCardEv
     private static final String DPAN_ID = "dpanId";
     private static final String DSID = "dsid";
     private static final String LOCALE = "locale";
+    private static final String SEID = "seid";
 
     @Override
     public JsonElement serialize(ProvisionCardEvent src, Type typeOfSrc, JsonSerializationContext context)
@@ -41,6 +42,7 @@ public class ProvisionCardEventAdapter implements JsonSerializer<ProvisionCardEv
         JSONUtils.setAttributeValue(root, DPAN_ID, src.getDpanId());
         JSONUtils.setAttributeValue(root, DSID, src.getDsid());
         JSONUtils.setAttributeValue(root, LOCALE, src.getLocale());
+        JSONUtils.setAttributeValue(root, SEID, src.getSeid());
 
         return root;
     }
@@ -60,6 +62,7 @@ public class ProvisionCardEventAdapter implements JsonSerializer<ProvisionCardEv
                 deviceType(JSONUtils.getAttributeValueAsString(root, DEVICE_TYPE)).
                 dpanId(JSONUtils.getAttributeValueAsString(root, DPAN_ID)).
                 dsid(JSONUtils.getAttributeValueAsString(root, DSID)).
-                locale(JSONUtils.getAttributeValueAsString(root, LOCALE)).build();
+                locale(JSONUtils.getAttributeValueAsString(root, LOCALE)).
+                seid(JSONUtils.getAttributeValueAsString(root, SEID)).build();
     }
 }

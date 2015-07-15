@@ -1,6 +1,8 @@
 package com.apple.iossystems.smp.reporting.core.eventhandler;
 
 import com.apple.cds.keystone.config.PropertyManager;
+import com.apple.iossystems.smp.reporting.core.email.ManageDeviceEvent;
+import com.apple.iossystems.smp.reporting.core.email.ProvisionCardEvent;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 import com.apple.iossystems.smp.reporting.core.logging.KistaEventLogger;
 
@@ -19,5 +21,17 @@ public class SMPKistaEventListener extends SMPEventListener
     public void handleEvent(EventRecords records)
     {
         kistaEventLogger.log(records);
+    }
+
+    @Override
+    public void handleEvent(ProvisionCardEvent provisionCardEvent)
+    {
+        kistaEventLogger.log(provisionCardEvent);
+    }
+
+    @Override
+    public void handleEvent(ManageDeviceEvent manageDeviceEvent)
+    {
+        kistaEventLogger.log(manageDeviceEvent);
     }
 }

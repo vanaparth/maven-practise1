@@ -24,8 +24,11 @@ public class ManageDeviceEventBuilder
     private static final String DEVICE_NAME = "deviceName";
     private static final String DEVICE_IMAGE_URL = "deviceImageURL";
 
-    private String timestamp;
+    private String eventType;
+    private String conversationId;
     private String dsid;
+    private String seid;
+    private String timestamp;
     private Actor actor;
     private FmipSource fmipSource;
     private Map<String, String> cardData;
@@ -42,15 +45,33 @@ public class ManageDeviceEventBuilder
         return new ManageDeviceEventBuilder();
     }
 
-    public ManageDeviceEventBuilder timestamp(String value)
+    public ManageDeviceEventBuilder eventType(String value)
     {
-        timestamp = value;
+        eventType = value;
+        return this;
+    }
+
+    public ManageDeviceEventBuilder conversationId(String value)
+    {
+        conversationId = value;
         return this;
     }
 
     public ManageDeviceEventBuilder dsid(String value)
     {
         dsid = value;
+        return this;
+    }
+
+    public ManageDeviceEventBuilder seid(String value)
+    {
+        seid = value;
+        return this;
+    }
+
+    public ManageDeviceEventBuilder timestamp(String value)
+    {
+        timestamp = value;
         return this;
     }
 
@@ -104,9 +125,13 @@ public class ManageDeviceEventBuilder
         String deviceName = cardData.get(DEVICE_NAME);
         String deviceImageUrl = cardData.get(DEVICE_IMAGE_URL);
 
-        return ManageDeviceEvent.getBuilder().cardHolderName(getCardHolderName(firstName, lastName)).
+        return ManageDeviceEvent.getBuilder().
+                eventType(eventType).
+                cardHolderName(getCardHolderName(firstName, lastName)).
                 cardHolderEmail(cardHolderEmail).
+                conversationId(conversationId).
                 dsid(dsid).
+                seid(seid).
                 timestamp(timestamp).
                 timezone(timezone).
                 locale(locale).

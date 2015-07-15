@@ -31,6 +31,7 @@ public class EmailService
     private static final boolean DEFAULT_EMAIL_LOCALE_ENABLED = ApplicationConfiguration.isDefaultEmailLocaleEnabled();
 
     private EventListener eventListener = EventListenerFactory.getInstance().getEmailEventListener();
+    private EventListener kistaEventListener = EventListenerFactory.getInstance().getSMPKistaEventListener();
 
     private EmailService()
     {
@@ -59,6 +60,19 @@ public class EmailService
         {
             LOGGER.error(e);
         }
+    }
+
+    private void notifyEventListeners(ProvisionCardEvent provisionCardEvent)
+    {
+        eventListener.handleEvent(provisionCardEvent);
+        kistaEventListener.handleEvent(provisionCardEvent);
+    }
+
+    private void notifyEventListeners(ManageDeviceEvent manageDeviceEvent)
+    {
+        eventListener.handleEvent(manageDeviceEvent);
+        kistaEventListener.handleEvent(manageDeviceEvent);
+
     }
 
     private String format(String value)
@@ -110,7 +124,7 @@ public class EmailService
                         format(provisionCardEvent.getDeviceType()),
                         format(provisionCardEvent.getDsid()))).sendEmail();
 
-                eventListener.handleEvent(provisionCardEvent);
+                notifyEventListeners(provisionCardEvent);
             }
             catch (Exception e)
             {
@@ -185,7 +199,7 @@ public class EmailService
                     }
                 }
 
-                eventListener.handleEvent(record, manageDeviceEvent, cardEventRecord);
+                notifyEventListeners(manageDeviceEvent);
             }
         }
     }

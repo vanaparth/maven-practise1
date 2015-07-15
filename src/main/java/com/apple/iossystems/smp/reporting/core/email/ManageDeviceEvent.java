@@ -7,9 +7,12 @@ import java.util.List;
  */
 public class ManageDeviceEvent
 {
+    private final String eventType;
     private final String cardHolderName;
     private final String cardHolderEmail;
+    private final String conversationId;
     private final String dsid;
+    private final String seid;
     private final String timestamp;
     private final String timezone;
     private final String locale;
@@ -22,9 +25,12 @@ public class ManageDeviceEvent
 
     private ManageDeviceEvent(Builder builder)
     {
+        eventType = builder.eventType;
         cardHolderName = builder.cardHolderName;
         cardHolderEmail = builder.cardHolderEmail;
+        conversationId = builder.conversationId;
         dsid = builder.dsid;
+        seid = builder.seid;
         timestamp = builder.timestamp;
         timezone = builder.timezone;
         locale = builder.locale;
@@ -34,6 +40,11 @@ public class ManageDeviceEvent
         manageDeviceEventSource = builder.manageDeviceEventSource;
         fmipSource = builder.fmipSource;
         cardEvents = builder.cardEvents;
+    }
+
+    public String getEventType()
+    {
+        return eventType;
     }
 
     public String getCardHolderName()
@@ -46,9 +57,19 @@ public class ManageDeviceEvent
         return cardHolderEmail;
     }
 
+    public String getConversationId()
+    {
+        return conversationId;
+    }
+
     public String getDsid()
     {
         return dsid;
+    }
+
+    public String getSeid()
+    {
+        return seid;
     }
 
     public String getTimestamp()
@@ -103,9 +124,12 @@ public class ManageDeviceEvent
 
     public static class Builder
     {
+        private String eventType;
         private String cardHolderName;
         private String cardHolderEmail;
+        private String conversationId;
         private String dsid;
+        private String seid;
         private String timestamp;
         private String timezone;
         private String locale;
@@ -120,6 +144,12 @@ public class ManageDeviceEvent
         {
         }
 
+        public Builder eventType(String value)
+        {
+            eventType = value;
+            return this;
+        }
+
         public Builder cardHolderName(String value)
         {
             cardHolderName = value;
@@ -132,9 +162,21 @@ public class ManageDeviceEvent
             return this;
         }
 
+        public Builder conversationId(String value)
+        {
+            conversationId = value;
+            return this;
+        }
+
         public Builder dsid(String value)
         {
             dsid = value;
+            return this;
+        }
+
+        public Builder seid(String value)
+        {
+            seid = value;
             return this;
         }
 

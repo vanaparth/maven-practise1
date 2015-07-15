@@ -1,9 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.eventhandler;
 
-import com.apple.iossystems.smp.reporting.core.email.CardEventRecord;
 import com.apple.iossystems.smp.reporting.core.email.ManageDeviceEvent;
 import com.apple.iossystems.smp.reporting.core.email.ProvisionCardEvent;
-import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 
 /**
@@ -22,7 +20,7 @@ abstract class SMPEventListener implements EventListener
     }
 
     @Override
-    public void handleEvent(EventRecord record, ManageDeviceEvent manageDeviceEvent, CardEventRecord cardEventRecord)
+    public void handleEvent(ManageDeviceEvent manageDeviceEvent)
     {
     }
 }

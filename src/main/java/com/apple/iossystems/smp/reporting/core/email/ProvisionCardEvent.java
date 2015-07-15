@@ -15,6 +15,7 @@ public class ProvisionCardEvent
     private final String dpanId;
     private final String dsid;
     private final String locale;
+    private final String seid;
 
     private ProvisionCardEvent(Builder builder)
     {
@@ -28,6 +29,7 @@ public class ProvisionCardEvent
         dpanId = builder.dpanId;
         dsid = builder.dsid;
         locale = builder.locale;
+        seid = builder.seid;
     }
 
     public String getConversationId()
@@ -80,6 +82,11 @@ public class ProvisionCardEvent
         return locale;
     }
 
+    public String getSeid()
+    {
+        return seid;
+    }
+
     public static Builder getBuilder()
     {
         return new Builder();
@@ -97,6 +104,7 @@ public class ProvisionCardEvent
         private String dpanId;
         private String dsid;
         private String locale;
+        private String seid;
 
         private Builder()
         {
@@ -159,6 +167,12 @@ public class ProvisionCardEvent
         public Builder locale(String value)
         {
             locale = value;
+            return this;
+        }
+
+        public Builder seid(String value)
+        {
+            seid = value;
             return this;
         }
 

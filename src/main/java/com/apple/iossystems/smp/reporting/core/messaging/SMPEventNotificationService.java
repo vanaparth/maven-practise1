@@ -101,14 +101,21 @@ public class SMPEventNotificationService
 
     private void publishEventRecords(EventRecords records)
     {
-        for (EventRecord record : records.getList())
+        try
         {
-            publishEventRecord(record);
+            for (EventRecord record : records.getList())
+            {
+                publishEventRecord(record);
+            }
+
+            notifyEventListener(records);
+
+            notifyKista(records);
         }
-
-        notifyEventListener(records);
-
-        notifyKista(records);
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+        }
     }
 
     public void publishEvents(EventRecords records)

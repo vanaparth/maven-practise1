@@ -30,6 +30,7 @@ public enum EventAttribute
     FPAN_ID("fpn"),
     OTP("otp"),
     PNO("pno"),
+    PRODUCT("plr"),
     PROVISION_RESPONSE("prs"),
     PROVISION_STATUS("pst"),
     TIMESTAMP("tim"),

@@ -44,6 +44,7 @@ public class IReporterEvent
         eventAttributes.add(EventAttribute.FPAN_ID.key());
         eventAttributes.add(EventAttribute.OTP.key());
         eventAttributes.add(EventAttribute.PNO.key());
+        eventAttributes.add(EventAttribute.PRODUCT.key());
         eventAttributes.add(EventAttribute.PROVISION_RESPONSE.key());
         eventAttributes.add(EventAttribute.PROVISION_STATUS.key());
         eventAttributes.add(EventAttribute.TIMESTAMP.key());

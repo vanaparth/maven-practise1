@@ -7,7 +7,7 @@ import org.apache.commons.lang.StringUtils;
  */
 public class LogMessage
 {
-    private StringJoiner stringJoiner = new StringJoiner(" ");
+    private final StringJoiner stringJoiner = new StringJoiner(" ");
 
     public LogMessage()
     {

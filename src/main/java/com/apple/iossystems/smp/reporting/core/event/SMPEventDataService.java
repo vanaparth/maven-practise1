@@ -1,6 +1,8 @@
 package com.apple.iossystems.smp.reporting.core.event;
 
 import com.apple.cds.keystone.spring.AppContext;
+import com.apple.iossystems.persistence.entity.dao.PaymentProductRepository;
+import com.apple.iossystems.smp.domain.product.ProductId;
 import com.apple.iossystems.smp.persistence.entity.*;
 import com.apple.iossystems.smp.service.PassManagementService;
 import com.apple.iossystems.smp.service.SecureElementService;
@@ -14,6 +16,7 @@ class SMPEventDataService
 {
     private PassManagementService passManagementService = AppContext.getApplicationContext().getBean(PassManagementService.class);
     private SecureElementService secureElementService = AppContext.getApplicationContext().getBean(SecureElementService.class);
+    private PaymentProductRepository paymentProductRepository = AppContext.getApplicationContext().getBean(PaymentProductRepository.class);
 
     private SMPEventDataService()
     {
@@ -26,7 +29,7 @@ class SMPEventDataService
 
     public String getDeviceType(SecureElement secureElement)
     {
-        DeviceType deviceType = secureElement.getDeviceType();
+        DeviceType deviceType = (secureElement != null) ? secureElement.getDeviceType() : null;
 
         return (deviceType != null) ? deviceType.getDeviceTypeName() : null;
     }
@@ -47,7 +50,7 @@ class SMPEventDataService
     {
         String value = null;
 
-        Collection<PanMetadata> panMetadataCollection = passbookPass.getPanMetadataCollection();
+        Collection<PanMetadata> panMetadataCollection = (passbookPass != null) ? passbookPass.getPanMetadataCollection() : null;
 
         if (panMetadataCollection != null)
         {
@@ -75,5 +78,14 @@ class SMPEventDataService
         SecureElement secureElement = secureElementService.findSecureElementBySerialNumber(serialNumber);
 
         return (secureElement != null) ? secureElement.getCompanionDeviceSerialNumber() : null;
+    }
+
+    public PassPaymentType getPassPaymentType(ProductId productId)
+    {
+        PaymentProduct paymentProduct = (productId != null) ? paymentProductRepository.findByPnoAndName(productId.getPnoName(), productId.getName()) : null;
+
+        PaymentOption paymentOption = (paymentProduct != null) ? paymentProduct.getPrimaryPaymentOption() : null;
+
+        return (paymentOption != null) ? paymentOption.getPaymentType() : null;
     }
 }

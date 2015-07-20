@@ -1,7 +1,9 @@
 package com.apple.iossystems.smp.reporting.core.event;
 
 import com.apple.iossystems.smp.domain.device.AbstractPass;
+import com.apple.iossystems.smp.domain.product.ProductId;
 import com.apple.iossystems.smp.persistence.entity.PassPan;
+import com.apple.iossystems.smp.persistence.entity.PassPaymentType;
 import com.apple.iossystems.smp.persistence.entity.PassbookPass;
 import com.apple.iossystems.smp.persistence.entity.SecureElement;
 
@@ -60,12 +62,12 @@ public class SMPEventDataServiceClient
 
     public PassPan getPassPanByPassSerialAndSeid(String passSerial, String seid)
     {
-        return smpEventDataService.getPassPanByPassSerialAndSeid(passSerial, seid);
+        return ((passSerial != null) && (seid != null)) ? smpEventDataService.getPassPanByPassSerialAndSeid(passSerial, seid) : null;
     }
 
     public String getDpanIdByPassSerialAndSeid(String passSerial, String seid)
     {
-        PassPan passPan = getPassPanByPassSerialAndSeid(passSerial, seid);
+        PassPan passPan = ((passSerial != null) && (seid != null)) ? getPassPanByPassSerialAndSeid(passSerial, seid) : null;
 
         return (passPan != null) ? passPan.getDpanId() : null;
     }
@@ -73,5 +75,10 @@ public class SMPEventDataServiceClient
     public String getCompanionDeviceSerialNumber(String serialNumber)
     {
         return (serialNumber != null) ? smpEventDataService.getCompanionDeviceSerialNumber(serialNumber) : null;
+    }
+
+    public PassPaymentType getPassPaymentType(ProductId productId)
+    {
+        return (productId != null) ? smpEventDataService.getPassPaymentType(productId) : null;
     }
 }

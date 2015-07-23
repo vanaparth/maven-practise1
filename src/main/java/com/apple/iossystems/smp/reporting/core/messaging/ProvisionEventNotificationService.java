@@ -53,7 +53,7 @@ public class ProvisionEventNotificationService
 
         try
         {
-            dsidInfo = storeManagementService.getDSIDInfo(dsid);
+            dsidInfo = storeManagementService.findDSIDInfo(dsid);
         }
         catch (Exception e)
         {

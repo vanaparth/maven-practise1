@@ -7,6 +7,7 @@ import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
 import com.apple.iossystems.smp.journal.SMPJournal;
 import com.apple.iossystems.smp.journal.SMPJournalHelper;
 import com.apple.iossystems.smp.journal.SMPJournalService;
+import com.apple.iossystems.smp.journal.core.JournalConstants;
 import com.apple.iossystems.smp.journal.core.JournalEntryType;
 import com.apple.iossystems.smp.reporting.core.email.ManageDeviceEvent;
 import com.apple.iossystems.smp.reporting.core.email.ProvisionCardEvent;
@@ -87,7 +88,10 @@ public class KistaEventLogger
     private void doPublishEvent(String conversationId, String seid, String request)
     {
         String requestId = UUID.randomUUID().toString();
+
         Map<String, String> data = SMPJournalHelper.buildMetadataMap("Reporting", null, null);
+        data.put(JournalConstants.ACTION, "reporting");
+
         request = KistaSanitizerFactory.getSanitizer().sanitize(request, SMPReportingKistaRequest.class);
 
         journal.record(LogLevel.INFO, seid, requestId, conversationId, request, JournalEntryType.REQUEST, data);

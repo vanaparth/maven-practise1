@@ -90,6 +90,7 @@ public class KistaEventLogger
         String requestId = UUID.randomUUID().toString();
 
         Map<String, String> data = SMPJournalHelper.buildMetadataMap("Reporting", null, null);
+
         data.put(JournalConstants.ACTION, "reporting");
 
         request = KistaSanitizerFactory.getSanitizer().sanitize(request, SMPReportingKistaRequest.class);

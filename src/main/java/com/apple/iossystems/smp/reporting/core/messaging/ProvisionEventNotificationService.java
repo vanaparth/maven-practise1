@@ -102,7 +102,7 @@ public class ProvisionEventNotificationService
         }
 
         @Override
-        public Object call()
+        public Object call() throws Exception
         {
             emailService.publishProvisionEvent(provisionCardEvent);
 

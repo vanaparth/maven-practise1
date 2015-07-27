@@ -165,7 +165,7 @@ public class SMPEventNotificationService
         }
 
         @Override
-        public Object call()
+        public Object call() throws Exception
         {
             publishEventTask(records);
 

@@ -76,11 +76,11 @@ public class ProvisionEventNotificationService
 
         if (firstProvision && (json != null))
         {
-            publishProvisionEvent(GsonBuilderFactory.getInstance().fromJson(json, ProvisionCardEvent.class));
+            processEmailEvent(GsonBuilderFactory.getInstance().fromJson(json, ProvisionCardEvent.class));
         }
     }
 
-    private void publishProvisionEvent(ProvisionCardEvent provisionCardEvent)
+    private void processEmailEvent(ProvisionCardEvent provisionCardEvent)
     {
         try
         {

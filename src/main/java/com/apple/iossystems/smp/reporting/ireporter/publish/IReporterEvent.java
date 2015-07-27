@@ -61,10 +61,12 @@ public class IReporterEvent
 
     public static EventRecord processEventRecord(EventRecord record)
     {
-        record.removeAttributesIfAbsent(EVENT_ATTRIBUTES);
+        EventRecord output = record.getCopy();
 
-        SMPEventRecord.maskAttributes(record);
+        output.removeAttributesIfAbsent(EVENT_ATTRIBUTES);
 
-        return record;
+        SMPEventRecord.maskAttributes(output);
+
+        return output;
     }
 }

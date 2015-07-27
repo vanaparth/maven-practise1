@@ -11,11 +11,13 @@ public class PutPendingCommandSMPEvent
     private static final Logger LOGGER = Logger.getLogger(PutPendingCommandSMPEvent.class);
 
     private final String conversationId;
+    private final String seid;
     private final PNO pno;
 
     private PutPendingCommandSMPEvent(Builder builder)
     {
         conversationId = builder.conversationId;
+        seid = builder.seid;
         pno = builder.pno;
     }
 
@@ -31,17 +33,13 @@ public class PutPendingCommandSMPEvent
         record.setAttributeValue(EventAttribute.EVENT_TYPE.key(), EventType.REPORTS.getKey());
         record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(System.currentTimeMillis()));
         record.setAttributeValue(EventAttribute.CONVERSATION_ID.key(), conversationId);
+        record.setAttributeValue(EventAttribute.SEID.key(), seid);
 
         SMPDeviceEvent.PUT_PENDING.setEvent(record);
 
         if (pno != null)
         {
-            String pnoName = pno.getPnoName();
-
-            if (pnoName != null)
-            {
-                SMPEventCode.writePNOName(record, EventAttribute.PNO, pnoName);
-            }
+            SMPEventCode.writePNOName(record, EventAttribute.PNO, pno.getPnoName());
         }
 
         EventRecords records = EventRecords.getInstance();
@@ -53,6 +51,7 @@ public class PutPendingCommandSMPEvent
     public static class Builder
     {
         private String conversationId;
+        private String seid;
         private PNO pno;
 
         private Builder()
@@ -62,6 +61,12 @@ public class PutPendingCommandSMPEvent
         public Builder conversationId(String value)
         {
             conversationId = value;
+            return this;
+        }
+
+        public Builder seid(String value)
+        {
+            seid = value;
             return this;
         }
 

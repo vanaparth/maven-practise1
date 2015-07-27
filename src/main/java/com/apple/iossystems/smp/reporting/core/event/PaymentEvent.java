@@ -15,6 +15,7 @@ public class PaymentEvent
     private final String currency;
     private final String merchantId;
     private final String merchantName;
+    private final String seid;
     private final String transactionId;
     private final float transactionAmount;
     private final PaymentTransactionStatus transactionStatus;
@@ -24,6 +25,7 @@ public class PaymentEvent
         currency = builder.currency;
         merchantId = builder.merchantId;
         merchantName = builder.merchantName;
+        seid = builder.seid;
         transactionId = builder.transactionId;
         transactionAmount = builder.transactionAmount;
         transactionStatus = builder.transactionStatus;
@@ -48,6 +50,7 @@ public class PaymentEvent
         record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(Calendar.getCurrentHourInMilliseconds()));
         record.setAttributeValue(EventAttribute.CURRENCY.key(), currency);
         record.setAttributeValue(EventAttribute.MERCHANT_ID.key(), getMerchantInfo());
+        record.setAttributeValue(EventAttribute.SEID.key(), seid);
         record.setAttributeValue(EventAttribute.TRANSACTION_ID.key(), transactionId);
         record.setAttributeValue(EventAttribute.TRANSACTION_AMOUNT.key(), formatTransactionAmount(transactionAmount));
 
@@ -97,6 +100,7 @@ public class PaymentEvent
         private String currency;
         private String merchantId;
         private String merchantName;
+        private String seid;
         private String transactionId;
         private float transactionAmount;
         private PaymentTransactionStatus transactionStatus;
@@ -123,6 +127,12 @@ public class PaymentEvent
             return this;
         }
 
+        public Builder seid(String value)
+        {
+            seid = value;
+            return this;
+        }
+
         public Builder transactionId(String value)
         {
             transactionId = value;
@@ -141,7 +151,7 @@ public class PaymentEvent
             return this;
         }
 
-        private static float getTransactionAmount(float value)
+        private float getTransactionAmount(float value)
         {
             return (Math.round(value / 10f) / 10f);
         }

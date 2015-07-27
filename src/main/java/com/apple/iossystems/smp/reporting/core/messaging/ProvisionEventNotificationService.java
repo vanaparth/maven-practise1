@@ -4,11 +4,14 @@ import com.apple.cds.keystone.spring.AppContext;
 import com.apple.iossystems.smp.domain.DSIDInfo;
 import com.apple.iossystems.smp.domain.ProvisionCount;
 import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
+import com.apple.iossystems.smp.reporting.core.concurrent.ThreadPoolExecutorService;
 import com.apple.iossystems.smp.reporting.core.email.EmailService;
 import com.apple.iossystems.smp.reporting.core.email.ProvisionCardEvent;
 import com.apple.iossystems.smp.reporting.core.persistence.SMPEventCache;
 import com.apple.iossystems.smp.service.StoreManagementService;
 import org.apache.log4j.Logger;
+
+import java.util.concurrent.Callable;
 
 /**
  * @author Toch
@@ -17,11 +20,13 @@ public class ProvisionEventNotificationService
 {
     private static final Logger LOGGER = Logger.getLogger(ProvisionEventNotificationService.class);
 
+    private static final ProvisionEventNotificationService INSTANCE = new ProvisionEventNotificationService();
+
     private EmailService emailService = EmailService.getInstance();
 
     private static final SMPEventCache SMP_EVENT_CACHE = SMPEventCache.getInstance();
 
-    private static final ProvisionEventNotificationService INSTANCE = new ProvisionEventNotificationService();
+    private ThreadPoolExecutorService threadPoolExecutorService = ThreadPoolExecutorService.getInstance();
 
     private ProvisionEventNotificationService()
     {
@@ -71,7 +76,37 @@ public class ProvisionEventNotificationService
 
         if (firstProvision && (json != null))
         {
-            emailService.publishProvisionEvent(GsonBuilderFactory.getInstance().fromJson(json, ProvisionCardEvent.class));
+            publishProvisionEvent(GsonBuilderFactory.getInstance().fromJson(json, ProvisionCardEvent.class));
+        }
+    }
+
+    private void publishProvisionEvent(ProvisionCardEvent provisionCardEvent)
+    {
+        try
+        {
+            threadPoolExecutorService.submit(new Task(provisionCardEvent));
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+        }
+    }
+
+    private class Task implements Callable
+    {
+        private final ProvisionCardEvent provisionCardEvent;
+
+        private Task(ProvisionCardEvent provisionCardEvent)
+        {
+            this.provisionCardEvent = provisionCardEvent;
+        }
+
+        @Override
+        public Object call()
+        {
+            emailService.publishProvisionEvent(provisionCardEvent);
+
+            return null;
         }
     }
 }

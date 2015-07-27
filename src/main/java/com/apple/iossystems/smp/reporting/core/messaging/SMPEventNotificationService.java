@@ -2,6 +2,7 @@ package com.apple.iossystems.smp.reporting.core.messaging;
 
 import com.apple.iossystems.logging.LogService;
 import com.apple.iossystems.logging.LogServiceFactory2;
+import com.apple.iossystems.smp.reporting.core.concurrent.ThreadPoolExecutorService;
 import com.apple.iossystems.smp.reporting.core.email.EmailService;
 import com.apple.iossystems.smp.reporting.core.email.SMPEmailEvent;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
@@ -11,6 +12,8 @@ import com.apple.iossystems.smp.reporting.core.eventhandler.EventListener;
 import com.apple.iossystems.smp.reporting.core.eventhandler.EventListenerFactory;
 import com.apple.iossystems.smp.reporting.core.util.MapToPair;
 import org.apache.log4j.Logger;
+
+import java.util.concurrent.Callable;
 
 /**
  * @author Toch
@@ -26,6 +29,8 @@ public class SMPEventNotificationService
     private EventListener eventListener = EventListenerFactory.getInstance().getSMPPublishEventListener();
 
     private EventListener kistaEventListener = EventListenerFactory.getInstance().getSMPKistaEventListener();
+
+    private ThreadPoolExecutorService threadPoolExecutorService = ThreadPoolExecutorService.getInstance();
 
     private LogService logService;
 
@@ -118,9 +123,8 @@ public class SMPEventNotificationService
         }
     }
 
-    public void publishEvents(EventRecords records)
+    private void publishEventTask(EventRecords records)
     {
-        // Prevent any side effects
         try
         {
             publishEventRecords(records);
@@ -133,8 +137,39 @@ public class SMPEventNotificationService
         }
     }
 
+    public void publishEvents(EventRecords records)
+    {
+        // Prevent any side effects
+        try
+        {
+            threadPoolExecutorService.submit(new Task(records));
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+        }
+    }
+
     public boolean isOnline()
     {
         return (logService != null);
+    }
+
+    private class Task implements Callable
+    {
+        private final EventRecords records;
+
+        private Task(EventRecords records)
+        {
+            this.records = records;
+        }
+
+        @Override
+        public Object call()
+        {
+            publishEventTask(records);
+
+            return null;
+        }
     }
 }

@@ -24,13 +24,13 @@ public class SMPEventNotificationService
 
     private static final SMPEventNotificationService INSTANCE = new SMPEventNotificationService();
 
+    private ThreadPoolExecutorService threadPoolExecutorService = ThreadPoolExecutorService.getInstance();
+
     private EmailService emailService = EmailService.getInstance();
 
     private EventListener eventListener = EventListenerFactory.getInstance().getSMPPublishEventListener();
 
     private EventListener kistaEventListener = EventListenerFactory.getInstance().getSMPKistaEventListener();
-
-    private ThreadPoolExecutorService threadPoolExecutorService = ThreadPoolExecutorService.getInstance();
 
     private LogService logService;
 
@@ -169,7 +169,7 @@ public class SMPEventNotificationService
         {
             publishEventTask(records);
 
-            return null;
+            return new Object();
         }
     }
 }

@@ -22,11 +22,11 @@ public class ProvisionEventNotificationService
 
     private static final ProvisionEventNotificationService INSTANCE = new ProvisionEventNotificationService();
 
+    private ThreadPoolExecutorService threadPoolExecutorService = ThreadPoolExecutorService.getInstance();
+
     private EmailService emailService = EmailService.getInstance();
 
     private static final SMPEventCache SMP_EVENT_CACHE = SMPEventCache.getInstance();
-
-    private ThreadPoolExecutorService threadPoolExecutorService = ThreadPoolExecutorService.getInstance();
 
     private ProvisionEventNotificationService()
     {

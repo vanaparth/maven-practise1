@@ -169,7 +169,7 @@ public class SMPEventNotificationService
         {
             publishEventTask(records);
 
-            return new Object();
+            return null;
         }
     }
 }

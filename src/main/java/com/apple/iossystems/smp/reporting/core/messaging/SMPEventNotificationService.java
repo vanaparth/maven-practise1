@@ -2,7 +2,6 @@ package com.apple.iossystems.smp.reporting.core.messaging;
 
 import com.apple.iossystems.logging.LogService;
 import com.apple.iossystems.logging.LogServiceFactory2;
-import com.apple.iossystems.smp.reporting.core.concurrent.ThreadPoolExecutorService;
 import com.apple.iossystems.smp.reporting.core.email.EmailService;
 import com.apple.iossystems.smp.reporting.core.email.SMPEmailEvent;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
@@ -24,7 +23,7 @@ public class SMPEventNotificationService
 
     private static final SMPEventNotificationService INSTANCE = new SMPEventNotificationService();
 
-    private ThreadPoolExecutorService threadPoolExecutorService = ThreadPoolExecutorService.getInstance();
+    private EventNotificationServiceThreadPool threadPool = EventNotificationServiceThreadPool.getInstance();
 
     private EmailService emailService = EmailService.getInstance();
 
@@ -142,7 +141,7 @@ public class SMPEventNotificationService
         // Prevent any side effects
         try
         {
-            threadPoolExecutorService.submit(new Task(records));
+            threadPool.submit(new Task(records));
         }
         catch (Exception e)
         {
@@ -155,7 +154,7 @@ public class SMPEventNotificationService
         return (logService != null);
     }
 
-    private class Task implements Callable
+    private class Task implements Callable<Boolean>
     {
         private final EventRecords records;
 
@@ -165,11 +164,11 @@ public class SMPEventNotificationService
         }
 
         @Override
-        public Object call() throws Exception
+        public Boolean call() throws Exception
         {
             publishEventTask(records);
 
-            return null;
+            return true;
         }
     }
 }

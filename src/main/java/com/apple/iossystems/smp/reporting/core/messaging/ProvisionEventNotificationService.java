@@ -4,7 +4,6 @@ import com.apple.cds.keystone.spring.AppContext;
 import com.apple.iossystems.smp.domain.DSIDInfo;
 import com.apple.iossystems.smp.domain.ProvisionCount;
 import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
-import com.apple.iossystems.smp.reporting.core.concurrent.ThreadPoolExecutorService;
 import com.apple.iossystems.smp.reporting.core.email.EmailService;
 import com.apple.iossystems.smp.reporting.core.email.ProvisionCardEvent;
 import com.apple.iossystems.smp.reporting.core.persistence.SMPEventCache;
@@ -22,7 +21,7 @@ public class ProvisionEventNotificationService
 
     private static final ProvisionEventNotificationService INSTANCE = new ProvisionEventNotificationService();
 
-    private ThreadPoolExecutorService threadPoolExecutorService = ThreadPoolExecutorService.getInstance();
+    private EventNotificationServiceThreadPool threadPool = EventNotificationServiceThreadPool.getInstance();
 
     private EmailService emailService = EmailService.getInstance();
 
@@ -84,7 +83,7 @@ public class ProvisionEventNotificationService
     {
         try
         {
-            threadPoolExecutorService.submit(new Task(provisionCardEvent));
+            threadPool.submit(new Task(provisionCardEvent));
         }
         catch (Exception e)
         {
@@ -92,7 +91,7 @@ public class ProvisionEventNotificationService
         }
     }
 
-    private class Task implements Callable
+    private class Task implements Callable<Boolean>
     {
         private final ProvisionCardEvent provisionCardEvent;
 
@@ -102,11 +101,11 @@ public class ProvisionEventNotificationService
         }
 
         @Override
-        public Object call() throws Exception
+        public Boolean call() throws Exception
         {
             emailService.publishProvisionEvent(provisionCardEvent);
 
-            return null;
+            return true;
         }
     }
 }

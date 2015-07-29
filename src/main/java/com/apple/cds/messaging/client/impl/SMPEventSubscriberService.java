@@ -9,11 +9,14 @@ import com.apple.iossystems.logging.pubsub.LoggingSubscriberServiceBase;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import org.apache.log4j.Logger;
 
+import java.net.InetAddress;
+
 /**
  * @author Toch
  */
 public abstract class SMPEventSubscriberService<LogEvent> extends LoggingSubscriberServiceBase<LogEvent>
 {
+    private static final Logger LOGGER = Logger.getLogger( SMPEventSubscriberService.class ) ;
     private BasicConsumerService<LogEvent> consumerService;
 
     protected SMPEventSubscriberService(String queueName)
@@ -45,6 +48,13 @@ public abstract class SMPEventSubscriberService<LogEvent> extends LoggingSubscri
         properties.setServiceConsumerQueue(queueName);
         properties.setServiceName(serviceName);
         properties.setServiceConsumerTransactional(false);
+
+        try {
+            String localHostName = InetAddress.getLocalHost().getHostName();
+            properties.setClientProvidedConsumerTag(localHostName);
+        } catch (Exception e) {
+            LOGGER.warn("Could not retrieve lost host name");
+        }
 
         return properties;
     }

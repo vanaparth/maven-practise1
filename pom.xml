@@ -15,7 +15,17 @@
             <groupId>com.apple.cds</groupId>
             <artifactId>CDSJavaFoundation</artifactId>
         </dependency>
-            <dependency>
+        <dependency>
+            <groupId>com.apple.cds</groupId>
+            <artifactId>CDSLogging</artifactId>
+            <version>1.84</version>
+        </dependency>
+        <dependency>
+            <groupId>com.apple.cds</groupId>
+            <artifactId>CDSMessaging</artifactId>
+            <version>1.8.2</version>
+        </dependency>
+        <dependency>
             <groupId>com.apple.iossystems</groupId>
             <artifactId>SMPBase</artifactId>
             <version>1.0</version>
@@ -29,11 +39,6 @@
             <groupId>com.apple.iossystems</groupId>
             <artifactId>SMPPersistenceServices</artifactId>
             <version>1.0</version>
-        </dependency>
-        <dependency>
-            <groupId>com.apple.cds</groupId>
-            <artifactId>CDSMessaging</artifactId>
-            <version>1.8.2</version>
         </dependency>
     </dependencies>
 </project>

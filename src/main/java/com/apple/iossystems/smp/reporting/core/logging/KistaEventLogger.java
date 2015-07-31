@@ -28,7 +28,7 @@ public class KistaEventLogger
 {
     private static final Logger LOGGER = Logger.getLogger(KistaEventLogger.class);
 
-    private static final Map<String, String> KISTA_MAP = getKistaMap();
+    private final Map<String, String> kistaMap = getKistaMap();
 
     private final SMPJournal journal = SMPJournalService.getJournal();
 
@@ -39,7 +39,7 @@ public class KistaEventLogger
         this.loggingEnabled = loggingEnabled;
     }
 
-    private static Map<String, String> getKistaMap()
+    private Map<String, String> getKistaMap()
     {
         Map<String, String> map = SMPJournalHelper.buildMetadataMap("Reporting", null, null);
 
@@ -107,6 +107,6 @@ public class KistaEventLogger
 
         request = KistaSanitizerFactory.getSanitizer().sanitize(request, SMPReportingKistaRequest.class);
 
-        journal.record(LogLevel.INFO, seid, UUID.randomUUID().toString(), conversationId, request, JournalEntryType.REQUEST, KISTA_MAP);
+        journal.record(LogLevel.INFO, seid, UUID.randomUUID().toString(), conversationId, request, JournalEntryType.REQUEST, kistaMap);
     }
 }

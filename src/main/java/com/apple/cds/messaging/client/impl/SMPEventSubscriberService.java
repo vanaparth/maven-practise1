@@ -16,7 +16,6 @@ import java.net.InetAddress;
  */
 public abstract class SMPEventSubscriberService<LogEvent> extends LoggingSubscriberServiceBase<LogEvent>
 {
-    private static final Logger LOGGER = Logger.getLogger( SMPEventSubscriberService.class ) ;
     private BasicConsumerService<LogEvent> consumerService;
 
     protected SMPEventSubscriberService(String queueName)
@@ -49,11 +48,13 @@ public abstract class SMPEventSubscriberService<LogEvent> extends LoggingSubscri
         properties.setServiceName(serviceName);
         properties.setServiceConsumerTransactional(false);
 
-        try {
-            String localHostName = InetAddress.getLocalHost().getHostName();
-            properties.setClientProvidedConsumerTag(localHostName);
-        } catch (Exception e) {
-            LOGGER.warn("Could not retrieve lost host name");
+        try
+        {
+            properties.setClientProvidedConsumerTag(InetAddress.getLocalHost().getHostName());
+        }
+        catch (Exception e)
+        {
+            Logger.getLogger(SMPEventSubscriberService.class).error(e);
         }
 
         return properties;

@@ -14,6 +14,7 @@ import com.apple.iossystems.smp.reporting.core.email.ProvisionCardEvent;
 import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
+import com.apple.iossystems.smp.reporting.core.event.EventType;
 import com.apple.iossystems.smp.reporting.ireporter.publish.IReporterEvent;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
@@ -28,8 +29,6 @@ public class KistaEventLogger
 {
     private static final Logger LOGGER = Logger.getLogger(KistaEventLogger.class);
 
-    private final Map<String, String> kistaMap = getKistaMap();
-
     private final SMPJournal journal = SMPJournalService.getJournal();
 
     private final boolean loggingEnabled;
@@ -37,15 +36,6 @@ public class KistaEventLogger
     public KistaEventLogger(boolean loggingEnabled)
     {
         this.loggingEnabled = loggingEnabled;
-    }
-
-    private Map<String, String> getKistaMap()
-    {
-        Map<String, String> map = SMPJournalHelper.buildMetadataMap("Reporting", null, null);
-
-        map.put(JournalConstants.ACTION, "reporting");
-
-        return map;
     }
 
     public void log(EventRecords records)
@@ -62,7 +52,7 @@ public class KistaEventLogger
         String seid = record.getAttributeValue(EventAttribute.SEID.key());
         String request = GsonBuilderFactory.getInstance().toJson(IReporterEvent.processEventRecord(record).getData(), Map.class);
 
-        publishEvent(conversationId, seid, request);
+        publishEvent(conversationId, seid, request, EventType.getEventType(record.getAttributeValue(EventAttribute.EVENT_TYPE.key())));
     }
 
     public void log(ProvisionCardEvent record)
@@ -71,7 +61,7 @@ public class KistaEventLogger
         String seid = record.getSeid();
         String request = GsonBuilderFactory.getInstance().toJson(record, ProvisionCardEvent.class);
 
-        publishEvent(conversationId, seid, request);
+        publishEvent(conversationId, seid, request, EventType.EMAIL);
     }
 
     public void log(ManageDeviceEvent record)
@@ -80,16 +70,16 @@ public class KistaEventLogger
         String seid = record.getSeid();
         String request = GsonBuilderFactory.getInstance().toJson(record, ManageDeviceEvent.class);
 
-        publishEvent(conversationId, seid, request);
+        publishEvent(conversationId, seid, request, EventType.EMAIL);
     }
 
-    private void publishEvent(String conversationId, String seid, String request)
+    private void publishEvent(String conversationId, String seid, String request, EventType eventType)
     {
         if (loggingEnabled)
         {
             try
             {
-                doPublishEvent(conversationId, seid, request);
+                doPublishEvent(conversationId, seid, request, eventType);
             }
             catch (Exception e)
             {
@@ -98,7 +88,7 @@ public class KistaEventLogger
         }
     }
 
-    private void doPublishEvent(String conversationId, String seid, String request)
+    private void doPublishEvent(String conversationId, String seid, String request, EventType eventType)
     {
         if (StringUtils.isBlank(conversationId))
         {
@@ -107,6 +97,40 @@ public class KistaEventLogger
 
         request = KistaSanitizerFactory.getSanitizer().sanitize(request, SMPReportingKistaRequest.class);
 
-        journal.record(LogLevel.INFO, seid, UUID.randomUUID().toString(), conversationId, request, JournalEntryType.REQUEST, kistaMap);
+        journal.record(LogLevel.INFO, seid, UUID.randomUUID().toString(), conversationId, request, JournalEntryType.REQUEST, getKistaMap(eventType));
+    }
+
+    private Map<String, String> getKistaMap(EventType eventType)
+    {
+        Map<String, String> map = SMPJournalHelper.buildMetadataMap("Reporting", null, null);
+
+        map.put(JournalConstants.ACTION, "reporting");
+
+        setTitle(map, eventType);
+
+        return map;
+    }
+
+    private void setTitle(Map<String, String> map, EventType eventType)
+    {
+        String title;
+
+        if (eventType == EventType.PAYMENT)
+        {
+            title = "Oslo";
+        }
+        else if (eventType == EventType.EMAIL)
+        {
+            title = "Email";
+        }
+        else
+        {
+            title = "";
+        }
+
+        if (StringUtils.isNotBlank(title))
+        {
+            map.put(JournalConstants.TITLE, title);
+        }
     }
 }

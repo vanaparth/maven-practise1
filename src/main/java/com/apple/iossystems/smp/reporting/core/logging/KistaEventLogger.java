@@ -113,7 +113,7 @@ public class KistaEventLogger
 
     private void setTitle(Map<String, String> map, EventType eventType)
     {
-        String title;
+        String title = null;
 
         if (eventType == EventType.PAYMENT)
         {
@@ -123,12 +123,8 @@ public class KistaEventLogger
         {
             title = "Email";
         }
-        else
-        {
-            title = "";
-        }
 
-        if (StringUtils.isNotBlank(title))
+        if (title != null)
         {
             map.put(JournalConstants.TITLE, title);
         }

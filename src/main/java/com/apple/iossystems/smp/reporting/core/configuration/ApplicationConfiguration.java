@@ -26,6 +26,9 @@ public class ApplicationConfiguration
     static final String LOG_SERVICE_STORE = PROPERTY_MANAGER.valueForKeyWithDefault("smp.reporting.logging.store", "reporting");
     static final String LOG_SERVICE_CLASS = PROPERTY_MANAGER.valueForKeyWithDefault("smp.reporting.logging.classname", "com.apple.iossystems.logging.impl.pubsub.BufferedPubSub");
 
+    static final int LOG_SERVICE_BDB_BATCH_SIZE = PROPERTY_MANAGER.getIntValueForKeyWithDefault("smp.reporting.logging.bdb.batch.size", 50);
+    static final int LOG_SERVICE_BDB_INTERVAL = PROPERTY_MANAGER.getIntValueForKeyWithDefault("smp.reporting.logging.bdb.interval.ms", 500);
+
     static final String IREPORTER_URL = PROPERTY_MANAGER.valueForKeyWithDefault("icloud.ireporter.url", "https://icloud4-e3.icloud.com");
     static final String HASH_PASSWORD = PROPERTY_MANAGER.valueForKeyWithDefault("icloud.ireporter.pass", "pLijzg2e2QNspdhOyNWdOSScPszmZBryJ0L8BcQ116BhkT6p0iHyNcwnlFIwhLun");
 
@@ -106,6 +109,16 @@ public class ApplicationConfiguration
     public static String getLogServiceClass()
     {
         return ApplicationConfiguration.LOG_SERVICE_CLASS;
+    }
+
+    public static int getLogServiceBdbBatchSize()
+    {
+        return ApplicationConfiguration.LOG_SERVICE_BDB_BATCH_SIZE;
+    }
+
+    public static int getLogServiceBdbInterval()
+    {
+        return ApplicationConfiguration.LOG_SERVICE_BDB_INTERVAL;
     }
 
     public static String getIReporterUrl()

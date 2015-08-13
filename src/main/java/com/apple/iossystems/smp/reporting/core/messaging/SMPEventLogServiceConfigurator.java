@@ -29,6 +29,8 @@ public class SMPEventLogServiceConfigurator implements LogServiceConfigurator
         map.put("logservice.path", ApplicationConfiguration.getLogServicePath());
         map.put("logservice.category", ApplicationConfiguration.getLogServiceCategory());
         map.put("logservice.localStoreName", ApplicationConfiguration.getLogServiceStore());
+        map.put("loggingservice.bdb.batch.size", String.valueOf(ApplicationConfiguration.getLogServiceBdbBatchSize()));
+        map.put("loggingservice.bdb.service.interval.ms", String.valueOf(ApplicationConfiguration.getLogServiceBdbInterval()));
 
         return map;
     }

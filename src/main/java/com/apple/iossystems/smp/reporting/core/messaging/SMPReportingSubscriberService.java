@@ -1,8 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
 import com.apple.cds.messaging.client.impl.SMPEventSubscriberService;
-import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledNotification;
-import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledTaskHandler;
+import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledEventTaskHandler;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 import com.apple.iossystems.smp.reporting.core.eventhandler.EventListener;
@@ -73,7 +72,7 @@ class SMPReportingSubscriberService<LogEvent> extends SMPEventSubscriberService<
     {
         if (!taskHandlerIsActive())
         {
-            taskHandler = getTaskHandler();
+            taskHandler = new TaskHandler();
         }
     }
 
@@ -88,15 +87,6 @@ class SMPReportingSubscriberService<LogEvent> extends SMPEventSubscriberService<
     private boolean taskHandlerIsActive()
     {
         return ((taskHandler != null) && (!taskHandler.isShutdown()));
-    }
-
-    private TaskHandler getTaskHandler()
-    {
-        TaskHandler handler = new TaskHandler();
-
-        handler.init();
-
-        return handler;
     }
 
     private void checkSMPReportingService()
@@ -134,38 +124,16 @@ class SMPReportingSubscriberService<LogEvent> extends SMPEventSubscriberService<
         }
     }
 
-    private class TaskHandler implements ScheduledTaskHandler
+    private class TaskHandler extends ScheduledEventTaskHandler
     {
-        private ScheduledNotification scheduledNotification;
-
         private TaskHandler()
         {
-        }
-
-        private void init()
-        {
-            startScheduledTasks();
-        }
-
-        private void startScheduledTasks()
-        {
-            scheduledNotification = ScheduledNotification.getInstance(this, 60 * 1000);
         }
 
         @Override
         public void handleEvent()
         {
             checkSMPReportingService();
-        }
-
-        private void shutdown()
-        {
-            scheduledNotification.shutdown();
-        }
-
-        private boolean isShutdown()
-        {
-            return scheduledNotification.isShutdown();
         }
     }
 }

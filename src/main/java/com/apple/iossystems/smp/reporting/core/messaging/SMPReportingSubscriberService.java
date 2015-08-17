@@ -19,10 +19,6 @@ class SMPReportingSubscriberService<LogEvent> extends SMPEventSubscriberService<
 
     private SMPReportingService smpReportingService;
 
-    private TaskHandler taskHandler;
-
-    private EventRecord pendingEventRecord;
-
     private SMPReportingSubscriberService(String queueName, SMPReportingService smpReportingService)
     {
         super(queueName);
@@ -56,11 +52,9 @@ class SMPReportingSubscriberService<LogEvent> extends SMPEventSubscriberService<
     {
         try
         {
-            pendingEventRecord = record;
-
             pause();
 
-            startTaskHandler();
+            new TaskHandler(record);
         }
         catch (Exception e)
         {
@@ -68,39 +62,11 @@ class SMPReportingSubscriberService<LogEvent> extends SMPEventSubscriberService<
         }
     }
 
-    private void startTaskHandler()
-    {
-        if (!taskHandlerIsActive())
-        {
-            taskHandler = new TaskHandler();
-        }
-    }
-
-    private void stopTaskHandler()
-    {
-        if (taskHandlerIsActive())
-        {
-            taskHandler.shutdown();
-        }
-    }
-
-    private boolean taskHandlerIsActive()
-    {
-        return ((taskHandler != null) && (!taskHandler.isShutdown()));
-    }
-
-    private void checkSMPReportingService()
+    private void resumeService()
     {
         try
         {
-            if ((pendingEventRecord != null) && (smpReportingService.postSMPEvent(pendingEventRecord)))
-            {
-                pendingEventRecord = null;
-
-                stopTaskHandler();
-
-                resume();
-            }
+            resume();
         }
         catch (Exception e)
         {
@@ -126,14 +92,22 @@ class SMPReportingSubscriberService<LogEvent> extends SMPEventSubscriberService<
 
     private class TaskHandler extends ScheduledEventTaskHandler
     {
-        private TaskHandler()
+        private final EventRecord record;
+
+        private TaskHandler(EventRecord record)
         {
+            this.record = record;
         }
 
         @Override
         public void handleEvent()
         {
-            checkSMPReportingService();
+            if (smpReportingService.postSMPEvent(record))
+            {
+                resumeService();
+
+                shutdown();
+            }
         }
     }
 }

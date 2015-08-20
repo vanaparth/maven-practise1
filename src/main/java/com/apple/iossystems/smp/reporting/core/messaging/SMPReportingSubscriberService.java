@@ -38,14 +38,22 @@ class SMPReportingSubscriberService<LogEvent> extends SMPEventSubscriberService<
 
         record.putAll(logEvent.getMetadata());
 
-        if (smpReportingService.postSMPEvent(record))
-        {
-            notifyEventListener(record);
-        }
-        else
+        if (!sendEventRecord(record))
         {
             handleFailedRequest(record);
         }
+    }
+
+    private boolean sendEventRecord(EventRecord record)
+    {
+        boolean result = smpReportingService.postSMPEvent(record);
+
+        if (result)
+        {
+            notifyEventListener(record);
+        }
+
+        return result;
     }
 
     private void handleFailedRequest(EventRecord record)
@@ -102,7 +110,7 @@ class SMPReportingSubscriberService<LogEvent> extends SMPEventSubscriberService<
         @Override
         public void handleEvent()
         {
-            if (smpReportingService.postSMPEvent(record))
+            if (sendEventRecord(record))
             {
                 resumeService();
 

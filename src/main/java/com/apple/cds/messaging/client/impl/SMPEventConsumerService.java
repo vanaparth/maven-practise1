@@ -55,7 +55,7 @@ class SMPEventConsumerService<LogEvent> extends BasicConsumerService<LogEvent>
         {
             try
             {
-                LOGGER.info("Attempting to restart consumer for event " + ((eventId != null) ? eventId.getName() : " Unknown"));
+                LOGGER.warn("Attempting to restart consumer for event " + ((eventId != null) ? eventId.getName() : " Unknown"));
 
                 start();
             }

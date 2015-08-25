@@ -29,13 +29,34 @@ public class KistaEventLogger
 {
     private static final Logger LOGGER = Logger.getLogger(KistaEventLogger.class);
 
-    private final SMPJournal journal = SMPJournalService.getJournal();
+    private final SMPJournal smpJournal = getSMPJournal();
 
     private final boolean loggingEnabled;
 
     public KistaEventLogger(boolean loggingEnabled)
     {
         this.loggingEnabled = loggingEnabled;
+    }
+
+    private SMPJournal getSMPJournal()
+    {
+        SMPJournal smpJournal = null;
+
+        try
+        {
+            smpJournal = SMPJournalService.getJournal();
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+        }
+
+        return smpJournal;
+    }
+
+    private boolean loggingEnabled()
+    {
+        return (loggingEnabled && (smpJournal != null));
     }
 
     public void log(EventRecords records)
@@ -75,7 +96,7 @@ public class KistaEventLogger
 
     private void publishEvent(String conversationId, String seid, String request, EventType eventType)
     {
-        if (loggingEnabled)
+        if (loggingEnabled())
         {
             try
             {
@@ -97,7 +118,7 @@ public class KistaEventLogger
 
         request = KistaSanitizerFactory.getSanitizer().sanitize(request, SMPReportingKistaRequest.class);
 
-        journal.record(LogLevel.INFO, seid, UUID.randomUUID().toString(), conversationId, request, JournalEntryType.REQUEST, getKistaMap(eventType));
+        smpJournal.record(LogLevel.INFO, seid, UUID.randomUUID().toString(), conversationId, request, JournalEntryType.REQUEST, getKistaMap(eventType));
     }
 
     private Map<String, String> getKistaMap(EventType eventType)

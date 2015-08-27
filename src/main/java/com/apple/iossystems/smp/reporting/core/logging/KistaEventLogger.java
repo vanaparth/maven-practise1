@@ -29,26 +29,31 @@ public class KistaEventLogger
 {
     private static final Logger LOGGER = Logger.getLogger(KistaEventLogger.class);
 
-    private final SMPJournal smpJournal = getSMPJournal();
-
     private final boolean loggingEnabled;
+
+    private final SMPJournal smpJournal;
 
     public KistaEventLogger(boolean loggingEnabled)
     {
         this.loggingEnabled = loggingEnabled;
+
+        smpJournal = getSMPJournal(loggingEnabled);
     }
 
-    private SMPJournal getSMPJournal()
+    private SMPJournal getSMPJournal(boolean loggingEnabled)
     {
         SMPJournal smpJournal = null;
 
-        try
+        if (loggingEnabled)
         {
-            smpJournal = SMPJournalService.getJournal();
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e);
+            try
+            {
+                smpJournal = SMPJournalService.getJournal();
+            }
+            catch (Exception e)
+            {
+                LOGGER.error(e);
+            }
         }
 
         return smpJournal;

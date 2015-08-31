@@ -1,18 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
-import com.apple.iossystems.logging.LogService;
-import com.apple.iossystems.logging.LogServiceFactory2;
-import com.apple.iossystems.smp.reporting.core.email.EmailService;
-import com.apple.iossystems.smp.reporting.core.email.SMPEmailEvent;
-import com.apple.iossystems.smp.reporting.core.event.EventRecord;
-import com.apple.iossystems.smp.reporting.core.event.EventRecords;
-import com.apple.iossystems.smp.reporting.core.event.EventType;
-import com.apple.iossystems.smp.reporting.core.eventhandler.EventListener;
-import com.apple.iossystems.smp.reporting.core.eventhandler.EventListenerFactory;
-import com.apple.iossystems.smp.reporting.core.util.MapToPair;
+import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledEventTaskHandler;
 import org.apache.log4j.Logger;
-
-import java.util.concurrent.Callable;
 
 /**
  * @author Toch
@@ -23,19 +12,12 @@ public class SMPEventNotificationService
 
     private static final SMPEventNotificationService INSTANCE = new SMPEventNotificationService();
 
-    private EventNotificationServiceThreadPool threadPool = EventNotificationServiceThreadPool.getInstance();
+    private final NotificationService OFFLINE_NOTIFICATION_SERVICE = new OfflineNotificationService();
 
-    private EmailService emailService = EmailService.getInstance();
-
-    private EventListener eventListener = EventListenerFactory.getInstance().getSMPPublishEventListener();
-
-    private EventListener kistaEventListener = EventListenerFactory.getInstance().getSMPKistaEventListener();
-
-    private LogService logService;
+    private NotificationService EVENT_NOTIFICATION_SERVICE = createEventNotificationService();
 
     private SMPEventNotificationService()
     {
-        initLogService();
     }
 
     public static SMPEventNotificationService getInstance()
@@ -43,132 +25,78 @@ public class SMPEventNotificationService
         return INSTANCE;
     }
 
-    private void initLogService()
+    public NotificationService getPublisher()
     {
-        try
-        {
-            logService = LogServiceFactory2.getInstance().createLogService(new SMPEventLogServiceConfigurator(), new SMPEventLogServiceFactoryStrategy());
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e);
-        }
+        return getNotificationService();
     }
 
-    private void publishEventRecord(EventRecord record)
+    private NotificationService getNotificationService()
     {
-        try
+        NotificationService notificationService = EVENT_NOTIFICATION_SERVICE;
+
+        if (notificationService == null)
         {
-            logService.logEvent("event", EventType.getLogLevel(record), MapToPair.toPairs(record.getData()));
+            notificationService = OFFLINE_NOTIFICATION_SERVICE;
+
+            LOGGER.warn("Using offline notification service");
         }
-        catch (Exception e)
-        {
-            LOGGER.error(e);
-        }
+
+        return notificationService;
     }
 
-    private void notifyEventListener(EventRecords records)
+    private NotificationService createEventNotificationService()
     {
-        try
+        NotificationService notificationService = getEventNotificationService();
+
+        if (notificationService == null)
         {
-            eventListener.handleEvent(records);
+            new TaskHandler();
         }
-        catch (Exception e)
-        {
-            LOGGER.error(e);
-        }
+
+        return notificationService;
     }
 
-    private void notifyKista(EventRecords records)
+    private NotificationService getEventNotificationService()
     {
-        try
-        {
-            kistaEventListener.handleEvent(records);
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e);
-        }
-    }
+        NotificationService notificationService = null;
 
-    private void publishEmailRecords(EventRecords records)
-    {
-        try
-        {
-            emailService.send(SMPEmailEvent.getEventRecords(records));
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e);
-        }
-    }
-
-    private void publishEventRecords(EventRecords records)
-    {
-        try
-        {
-            for (EventRecord record : records.getList())
-            {
-                publishEventRecord(record);
-            }
-
-            notifyEventListener(records);
-
-            notifyKista(records);
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e);
-        }
-    }
-
-    private void publishEventTask(EventRecords records)
-    {
-        try
-        {
-            publishEventRecords(records);
-
-            publishEmailRecords(records);
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e);
-        }
-    }
-
-    public void publishEvents(EventRecords records)
-    {
         // Prevent any side effects
         try
         {
-            threadPool.submit(new Task(records));
+            notificationService = new EventNotificationService();
         }
         catch (Exception e)
         {
             LOGGER.error(e);
         }
+
+        return notificationService;
     }
 
-    public boolean isOnline()
+    private class TaskHandler extends ScheduledEventTaskHandler
     {
-        return (logService != null);
-    }
-
-    private class Task implements Callable<Boolean>
-    {
-        private final EventRecords records;
-
-        private Task(EventRecords records)
+        private TaskHandler()
         {
-            this.records = records;
         }
 
         @Override
-        public Boolean call() throws Exception
+        public void handleEvent()
         {
-            publishEventTask(records);
+            if (EVENT_NOTIFICATION_SERVICE != null)
+            {
+                shutdown();
+            }
+            else
+            {
+                NotificationService notificationService = getEventNotificationService();
 
-            return true;
+                if (notificationService != null)
+                {
+                    EVENT_NOTIFICATION_SERVICE = notificationService;
+
+                    shutdown();
+                }
+            }
         }
     }
 }

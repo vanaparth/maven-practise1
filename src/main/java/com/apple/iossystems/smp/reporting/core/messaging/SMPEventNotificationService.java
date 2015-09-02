@@ -18,7 +18,7 @@ public class SMPEventNotificationService
 
     private SMPEventNotificationService()
     {
-        initNotificationService();
+        initPublisher();
     }
 
     public static SMPEventNotificationService getInstance()
@@ -31,7 +31,7 @@ public class SMPEventNotificationService
         return publisher;
     }
 
-    private void initNotificationService()
+    private void initPublisher()
     {
         NotificationService notificationService = getEventNotificationService();
 

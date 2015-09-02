@@ -31,8 +31,13 @@ class EventNotificationService implements NotificationService
 
     private LogService logService = getLogService();
 
-    public EventNotificationService()
+    private EventNotificationService()
     {
+    }
+
+    public static EventNotificationService getInstance()
+    {
+        return new EventNotificationService();
     }
 
     private LogService getLogService()

@@ -12,12 +12,13 @@ public class SMPEventNotificationService
 
     private static final SMPEventNotificationService INSTANCE = new SMPEventNotificationService();
 
-    private final NotificationService OFFLINE_NOTIFICATION_SERVICE = new OfflineNotificationService();
+    private final NotificationService OFFLINE_NOTIFICATION_SERVICE = OfflineNotificationService.getInstance();
 
-    private NotificationService EVENT_NOTIFICATION_SERVICE = createEventNotificationService();
+    private NotificationService publisher;
 
     private SMPEventNotificationService()
     {
+        initNotificationService();
     }
 
     public static SMPEventNotificationService getInstance()
@@ -27,33 +28,23 @@ public class SMPEventNotificationService
 
     public NotificationService getPublisher()
     {
-        return getNotificationService();
+        return publisher;
     }
 
-    private NotificationService getNotificationService()
+    private void initNotificationService()
     {
-        NotificationService notificationService = EVENT_NOTIFICATION_SERVICE;
+        NotificationService notificationService = getEventNotificationService();
 
         if (notificationService == null)
         {
             notificationService = OFFLINE_NOTIFICATION_SERVICE;
 
             LOGGER.warn("Using offline notification service");
-        }
 
-        return notificationService;
-    }
-
-    private NotificationService createEventNotificationService()
-    {
-        NotificationService notificationService = getEventNotificationService();
-
-        if (notificationService == null)
-        {
             new TaskHandler();
         }
 
-        return notificationService;
+        publisher = notificationService;
     }
 
     private NotificationService getEventNotificationService()
@@ -63,7 +54,7 @@ public class SMPEventNotificationService
         // Prevent any side effects
         try
         {
-            notificationService = new EventNotificationService();
+            notificationService = EventNotificationService.getInstance();
         }
         catch (Exception e)
         {
@@ -82,7 +73,7 @@ public class SMPEventNotificationService
         @Override
         public void handleEvent()
         {
-            if (EVENT_NOTIFICATION_SERVICE != null)
+            if (publisher != null)
             {
                 shutdown();
             }
@@ -92,7 +83,7 @@ public class SMPEventNotificationService
 
                 if (notificationService != null)
                 {
-                    EVENT_NOTIFICATION_SERVICE = notificationService;
+                    publisher = notificationService;
 
                     shutdown();
                 }

@@ -7,8 +7,13 @@ import com.apple.iossystems.smp.reporting.core.event.EventRecords;
  */
 class OfflineNotificationService implements NotificationService
 {
-    public OfflineNotificationService()
+    private OfflineNotificationService()
     {
+    }
+
+    public static OfflineNotificationService getInstance()
+    {
+        return new OfflineNotificationService();
     }
 
     @Override

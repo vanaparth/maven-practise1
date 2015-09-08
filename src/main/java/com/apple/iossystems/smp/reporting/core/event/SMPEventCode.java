@@ -33,7 +33,6 @@ public class SMPEventCode
         addToMap(PNO_MAP, PNORepository.KRYPTON_NAME, "204");
         addToMap(PNO_MAP, PNORepository.XENON_NAME, "205");
         addToMap(PNO_MAP, PNORepository.SODIUM_NAME, "206");
-        addToMap(PNO_MAP, PNORepository.CORSICA_NAME, "207");
         //
         addToMap(COLOR_MAP, "green", "1");
         addToMap(COLOR_MAP, "yellow", "2");

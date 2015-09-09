@@ -15,76 +15,90 @@ import java.util.Map;
  */
 public class SMPEventCode
 {
-    private static final String EMPTY_CODE = "";
+    private static final SMPEventCode INSTANCE = new SMPEventCode();
 
-    private static final Map<String, String> PNO_MAP = new HashMap<>();
-    private static final Map<String, String> COLOR_MAP = new HashMap<>();
-    private static final Map<String, String> USE_CASE_TYPE_MAP = new HashMap<>();
-    private static final Map<String, String> FPAN_TYPE_MAP = new HashMap<>();
-    private static final Map<String, String> CARD_STATUS_MAP = new HashMap<>();
-    private static final Map<String, String> CARD_ELIGIBILITY_STATUS_MAP = new HashMap<>();
-    private static final Map<String, String> PROVISIONING_CARD_SOURCE_MAP = new HashMap<>();
+    private final Map<String, String> pnoMap = new HashMap<>();
+    private final Map<String, String> colorMap = new HashMap<>();
+    private final Map<String, String> useCaseTypeMap = new HashMap<>();
+    private final Map<String, String> fpanTypeMap = new HashMap<>();
+    private final Map<String, String> cardStatusMap = new HashMap<>();
+    private final Map<String, String> cardEligibilityStatusMap = new HashMap<>();
+    private final Map<String, String> provisioningCardSourceMap = new HashMap<>();
 
-    static
-    {
-        addToMap(PNO_MAP, PNORepository.HELIUM_NAME, "201");
-        addToMap(PNO_MAP, PNORepository.NEON_NAME, "202");
-        addToMap(PNO_MAP, PNORepository.ARGON_NAME, "203");
-        addToMap(PNO_MAP, PNORepository.KRYPTON_NAME, "204");
-        addToMap(PNO_MAP, PNORepository.XENON_NAME, "205");
-        addToMap(PNO_MAP, PNORepository.SODIUM_NAME, "206");
-        //
-        addToMap(COLOR_MAP, "green", "1");
-        addToMap(COLOR_MAP, "yellow", "2");
-        addToMap(COLOR_MAP, "red", "3");
-        //
-        addToMap(USE_CASE_TYPE_MAP, "Passbook", "1");
-        //
-        addToMap(FPAN_TYPE_MAP, "Credit", "1");
-        addToMap(FPAN_TYPE_MAP, "Debit", "2");
-        addToMap(FPAN_TYPE_MAP, "PrePaid", "3");
-        addToMap(FPAN_TYPE_MAP, "PrivateLabel", "4");
-        //
-        addToMap(CARD_STATUS_MAP, Card.CardStatus.UNKNOWN.toString(), "0");
-        addToMap(CARD_STATUS_MAP, Card.CardStatus.ACTIVE.toString(), "1");
-        addToMap(CARD_STATUS_MAP, Card.CardStatus.SUSPENDED.toString(), "2");
-        addToMap(CARD_STATUS_MAP, Card.CardStatus.UNLINKED.toString(), "3");
-        addToMap(CARD_STATUS_MAP, Card.CardStatus.SUSPENDED_OTP.toString(), "4");
-        addToMap(CARD_STATUS_MAP, Card.CardStatus.SUSPENDED_ISSUER.toString(), "5");
-        addToMap(CARD_STATUS_MAP, Card.CardStatus.SUSPENDED_WALLET.toString(), "6");
-        //
-        addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.INELIGIBLE.getId()), "7");
-        addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.ELIGIBLE.getId()), "8");
-        addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.NETWORK_UNAVAILABLE.getId()), "9");
-        addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.PROVISIONED.getId()), "10");
-        addToMap(CARD_ELIGIBILITY_STATUS_MAP, String.valueOf(CardEligibilityStatus.UPGRADE_REQUIRED.getId()), "11");
-        //
-        addToMap(PROVISIONING_CARD_SOURCE_MAP, String.valueOf(ProvisioningCardSource.MANUAL.getId()), "1");
-        addToMap(PROVISIONING_CARD_SOURCE_MAP, String.valueOf(ProvisioningCardSource.ON_FILE.getId()), "2");
-        addToMap(PROVISIONING_CARD_SOURCE_MAP, String.valueOf(ProvisioningCardSource.BANKING_APP.getId()), "3");
-        addToMap(PROVISIONING_CARD_SOURCE_MAP, String.valueOf(ProvisioningCardSource.PASS.getId()), "4");
-    }
+    private final Map<String, Map<String, String>> maps = new HashMap<>();
+
+    private final String emptyCode = "";
+    public static final String DELETED_ISSUER = "deletedIssuer";
 
     private SMPEventCode()
     {
+        init();
     }
 
-    private static void addToMap(Map<String, String> map, String key, String value)
+    public static SMPEventCode getInstance()
+    {
+        return INSTANCE;
+    }
+
+    private void init()
+    {
+        addToMap(pnoMap, PNORepository.HELIUM_NAME, "201");
+        addToMap(pnoMap, PNORepository.NEON_NAME, "202");
+        addToMap(pnoMap, PNORepository.ARGON_NAME, "203");
+        addToMap(pnoMap, PNORepository.KRYPTON_NAME, "204");
+        addToMap(pnoMap, PNORepository.XENON_NAME, "205");
+        addToMap(pnoMap, PNORepository.SODIUM_NAME, "206");
+        //
+        addToMap(colorMap, "green", "1");
+        addToMap(colorMap, "yellow", "2");
+        addToMap(colorMap, "red", "3");
+        //
+        addToMap(useCaseTypeMap, "Passbook", "1");
+        //
+        addToMap(fpanTypeMap, "Credit", "1");
+        addToMap(fpanTypeMap, "Debit", "2");
+        addToMap(fpanTypeMap, "PrePaid", "3");
+        addToMap(fpanTypeMap, "PrivateLabel", "4");
+        //
+        addToMap(cardStatusMap, Card.CardStatus.UNKNOWN.toString(), "0");
+        addToMap(cardStatusMap, Card.CardStatus.ACTIVE.toString(), "1");
+        addToMap(cardStatusMap, Card.CardStatus.SUSPENDED.toString(), "2");
+        addToMap(cardStatusMap, Card.CardStatus.UNLINKED.toString(), "3");
+        addToMap(cardStatusMap, Card.CardStatus.SUSPENDED_OTP.toString(), "4");
+        addToMap(cardStatusMap, Card.CardStatus.SUSPENDED_ISSUER.toString(), "5");
+        addToMap(cardStatusMap, Card.CardStatus.SUSPENDED_WALLET.toString(), "6");
+        addToMap(cardStatusMap, DELETED_ISSUER, "7");
+        //
+        addToMap(cardEligibilityStatusMap, String.valueOf(CardEligibilityStatus.INELIGIBLE.getId()), "7");
+        addToMap(cardEligibilityStatusMap, String.valueOf(CardEligibilityStatus.ELIGIBLE.getId()), "8");
+        addToMap(cardEligibilityStatusMap, String.valueOf(CardEligibilityStatus.NETWORK_UNAVAILABLE.getId()), "9");
+        addToMap(cardEligibilityStatusMap, String.valueOf(CardEligibilityStatus.PROVISIONED.getId()), "10");
+        addToMap(cardEligibilityStatusMap, String.valueOf(CardEligibilityStatus.UPGRADE_REQUIRED.getId()), "11");
+        //
+        addToMap(provisioningCardSourceMap, String.valueOf(ProvisioningCardSource.MANUAL.getId()), "1");
+        addToMap(provisioningCardSourceMap, String.valueOf(ProvisioningCardSource.ON_FILE.getId()), "2");
+        addToMap(provisioningCardSourceMap, String.valueOf(ProvisioningCardSource.BANKING_APP.getId()), "3");
+        addToMap(provisioningCardSourceMap, String.valueOf(ProvisioningCardSource.PASS.getId()), "4");
+        //
+        maps.put(DELETED_ISSUER, cardStatusMap);
+    }
+
+    private void addToMap(Map<String, String> map, String key, String value)
     {
         map.put(key.toLowerCase(), value);
     }
 
-    private static boolean isValid(String code)
+    private boolean isValid(String code)
     {
-        return (!code.equals(EMPTY_CODE));
+        return (!code.equals(emptyCode));
     }
 
-    private static void writeCode(EventRecord record, EventAttribute attribute, Map<String, String> map, String key)
+    private void writeCode(EventRecord record, EventAttribute attribute, Map<String, String> map, String key)
     {
         writeCode(record, attribute, getCode(map, key));
     }
 
-    private static void writeCode(EventRecord record, EventAttribute attribute, String code)
+    private void writeCode(EventRecord record, EventAttribute attribute, String code)
     {
         if (isValid(code))
         {
@@ -92,54 +106,64 @@ public class SMPEventCode
         }
     }
 
-    private static String getCode(Map<String, String> map, String key)
+    private String getCode(Map<String, String> map, String key)
     {
         if (key != null)
         {
             key = key.toLowerCase();
         }
 
-        String value = map.get(key);
+        String value = (map != null) ? map.get(key) : null;
 
-        return (value != null) ? value : EMPTY_CODE;
+        return (value != null) ? value : emptyCode;
     }
 
-    public static void writePNOName(EventRecord record, EventAttribute attribute, String pnoName)
+    public void writePNOName(EventRecord record, EventAttribute attribute, String pnoName)
     {
-        writeCode(record, attribute, PNO_MAP, pnoName);
+        writeCode(record, attribute, pnoMap, pnoName);
     }
 
-    public static void writeProvisioningColor(EventRecord record, EventAttribute attribute, String color)
+    public void writeProvisioningColor(EventRecord record, EventAttribute attribute, String color)
     {
-        writeCode(record, attribute, COLOR_MAP, color);
+        writeCode(record, attribute, colorMap, color);
     }
 
-    public static void writeUseCaseType(EventRecord record, EventAttribute attribute, String useCaseType)
+    public void writeUseCaseType(EventRecord record, EventAttribute attribute, String useCaseType)
     {
-        writeCode(record, attribute, USE_CASE_TYPE_MAP, useCaseType);
+        writeCode(record, attribute, useCaseTypeMap, useCaseType);
     }
 
-    public static void writeFpanType(EventRecord record, EventAttribute attribute, String fpanType)
+    public void writeFpanType(EventRecord record, EventAttribute attribute, String fpanType)
     {
-        writeCode(record, attribute, FPAN_TYPE_MAP, fpanType);
+        writeCode(record, attribute, fpanTypeMap, fpanType);
     }
 
-    public static void writeCardStatus(EventRecord record, EventAttribute attribute, Card.CardStatus cardStatus)
+    public void writeCardStatus(EventRecord record, EventAttribute attribute, Card.CardStatus cardStatus)
     {
-        writeCode(record, attribute, CARD_STATUS_MAP, (cardStatus != null) ? cardStatus.toString() : "");
+        writeCode(record, attribute, cardStatusMap, (cardStatus != null) ? cardStatus.toString() : "");
     }
 
-    public static void writeCardEligibilityStatus(EventRecord record, EventAttribute attribute, CardEligibilityStatus cardEligibilityStatus)
+    public void writeCardEligibilityStatus(EventRecord record, EventAttribute attribute, CardEligibilityStatus cardEligibilityStatus)
     {
-        writeCode(record, attribute, CARD_ELIGIBILITY_STATUS_MAP, (cardEligibilityStatus != null) ? String.valueOf(cardEligibilityStatus.getId()) : "");
+        writeCode(record, attribute, cardEligibilityStatusMap, (cardEligibilityStatus != null) ? String.valueOf(cardEligibilityStatus.getId()) : "");
     }
 
-    public static void writeProvisioningCardSource(EventRecord record, EventAttribute attribute, ProvisioningCardSource provisioningCardSource)
+    public void writeProvisioningCardSource(EventRecord record, EventAttribute attribute, ProvisioningCardSource provisioningCardSource)
     {
-        writeCode(record, attribute, PROVISIONING_CARD_SOURCE_MAP, (provisioningCardSource != null) ? String.valueOf(provisioningCardSource.getId()) : "");
+        writeCode(record, attribute, provisioningCardSourceMap, (provisioningCardSource != null) ? String.valueOf(provisioningCardSource.getId()) : "");
     }
 
-    public static void writeResponseStatus(EventRecord record, EventAttribute attribute, String errorCode)
+    public void writeValue(EventRecord record, EventAttribute attribute, String key)
+    {
+        Map<String, String> map = maps.get(key);
+
+        if (map != null)
+        {
+            writeCode(record, attribute, map, key);
+        }
+    }
+
+    public void writeResponseStatus(EventRecord record, EventAttribute attribute, String errorCode)
     {
         String responseStatusCode = null;
 
@@ -152,7 +176,7 @@ public class SMPEventCode
                 switch (errorEnum)
                 {
                     case NO_ERROR:
-                        responseStatusCode = EMPTY_CODE;
+                        responseStatusCode = emptyCode;
                         break;
 
                     case PAN_INELIGIBLE:
@@ -181,6 +205,6 @@ public class SMPEventCode
             }
         }
 
-        writeCode(record, attribute, (responseStatusCode != null) ? responseStatusCode : EMPTY_CODE);
+        writeCode(record, attribute, (responseStatusCode != null) ? responseStatusCode : emptyCode);
     }
 }

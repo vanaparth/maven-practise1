@@ -9,6 +9,7 @@ import org.apache.log4j.Logger;
 public class PutPendingCommandSMPEvent
 {
     private static final Logger LOGGER = Logger.getLogger(PutPendingCommandSMPEvent.class);
+    private static final SMPEventCode SMP_EVENT_CODE = SMPEventCode.getInstance();
 
     private final String conversationId;
     private final String seid;
@@ -39,7 +40,7 @@ public class PutPendingCommandSMPEvent
 
         if (pno != null)
         {
-            SMPEventCode.writePNOName(record, EventAttribute.PNO, pno.getPnoName());
+            SMP_EVENT_CODE.writePNOName(record, EventAttribute.PNO, pno.getPnoName());
         }
 
         EventRecords records = EventRecords.getInstance();

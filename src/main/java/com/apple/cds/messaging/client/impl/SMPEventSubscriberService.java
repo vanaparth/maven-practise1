@@ -50,7 +50,7 @@ public abstract class SMPEventSubscriberService<LogEvent> extends LoggingSubscri
 
         try
         {
-            properties.setClientProvidedConsumerTag(InetAddress.getLocalHost().getHostName());
+            properties.setClientProvidedConsumerTagPrefix(InetAddress.getLocalHost().getHostName());
         }
         catch (Exception e)
         {

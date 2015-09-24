@@ -2,6 +2,7 @@ package com.apple.iossystems.smp.reporting.ireporter.configuration;
 
 import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
+import org.apache.log4j.Logger;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -151,14 +152,18 @@ public class IReporterConfiguration
 
     public static IReporterConfiguration getConfiguration(IReporterConfiguration.Type configurationType, String json)
     {
+        IReporterConfiguration configuration = null;
+
         try
         {
-            return GsonBuilderFactory.getInstance().fromJson(json, IReporterConfiguration.class);
+            configuration = GsonBuilderFactory.getInstance().fromJson(json, IReporterConfiguration.class);
         }
         catch (Exception e)
         {
-            return getDefaultConfiguration(configurationType);
+            Logger.getLogger(IReporterConfiguration.class).error(e);
         }
+
+        return (configuration != null) ? configuration : getDefaultConfiguration(configurationType);
     }
 
     public static IReporterConfiguration getDefaultConfiguration(Type configurationType)

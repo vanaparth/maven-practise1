@@ -30,6 +30,8 @@ public class EmailService
     private static final boolean UNLINK_EMAIL_ENABLED = ApplicationConfiguration.isUnlinkEmailEnabled();
     private static final boolean DEFAULT_EMAIL_LOCALE_ENABLED = ApplicationConfiguration.isDefaultEmailLocaleEnabled();
 
+    private XmlProcessor xmlProcessor = XmlProcessor.getInstance();
+
     private EventListener eventListener = EventListenerFactory.getInstance().getEmailEventListener();
     private EventListener kistaEventListener = EventListenerFactory.getInstance().getSMPKistaEventListener();
 
@@ -98,20 +100,31 @@ public class EmailService
         return calendar;
     }
 
-    private boolean isValidManageDeviceEventRecord(SMPDeviceEvent smpDeviceEvent, ManageDeviceEvent manageDeviceEvent)
+    private boolean isValidManageDeviceEvent(ManageDeviceEvent manageDeviceEvent, SMPDeviceEvent smpDeviceEvent)
     {
-        boolean isManageDeviceEvent = ((smpDeviceEvent == SMPDeviceEvent.SUSPEND_CARD) || (smpDeviceEvent == SMPDeviceEvent.UNLINK_CARD) || (smpDeviceEvent == SMPDeviceEvent.RESUME_CARD));
+        boolean isManageDeviceEvent = ((smpDeviceEvent == SMPDeviceEvent.RESUME_CARD) || (smpDeviceEvent == SMPDeviceEvent.SUSPEND_CARD) || (smpDeviceEvent == SMPDeviceEvent.UNLINK_CARD));
 
-        boolean hasRequiredSource = (manageDeviceEvent.getManageDeviceEventSource() == ManageDeviceEventSource.FMIP);
+        boolean hasRequiredSource = false;
+        boolean hasRequiredValues = false;
 
-        boolean hasRequiredValues = StringUtils.isNotBlank(manageDeviceEvent.getCardHolderEmail());
+        if (manageDeviceEvent != null)
+        {
+            hasRequiredSource = (manageDeviceEvent.getManageDeviceEventSource() == ManageDeviceEventSource.FMIP);
+
+            hasRequiredValues = StringUtils.isNotBlank(manageDeviceEvent.getCardHolderEmail());
+        }
 
         return (isManageDeviceEvent && hasRequiredSource && hasRequiredValues);
     }
 
+    private boolean isValidProvisionCardEvent(ProvisionCardEvent provisionCardEvent)
+    {
+        return ((provisionCardEvent != null) && StringUtils.isNotBlank(provisionCardEvent.getCardHolderEmail()));
+    }
+
     public void publishProvisionEvent(ProvisionCardEvent provisionCardEvent)
     {
-        if (PROVISION_EMAIL_ENABLED && (provisionCardEvent != null))
+        if (PROVISION_EMAIL_ENABLED && (provisionCardEvent != null) && isValidProvisionCardEvent(provisionCardEvent))
         {
             try
             {
@@ -120,7 +133,7 @@ public class EmailService
                         format(provisionCardEvent.getConversationId()),
                         format(provisionCardEvent.getCardHolderEmail()),
                         format(provisionCardEvent.getLocale()),
-                        format(provisionCardEvent.getDeviceName()),
+                        format(xmlProcessor.getValidXmlString(provisionCardEvent.getDeviceName())),
                         format(provisionCardEvent.getDeviceType()),
                         format(provisionCardEvent.getDsid()))).sendEmail();
 
@@ -137,70 +150,67 @@ public class EmailService
     {
         String json = record.getAttributeValue(EventAttribute.MANAGE_DEVICE_EVENT.key());
 
-        if (json != null)
+        ManageDeviceEvent manageDeviceEvent = (json != null) ? GsonBuilderFactory.getInstance().fromJson(json, ManageDeviceEvent.class) : null;
+
+        SMPDeviceEvent smpDeviceEvent = SMPDeviceEvent.getEvent(record);
+
+        if ((manageDeviceEvent != null) && isValidManageDeviceEvent(manageDeviceEvent, smpDeviceEvent))
         {
-            ManageDeviceEvent manageDeviceEvent = GsonBuilderFactory.getInstance().fromJson(json, ManageDeviceEvent.class);
+            CardEventRecord cardEventRecord = CardEventRecord.getCardEventRecord(manageDeviceEvent);
+            List<SMPEmailCardData> successCards = cardEventRecord.getSuccessCards();
+            List<SMPEmailCardData> failedCards = cardEventRecord.getFailedCards();
 
-            SMPDeviceEvent smpDeviceEvent = SMPDeviceEvent.getEvent(record);
+            String conversationId = format(record.getAttributeValue(EventAttribute.CONVERSATION_ID.key()));
+            String deviceName = format(xmlProcessor.getValidXmlString(manageDeviceEvent.getDeviceName()));
+            String cardHolderName = format(manageDeviceEvent.getCardHolderName());
+            String cardHolderEmail = format(manageDeviceEvent.getCardHolderEmail());
+            String dsid = format(manageDeviceEvent.getDsid());
+            String locale = format(getLocale(manageDeviceEvent.getLocale()));
+            String deviceType = format(manageDeviceEvent.getDeviceType());
+            String deviceImageUrl = format(manageDeviceEvent.getDeviceImageUrl());
+            Calendar calendar = getCalendar(manageDeviceEvent);
 
-            if (isValidManageDeviceEventRecord(smpDeviceEvent, manageDeviceEvent))
+            FmipSource fmipSource = manageDeviceEvent.getFmipSource();
+            String fmipSourceDescription = format((fmipSource != null) ? fmipSource.getDescription() : "");
+
+            if (smpDeviceEvent == SMPDeviceEvent.SUSPEND_CARD)
             {
-                CardEventRecord cardEventRecord = CardEventRecord.getCardEventRecord(manageDeviceEvent);
-                List<SMPEmailCardData> successCards = cardEventRecord.getSuccessCards();
-                List<SMPEmailCardData> failedCards = cardEventRecord.getFailedCards();
-
-                String conversationId = format(record.getAttributeValue(EventAttribute.CONVERSATION_ID.key()));
-                String deviceName = format(manageDeviceEvent.getDeviceName());
-                String cardHolderName = format(manageDeviceEvent.getCardHolderName());
-                String cardHolderEmail = format(manageDeviceEvent.getCardHolderEmail());
-                String dsid = format(manageDeviceEvent.getDsid());
-                String locale = format(getLocale(manageDeviceEvent.getLocale()));
-                String deviceType = format(manageDeviceEvent.getDeviceType());
-                String deviceImageUrl = format(manageDeviceEvent.getDeviceImageUrl());
-                Calendar calendar = getCalendar(manageDeviceEvent);
-
-                FmipSource fmipSource = manageDeviceEvent.getFmipSource();
-                String fmipSourceDescription = format((fmipSource != null) ? fmipSource.getDescription() : "");
-
-                if (smpDeviceEvent == SMPDeviceEvent.SUSPEND_CARD)
+                if (SUSPEND_EMAIL_ENABLED)
                 {
-                    if (SUSPEND_EMAIL_ENABLED)
+                    if (cardEventRecord.isSuccessful())
                     {
-                        if (cardEventRecord.isSuccessful())
-                        {
-                            new SMPSuccessSuspendMailHandler(new SuspendEmailRequest(deviceName, successCards, calendar, cardHolderName, conversationId, cardHolderEmail, dsid, locale, deviceType, deviceImageUrl)).sendEmail();
-                        }
-                        else if (cardEventRecord.hasPartialSuccess())
-                        {
-                            new SMPPartialSuspendMailHandler(new PartialSuspendEmailRequest(deviceName, successCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, dsid, deviceType, failedCards, deviceImageUrl)).sendEmail();
-                        }
-                        else if (cardEventRecord.isFailed())
-                        {
-                            new SMPFailSuspendMailHandler(new SuspendEmailRequest(deviceName, failedCards, calendar, cardHolderName, conversationId, cardHolderEmail, dsid, locale, deviceType, deviceImageUrl)).sendEmail();
-                        }
+                        new SMPSuccessSuspendMailHandler(new SuspendEmailRequest(deviceName, successCards, calendar, cardHolderName, conversationId, cardHolderEmail, dsid, locale, deviceType, deviceImageUrl)).sendEmail();
+                    }
+                    else if (cardEventRecord.hasPartialSuccess())
+                    {
+                        new SMPPartialSuspendMailHandler(new PartialSuspendEmailRequest(deviceName, successCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, dsid, deviceType, failedCards, deviceImageUrl)).sendEmail();
+                    }
+                    else if (cardEventRecord.isFailed())
+                    {
+                        new SMPFailSuspendMailHandler(new SuspendEmailRequest(deviceName, failedCards, calendar, cardHolderName, conversationId, cardHolderEmail, dsid, locale, deviceType, deviceImageUrl)).sendEmail();
                     }
                 }
-                else if (smpDeviceEvent == SMPDeviceEvent.UNLINK_CARD)
-                {
-                    if (UNLINK_EMAIL_ENABLED)
-                    {
-                        if (cardEventRecord.isSuccessful())
-                        {
-                            new SMPSuccessRemoveMailHandler(new RemoveEmailRequest(deviceName, successCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, deviceType, dsid, deviceImageUrl, fmipSourceDescription)).sendEmail();
-                        }
-                        else if (cardEventRecord.hasPartialSuccess())
-                        {
-                            new SMPPartialRemoveMailHandler(new PartialRemoveEmailRequest(deviceName, successCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, dsid, deviceType, failedCards, deviceImageUrl, fmipSourceDescription)).sendEmail();
-                        }
-                        else if (cardEventRecord.isFailed())
-                        {
-                            new SMPFailRemoveMailHandler(new RemoveEmailRequest(deviceName, failedCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, deviceType, dsid, deviceImageUrl, fmipSourceDescription)).sendEmail();
-                        }
-                    }
-                }
-
-                notifyEventListeners(manageDeviceEvent);
             }
+            else if (smpDeviceEvent == SMPDeviceEvent.UNLINK_CARD)
+            {
+                if (UNLINK_EMAIL_ENABLED)
+                {
+                    if (cardEventRecord.isSuccessful())
+                    {
+                        new SMPSuccessRemoveMailHandler(new RemoveEmailRequest(deviceName, successCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, deviceType, dsid, deviceImageUrl, fmipSourceDescription)).sendEmail();
+                    }
+                    else if (cardEventRecord.hasPartialSuccess())
+                    {
+                        new SMPPartialRemoveMailHandler(new PartialRemoveEmailRequest(deviceName, successCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, dsid, deviceType, failedCards, deviceImageUrl, fmipSourceDescription)).sendEmail();
+                    }
+                    else if (cardEventRecord.isFailed())
+                    {
+                        new SMPFailRemoveMailHandler(new RemoveEmailRequest(deviceName, failedCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, deviceType, dsid, deviceImageUrl, fmipSourceDescription)).sendEmail();
+                    }
+                }
+            }
+
+            notifyEventListeners(manageDeviceEvent);
         }
     }
 }

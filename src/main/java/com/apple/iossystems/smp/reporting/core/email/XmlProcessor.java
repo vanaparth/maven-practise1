@@ -5,7 +5,7 @@ import org.apache.xerces.util.XMLChar;
 /**
  * @author Toch
  */
-public class XmlProcessor
+class XmlProcessor
 {
     private XmlProcessor()
     {

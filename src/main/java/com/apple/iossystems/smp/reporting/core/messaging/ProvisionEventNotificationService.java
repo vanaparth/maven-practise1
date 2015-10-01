@@ -36,12 +36,12 @@ public class ProvisionEventNotificationService
         return INSTANCE;
     }
 
-    public void processProvisionEvent(String dpanId, String dsid)
+    public void processProvisionEvent(String dpanId, String dsid, String seid)
     {
         // Prevent any side effects
         try
         {
-            doProcessProvisionEvent(dpanId, dsid);
+            doProcessProvisionEvent(dpanId, dsid, seid);
         }
         catch (Exception e)
         {
@@ -49,7 +49,7 @@ public class ProvisionEventNotificationService
         }
     }
 
-    private void doProcessProvisionEvent(String dpanId, String dsid)
+    private void doProcessProvisionEvent(String dpanId, String dsid, String seid)
     {
         StoreManagementService storeManagementService = AppContext.getApplicationContext().getBean(StoreManagementService.class);
 
@@ -66,7 +66,7 @@ public class ProvisionEventNotificationService
 
         publishEvent(dpanId, ((dsidInfo != null) && (dsidInfo.getProvisionCount() == ProvisionCount.ZERO)));
 
-        storeManagementService.updateProvisionCount(dsid);
+        storeManagementService.updateProvisionCount(dsid, seid);
     }
 
     private void publishEvent(String dpanId, boolean firstProvision)

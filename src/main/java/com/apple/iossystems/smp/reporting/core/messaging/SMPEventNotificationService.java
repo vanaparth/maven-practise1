@@ -35,7 +35,7 @@ public class SMPEventNotificationService
     {
         NotificationService notificationService = getEventNotificationService();
 
-        if (notificationService == null)
+        if (!isOnline(notificationService))
         {
             notificationService = OFFLINE_NOTIFICATION_SERVICE;
 
@@ -64,6 +64,11 @@ public class SMPEventNotificationService
         return notificationService;
     }
 
+    private boolean isOnline(NotificationService notificationService)
+    {
+        return ((notificationService != null) && notificationService.isOnline());
+    }
+
     private class TaskHandler extends ScheduledEventTaskHandler
     {
         private TaskHandler()
@@ -81,7 +86,7 @@ public class SMPEventNotificationService
             {
                 NotificationService notificationService = getEventNotificationService();
 
-                if (notificationService != null)
+                if (isOnline(notificationService))
                 {
                     publisher = notificationService;
 

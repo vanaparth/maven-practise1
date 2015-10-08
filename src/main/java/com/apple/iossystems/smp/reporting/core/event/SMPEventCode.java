@@ -67,13 +67,14 @@ public class SMPEventCode
         addToMap(cardStatusMap, Card.CardStatus.SUSPENDED_OTP.toString(), "4");
         addToMap(cardStatusMap, Card.CardStatus.SUSPENDED_ISSUER.toString(), "5");
         addToMap(cardStatusMap, Card.CardStatus.SUSPENDED_WALLET.toString(), "6");
-        addToMap(cardStatusMap, DELETED_ISSUER, "7");
         //
         addToMap(cardEligibilityStatusMap, String.valueOf(CardEligibilityStatus.INELIGIBLE.getId()), "7");
         addToMap(cardEligibilityStatusMap, String.valueOf(CardEligibilityStatus.ELIGIBLE.getId()), "8");
         addToMap(cardEligibilityStatusMap, String.valueOf(CardEligibilityStatus.NETWORK_UNAVAILABLE.getId()), "9");
         addToMap(cardEligibilityStatusMap, String.valueOf(CardEligibilityStatus.PROVISIONED.getId()), "10");
         addToMap(cardEligibilityStatusMap, String.valueOf(CardEligibilityStatus.UPGRADE_REQUIRED.getId()), "11");
+        //
+        addToMap(cardStatusMap, DELETED_ISSUER, "12");
         //
         addToMap(provisioningCardSourceMap, String.valueOf(ProvisioningCardSource.MANUAL.getId()), "1");
         addToMap(provisioningCardSourceMap, String.valueOf(ProvisioningCardSource.ON_FILE.getId()), "2");

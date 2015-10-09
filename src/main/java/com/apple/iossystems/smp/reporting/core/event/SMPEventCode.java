@@ -28,7 +28,9 @@ public class SMPEventCode
     private final Map<String, Map<String, String>> maps = new HashMap<>();
 
     private final String emptyCode = "";
-    public static final String DELETED_ISSUER = "deletedIssuer";
+
+    public static final String UNLINKED_ISSUER = "unlinkedIssuer";
+    public static final String UNLINKED_WALLET = "unlinkedWallet";
 
     private SMPEventCode()
     {
@@ -74,14 +76,16 @@ public class SMPEventCode
         addToMap(cardEligibilityStatusMap, String.valueOf(CardEligibilityStatus.PROVISIONED.getId()), "10");
         addToMap(cardEligibilityStatusMap, String.valueOf(CardEligibilityStatus.UPGRADE_REQUIRED.getId()), "11");
         //
-        addToMap(cardStatusMap, DELETED_ISSUER, "12");
+        addToMap(cardStatusMap, UNLINKED_ISSUER, "12");
+        addToMap(cardStatusMap, UNLINKED_WALLET, "13");
         //
         addToMap(provisioningCardSourceMap, String.valueOf(ProvisioningCardSource.MANUAL.getId()), "1");
         addToMap(provisioningCardSourceMap, String.valueOf(ProvisioningCardSource.ON_FILE.getId()), "2");
         addToMap(provisioningCardSourceMap, String.valueOf(ProvisioningCardSource.BANKING_APP.getId()), "3");
         addToMap(provisioningCardSourceMap, String.valueOf(ProvisioningCardSource.PASS.getId()), "4");
         //
-        maps.put(DELETED_ISSUER, cardStatusMap);
+        maps.put(UNLINKED_ISSUER, cardStatusMap);
+        maps.put(UNLINKED_WALLET, cardStatusMap);
     }
 
     private void addToMap(Map<String, String> map, String key, String value)

@@ -31,6 +31,8 @@ public class SMPEventCode
 
     public static final String UNLINKED_ISSUER = "unlinkedIssuer";
     public static final String UNLINKED_WALLET = "unlinkedWallet";
+    public static final String RESUMED_ISSUER = "resumedIssuer";
+    public static final String RESUMED_WALLET = "resumedWallet";
 
     private SMPEventCode()
     {
@@ -42,7 +44,7 @@ public class SMPEventCode
         return INSTANCE;
     }
 
-    private void init()
+    private void init()/**/
     {
         addToMap(pnoMap, PNORepository.HELIUM_NAME, "201");
         addToMap(pnoMap, PNORepository.NEON_NAME, "202");
@@ -78,6 +80,8 @@ public class SMPEventCode
         //
         addToMap(cardStatusMap, UNLINKED_ISSUER, "12");
         addToMap(cardStatusMap, UNLINKED_WALLET, "13");
+        addToMap(cardStatusMap, RESUMED_ISSUER, "14");
+        addToMap(cardStatusMap, RESUMED_WALLET, "15");
         //
         addToMap(provisioningCardSourceMap, String.valueOf(ProvisioningCardSource.MANUAL.getId()), "1");
         addToMap(provisioningCardSourceMap, String.valueOf(ProvisioningCardSource.ON_FILE.getId()), "2");
@@ -86,6 +90,8 @@ public class SMPEventCode
         //
         maps.put(UNLINKED_ISSUER, cardStatusMap);
         maps.put(UNLINKED_WALLET, cardStatusMap);
+        maps.put(RESUMED_ISSUER, cardStatusMap);
+        maps.put(RESUMED_WALLET, cardStatusMap);
     }
 
     private void addToMap(Map<String, String> map, String key, String value)

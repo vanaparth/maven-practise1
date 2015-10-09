@@ -22,15 +22,9 @@ public class SMPEventCode
     private final Map<String, String> useCaseTypeMap = new HashMap<>();
     private final Map<String, String> fpanTypeMap = new HashMap<>();
     private final Map<String, String> cardStatusMap = new HashMap<>();
-    private final Map<String, String> cardEligibilityStatusMap = new HashMap<>();
     private final Map<String, String> provisioningCardSourceMap = new HashMap<>();
 
-    private final Map<String, Map<String, String>> maps = new HashMap<>();
-
     private final String emptyCode = "";
-
-    public static final String UNLINKED_ISSUER = "unlinkedIssuer";
-    public static final String UNLINKED_WALLET = "unlinkedWallet";
 
     private SMPEventCode()
     {
@@ -70,22 +64,21 @@ public class SMPEventCode
         addToMap(cardStatusMap, Card.CardStatus.SUSPENDED_ISSUER.toString(), "5");
         addToMap(cardStatusMap, Card.CardStatus.SUSPENDED_WALLET.toString(), "6");
         //
-        addToMap(cardEligibilityStatusMap, String.valueOf(CardEligibilityStatus.INELIGIBLE.getId()), "7");
-        addToMap(cardEligibilityStatusMap, String.valueOf(CardEligibilityStatus.ELIGIBLE.getId()), "8");
-        addToMap(cardEligibilityStatusMap, String.valueOf(CardEligibilityStatus.NETWORK_UNAVAILABLE.getId()), "9");
-        addToMap(cardEligibilityStatusMap, String.valueOf(CardEligibilityStatus.PROVISIONED.getId()), "10");
-        addToMap(cardEligibilityStatusMap, String.valueOf(CardEligibilityStatus.UPGRADE_REQUIRED.getId()), "11");
+        addToMap(cardStatusMap, String.valueOf(CardEligibilityStatus.INELIGIBLE.getId()), "7");
+        addToMap(cardStatusMap, String.valueOf(CardEligibilityStatus.ELIGIBLE.getId()), "8");
+        addToMap(cardStatusMap, String.valueOf(CardEligibilityStatus.NETWORK_UNAVAILABLE.getId()), "9");
+        addToMap(cardStatusMap, String.valueOf(CardEligibilityStatus.PROVISIONED.getId()), "10");
+        addToMap(cardStatusMap, String.valueOf(CardEligibilityStatus.UPGRADE_REQUIRED.getId()), "11");
         //
-        addToMap(cardStatusMap, UNLINKED_ISSUER, "12");
-        addToMap(cardStatusMap, UNLINKED_WALLET, "13");
+        addToMap(cardStatusMap, SMPCardStatus.UNLINKED_ISSUER.toString(), "12");
+        addToMap(cardStatusMap, SMPCardStatus.UNLINKED_WALLET.toString(), "13");
+        addToMap(cardStatusMap, SMPCardStatus.RESUMED_ISSUER.toString(), "14");
+        addToMap(cardStatusMap, SMPCardStatus.RESUMED_WALLET.toString(), "15");
         //
         addToMap(provisioningCardSourceMap, String.valueOf(ProvisioningCardSource.MANUAL.getId()), "1");
         addToMap(provisioningCardSourceMap, String.valueOf(ProvisioningCardSource.ON_FILE.getId()), "2");
         addToMap(provisioningCardSourceMap, String.valueOf(ProvisioningCardSource.BANKING_APP.getId()), "3");
         addToMap(provisioningCardSourceMap, String.valueOf(ProvisioningCardSource.PASS.getId()), "4");
-        //
-        maps.put(UNLINKED_ISSUER, cardStatusMap);
-        maps.put(UNLINKED_WALLET, cardStatusMap);
     }
 
     private void addToMap(Map<String, String> map, String key, String value)
@@ -148,24 +141,19 @@ public class SMPEventCode
         writeCode(record, attribute, cardStatusMap, (cardStatus != null) ? cardStatus.toString() : "");
     }
 
+    public void writeCardStatus(EventRecord record, EventAttribute attribute, SMPCardStatus cardStatus)
+    {
+        writeCode(record, attribute, cardStatusMap, (cardStatus != null) ? cardStatus.toString() : "");
+    }
+
     public void writeCardEligibilityStatus(EventRecord record, EventAttribute attribute, CardEligibilityStatus cardEligibilityStatus)
     {
-        writeCode(record, attribute, cardEligibilityStatusMap, (cardEligibilityStatus != null) ? String.valueOf(cardEligibilityStatus.getId()) : "");
+        writeCode(record, attribute, cardStatusMap, (cardEligibilityStatus != null) ? String.valueOf(cardEligibilityStatus.getId()) : "");
     }
 
     public void writeProvisioningCardSource(EventRecord record, EventAttribute attribute, ProvisioningCardSource provisioningCardSource)
     {
         writeCode(record, attribute, provisioningCardSourceMap, (provisioningCardSource != null) ? String.valueOf(provisioningCardSource.getId()) : "");
-    }
-
-    public void writeValue(EventRecord record, EventAttribute attribute, String key)
-    {
-        Map<String, String> map = maps.get(key);
-
-        if (map != null)
-        {
-            writeCode(record, attribute, map, key);
-        }
     }
 
     public void writeResponseStatus(EventRecord record, EventAttribute attribute, String errorCode)

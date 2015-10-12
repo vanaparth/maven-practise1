@@ -30,6 +30,7 @@ public class IReporterEvent
         eventAttributes.add(EventAttribute.CARD_ISSUER.key());
         eventAttributes.add(EventAttribute.CARD_SOURCE.key());
         eventAttributes.add(EventAttribute.CARD_STATUS.key());
+        eventAttributes.add(EventAttribute.CARD_STATUS_UPDATE_SOURCE.key());
         eventAttributes.add(EventAttribute.CARD_TYPE.key());
         eventAttributes.add(EventAttribute.COMPANION_DEVICE_SERIAL_NUMBER.key());
         eventAttributes.add(EventAttribute.COMPANION_USER_AGENT.key());

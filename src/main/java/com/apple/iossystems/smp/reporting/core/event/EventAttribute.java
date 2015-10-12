@@ -15,6 +15,7 @@ public enum EventAttribute
     CARD_ISSUER("bnm"),
     CARD_SOURCE("ptp"),
     CARD_STATUS("cst"),
+    CARD_STATUS_UPDATE_SOURCE("ssr"),
     CARD_TYPE("ctp"),
     COMPANION_DEVICE_SERIAL_NUMBER("csn"),
     COMPANION_USER_AGENT("cua"),

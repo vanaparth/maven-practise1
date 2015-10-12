@@ -1,5 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.event;
 
+import com.apple.iossystems.smp.domain.Actor;
 import com.apple.iossystems.smp.domain.ProvisioningCardSource;
 import com.apple.iossystems.smp.domain.clm.Card;
 import com.apple.iossystems.smp.domain.device.CardEligibilityStatus;
@@ -22,6 +23,7 @@ public class SMPEventCode
     private final Map<String, String> useCaseTypeMap = new HashMap<>();
     private final Map<String, String> fpanTypeMap = new HashMap<>();
     private final Map<String, String> cardStatusMap = new HashMap<>();
+    private final Map<String, String> cardStatusUpdateSourceMap = new HashMap<>();
     private final Map<String, String> provisioningCardSourceMap = new HashMap<>();
 
     private final String emptyCode = "";
@@ -70,10 +72,10 @@ public class SMPEventCode
         addToMap(cardStatusMap, String.valueOf(CardEligibilityStatus.PROVISIONED.getId()), "10");
         addToMap(cardStatusMap, String.valueOf(CardEligibilityStatus.UPGRADE_REQUIRED.getId()), "11");
         //
-        addToMap(cardStatusMap, SMPCardStatus.UNLINKED_ISSUER.toString(), "12");
-        addToMap(cardStatusMap, SMPCardStatus.UNLINKED_WALLET.toString(), "13");
-        addToMap(cardStatusMap, SMPCardStatus.RESUMED_ISSUER.toString(), "14");
-        addToMap(cardStatusMap, SMPCardStatus.RESUMED_WALLET.toString(), "15");
+        addToMap(cardStatusUpdateSourceMap, Actor.DEVICE.toString(), "1");
+        addToMap(cardStatusUpdateSourceMap, Actor.INTERNAL.toString(), "1");
+        addToMap(cardStatusUpdateSourceMap, Actor.PNO.toString(), "2");
+        addToMap(cardStatusUpdateSourceMap, Actor.FMIP.toString(), "3");
         //
         addToMap(provisioningCardSourceMap, String.valueOf(ProvisioningCardSource.MANUAL.getId()), "1");
         addToMap(provisioningCardSourceMap, String.valueOf(ProvisioningCardSource.ON_FILE.getId()), "2");
@@ -141,9 +143,9 @@ public class SMPEventCode
         writeCode(record, attribute, cardStatusMap, (cardStatus != null) ? cardStatus.toString() : "");
     }
 
-    public void writeCardStatus(EventRecord record, EventAttribute attribute, SMPCardStatus cardStatus)
+    public void writeCardStatusUpdateSource(EventRecord record, EventAttribute attribute, Actor actor)
     {
-        writeCode(record, attribute, cardStatusMap, (cardStatus != null) ? cardStatus.toString() : "");
+        writeCode(record, attribute, cardStatusUpdateSourceMap, (actor != null) ? actor.toString() : "");
     }
 
     public void writeCardEligibilityStatus(EventRecord record, EventAttribute attribute, CardEligibilityStatus cardEligibilityStatus)

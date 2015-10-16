@@ -25,7 +25,7 @@ public class SMPPublishEventValidation
 
         for (EventRecord record : records.getList())
         {
-            if (!validate(record))
+            if (!smpEventValidationMap.isValid(record))
             {
                 result = false;
                 break;
@@ -33,10 +33,5 @@ public class SMPPublishEventValidation
         }
 
         return result;
-    }
-
-    public boolean validate(EventRecord record)
-    {
-        return smpEventValidationMap.isValid(record);
     }
 }

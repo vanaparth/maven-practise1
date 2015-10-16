@@ -20,7 +20,7 @@ class SMPEventValidationMap
     {
         Map<SMPDeviceEvent, Set<String>> map = new HashMap<>();
 
-        map.put(SMPDeviceEvent.CHECK_CARD, new HashSet<>(Arrays.asList("bin", "bnm", "ccd", "cid", "con", "cst", "did", "dua", "evt", "lcd", "pno", "ptp", "sno", "tim")));
+        map.put(SMPDeviceEvent.CHECK_CARD, new HashSet<>(Arrays.asList("bin", "ccd", "cid", "con", "cst", "did", "dua", "evt", "lcd", "pno", "ptp", "sno", "tim")));
         map.put(SMPDeviceEvent.PROVISION_CARD, new HashSet<>(Arrays.asList("ast", "bin", "ccd", "con", "ctp", "did", "dpn", "dua", "evt", "fpn", "lcd", "llg", "pno", "psr", "pst", "ptp", "sno", "tim")));
         map.put(SMPDeviceEvent.SUSPEND_CARD, new HashSet<>(Arrays.asList("con", "cst", "dpn", "evt", "pno", "tim")));
         map.put(SMPDeviceEvent.UNLINK_CARD, new HashSet<>(Arrays.asList("con", "cst", "dpn", "evt", "pno", "tim")));

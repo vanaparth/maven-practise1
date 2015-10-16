@@ -1,5 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
+import com.apple.cds.keystone.config.PropertyManager;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledEventTaskHandler;
 import org.apache.log4j.Logger;
 
@@ -33,7 +34,27 @@ public class SMPEventNotificationService
 
     private void initPublisher()
     {
-        NotificationService notificationService = getEventNotificationService();
+        // Prevent any side effects
+        try
+        {
+            doInitPublisher();
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+        }
+    }
+
+    private void doInitPublisher()
+    {
+        String notificationServiceClassName = PropertyManager.getInstance().valueForKey("smp.reporting.eventNotificationService.classname");
+
+        NotificationService notificationService = getEventNotificationService(notificationServiceClassName);
+
+        if (!isOnline(notificationService))
+        {
+            notificationService = getEventNotificationService();
+        }
 
         if (!isOnline(notificationService))
         {
@@ -41,7 +62,7 @@ public class SMPEventNotificationService
 
             LOGGER.warn("Using offline notification service");
 
-            new TaskHandler();
+            new TaskHandler(notificationServiceClassName);
         }
 
         publisher = notificationService;
@@ -51,7 +72,6 @@ public class SMPEventNotificationService
     {
         NotificationService notificationService = null;
 
-        // Prevent any side effects
         try
         {
             notificationService = EventNotificationService.getInstance();
@@ -64,6 +84,25 @@ public class SMPEventNotificationService
         return notificationService;
     }
 
+    private NotificationService getEventNotificationService(String className)
+    {
+        NotificationService notificationService = null;
+
+        if (className != null)
+        {
+            try
+            {
+                notificationService = (NotificationService) Class.forName(className).newInstance();
+            }
+            catch (Exception e)
+            {
+                LOGGER.error(e);
+            }
+        }
+
+        return notificationService;
+    }
+
     private boolean isOnline(NotificationService notificationService)
     {
         return ((notificationService != null) && notificationService.isOnline());
@@ -71,8 +110,11 @@ public class SMPEventNotificationService
 
     private class TaskHandler extends ScheduledEventTaskHandler
     {
-        private TaskHandler()
+        private final String notificationServiceClassName;
+
+        private TaskHandler(String notificationServiceClassName)
         {
+            this.notificationServiceClassName = notificationServiceClassName;
         }
 
         @Override
@@ -84,7 +126,7 @@ public class SMPEventNotificationService
             }
             else
             {
-                NotificationService notificationService = getEventNotificationService();
+                NotificationService notificationService = (notificationServiceClassName != null) ? getEventNotificationService(notificationServiceClassName) : getEventNotificationService();
 
                 if (isOnline(notificationService))
                 {

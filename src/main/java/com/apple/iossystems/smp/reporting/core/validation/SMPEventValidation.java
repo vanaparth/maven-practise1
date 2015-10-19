@@ -6,32 +6,31 @@ import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 /**
  * @author Toch
  */
-public class SMPPublishEventValidation
+public class SMPEventValidation
 {
     private final SMPEventValidationMap smpEventValidationMap = SMPEventValidationMap.getInstance();
 
-    private SMPPublishEventValidation()
+    private SMPEventValidation()
     {
     }
 
-    public static SMPPublishEventValidation getInstance()
+    public static SMPEventValidation getInstance()
     {
-        return new SMPPublishEventValidation();
+        return new SMPEventValidation();
     }
 
-    public boolean validate(EventRecords records)
+    public EventRecords validate(EventRecords records)
     {
-        boolean result = true;
+        EventRecords invalidRecords = EventRecords.getInstance();
 
         for (EventRecord record : records.getList())
         {
             if (!smpEventValidationMap.isValid(record))
             {
-                result = false;
-                break;
+                invalidRecords.add(record);
             }
         }
 
-        return result;
+        return invalidRecords;
     }
 }

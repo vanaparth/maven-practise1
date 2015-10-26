@@ -33,7 +33,7 @@ public class AuditRequestAdapter implements JsonSerializer<AuditRequest>, JsonDe
 
         if ((auditRecords != null) && (!auditRecords.isEmpty()))
         {
-            root.add(CONTENT, context.serialize(auditRecords, List.class));
+            root.add(CONTENT, context.serialize(auditRecords));
         }
 
         return root;

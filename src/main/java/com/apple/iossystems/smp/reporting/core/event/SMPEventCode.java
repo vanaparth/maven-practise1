@@ -72,6 +72,8 @@ public class SMPEventCode
         addToMap(cardStatusMap, String.valueOf(CardEligibilityStatus.PROVISIONED.getId()), "10");
         addToMap(cardStatusMap, String.valueOf(CardEligibilityStatus.UPGRADE_REQUIRED.getId()), "11");
         //
+        addToMap(cardStatusMap, String.valueOf(Card.CardStatus.IN_PROCESS.toString()), "12");
+        //
         addToMap(cardStatusUpdateSourceMap, Actor.DEVICE.toString(), "1");
         addToMap(cardStatusUpdateSourceMap, Actor.INTERNAL.toString(), "1");
         addToMap(cardStatusUpdateSourceMap, Actor.PNO.toString(), "2");

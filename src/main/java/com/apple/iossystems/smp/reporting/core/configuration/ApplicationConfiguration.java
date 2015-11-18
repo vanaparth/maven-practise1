@@ -37,7 +37,7 @@ public class ApplicationConfiguration
     static final boolean PROVISION_EMAIL_ENABLED = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault("smp.reporting.email.provision", true);
     static final boolean SUSPEND_EMAIL_ENABLED = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault("smp.reporting.email.suspend", true);
     static final boolean UNLINK_EMAIL_ENABLED = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault("smp.reporting.email.unlink", true);
-    static final boolean DEFAULT_EMAIL_LOCALE_ENABLED = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault("smp.reporting.email.locale", true);
+    static final boolean DEFAULT_EMAIL_LOCALE_ENABLED = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault("smp.reporting.email.default.locale", true);
 
     static final String FMIP_CERTIFICATE = PROPERTY_MANAGER.valueForKeyWithDefault("com.apple.iossystems.internal.fmip.app.cert", "0");
     static final String FMIP_REMOTE_CERTIFICATE = PROPERTY_MANAGER.valueForKeyWithDefault("com.apple.iossystems.internal.fmip.setup.cert", "0");

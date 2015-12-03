@@ -34,6 +34,9 @@ public class ApplicationConfiguration
 
     static final boolean RABBIT_CONSUMERS_ENABLED = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault("smp.reporting.rabbit.consumers", true);
 
+    static final boolean PUBLISH_EVENTS_ENABLED = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault("smp.reporting.publish.events", true);
+    static final boolean EMAIL_EVENTS_ENABLED = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault("smp.reporting.email.events", true);
+
     static final boolean PROVISION_EMAIL_ENABLED = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault("smp.reporting.email.provision", true);
     static final boolean SUSPEND_EMAIL_ENABLED = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault("smp.reporting.email.suspend", true);
     static final boolean UNLINK_EMAIL_ENABLED = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault("smp.reporting.email.unlink", true);
@@ -134,6 +137,16 @@ public class ApplicationConfiguration
     public static boolean isRabbitConsumersEnabled()
     {
         return ApplicationConfiguration.RABBIT_CONSUMERS_ENABLED;
+    }
+
+    public static boolean publishEventsEnabled()
+    {
+        return PUBLISH_EVENTS_ENABLED;
+    }
+
+    public static boolean emailEventsEnabled()
+    {
+        return EMAIL_EVENTS_ENABLED;
     }
 
     public static boolean isProvisionEmailEnabled()

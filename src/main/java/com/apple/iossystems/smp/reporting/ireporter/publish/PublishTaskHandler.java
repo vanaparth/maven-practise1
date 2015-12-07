@@ -4,6 +4,7 @@ import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
 import com.apple.iossystems.smp.reporting.core.analytics.Statistics;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledNotification;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledTaskHandler;
+import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import com.apple.iossystems.smp.reporting.core.email.EmailService;
 import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
@@ -40,6 +41,9 @@ public class PublishTaskHandler implements ScheduledTaskHandler
 
     private PublishMetric reportsMetrics = PublishMetric.getReportsMetrics();
     private PublishMetric paymentReportsMetrics = PublishMetric.getPaymentReportsMetrics();
+
+    private final boolean publishEventsEnabled = ApplicationConfiguration.publishEventsEnabled();
+    private final boolean emailEventsEnabled = ApplicationConfiguration.emailEventsEnabled();
 
     private PublishTaskHandler()
     {
@@ -203,6 +207,11 @@ public class PublishTaskHandler implements ScheduledTaskHandler
         }
     }
 
+    private boolean addEvent(BlockingQueue<EventRecord> queue, EventRecord record, boolean enabled)
+    {
+        return ((!enabled) || queue.offer(record));
+    }
+
     public boolean add(EventRecord record)
     {
         String value = record.removeAttribute(EventAttribute.EVENT_TYPE.key());
@@ -210,15 +219,15 @@ public class PublishTaskHandler implements ScheduledTaskHandler
 
         if (eventType == EventType.REPORTS)
         {
-            return reportsQueue.offer(IReporterEvent.processEventRecord(record));
+            return addEvent(reportsQueue, IReporterEvent.processEventRecord(record), publishEventsEnabled);
         }
         else if (eventType == EventType.PAYMENT)
         {
-            return paymentReportsQueue.offer(IReporterEvent.processEventRecord(record));
+            return addEvent(paymentReportsQueue, IReporterEvent.processEventRecord(record), publishEventsEnabled);
         }
         else if (eventType == EventType.EMAIL)
         {
-            return emailReportsQueue.offer(record);
+            return addEvent(emailReportsQueue, record, emailEventsEnabled);
         }
         else
         {

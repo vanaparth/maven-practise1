@@ -172,7 +172,7 @@ public class PublishTaskHandler implements ScheduledTaskHandler
 
     private void handleAuditEvent(IReporterPublishService auditService, PublishMetric publishMetric)
     {
-        if (auditService.publishReady())
+        if (auditService.publishReady() && publishEventsEnabled)
         {
             int sent = statistics.getIntValue(publishMetric.getIReporterRecordsSent());
             int failed = statistics.getIntValue(publishMetric.getIReporterRecordsFailed());

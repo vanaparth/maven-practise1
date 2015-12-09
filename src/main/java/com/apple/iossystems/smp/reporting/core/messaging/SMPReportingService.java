@@ -4,7 +4,8 @@ import com.apple.cds.messaging.client.impl.PubSubUtil;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventType;
-import com.apple.iossystems.smp.reporting.ireporter.publish.PublishTaskHandler;
+import com.apple.iossystems.smp.reporting.ireporter.publish.EventTaskHandler;
+import com.apple.iossystems.smp.reporting.ireporter.publish.PublishTaskHandlerFactory;
 import org.apache.log4j.Logger;
 
 /**
@@ -14,7 +15,7 @@ public class SMPReportingService
 {
     private static final Logger LOGGER = Logger.getLogger(SMPReportingService.class);
 
-    private PublishTaskHandler publishTaskHandler = PublishTaskHandler.getInstance();
+    private EventTaskHandler publishTaskHandler = PublishTaskHandlerFactory.getInstance().getPublishTaskHandler();
 
     private SMPReportingService()
     {

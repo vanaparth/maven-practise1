@@ -3,7 +3,6 @@ package com.apple.iossystems.smp.reporting.ireporter.publish;
 import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
 import com.apple.iossystems.smp.reporting.core.analytics.Statistics;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledNotification;
-import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledTaskHandler;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import com.apple.iossystems.smp.reporting.core.email.EmailService;
 import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
@@ -21,7 +20,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  * @author Toch
  */
-public class PublishTaskHandler implements ScheduledTaskHandler
+public class PublishTaskHandler implements EventTaskHandler
 {
     private IReporterPublishService reportsPublishService = ReportsPublishService.getInstance();
     private IReporterPublishService auditPublishService = AuditPublishService.getInstance();
@@ -212,7 +211,8 @@ public class PublishTaskHandler implements ScheduledTaskHandler
         return ((!enabled) || queue.offer(record));
     }
 
-    public boolean add(EventRecord record)
+    @Override
+    public final boolean add(EventRecord record)
     {
         String value = record.removeAttribute(EventAttribute.EVENT_TYPE.key());
         EventType eventType = EventType.getEventType(value);

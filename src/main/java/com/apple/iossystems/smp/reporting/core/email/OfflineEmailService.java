@@ -5,7 +5,7 @@ import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 /**
  * @author Toch
  */
-public class OfflineEmailService implements EmailEventService
+class OfflineEmailService implements EmailEventService
 {
     private OfflineEmailService()
     {

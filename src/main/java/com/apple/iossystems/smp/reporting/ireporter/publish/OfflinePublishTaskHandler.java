@@ -5,7 +5,7 @@ import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 /**
  * @author Toch
  */
-public class OfflinePublishTaskHandler implements EventTaskHandler
+class OfflinePublishTaskHandler implements EventTaskHandler
 {
     private OfflinePublishTaskHandler()
     {

@@ -3,7 +3,8 @@ package com.apple.iossystems.smp.reporting.core.messaging;
 import com.apple.iossystems.logging.LogService;
 import com.apple.iossystems.logging.LogServiceFactory2;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
-import com.apple.iossystems.smp.reporting.core.email.EmailService;
+import com.apple.iossystems.smp.reporting.core.email.EmailEventService;
+import com.apple.iossystems.smp.reporting.core.email.EmailServiceFactory;
 import com.apple.iossystems.smp.reporting.core.email.SMPEmailEvent;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
@@ -24,7 +25,7 @@ class EventNotificationService implements NotificationService
 
     private EventNotificationServiceThreadPool threadPool = EventNotificationServiceThreadPool.getInstance();
 
-    private EmailService emailService = EmailService.getInstance();
+    private EmailEventService emailService = EmailServiceFactory.getInstance().getEmailService();
 
     private EventListener eventListener = EventListenerFactory.getInstance().getSMPPublishEventListener();
 
@@ -33,7 +34,6 @@ class EventNotificationService implements NotificationService
     private LogService logService = getLogService();
 
     private final boolean publishEventsEnabled = ApplicationConfiguration.publishEventsEnabled();
-    private final boolean emailEventsEnabled = ApplicationConfiguration.emailEventsEnabled();
 
     private EventNotificationService()
     {
@@ -96,19 +96,23 @@ class EventNotificationService implements NotificationService
         }
     }
 
+    private void publishEmailRecords(EventRecords records)
+    {
+        try
+        {
+            emailService.send(SMPEmailEvent.getEventRecords(records));
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e);
+        }
+    }
+
     private void publishEventRecords(EventRecords records)
     {
         if (publishEventsEnabled)
         {
             doPublishEventRecords(records);
-        }
-    }
-
-    private void publishEmailRecords(EventRecords records)
-    {
-        if (emailEventsEnabled)
-        {
-            doPublishEmailRecords(records);
         }
     }
 
@@ -124,18 +128,6 @@ class EventNotificationService implements NotificationService
             notifyEventListener(records);
 
             notifyKista(records);
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e);
-        }
-    }
-
-    private void doPublishEmailRecords(EventRecords records)
-    {
-        try
-        {
-            emailService.send(SMPEmailEvent.getEventRecords(records));
         }
         catch (Exception e)
         {

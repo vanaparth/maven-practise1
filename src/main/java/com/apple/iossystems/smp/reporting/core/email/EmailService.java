@@ -21,7 +21,7 @@ import java.util.TimeZone;
 /**
  * @author Toch
  */
-public class EmailService
+class EmailService implements EmailEventService
 {
     private static final Logger LOGGER = Logger.getLogger(EmailService.class);
 
@@ -44,6 +44,7 @@ public class EmailService
         return new EmailService();
     }
 
+    @Override
     public void send(EventRecords records)
     {
         for (EventRecord record : records.getList())
@@ -122,6 +123,7 @@ public class EmailService
         return ((provisionCardEvent != null) && StringUtils.isNotBlank(provisionCardEvent.getCardHolderEmail()));
     }
 
+    @Override
     public void publishProvisionEvent(ProvisionCardEvent provisionCardEvent)
     {
         if (PROVISION_EMAIL_ENABLED && (provisionCardEvent != null) && isValidProvisionCardEvent(provisionCardEvent))

@@ -3,8 +3,8 @@ package com.apple.iossystems.smp.reporting.ireporter.publish;
 import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
 import com.apple.iossystems.smp.reporting.core.analytics.Statistics;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledNotification;
-import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
-import com.apple.iossystems.smp.reporting.core.email.EmailService;
+import com.apple.iossystems.smp.reporting.core.email.EmailEventService;
+import com.apple.iossystems.smp.reporting.core.email.EmailServiceFactory;
 import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
@@ -20,7 +20,7 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  * @author Toch
  */
-public class PublishTaskHandler implements EventTaskHandler
+class PublishTaskHandler implements EventTaskHandler
 {
     private IReporterPublishService reportsPublishService = ReportsPublishService.getInstance();
     private IReporterPublishService auditPublishService = AuditPublishService.getInstance();
@@ -29,7 +29,7 @@ public class PublishTaskHandler implements EventTaskHandler
 
     private HubblePublisher hubblePublisher = HubblePublisher.getInstance();
 
-    private EmailService emailService = EmailService.getInstance();
+    private EmailEventService emailService = EmailServiceFactory.getInstance().getEmailService();
 
     private Statistics statistics = Statistics.getInstance();
     private StopWatch stopWatch = StopWatch.getInstance();
@@ -40,9 +40,6 @@ public class PublishTaskHandler implements EventTaskHandler
 
     private PublishMetric reportsMetrics = PublishMetric.getReportsMetrics();
     private PublishMetric paymentReportsMetrics = PublishMetric.getPaymentReportsMetrics();
-
-    private final boolean publishEventsEnabled = ApplicationConfiguration.publishEventsEnabled();
-    private final boolean emailEventsEnabled = ApplicationConfiguration.emailEventsEnabled();
 
     private PublishTaskHandler()
     {
@@ -171,7 +168,7 @@ public class PublishTaskHandler implements EventTaskHandler
 
     private void handleAuditEvent(IReporterPublishService auditService, PublishMetric publishMetric)
     {
-        if (auditService.publishReady() && publishEventsEnabled)
+        if (auditService.publishReady())
         {
             int sent = statistics.getIntValue(publishMetric.getIReporterRecordsSent());
             int failed = statistics.getIntValue(publishMetric.getIReporterRecordsFailed());
@@ -206,28 +203,23 @@ public class PublishTaskHandler implements EventTaskHandler
         }
     }
 
-    private boolean addEvent(BlockingQueue<EventRecord> queue, EventRecord record, boolean enabled)
-    {
-        return ((!enabled) || queue.offer(record));
-    }
-
     @Override
-    public final boolean add(EventRecord record)
+    public boolean add(EventRecord record)
     {
         String value = record.removeAttribute(EventAttribute.EVENT_TYPE.key());
         EventType eventType = EventType.getEventType(value);
 
         if (eventType == EventType.REPORTS)
         {
-            return addEvent(reportsQueue, IReporterEvent.processEventRecord(record), publishEventsEnabled);
+            return reportsQueue.offer(IReporterEvent.processEventRecord(record));
         }
         else if (eventType == EventType.PAYMENT)
         {
-            return addEvent(paymentReportsQueue, IReporterEvent.processEventRecord(record), publishEventsEnabled);
+            return paymentReportsQueue.offer(IReporterEvent.processEventRecord(record));
         }
         else if (eventType == EventType.EMAIL)
         {
-            return addEvent(emailReportsQueue, record, emailEventsEnabled);
+            return emailReportsQueue.offer(record);
         }
         else
         {

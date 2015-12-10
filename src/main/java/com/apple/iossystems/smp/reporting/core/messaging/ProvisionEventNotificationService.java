@@ -4,8 +4,8 @@ import com.apple.cds.keystone.spring.AppContext;
 import com.apple.iossystems.smp.domain.DSIDInfo;
 import com.apple.iossystems.smp.domain.ProvisionCount;
 import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
-import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
-import com.apple.iossystems.smp.reporting.core.email.EmailService;
+import com.apple.iossystems.smp.reporting.core.email.EmailEventService;
+import com.apple.iossystems.smp.reporting.core.email.EmailServiceFactory;
 import com.apple.iossystems.smp.reporting.core.email.ProvisionCardEvent;
 import com.apple.iossystems.smp.reporting.core.persistence.SMPEventCache;
 import com.apple.iossystems.smp.service.StoreManagementService;
@@ -24,11 +24,9 @@ public class ProvisionEventNotificationService
 
     private EventNotificationServiceThreadPool threadPool = EventNotificationServiceThreadPool.getInstance();
 
-    private EmailService emailService = EmailService.getInstance();
+    private EmailEventService emailService = EmailServiceFactory.getInstance().getEmailService();
 
     private static final SMPEventCache SMP_EVENT_CACHE = SMPEventCache.getInstance();
-
-    private final boolean emailEventsEnabled = ApplicationConfiguration.emailEventsEnabled();
 
     private ProvisionEventNotificationService()
     {
@@ -41,18 +39,10 @@ public class ProvisionEventNotificationService
 
     public void processProvisionEvent(String dpanId, String dsid, String seid)
     {
-        if (emailEventsEnabled)
-        {
-            doProcessProvisionEvent(dpanId, dsid, seid);
-        }
-    }
-
-    private void doProcessProvisionEvent(String dpanId, String dsid, String seid)
-    {
         // Prevent any side effects
         try
         {
-            processProvisionNotificationEvent(dpanId, dsid, seid);
+            doProcessProvisionEvent(dpanId, dsid, seid);
         }
         catch (Exception e)
         {
@@ -60,7 +50,7 @@ public class ProvisionEventNotificationService
         }
     }
 
-    private void processProvisionNotificationEvent(String dpanId, String dsid, String seid)
+    private void doProcessProvisionEvent(String dpanId, String dsid, String seid)
     {
         StoreManagementService storeManagementService = AppContext.getApplicationContext().getBean(StoreManagementService.class);
 

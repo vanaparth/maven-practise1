@@ -38,7 +38,7 @@ public class SecurityProvider
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
 
         return output;

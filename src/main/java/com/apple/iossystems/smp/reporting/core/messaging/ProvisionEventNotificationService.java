@@ -46,7 +46,7 @@ public class ProvisionEventNotificationService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -62,7 +62,7 @@ public class ProvisionEventNotificationService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
 
         publishEvent(dpanId, ((dsidInfo != null) && (dsidInfo.getProvisionCount() == ProvisionCount.ZERO)));
@@ -88,7 +88,7 @@ public class ProvisionEventNotificationService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 

@@ -53,7 +53,7 @@ public class SMPReportingService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -67,7 +67,7 @@ public class SMPReportingService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 

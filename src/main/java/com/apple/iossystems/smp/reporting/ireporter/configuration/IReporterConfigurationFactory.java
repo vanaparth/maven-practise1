@@ -71,7 +71,7 @@ class IReporterConfigurationFactory
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
 
         return getDefaultConfiguration(configurationType);

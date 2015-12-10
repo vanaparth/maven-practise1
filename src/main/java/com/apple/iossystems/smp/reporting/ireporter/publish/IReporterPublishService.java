@@ -78,7 +78,7 @@ public abstract class IReporterPublishService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
 
         lastRequestTime = System.currentTimeMillis();

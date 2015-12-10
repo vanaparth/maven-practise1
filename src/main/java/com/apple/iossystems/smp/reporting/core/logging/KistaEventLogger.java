@@ -52,7 +52,7 @@ public class KistaEventLogger
             }
             catch (Exception e)
             {
-                LOGGER.error(e);
+                LOGGER.error(e.getMessage(), e);
             }
         }
 
@@ -109,7 +109,7 @@ public class KistaEventLogger
             }
             catch (Exception e)
             {
-                LOGGER.error(e);
+                LOGGER.error(e.getMessage(), e);
             }
         }
     }

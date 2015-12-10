@@ -31,7 +31,7 @@ class CacheService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -46,7 +46,7 @@ class CacheService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -68,7 +68,7 @@ class CacheService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
 
         return value;
@@ -89,7 +89,7 @@ class CacheService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
 
         return value;

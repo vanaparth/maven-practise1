@@ -54,7 +54,7 @@ class EventNotificationService implements NotificationService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
 
         return logService;
@@ -68,7 +68,7 @@ class EventNotificationService implements NotificationService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -80,7 +80,7 @@ class EventNotificationService implements NotificationService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -92,7 +92,7 @@ class EventNotificationService implements NotificationService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -104,7 +104,7 @@ class EventNotificationService implements NotificationService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -131,7 +131,7 @@ class EventNotificationService implements NotificationService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -145,7 +145,7 @@ class EventNotificationService implements NotificationService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -159,7 +159,7 @@ class EventNotificationService implements NotificationService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 

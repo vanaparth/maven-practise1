@@ -49,7 +49,7 @@ public class SMPHttpClient
             }
             catch (Exception e)
             {
-                LOGGER.error(e);
+                LOGGER.error(e.getMessage(), e);
             }
 
             retryCount++;

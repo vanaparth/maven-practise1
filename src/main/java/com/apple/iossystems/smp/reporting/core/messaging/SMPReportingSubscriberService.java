@@ -66,7 +66,7 @@ class SMPReportingSubscriberService<LogEvent> extends SMPEventSubscriberService<
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -78,7 +78,7 @@ class SMPReportingSubscriberService<LogEvent> extends SMPEventSubscriberService<
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -94,7 +94,7 @@ class SMPReportingSubscriberService<LogEvent> extends SMPEventSubscriberService<
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 

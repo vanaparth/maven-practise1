@@ -41,7 +41,7 @@ public class SMPEventNotificationService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -78,7 +78,7 @@ public class SMPEventNotificationService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
 
         return notificationService;
@@ -96,7 +96,7 @@ public class SMPEventNotificationService
             }
             catch (Exception e)
             {
-                LOGGER.error(e);
+                LOGGER.error(e.getMessage(), e);
             }
         }
 

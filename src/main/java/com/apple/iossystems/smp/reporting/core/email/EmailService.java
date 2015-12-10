@@ -61,7 +61,7 @@ class EmailService implements EmailEventService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -143,7 +143,7 @@ class EmailService implements EmailEventService
             }
             catch (Exception e)
             {
-                LOGGER.error(e);
+                LOGGER.error(e.getMessage(), e);
             }
         }
     }

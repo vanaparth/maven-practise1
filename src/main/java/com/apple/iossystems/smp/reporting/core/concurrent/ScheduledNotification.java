@@ -42,7 +42,7 @@ public class ScheduledNotification
                 }
                 catch (Exception e)
                 {
-                    LOGGER.error(e);
+                    LOGGER.error(e.getMessage(), e);
                 }
             }
         };

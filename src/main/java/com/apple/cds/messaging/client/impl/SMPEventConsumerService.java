@@ -61,7 +61,7 @@ class SMPEventConsumerService<LogEvent> extends BasicConsumerService<LogEvent>
             }
             catch (Exception e)
             {
-                LOGGER.error(e);
+                LOGGER.error(e.getMessage(), e);
             }
         }
 

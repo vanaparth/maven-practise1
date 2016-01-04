@@ -1,6 +1,9 @@
 package com.apple.iossystems.smp.reporting.core.configuration;
 
 import com.apple.cds.keystone.config.PropertyManager;
+import com.apple.maus.util.StringUtils;
+
+import java.util.*;
 
 /**
  * @author Toch
@@ -42,8 +45,22 @@ public class ApplicationConfiguration
     static final String FMIP_CERTIFICATE = PROPERTY_MANAGER.valueForKeyWithDefault("com.apple.iossystems.internal.fmip.app.cert", "0");
     static final String FMIP_REMOTE_CERTIFICATE = PROPERTY_MANAGER.valueForKeyWithDefault("com.apple.iossystems.internal.fmip.setup.cert", "0");
 
-    private ApplicationConfiguration()
-    {
+    static final Map<String,String> MANAGE_DEVICE_COUNTRY_DEFAULTS = PropertyManager.getInstance().getDictionaryForKey("com.apple.iossystems.manage.device.defaults");
+    static final Map<String, List<String>> MANAGE_DEVICE_COUNTRY_DEFAULT_MAP = new HashMap<String, List<String>>();
+
+    static {
+        if (MANAGE_DEVICE_COUNTRY_DEFAULTS  != null && !MANAGE_DEVICE_COUNTRY_DEFAULTS .isEmpty()) // There are filters defined {
+        {
+            //Entries in the cardFilterMap are defined as "serialNumber"="1,2,4,11", its a comma separated list co
+            for (String key : MANAGE_DEVICE_COUNTRY_DEFAULTS.keySet()) {
+                String entry = MANAGE_DEVICE_COUNTRY_DEFAULTS .get(key);
+                String[] list = StringUtils.split(entry, ",");
+                MANAGE_DEVICE_COUNTRY_DEFAULT_MAP.put(key, Arrays.asList(list));
+            }
+        }
+    }
+
+    private ApplicationConfiguration(){
     }
 
     public static String getKeystoneRabbitHost()
@@ -165,4 +182,9 @@ public class ApplicationConfiguration
     {
         return ApplicationConfiguration.FMIP_REMOTE_CERTIFICATE;
     }
+
+    public static Map<String , List<String>> getManageDeviceCountryDefaults(){
+        return ApplicationConfiguration.MANAGE_DEVICE_COUNTRY_DEFAULT_MAP;
+    }
+
 }

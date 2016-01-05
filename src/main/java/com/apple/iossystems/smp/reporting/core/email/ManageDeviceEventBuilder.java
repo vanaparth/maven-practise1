@@ -164,9 +164,9 @@ public class ManageDeviceEventBuilder
         return defaultLocale;
     }
 
-    /*
-   * This method assumes that the locale is of the form language_countryCode, the return value is the country code
-   * which is set as the language in the header elements.
+   /*
+   * This method assumes that the locale is of the form language_countryCode, the return value is the language code
+   *
    */
     private String getLanguageCode( String customerLocale ) {
 

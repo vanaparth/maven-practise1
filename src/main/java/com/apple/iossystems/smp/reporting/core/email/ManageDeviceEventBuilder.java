@@ -8,10 +8,7 @@ import com.apple.iossystems.smp.reporting.core.event.SMPEventDataServiceClient;
 import org.apache.commons.lang.StringUtils;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Toch
@@ -25,8 +22,8 @@ public class ManageDeviceEventBuilder
     private static final String TIMEZONE = "customerTZ";
     private static final String DEVICE_NAME = "deviceName";
     private static final String DEVICE_IMAGE_URL = "deviceImageURL";
-    private static final String DEFAULT_MANAGE_DEVICE_COUNTRY_CODE= PropertyManager.getInstance().valueForKeyWithDefault
-                                    ("com.apple.iossystems.email.managedevice.default.language", "en_US");
+
+
 
     private String eventType;
     private String conversationId;
@@ -125,7 +122,7 @@ public class ManageDeviceEventBuilder
         String lastName = cardData.get(LAST_NAME);
         String cardHolderEmail = cardData.get(EMAIL);
         String timezone = cardData.get(TIMEZONE);
-        String locale = getLocale( cardData.get(LOCALE) );
+        String locale = getLocale(cardData.get(LOCALE));
         String deviceName = cardData.get(DEVICE_NAME);
         String deviceImageUrl = cardData.get(DEVICE_IMAGE_URL);
 
@@ -147,35 +144,35 @@ public class ManageDeviceEventBuilder
                 cardEvents(cardEvents).build();
     }
 
-    private String getLocale ( String locale ) {
-        String defaultLocale = DEFAULT_MANAGE_DEVICE_COUNTRY_CODE;
-        // Algorithm - Check in the defaults map, if there is a default define for the locale
+    public String getLocale ( String customerLocale ) {
+        String  locale="";
+        boolean matchFound = false;
+         // Algorithm - Check in the defaults map, if there is a default define for the locale
         // use it, otherwise everything else will be defaulted to a language
-        Map<String, List<String>> manageDeviceDefaultsList = ApplicationConfiguration.getManageDeviceCountryDefaults();
-        String languageCode = getLanguageCode( locale );
-        for ( Map.Entry<String, List<String>> entry: manageDeviceDefaultsList.entrySet() ) {
-            List<String> countryList = entry.getValue();
-            for (String countryCode : countryList) {
-                if (countryCode.contains( languageCode )) {
-                    defaultLocale = entry.getKey();
+        Map<String, String> manageDeviceDefaultsList = ApplicationConfiguration.getManageDeviceCountryDefaults();
+
+
+        if( StringUtils.isBlank( customerLocale ) || !customerLocale.contains("_")) {
+           locale = ApplicationConfiguration.getManageDeviceDefaultLocale();
+        } else {
+            if (manageDeviceDefaultsList.containsKey(customerLocale.toUpperCase())) {
+                locale = manageDeviceDefaultsList.get(customerLocale.toUpperCase());
+                matchFound = true;
+            }
+            if (!matchFound) {
+                // Check if the locale is present in the en_US exclusion list,
+                if (ApplicationConfiguration.getManageDeviceUSExclusionList().contains(customerLocale)) {
+                    locale = customerLocale;
+                } else {
+                    locale = ApplicationConfiguration.getManageDeviceDefaultLocale();
                 }
             }
         }
-        return defaultLocale;
+        return locale;
+
     }
 
-   /*
-   * This method assumes that the locale is of the form language_countryCode, the return value is the language code
-   *
-   */
-    private String getLanguageCode( String customerLocale ) {
 
-        if( StringUtils.isBlank(customerLocale) || !customerLocale.contains("_")) {
-            customerLocale = DEFAULT_MANAGE_DEVICE_COUNTRY_CODE;
-        }
-        String[] elements = StringUtils.split(customerLocale, "_");
-        return elements[0];
-    }
 
     private String getCardHolderName(String firstName, String lastName)
     {

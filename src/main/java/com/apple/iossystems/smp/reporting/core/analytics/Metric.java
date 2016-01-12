@@ -43,7 +43,24 @@ public enum Metric
 
     // Stockholm/Oslo Performance Monitoring
     IREPORTER_TIMING("kpi.smp.ireporter.timing"),
-    PAYMENT_IREPORTER_TIMING("kpi.smp.ireporter.timing.oslo");
+    PAYMENT_IREPORTER_TIMING("kpi.smp.ireporter.timing.oslo"),
+
+    // Loyalty/MerchantServices
+    LOYALTY_REPORTS_RECORDS_SENT("kpi.ireporter.transactions.published.loyalty"),
+    LOYALTY_REPORTS_MESSAGES_SENT("kpi.ireporter.messages.published.loyalty"),
+    LOYALTY_REPORTS_MESSAGES_FAILED("kpi.ireporter.messages.rejected.loyalty"),
+    LOYALTY_REPORTS_RECORDS_FAILED("kpi.ireporter.transactions.rejected.loyalty"),
+    LOYALTY_AUDIT_RECORDS_SENT("kpi.ireporter.transactions.published.audit.loyalty"),
+    LOYALTY_AUDIT_RECORDS_FAILED("kpi.ireporter.transactions.rejected.audit.loyalty"),
+    LOYALTY_AUDIT_CONFIGURATION_REQUESTED("kpi.ireporter.configuration.fetched.audit.loyalty"),
+    LOYALTY_AUDIT_CONFIGURATION_CHANGED("kpi.ireporter.configuration.changed.audit.loyalty"),
+    LOYALTY_IREPORTER_REPORTS_RECORDS_SENT(""),
+    LOYALTY_IREPORTER_REPORTS_RECORDS_FAILED(""),
+    LOYALTY_IREPORTER_REPORTS_RECORDS_PENDING(""),
+    LOYALTY_IREPORTER_REPORTS_RECORDS_LOST(""),
+    LOYALTY_IREPORTER_TIMING("kpi.smp.ireporter.timing.loyalty"),
+    LOYALTY_REPORTS_CONFIGURATION_REQUESTED("kpi.ireporter.configuration.fetched.loyalty"),
+    LOYALTY_REPORTS_CONFIGURATION_CHANGED("kpi.ireporter.configuration.changed.loyalty");
 
     private final String kpi;
 

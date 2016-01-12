@@ -43,6 +43,14 @@ class IReporterConfigurationFactory
         return load(IReporterConfiguration.Type.PAYMENT_AUDIT);
     }
 
+    public IReporterConfiguration loadLoyaltyReportsConfiguration() {
+        return load(IReporterConfiguration.Type.LOYALTY_REPORTS);
+    }
+
+    public IReporterConfiguration loadLoyaltyAuditConfiguration() {
+        return load(IReporterConfiguration.Type.LOYALTY_AUDIT);
+    }
+
     private IReporterConfiguration getDefaultConfiguration(IReporterConfiguration.Type configurationType)
     {
         return IReporterConfiguration.getDefaultConfiguration(configurationType);

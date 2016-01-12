@@ -78,7 +78,11 @@ public class KistaEventLogger
         String seid = record.getAttributeValue(EventAttribute.SEID.key());
         String request = GsonBuilderFactory.getInstance().toJson(IReporterEvent.processEventRecord(record).getData(), Map.class);
 
-        publishEvent(conversationId, seid, request, EventType.getEventType(record.getAttributeValue(EventAttribute.EVENT_TYPE.key())));
+        EventType eventType = EventType.getEventType(record.getAttributeValue(EventAttribute.EVENT_TYPE.key()));
+
+        if( null != eventType ) {
+            publishEvent(conversationId, seid, request, eventType);
+        }
     }
 
     public void log(ProvisionCardEvent record)

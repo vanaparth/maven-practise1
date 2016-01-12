@@ -30,6 +30,14 @@ public class IReporterConfiguration
 
     private static final String DEFAULT_PAYMENT_AUDIT_URL = BASE_URL + "/e3/rest/1/oslo_audit";
 
+    private static final String DEFAULT_LOYALTY_REPORTS_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/vas";
+
+    private static final String DEFAULT_LOYALTY_REPORTS_URL = BASE_URL + "/e3/rest/1/vas";
+
+    private static final String DEFAULT_LOYALTY_AUDIT_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/vas_audit";
+
+    private static final String DEFAULT_LOYALTY_AUDIT_URL = BASE_URL + "/e3/rest/1/vas_audit";;
+
     private static final String DEFAULT_PUBLISH_KEY = "QWERTYUIOPASDF12";
 
     private static final String DEFAULT_CONTENT_TYPE = "application/json";
@@ -182,7 +190,9 @@ public class IReporterConfiguration
         REPORTS(DEFAULT_REPORTS_CONFIGURATION_URL, DEFAULT_REPORTS_URL),
         AUDIT(DEFAULT_AUDIT_CONFIGURATION_URL, DEFAULT_AUDIT_URL),
         PAYMENT_REPORTS(DEFAULT_PAYMENT_REPORTS_CONFIGURATION_URL, DEFAULT_PAYMENT_REPORTS_URL),
-        PAYMENT_AUDIT(DEFAULT_PAYMENT_AUDIT_CONFIGURATION_URL, DEFAULT_PAYMENT_AUDIT_URL);
+        PAYMENT_AUDIT(DEFAULT_PAYMENT_AUDIT_CONFIGURATION_URL, DEFAULT_PAYMENT_AUDIT_URL),
+        LOYALTY_REPORTS(DEFAULT_LOYALTY_REPORTS_CONFIGURATION_URL, DEFAULT_LOYALTY_REPORTS_URL),
+        LOYALTY_AUDIT(DEFAULT_LOYALTY_AUDIT_CONFIGURATION_URL, DEFAULT_LOYALTY_AUDIT_URL);
 
         private final String configurationUrl;
         private final String publishUrl;

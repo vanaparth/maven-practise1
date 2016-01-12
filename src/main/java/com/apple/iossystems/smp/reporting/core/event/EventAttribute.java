@@ -39,8 +39,8 @@ public enum EventAttribute
     USE_CASE_TYPE("psr"),
     USER_AGENT("dua"),
     WATCH_MATERIAL_PART_NUMBER("wpn"),
-    // Oslo
     MERCHANT_ID("mid"),
+    // Oslo
     TRANSACTION_AMOUNT("tmt"),
     TRANSACTION_ID("tid"),
     TRANSACTION_STATUS("tst"),
@@ -48,7 +48,9 @@ public enum EventAttribute
     MANAGE_DEVICE_EVENT("manage_device_event"),
     PROVISION_CARD_EVENT("provision_card_event"),
     // Kista
-    SEID("seid");
+    SEID("seid"),
+    // MerchantServices
+    TOKEN_ID("tkn");
 
     private final String key;
 

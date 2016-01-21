@@ -49,7 +49,7 @@ public class SMPEventCache
 
     public enum Attribute
     {
-        GET_OTP_RESOLUTION_METHODS("GetOtpResolutionMethods", DEFAULT_CACHE_TIMEOUT_MILLISECONDS),
+        GET_OTP_RESOLUTION_METHODS("GetOtpResolutionMethods", 60 * 60 * 1000),
         PROVISION_EVENT("ProvisionEvent", DEFAULT_CACHE_TIMEOUT_MILLISECONDS);
 
         private final String key;

@@ -6,8 +6,10 @@ import com.apple.iossystems.smp.reporting.ireporter.configuration.LoyaltyAuditCo
 /**
  * Created by scottblakesley on 12/15/15.
  */
-public class LoyaltyAuditPublishService extends IReporterPublishService {
-    private LoyaltyAuditPublishService() {
+public class LoyaltyAuditPublishService extends IReporterPublishService
+{
+    private LoyaltyAuditPublishService()
+    {
     }
 
     public static LoyaltyAuditPublishService getInstance()

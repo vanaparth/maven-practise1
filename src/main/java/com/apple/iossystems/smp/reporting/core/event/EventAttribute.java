@@ -30,6 +30,7 @@ public enum EventAttribute
     DSID("did"),
     EVENT("evt"),
     FPAN_ID("fpn"),
+    MERCHANT_ID("mid"),
     OTP("otp"),
     PNO("pno"),
     PRODUCT("plr"),
@@ -39,7 +40,6 @@ public enum EventAttribute
     USE_CASE_TYPE("psr"),
     USER_AGENT("dua"),
     WATCH_MATERIAL_PART_NUMBER("wpn"),
-    MERCHANT_ID("mid"),
     // Oslo
     TRANSACTION_AMOUNT("tmt"),
     TRANSACTION_ID("tid"),

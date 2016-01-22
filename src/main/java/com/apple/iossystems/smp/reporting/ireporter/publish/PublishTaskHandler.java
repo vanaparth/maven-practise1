@@ -215,10 +215,6 @@ class PublishTaskHandler implements EventTaskHandler
         String value = record.removeAttribute(EventAttribute.EVENT_TYPE.key());
         EventType eventType = EventType.getEventType(value);
 
-        if( null == eventType ) {
-            return false;
-        }
-
         if (eventType == EventType.REPORTS)
         {
             return reportsQueue.offer(IReporterEvent.processEventRecord(record));
@@ -235,9 +231,7 @@ class PublishTaskHandler implements EventTaskHandler
         {
             return loyaltyReportsQueue.offer(record);
         }
-        else
-        {
-            return true;
-        }
+
+        return true;
     }
 }

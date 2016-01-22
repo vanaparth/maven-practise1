@@ -36,7 +36,7 @@ public class IReporterConfiguration
 
     private static final String DEFAULT_LOYALTY_AUDIT_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/vas_audit";
 
-    private static final String DEFAULT_LOYALTY_AUDIT_URL = BASE_URL + "/e3/rest/1/vas_audit";;
+    private static final String DEFAULT_LOYALTY_AUDIT_URL = BASE_URL + "/e3/rest/1/vas_audit";
 
     private static final String DEFAULT_PUBLISH_KEY = "QWERTYUIOPASDF12";
 

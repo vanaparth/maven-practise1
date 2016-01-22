@@ -2,7 +2,6 @@ package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.iossystems.smp.domain.Actor;
 import com.apple.iossystems.smp.persistence.entity.SecureElement;
-import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import com.apple.iossystems.smp.reporting.core.event.SMPEventDataServiceClient;
 import org.apache.commons.lang.StringUtils;
 
@@ -142,34 +141,6 @@ public class ManageDeviceEventBuilder
                 manageDeviceEventSource(ManageDeviceEventSource.fromActor(actor)).
                 fmipSource(fmipSource).
                 cardEvents(cardEvents).build();
-    }
-
-    public String getLocale ( String customerLocale ) {
-        String  locale="";
-        boolean matchFound = false;
-        // Algorithm - Check in the defaults map, if there is a default define for the locale
-        // use it, otherwise everything else will be defaulted to a language
-        Map<String, String> manageDeviceDefaultsList = ApplicationConfiguration.getManageDeviceCountryDefaults();
-
-
-        if( StringUtils.isBlank( customerLocale ) || !customerLocale.contains("_")) {
-            locale = ApplicationConfiguration.getManageDeviceDefaultLocale();
-        } else {
-            if (manageDeviceDefaultsList.containsKey(customerLocale.toUpperCase())) {
-                locale = manageDeviceDefaultsList.get(customerLocale.toUpperCase());
-                matchFound = true;
-            }
-            if (!matchFound) {
-                // Check if the locale is present in the en_US exclusion list,
-                if (ApplicationConfiguration.getManageDeviceUSExclusionList().contains(customerLocale)) {
-                    locale = customerLocale;
-                } else {
-                    locale = ApplicationConfiguration.getManageDeviceDefaultLocale();
-                }
-            }
-        }
-        return locale;
-
     }
 
     private String getCardHolderName(String firstName, String lastName)

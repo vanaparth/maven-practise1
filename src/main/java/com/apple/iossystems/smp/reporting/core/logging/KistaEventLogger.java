@@ -59,7 +59,7 @@ public class KistaEventLogger
         return smpJournal;
     }
 
-    private boolean loggingEnabled()
+    private boolean loggerIsOnline()
     {
         return (loggingEnabled && (smpJournal != null));
     }
@@ -78,11 +78,7 @@ public class KistaEventLogger
         String seid = record.getAttributeValue(EventAttribute.SEID.key());
         String request = GsonBuilderFactory.getInstance().toJson(IReporterEvent.processEventRecord(record).getData(), Map.class);
 
-        EventType eventType = EventType.getEventType(record.getAttributeValue(EventAttribute.EVENT_TYPE.key()));
-
-        if( null != eventType ) {
-            publishEvent(conversationId, seid, request, eventType);
-        }
+        publishEvent(conversationId, seid, request, EventType.getEventType(record.getAttributeValue(EventAttribute.EVENT_TYPE.key())));
     }
 
     public void log(ProvisionCardEvent record)
@@ -105,7 +101,7 @@ public class KistaEventLogger
 
     private void publishEvent(String conversationId, String seid, String request, EventType eventType)
     {
-        if (loggingEnabled())
+        if (loggerIsOnline())
         {
             try
             {

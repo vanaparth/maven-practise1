@@ -58,7 +58,8 @@ class PublishMetric
         return PAYMENT_REPORTS;
     }
 
-    public static PublishMetric getLoyaltyReportsMetrics() {
+    public static PublishMetric getLoyaltyReportsMetrics()
+    {
         return LOYALTY_REPORTS;
     }
 
@@ -164,7 +165,8 @@ class PublishMetric
                 }).build();
     }
 
-    private static PublishMetric getLoyaltyReportsPublishMetrics() {
+    private static PublishMetric getLoyaltyReportsPublishMetrics()
+    {
         return new Builder().messagesSent(Metric.LOYALTY_REPORTS_MESSAGES_SENT).
                 recordsSent(Metric.LOYALTY_REPORTS_RECORDS_SENT).
                 messagesFailed(Metric.LOYALTY_REPORTS_MESSAGES_FAILED).

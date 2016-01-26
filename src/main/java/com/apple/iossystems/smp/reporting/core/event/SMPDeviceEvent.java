@@ -16,6 +16,7 @@ public enum SMPDeviceEvent
     POST_COMMAND("106"),
     GET_OTP_RESOLUTION_METHODS("107"),
     SEND_OTP("108"),
+    ACTIVATE_CARD("109"),
     UNKNOWN("000");
 
     private final String code;
@@ -25,22 +26,32 @@ public enum SMPDeviceEvent
         this.code = code;
     }
 
-    public static SMPDeviceEvent pnoApiToCardEvent(PnoApi pnoApi)
+    public static SMPDeviceEvent fromPnoApi(PnoApi pnoApi)
     {
-        switch (pnoApi)
+        SMPDeviceEvent smpDeviceEvent = null;
+
+        if (pnoApi != null)
         {
-            case RESUME:
-                return RESUME_CARD;
+            switch (pnoApi)
+            {
+                case RESUME:
+                    smpDeviceEvent = RESUME_CARD;
+                    break;
 
-            case SUSPEND:
-                return SUSPEND_CARD;
+                case SUSPEND:
+                    smpDeviceEvent = SUSPEND_CARD;
+                    break;
 
-            case UNLINK:
-                return UNLINK_CARD;
+                case UNLINK:
+                    smpDeviceEvent = UNLINK_CARD;
+                    break;
 
-            default:
-                return UNKNOWN;
+                default:
+                    break;
+            }
         }
+
+        return (smpDeviceEvent != null) ? smpDeviceEvent : UNKNOWN;
     }
 
     private static SMPDeviceEvent fromCode(String code)

@@ -4,6 +4,7 @@ import com.apple.cds.analysis.OperationalAnalytics;
 import com.apple.cds.messaging.client.ConsumerServiceProperties;
 import com.apple.cds.messaging.client.events.AbstractConsumerServiceEventListener;
 import com.apple.cds.messaging.client.exception.ServiceException;
+import com.apple.iossystems.logging.pubsub.LogEvent;
 import com.apple.iossystems.logging.pubsub.LogEventSerializer;
 import com.apple.iossystems.logging.pubsub.LoggingSubscriberServiceBase;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledEventTaskHandler;
@@ -15,9 +16,9 @@ import java.net.InetAddress;
 /**
  * @author Toch
  */
-public abstract class SMPEventSubscriberService<LogEvent> extends LoggingSubscriberServiceBase<LogEvent>
+public abstract class SMPEventSubscriberService<T> extends LoggingSubscriberServiceBase<T>
 {
-    private BasicConsumerService<LogEvent> consumerService;
+    private BasicConsumerService<T> consumerService;
 
     protected SMPEventSubscriberService(String queueName)
     {
@@ -26,9 +27,9 @@ public abstract class SMPEventSubscriberService<LogEvent> extends LoggingSubscri
 
     private void init(String queueName)
     {
-        SMPEventDeliveryHandler<LogEvent> smpEventDeliveryHandler = new SMPEventDeliveryHandler<>();
+        SMPEventDeliveryHandler<T> smpEventDeliveryHandler = new SMPEventDeliveryHandler<>();
 
-        consumerService = new SMPEventConsumerService<>(getProperties("LoggingSubscriberService", queueName), smpEventDeliveryHandler, new LogEventSerializer<LogEvent>());
+        consumerService = new SMPEventConsumerService<>(getProperties("LoggingSubscriberService", queueName), smpEventDeliveryHandler, new LogEventSerializer<T>());
 
         smpEventDeliveryHandler.setEventHandler(this);
     }
@@ -62,7 +63,7 @@ public abstract class SMPEventSubscriberService<LogEvent> extends LoggingSubscri
     }
 
     @Override
-    public void setEventListener(AbstractConsumerServiceEventListener eventListener)
+    public <V extends AbstractConsumerServiceEventListener<T>> void setEventListener(V eventListener)
     {
         consumerService.setEventListener(eventListener);
     }
@@ -136,7 +137,7 @@ public abstract class SMPEventSubscriberService<LogEvent> extends LoggingSubscri
         }
     }
 
-    public abstract void handleEvent(com.apple.iossystems.logging.pubsub.LogEvent logEvent);
+    public abstract void handleEvent(LogEvent logEvent);
 
     private void startConsumerService()
     {

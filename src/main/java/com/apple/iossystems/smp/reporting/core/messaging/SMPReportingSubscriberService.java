@@ -1,6 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
 import com.apple.cds.messaging.client.impl.SMPEventSubscriberService;
+import com.apple.iossystems.logging.pubsub.LogEvent;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledEventTaskHandler;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
@@ -11,7 +12,7 @@ import org.apache.log4j.Logger;
 /**
  * @author Toch
  */
-class SMPReportingSubscriberService<LogEvent> extends SMPEventSubscriberService<LogEvent>
+class SMPReportingSubscriberService<T> extends SMPEventSubscriberService<T>
 {
     private static final Logger LOGGER = Logger.getLogger(SMPReportingSubscriberService.class);
 
@@ -32,7 +33,7 @@ class SMPReportingSubscriberService<LogEvent> extends SMPEventSubscriberService<
     }
 
     @Override
-    public void handleEvent(com.apple.iossystems.logging.pubsub.LogEvent logEvent)
+    public void handleEvent(LogEvent logEvent)
     {
         EventRecord record = EventRecord.getInstance();
 

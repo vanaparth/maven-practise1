@@ -12,29 +12,29 @@ import org.apache.log4j.Logger;
 /**
  * @author Toch
  */
-class SMPEventConsumerService<LogEvent> extends BasicConsumerService<LogEvent>
+class SMPEventConsumerService<T> extends BasicConsumerService<T>
 {
     private static final Logger LOGGER = Logger.getLogger(SMPEventConsumerService.class);
 
-    public SMPEventConsumerService(ConsumerServiceProperties properties, DeliveryHandler<LogEvent> deliveryHandler, LogEventSerializer<LogEvent> serializer)
+    public SMPEventConsumerService(ConsumerServiceProperties properties, DeliveryHandler<T> deliveryHandler, LogEventSerializer<T> serializer)
     {
         super(properties, deliveryHandler, serializer);
 
         setEventListener(getEventListener());
     }
 
-    private AbstractConsumerServiceEventListener getEventListener()
+    private AbstractConsumerServiceEventListener<T> getEventListener()
     {
-        return new AbstractConsumerServiceEventListener<com.apple.iossystems.logging.pubsub.LogEvent>()
+        return new AbstractConsumerServiceEventListener<T>()
         {
             @Override
-            public void onEvent(EventId.ConsumerEventId eventId, Event<com.apple.iossystems.logging.pubsub.LogEvent> event)
+            public void onEvent(EventId.ConsumerEventId eventId, Event<T> event)
             {
                 handleConsumerServiceEvent(eventId);
             }
 
             @Override
-            public void onEvent(EventId.ServiceEventId eventId, Event<com.apple.iossystems.logging.pubsub.LogEvent> event)
+            public void onEvent(EventId.ServiceEventId eventId, Event<T> event)
             {
                 handleConsumerServiceEvent(eventId);
             }

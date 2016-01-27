@@ -2,22 +2,23 @@ package com.apple.cds.messaging.client.impl;
 
 import com.apple.cds.messaging.client.Delivery;
 import com.apple.cds.messaging.client.DeliveryHandler;
+import com.apple.iossystems.logging.pubsub.LogEvent;
 
 /**
  * @author Toch
  */
-class SMPEventDeliveryHandler<LogEvent> implements DeliveryHandler<LogEvent>
+class SMPEventDeliveryHandler<T> implements DeliveryHandler<T>
 {
-    private SMPEventSubscriberService<LogEvent> smpEventSubscriberService;
+    private SMPEventSubscriberService<T> smpEventSubscriberService;
 
-    public void setEventHandler(SMPEventSubscriberService<LogEvent> smpEventSubscriberService)
+    public void setEventHandler(SMPEventSubscriberService<T> smpEventSubscriberService)
     {
         this.smpEventSubscriberService = smpEventSubscriberService;
     }
 
     @Override
-    public void handleDelivery(Delivery<LogEvent> delivery)
+    public void handleDelivery(Delivery<T> delivery)
     {
-        smpEventSubscriberService.handleEvent((com.apple.iossystems.logging.pubsub.LogEvent) delivery.getMessage());
+        smpEventSubscriberService.handleEvent((LogEvent) delivery.getMessage());
     }
 }

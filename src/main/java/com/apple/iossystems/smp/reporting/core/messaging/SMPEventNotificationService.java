@@ -13,6 +13,8 @@ public class SMPEventNotificationService
 
     private static final SMPEventNotificationService INSTANCE = new SMPEventNotificationService();
 
+    private final NotificationService OFFLINE_NOTIFICATION_SERVICE = OfflineNotificationService.getInstance();
+
     private NotificationService publisher;
 
     private SMPEventNotificationService()
@@ -47,21 +49,23 @@ public class SMPEventNotificationService
     {
         String notificationServiceClassName = PropertyManager.getInstance().valueForKey("smp.reporting.eventNotificationService.classname");
 
-        publisher = getEventNotificationService(notificationServiceClassName);
+        NotificationService notificationService = getEventNotificationService(notificationServiceClassName);
 
-        if (!isOnline(publisher))
+        if (!isOnline(notificationService))
         {
-            publisher = getEventNotificationService();
+            notificationService = getEventNotificationService();
         }
 
-        if (!isOnline(publisher))
+        if (!isOnline(notificationService))
         {
-            publisher = OfflineNotificationService.getInstance();
+            notificationService = OFFLINE_NOTIFICATION_SERVICE;
 
             LOGGER.warn("Using offline notification service");
 
             new TaskHandler(notificationServiceClassName);
         }
+
+        publisher = notificationService;
     }
 
     private NotificationService getEventNotificationService()
@@ -116,19 +120,17 @@ public class SMPEventNotificationService
         @Override
         public void handleEvent()
         {
-            if (isOnline(publisher))
+            if (publisher != null)
             {
                 shutdown();
             }
             else
             {
-                LOGGER.info("Attempting to restart notification service");
+                NotificationService notificationService = (notificationServiceClassName != null) ? getEventNotificationService(notificationServiceClassName) : getEventNotificationService();
 
-                publisher = (notificationServiceClassName != null) ? getEventNotificationService(notificationServiceClassName) : getEventNotificationService();
-
-                if (isOnline(publisher))
+                if (isOnline(notificationService))
                 {
-                    LOGGER.info("Successfully started notification service");
+                    publisher = notificationService;
 
                     shutdown();
                 }

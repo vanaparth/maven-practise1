@@ -10,8 +10,7 @@ public enum EventType
     REPORTS("reports", LogLevel.EVENT1),
     PAYMENT("payment", LogLevel.EVENT2),
     EMAIL("email", LogLevel.EVENT3),
-
-    UNKNOWN("unknown", LogLevel.EVENT);
+    LOYALTY("loyalty", LogLevel.EVENT);
 
     private final String key;
     private final LogLevel logLevel;
@@ -47,7 +46,7 @@ public enum EventType
             }
         }
 
-        return UNKNOWN;
+        return null;
     }
 
     private static EventType getEventType(EventRecord record)

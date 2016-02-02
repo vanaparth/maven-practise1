@@ -26,6 +26,8 @@ public class PublishTaskHandler implements ScheduledTaskHandler
     private IReporterPublishService auditPublishService = AuditPublishService.getInstance();
     private IReporterPublishService paymentReportsPublishService = PaymentReportsPublishService.getInstance();
     private IReporterPublishService paymentAuditPublishService = PaymentAuditPublishService.getInstance();
+    private IReporterPublishService loyaltyReportsPublishService = LoyaltyReportsPublishService.getInstance();
+    private IReporterPublishService loyaltyAuditPublishService = LoyaltyAuditPublishService.getInstance();
 
     private HubblePublisher hubblePublisher = HubblePublisher.getInstance();
 
@@ -37,9 +39,11 @@ public class PublishTaskHandler implements ScheduledTaskHandler
     private BlockingQueue<EventRecord> reportsQueue = new LinkedBlockingQueue<>(1000);
     private BlockingQueue<EventRecord> paymentReportsQueue = new LinkedBlockingQueue<>(1000);
     private BlockingQueue<EventRecord> emailReportsQueue = new LinkedBlockingQueue<>(1000);
+    private BlockingQueue<EventRecord> loyaltyReportsQueue = new LinkedBlockingQueue<>(1000);
 
     private PublishMetric reportsMetrics = PublishMetric.getReportsMetrics();
     private PublishMetric paymentReportsMetrics = PublishMetric.getPaymentReportsMetrics();
+    private PublishMetric loyaltyReportsMetrics = PublishMetric.getLoyaltyReportsMetrics();
 
     private PublishTaskHandler()
     {
@@ -127,12 +131,14 @@ public class PublishTaskHandler implements ScheduledTaskHandler
     {
         handlePublishEvent(reportsPublishService, reportsQueue, reportsMetrics);
         handlePublishEvent(paymentReportsPublishService, paymentReportsQueue, paymentReportsMetrics);
+        handlePublishEvent(loyaltyReportsPublishService, loyaltyReportsQueue, loyaltyReportsMetrics);
     }
 
     private void handleAuditEvent()
     {
         handleAuditEvent(auditPublishService, reportsMetrics);
         handleAuditEvent(paymentAuditPublishService, paymentReportsMetrics);
+        handleAuditEvent(loyaltyAuditPublishService, loyaltyReportsMetrics);
     }
 
     private void handlePublishEvent(IReporterPublishService publishService, BlockingQueue<EventRecord> queue, PublishMetric publishMetric)
@@ -219,6 +225,10 @@ public class PublishTaskHandler implements ScheduledTaskHandler
         else if (eventType == EventType.EMAIL)
         {
             return emailReportsQueue.offer(record);
+        }
+        else if (eventType == EventType.LOYALTY)
+        {
+            return loyaltyReportsQueue.offer(record);
         }
         else
         {

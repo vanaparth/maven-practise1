@@ -9,6 +9,7 @@ class PublishMetric
 {
     private static final PublishMetric REPORTS = getReportsPublishMetrics();
     private static final PublishMetric PAYMENT_REPORTS = getPaymentReportsPublishMetrics();
+    private static final PublishMetric LOYALTY_REPORTS = getLoyaltyReportsPublishMetrics();
 
     private final Metric messagesSent;
     private final Metric recordsSent;
@@ -55,6 +56,11 @@ class PublishMetric
     public static PublishMetric getPaymentReportsMetrics()
     {
         return PAYMENT_REPORTS;
+    }
+
+    public static PublishMetric getLoyaltyReportsMetrics()
+    {
+        return LOYALTY_REPORTS;
     }
 
     public Metric getMessagesSentMetric()
@@ -156,6 +162,27 @@ class PublishMetric
                         Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_FAILED,
                         Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_PENDING,
                         Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_LOST
+                }).build();
+    }
+
+    private static PublishMetric getLoyaltyReportsPublishMetrics()
+    {
+        return new Builder().messagesSent(Metric.LOYALTY_REPORTS_MESSAGES_SENT).
+                recordsSent(Metric.LOYALTY_REPORTS_RECORDS_SENT).
+                messagesFailed(Metric.LOYALTY_REPORTS_MESSAGES_FAILED).
+                recordsFailed(Metric.LOYALTY_REPORTS_RECORDS_FAILED).
+                iReporterRecordsSent(Metric.LOYALTY_IREPORTER_REPORTS_RECORDS_SENT).
+                iReporterRecordsFailed(Metric.LOYALTY_IREPORTER_REPORTS_RECORDS_FAILED).
+                iReporterRecordsPending(Metric.LOYALTY_IREPORTER_REPORTS_RECORDS_PENDING).
+                iReporterRecordsLost(Metric.LOYALTY_IREPORTER_REPORTS_RECORDS_LOST).
+                auditRecordsSent(Metric.LOYALTY_AUDIT_RECORDS_SENT).
+                auditRecordsFailed(Metric.LOYALTY_AUDIT_RECORDS_FAILED).
+                iReporterTiming(Metric.LOYALTY_IREPORTER_TIMING).
+                auditMetrics(new Metric[]{
+                        Metric.LOYALTY_IREPORTER_REPORTS_RECORDS_SENT,
+                        Metric.LOYALTY_IREPORTER_REPORTS_RECORDS_FAILED,
+                        Metric.LOYALTY_IREPORTER_REPORTS_RECORDS_PENDING,
+                        Metric.LOYALTY_IREPORTER_REPORTS_RECORDS_LOST
                 }).build();
     }
 

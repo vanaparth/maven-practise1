@@ -42,6 +42,7 @@ public class SMPReportingService
         createPubSubQueue(exchangeName, EventType.REPORTS);
         createPubSubQueue(exchangeName, EventType.PAYMENT);
         createPubSubQueue(exchangeName, EventType.EMAIL);
+        createPubSubQueue(exchangeName, EventType.LOYALTY);
     }
 
     private void createExchange(String exchangeName)
@@ -52,7 +53,7 @@ public class SMPReportingService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -66,7 +67,7 @@ public class SMPReportingService
         }
         catch (Exception e)
         {
-            LOGGER.error(e);
+            LOGGER.error(e.getMessage(), e);
         }
     }
 
@@ -84,6 +85,8 @@ public class SMPReportingService
             SMPReportingSubscriberService.getInstance(EventType.PAYMENT.getQueueName(), this).begin();
 
             SMPReportingSubscriberService.getInstance(EventType.EMAIL.getQueueName(), this).begin();
+
+            SMPReportingSubscriberService.getInstance(EventType.LOYALTY.getQueueName(), this).begin();
         }
     }
 

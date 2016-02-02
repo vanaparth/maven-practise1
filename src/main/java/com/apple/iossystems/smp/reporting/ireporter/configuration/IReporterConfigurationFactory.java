@@ -43,6 +43,7 @@ class IReporterConfigurationFactory
         return load(IReporterConfiguration.Type.PAYMENT_AUDIT);
     }
 
+<<<<<<< .working
     public IReporterConfiguration loadLoyaltyReportsConfiguration() {
         return load(IReporterConfiguration.Type.LOYALTY_REPORTS);
     }
@@ -51,6 +52,18 @@ class IReporterConfigurationFactory
         return load(IReporterConfiguration.Type.LOYALTY_AUDIT);
     }
 
+=======
+    public IReporterConfiguration loadLoyaltyReportsConfiguration()
+    {
+        return load(IReporterConfiguration.Type.LOYALTY_REPORTS);
+    }
+
+    public IReporterConfiguration loadLoyaltyAuditConfiguration()
+    {
+        return load(IReporterConfiguration.Type.LOYALTY_AUDIT);
+    }
+
+>>>>>>> .merge-right.r28467
     private IReporterConfiguration getDefaultConfiguration(IReporterConfiguration.Type configurationType)
     {
         return IReporterConfiguration.getDefaultConfiguration(configurationType);

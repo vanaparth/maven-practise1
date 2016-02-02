@@ -30,6 +30,7 @@ public class IReporterConfiguration
 
     private static final String DEFAULT_PAYMENT_AUDIT_URL = BASE_URL + "/e3/rest/1/oslo_audit";
 
+<<<<<<< .working
     private static final String DEFAULT_LOYALTY_REPORTS_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/vas";
 
     private static final String DEFAULT_LOYALTY_REPORTS_URL = BASE_URL + "/e3/rest/1/vas";
@@ -38,6 +39,16 @@ public class IReporterConfiguration
 
     private static final String DEFAULT_LOYALTY_AUDIT_URL = BASE_URL + "/e3/rest/1/vas_audit";;
 
+=======
+    private static final String DEFAULT_LOYALTY_REPORTS_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/vas";
+
+    private static final String DEFAULT_LOYALTY_REPORTS_URL = BASE_URL + "/e3/rest/1/vas";
+
+    private static final String DEFAULT_LOYALTY_AUDIT_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/vas_audit";
+
+    private static final String DEFAULT_LOYALTY_AUDIT_URL = BASE_URL + "/e3/rest/1/vas_audit";
+
+>>>>>>> .merge-right.r28467
     private static final String DEFAULT_PUBLISH_KEY = "QWERTYUIOPASDF12";
 
     private static final String DEFAULT_CONTENT_TYPE = "application/json";

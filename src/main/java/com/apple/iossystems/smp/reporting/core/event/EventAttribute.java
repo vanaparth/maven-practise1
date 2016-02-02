@@ -30,6 +30,7 @@ public enum EventAttribute
     DSID("did"),
     EVENT("evt"),
     FPAN_ID("fpn"),
+    MERCHANT_ID("mid"),
     OTP("otp"),
     PNO("pno"),
     PRODUCT("plr"),

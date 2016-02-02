@@ -153,6 +153,10 @@ public class KistaEventLogger
         {
             title = "Email";
         }
+        else if (eventType == EventType.LOYALTY)
+        {
+            title = "Loyalty";
+        }
 
         if (title != null)
         {

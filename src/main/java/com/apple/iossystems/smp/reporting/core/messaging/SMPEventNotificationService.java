@@ -13,8 +13,6 @@ public class SMPEventNotificationService
 
     private static final SMPEventNotificationService INSTANCE = new SMPEventNotificationService();
 
-    private final NotificationService OFFLINE_NOTIFICATION_SERVICE = OfflineNotificationService.getInstance();
-
     private NotificationService publisher;
 
     private SMPEventNotificationService()
@@ -58,7 +56,7 @@ public class SMPEventNotificationService
 
         if (!isOnline(notificationService))
         {
-            notificationService = OFFLINE_NOTIFICATION_SERVICE;
+            notificationService = OfflineNotificationService.getInstance();
 
             LOGGER.warn("Using offline notification service");
 
@@ -120,12 +118,14 @@ public class SMPEventNotificationService
         @Override
         public void handleEvent()
         {
-            if (publisher != null)
+            if (isOnline(publisher))
             {
                 shutdown();
             }
             else
             {
+                LOGGER.info("Attempting to restart notification service");
+
                 NotificationService notificationService = (notificationServiceClassName != null) ? getEventNotificationService(notificationServiceClassName) : getEventNotificationService();
 
                 if (isOnline(notificationService))

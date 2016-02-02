@@ -8,6 +8,15 @@ import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigur
  */
 public class SMPEventLogServiceFactoryStrategy implements LogServiceFactoryStrategy
 {
+    private SMPEventLogServiceFactoryStrategy()
+    {
+    }
+
+    public static SMPEventLogServiceFactoryStrategy getInstance()
+    {
+        return new SMPEventLogServiceFactoryStrategy();
+    }
+
     @Override
     public String getClassname()
     {

@@ -2,6 +2,7 @@ package com.apple.iossystems.smp.reporting.ireporter.configuration;
 
 import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
+import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -12,6 +13,8 @@ import java.util.Map;
  */
 public class IReporterConfiguration
 {
+    private static final Logger LOGGER = Logger.getLogger(IReporterConfiguration.class);
+
     private static final String BASE_URL = ApplicationConfiguration.getIReporterUrl();
 
     private static final String DEFAULT_REPORTS_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/stockholm";
@@ -168,7 +171,7 @@ public class IReporterConfiguration
         }
         catch (Exception e)
         {
-            Logger.getLogger(IReporterConfiguration.class).error(e);
+            LOGGER.error(e.getMessage(), e);
         }
 
         return (configuration != null) ? configuration : getDefaultConfiguration(configurationType);
@@ -310,32 +313,37 @@ public class IReporterConfiguration
 
         private void validate()
         {
-            int defaultMinBatchSize = 1;
-            int defaultMaxBatchSize = 1000;
+            int validMinBatchSize = 1;
+            int validMaxBatchSize = 1000;
+            int defaultBatchSize = 100;
+
             int minPublishFrequency = 60 * 1000;
             int maxPublishFrequency = 60 * 60 * 1000;
+            int defaultPublishFrequency = 5 * 60 * 1000;
+
             int minConfigurationReloadFrequency = 60 * 1000;
             int maxConfigurationReloadFrequency = 60 * 60 * 1000;
+            int defaultConfigurationReloadFrequency = 5 * 60 * 1000;
 
-            if ((maxBatchSize < defaultMinBatchSize) || (maxBatchSize > defaultMaxBatchSize))
+            if ((maxBatchSize < validMinBatchSize) || (maxBatchSize > validMaxBatchSize))
             {
-                maxBatchSize = defaultMaxBatchSize;
+                maxBatchSize = defaultBatchSize;
             }
 
             if ((publishFrequency < minPublishFrequency) || (publishFrequency > maxPublishFrequency))
             {
-                publishFrequency = maxPublishFrequency;
+                publishFrequency = defaultPublishFrequency;
             }
 
             if ((configurationReloadFrequency < minConfigurationReloadFrequency) || (configurationReloadFrequency > maxConfigurationReloadFrequency))
             {
-                configurationReloadFrequency = maxConfigurationReloadFrequency;
+                configurationReloadFrequency = defaultConfigurationReloadFrequency;
             }
         }
 
         private String getUrl(String protocol, String hostname, String uri)
         {
-            if (protocol == null)
+            if (StringUtils.isBlank(protocol))
             {
                 protocol = "https";
             }

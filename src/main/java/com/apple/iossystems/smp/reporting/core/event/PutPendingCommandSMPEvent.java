@@ -87,6 +87,7 @@ public class PutPendingCommandSMPEvent
             catch (Exception e)
             {
                 LOGGER.error(e.getMessage(), e);
+
                 return EventRecords.getInstance();
             }
         }

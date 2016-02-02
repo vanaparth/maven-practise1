@@ -50,7 +50,7 @@ class EventNotificationService implements NotificationService
 
         try
         {
-            logService = LogServiceFactory2.getInstance().createLogService(new SMPEventLogServiceConfigurator(), new SMPEventLogServiceFactoryStrategy());
+            logService = LogServiceFactory2.getInstance().createLogService(SMPEventLogServiceConfigurator.getInstance(), SMPEventLogServiceFactoryStrategy.getInstance());
         }
         catch (Exception e)
         {

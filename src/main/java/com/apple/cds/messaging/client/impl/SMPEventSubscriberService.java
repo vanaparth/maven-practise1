@@ -4,10 +4,12 @@ import com.apple.cds.analysis.OperationalAnalytics;
 import com.apple.cds.messaging.client.ConsumerServiceProperties;
 import com.apple.cds.messaging.client.events.AbstractConsumerServiceEventListener;
 import com.apple.cds.messaging.client.exception.ServiceException;
-import com.apple.iossystems.logging.pubsub.LogEventSerializer;
+import com.apple.iossystems.logging.pubsub.LogEvent;
 import com.apple.iossystems.logging.pubsub.LoggingSubscriberServiceBase;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledEventTaskHandler;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
+import com.apple.iossystems.smp.reporting.core.messaging.SMPEventDeliveryHandler;
+import com.apple.iossystems.smp.reporting.core.messaging.SMPLogEventSerializer;
 import org.apache.log4j.Logger;
 
 import java.net.InetAddress;
@@ -15,9 +17,9 @@ import java.net.InetAddress;
 /**
  * @author Toch
  */
-public abstract class SMPEventSubscriberService<LogEvent> extends LoggingSubscriberServiceBase<LogEvent>
+public abstract class SMPEventSubscriberService extends LoggingSubscriberServiceBase<LogEvent>
 {
-    private BasicConsumerService<LogEvent> consumerService;
+    private SMPEventConsumerService consumerService;
 
     protected SMPEventSubscriberService(String queueName)
     {
@@ -26,9 +28,9 @@ public abstract class SMPEventSubscriberService<LogEvent> extends LoggingSubscri
 
     private void init(String queueName)
     {
-        SMPEventDeliveryHandler<LogEvent> smpEventDeliveryHandler = new SMPEventDeliveryHandler<>();
+        SMPEventDeliveryHandler smpEventDeliveryHandler = new SMPEventDeliveryHandler();
 
-        consumerService = new SMPEventConsumerService<>(getProperties("LoggingSubscriberService", queueName), smpEventDeliveryHandler, new LogEventSerializer<LogEvent>());
+        consumerService = new SMPEventConsumerService(getProperties("LoggingSubscriberService", queueName), smpEventDeliveryHandler, SMPLogEventSerializer.getInstance());
 
         smpEventDeliveryHandler.setEventHandler(this);
     }
@@ -55,14 +57,14 @@ public abstract class SMPEventSubscriberService<LogEvent> extends LoggingSubscri
         }
         catch (Exception e)
         {
-            Logger.getLogger(SMPEventSubscriberService.class).error(e);
+            Logger.getLogger(SMPEventSubscriberService.class).error(e.getMessage(), e);
         }
 
         return properties;
     }
 
     @Override
-    public void setEventListener(AbstractConsumerServiceEventListener eventListener)
+    public <V extends AbstractConsumerServiceEventListener<LogEvent>> void setEventListener(V eventListener)
     {
         consumerService.setEventListener(eventListener);
     }
@@ -136,7 +138,7 @@ public abstract class SMPEventSubscriberService<LogEvent> extends LoggingSubscri
         }
     }
 
-    public abstract void handleEvent(com.apple.iossystems.logging.pubsub.LogEvent logEvent);
+    public abstract void handleEvent(LogEvent logEvent);
 
     private void startConsumerService()
     {
@@ -146,7 +148,7 @@ public abstract class SMPEventSubscriberService<LogEvent> extends LoggingSubscri
         }
         catch (Exception e)
         {
-            Logger.getLogger(SMPEventSubscriberService.class).error(e);
+            Logger.getLogger(SMPEventSubscriberService.class).error(e.getMessage(), e);
         }
     }
 

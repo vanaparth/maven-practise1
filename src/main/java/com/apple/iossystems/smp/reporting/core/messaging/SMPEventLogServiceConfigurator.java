@@ -12,7 +12,18 @@ import java.util.Map;
  */
 public class SMPEventLogServiceConfigurator implements LogServiceConfigurator
 {
+    private static final PropertyManager PROPERTY_MANAGER = PropertyManager.getInstance();
+
     private static final Map<String, String> PROPERTY_MAP = getPropertyMap();
+
+    private SMPEventLogServiceConfigurator()
+    {
+    }
+
+    public static SMPEventLogServiceConfigurator getInstance()
+    {
+        return new SMPEventLogServiceConfigurator();
+    }
 
     private static Map<String, String> getPropertyMap()
     {
@@ -40,6 +51,6 @@ public class SMPEventLogServiceConfigurator implements LogServiceConfigurator
     {
         String value = PROPERTY_MAP.get(key);
 
-        return (value != null) ? value : PropertyManager.getInstance().valueForKeyWithDefault(key, defaultValue);
+        return (value != null) ? value : PROPERTY_MANAGER.valueForKeyWithDefault(key, defaultValue);
     }
 }

@@ -1,5 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.persistence;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * @author Toch
  */
@@ -24,7 +26,7 @@ public class SMPEventCache
     {
         String cacheKey = null;
 
-        if (key != null)
+        if (StringUtils.isNotBlank(key))
         {
             cacheKey = "SMPReporting_" + attribute.key + "_" + key;
         }

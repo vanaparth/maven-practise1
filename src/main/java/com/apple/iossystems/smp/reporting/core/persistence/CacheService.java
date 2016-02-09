@@ -2,6 +2,7 @@ package com.apple.iossystems.smp.reporting.core.persistence;
 
 import com.apple.cds.cache.Cache;
 import com.apple.iossystems.persistence.cache.StockholmCacheFactory;
+import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledEventTaskHandler;
 import org.apache.log4j.Logger;
 
 /**
@@ -11,7 +12,7 @@ class CacheService
 {
     private static final Logger LOGGER = Logger.getLogger(CacheService.class);
 
-    private Cache CACHE;
+    private Cache cache;
 
     private CacheService()
     {
@@ -25,14 +26,28 @@ class CacheService
 
     private void initCache()
     {
+        cache = createCache();
+
+        if (cache == null)
+        {
+            new TaskHandler();
+        }
+    }
+
+    private Cache createCache()
+    {
+        Cache cache = null;
+
         try
         {
-            CACHE = StockholmCacheFactory.getInstance().getDefaultCache();
+            cache = StockholmCacheFactory.getInstance().getDefaultCache();
         }
         catch (Exception e)
         {
             LOGGER.error(e.getMessage(), e);
         }
+
+        return cache;
     }
 
     public void put(String key, String value, long timeoutInMilliseconds)
@@ -41,7 +56,7 @@ class CacheService
         {
             if ((key != null) && (value != null))
             {
-                CACHE.setValueForKeyWithTimeout(value, key, timeoutInMilliseconds);
+                cache.setValueForKeyWithTimeout(value, key, timeoutInMilliseconds);
             }
         }
         catch (Exception e)
@@ -58,7 +73,7 @@ class CacheService
         {
             if (key != null)
             {
-                Object cacheValue = CACHE.valueForKey(key);
+                Object cacheValue = cache.valueForKey(key);
 
                 if (cacheValue != null)
                 {
@@ -84,7 +99,7 @@ class CacheService
             {
                 value = get(key);
 
-                CACHE.removeValueForKey(key);
+                cache.removeValueForKey(key);
             }
         }
         catch (Exception e)
@@ -93,5 +108,34 @@ class CacheService
         }
 
         return value;
+    }
+
+    private class TaskHandler extends ScheduledEventTaskHandler
+    {
+        private TaskHandler()
+        {
+        }
+
+        @Override
+        public void handleEvent()
+        {
+            if (cache != null)
+            {
+                shutdown();
+            }
+            else
+            {
+                LOGGER.info("Attempting to recreate cache");
+
+                Cache c = createCache();
+
+                if (c != null)
+                {
+                    cache = c;
+
+                    shutdown();
+                }
+            }
+        }
     }
 }

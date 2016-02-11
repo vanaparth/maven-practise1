@@ -10,12 +10,14 @@ public class LoyaltyEvent {
     private long eventTime;
     private String merchantId;
     private String token;
+    private String source;
 
     public LoyaltyEvent(Builder builder) {
         this.loyaltyEventType = builder.loyaltyEventType;
         this.eventTime = builder.eventTime;
         this.merchantId = builder.merchantId;
         this.token = builder.token;
+        this.source = builder.source;
     }
 
     public static Builder getBuilder() {
@@ -41,6 +43,7 @@ public class LoyaltyEvent {
         private long eventTime;
         private String merchantId;
         private String token;
+        private String source;
 
         private Builder() { }
 
@@ -61,6 +64,11 @@ public class LoyaltyEvent {
 
         public Builder setToken(String token) {
             this.token = token;
+            return this;
+        }
+
+        public Builder setSource(String source) {
+            this.source = source;
             return this;
         }
 

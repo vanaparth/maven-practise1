@@ -4,33 +4,32 @@ package com.apple.iossystems.smp.reporting.core.event;
 /**
  * Created by scottblakesley on 12/15/15.
  */
-public class LoyaltyEvent
-{
-    private final LoyaltyEventTypeEnum loyaltyEventType;
-    private final long eventTime;
-    private final String merchantId;
-    private final String token;
+public class LoyaltyEvent {
 
-    public LoyaltyEvent(Builder builder)
-    {
-        loyaltyEventType = builder.loyaltyEventType;
-        eventTime = builder.eventTime;
-        merchantId = builder.merchantId;
-        token = builder.token;
+    private LoyaltyEventTypeEnum loyaltyEventType;
+    private long eventTime;
+    private String merchantId;
+    private String token;
+    private String source;
+
+    public LoyaltyEvent(Builder builder) {
+        this.loyaltyEventType = builder.loyaltyEventType;
+        this.eventTime = builder.eventTime;
+        this.merchantId = builder.merchantId;
+        this.token = builder.token;
+        this.source = builder.source;
     }
 
-    public static Builder getBuilder()
-    {
+    public static Builder getBuilder() {
         return new Builder();
     }
 
-    private EventRecords buildRecords()
-    {
+    private EventRecords buildRecords() {
         EventRecord record = EventRecord.getInstance();
 
         record.setAttributeValue(EventAttribute.EVENT_TYPE.key(), EventType.LOYALTY.getKey());
 
-        record.setAttributeValue(EventAttribute.EVENT.key(), loyaltyEventType.getEventType());
+        record.setAttributeValue(EventAttribute.EVENT.key(), loyaltyEventType.getEventType() );
         record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(eventTime));
         record.setAttributeValue(EventAttribute.MERCHANT_ID.key(), merchantId);
         record.setAttributeValue(EventAttribute.TOKEN_ID.key(), token);
@@ -41,43 +40,41 @@ public class LoyaltyEvent
         return records;
     }
 
-    public static class Builder
-    {
+    public static class Builder {
         private LoyaltyEventTypeEnum loyaltyEventType;
         private long eventTime;
         private String merchantId;
         private String token;
+        private String source;
 
-        private Builder()
-        {
-        }
+        private Builder() { }
 
-        public Builder setLoyaltyEventType(LoyaltyEventTypeEnum value)
-        {
-            loyaltyEventType = value;
+        public Builder setLoyaltyEventType(LoyaltyEventTypeEnum loyaltyEventType) {
+            this.loyaltyEventType = loyaltyEventType;
             return this;
         }
 
-        public Builder setEventTime(long value)
-        {
-            eventTime = value;
+        public Builder setEventTime(long eventTime) {
+            this.eventTime = eventTime;
             return this;
         }
 
-        public Builder setMerchantId(String value)
-        {
-            merchantId = value;
+        public Builder setMerchantId(String merchantId) {
+            this.merchantId = merchantId;
             return this;
         }
 
-        public Builder setToken(String value)
-        {
-            token = value;
+        public Builder setToken(String token) {
+            this.token = token;
             return this;
         }
 
-        public EventRecords build()
-        {
+        public Builder setSource(String source) {
+            this.source = source;
+            return this;
+        }
+
+        public EventRecords build() {
             return new LoyaltyEvent(this).buildRecords();
         }
     }

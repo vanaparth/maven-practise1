@@ -50,7 +50,8 @@ public enum EventAttribute
     // Kista
     SEID("seid"),
     // MerchantServices
-    TOKEN_ID("tkn");
+    TOKEN_ID("tkn"),
+    SOURCE("src");
 
     private final String key;
 

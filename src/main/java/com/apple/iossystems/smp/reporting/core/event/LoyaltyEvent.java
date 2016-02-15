@@ -32,6 +32,7 @@ public class LoyaltyEvent {
         record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(eventTime));
         record.setAttributeValue(EventAttribute.MERCHANT_ID.key(), merchantId);
         record.setAttributeValue(EventAttribute.TOKEN_ID.key(), token);
+        record.setAttributeValue(EventAttribute.SOURCE.key(), source);
 
         EventRecords records = EventRecords.getInstance();
         records.add(record);

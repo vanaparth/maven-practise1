@@ -319,7 +319,7 @@ public class IReporterConfiguration
 
             int minPublishFrequency = 60 * 1000;
             int maxPublishFrequency = 60 * 60 * 1000;
-            int defaultPublishFrequency = 5 * 60 * 1000;
+            int defaultPublishFrequency = 60 * 1000;
 
             int minConfigurationReloadFrequency = 60 * 1000;
             int maxConfigurationReloadFrequency = 60 * 60 * 1000;

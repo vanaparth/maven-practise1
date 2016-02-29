@@ -203,6 +203,6 @@ class PublishTaskHandler implements EventTaskHandler
     {
         reportsQueue.offer(record);
 
-        hubblePublisher.incrementCountForEvent(publishMetric.getIReporterRecordsPending(), reportsQueue.size());
+        hubblePublisher.logCountForEvent(publishMetric.getIReporterRecordsPending(), reportsQueue.size());
     }
 }

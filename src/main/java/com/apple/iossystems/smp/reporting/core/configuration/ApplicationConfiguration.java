@@ -7,43 +7,41 @@ import com.apple.cds.keystone.config.PropertyManager;
  */
 public class ApplicationConfiguration
 {
-    private static final PropertyManager PROPERTY_MANAGER = PropertyManager.getInstance();
+    static final String KEYSTONE_RABBIT_HOST = PropertyManager.getInstance().valueForKeyWithDefault("keystone.rabbit.host", "rabbit-np-amqp.corp.apple.com");
+    static final String KEYSTONE_RABBIT_PORT = PropertyManager.getInstance().valueForKeyWithDefault("keystone.rabbit.port", "5672");
+    static final String KEYSTONE_RABBIT_USER = PropertyManager.getInstance().valueForKeyWithDefault("keystone.rabbit.user", "SMPQA_User");
+    static final String KEYSTONE_RABBIT_PASSWORD = PropertyManager.getInstance().valueForKeyWithDefault("keystone.rabbit.pass", "SMPQA_User123");
+    static final String KEYSTONE_RABBIT_VIRTUAL_HOST = PropertyManager.getInstance().valueForKeyWithDefault("keystone.rabbit.virtualhost", "SMPQA1");
 
-    static final String KEYSTONE_RABBIT_HOST = PROPERTY_MANAGER.valueForKeyWithDefault("keystone.rabbit.host", "rabbit-np-amqp.corp.apple.com");
-    static final String KEYSTONE_RABBIT_PORT = PROPERTY_MANAGER.valueForKeyWithDefault("keystone.rabbit.port", "5672");
-    static final String KEYSTONE_RABBIT_USER = PROPERTY_MANAGER.valueForKeyWithDefault("keystone.rabbit.user", "SMPQA_User");
-    static final String KEYSTONE_RABBIT_PASSWORD = PROPERTY_MANAGER.valueForKeyWithDefault("keystone.rabbit.pass", "SMPQA_User123");
-    static final String KEYSTONE_RABBIT_VIRTUAL_HOST = PROPERTY_MANAGER.valueForKeyWithDefault("keystone.rabbit.virtualhost", "SMPQA1");
+    static final int RABBIT_CONSUMER_THREADS_COUNT = PropertyManager.getInstance().getIntValueForKeyWithDefault("rabbit.consumerThreads", 10);
+    static final int RABBIT_CONSUMER_THREADS_PREFETCH_COUNT = PropertyManager.getInstance().getIntValueForKeyWithDefault("rabbit.consumerThreads.prefetchCount", 1);
 
-    static final int RABBIT_CONSUMER_THREADS_COUNT = PROPERTY_MANAGER.getIntValueForKeyWithDefault("rabbit.consumerThreads", 10);
-    static final int RABBIT_CONSUMER_THREADS_PREFETCH_COUNT = PROPERTY_MANAGER.getIntValueForKeyWithDefault("rabbit.consumerThreads.prefetchCount", 1);
+    static final String SMP_EVENTS_EXCHANGE = PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.events.exchange", "iossystems.stockholm.events");
 
-    static final String SMP_EVENTS_EXCHANGE = PROPERTY_MANAGER.valueForKeyWithDefault("smp.reporting.events.exchange", "iossystems.stockholm.events");
+    static final String LOG_SERVICE_OWNER = PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.logging.owner", "iossystems");
+    static final String LOG_SERVICE_PATH = PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.logging.path", "stockholm");
+    static final String LOG_SERVICE_CATEGORY = PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.logging.category", "events");
+    static final String LOG_SERVICE_STORE = PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.logging.store", "reporting");
+    static final String LOG_SERVICE_CLASS = PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.logging.classname", "com.apple.iossystems.logging.impl.pubsub.BufferedPubSub");
 
-    static final String LOG_SERVICE_OWNER = PROPERTY_MANAGER.valueForKeyWithDefault("smp.reporting.logging.owner", "iossystems");
-    static final String LOG_SERVICE_PATH = PROPERTY_MANAGER.valueForKeyWithDefault("smp.reporting.logging.path", "stockholm");
-    static final String LOG_SERVICE_CATEGORY = PROPERTY_MANAGER.valueForKeyWithDefault("smp.reporting.logging.category", "events");
-    static final String LOG_SERVICE_STORE = PROPERTY_MANAGER.valueForKeyWithDefault("smp.reporting.logging.store", "reporting");
-    static final String LOG_SERVICE_CLASS = PROPERTY_MANAGER.valueForKeyWithDefault("smp.reporting.logging.classname", "com.apple.iossystems.logging.impl.pubsub.BufferedPubSub");
+    static final int LOG_SERVICE_BDB_BATCH_SIZE = PropertyManager.getInstance().getIntValueForKeyWithDefault("smp.reporting.logging.bdb.batch.size", 50);
+    static final int LOG_SERVICE_BDB_INTERVAL = PropertyManager.getInstance().getIntValueForKeyWithDefault("smp.reporting.logging.bdb.interval.ms", 500);
 
-    static final int LOG_SERVICE_BDB_BATCH_SIZE = PROPERTY_MANAGER.getIntValueForKeyWithDefault("smp.reporting.logging.bdb.batch.size", 50);
-    static final int LOG_SERVICE_BDB_INTERVAL = PROPERTY_MANAGER.getIntValueForKeyWithDefault("smp.reporting.logging.bdb.interval.ms", 500);
+    static final String IREPORTER_URL = PropertyManager.getInstance().valueForKeyWithDefault("icloud.ireporter.url", "https://icloud4-e3.icloud.com");
+    static final String HASH_PASSWORD = PropertyManager.getInstance().valueForKeyWithDefault("icloud.ireporter.pass", "pLijzg2e2QNspdhOyNWdOSScPszmZBryJ0L8BcQ116BhkT6p0iHyNcwnlFIwhLun");
 
-    static final String IREPORTER_URL = PROPERTY_MANAGER.valueForKeyWithDefault("icloud.ireporter.url", "https://icloud4-e3.icloud.com");
-    static final String HASH_PASSWORD = PROPERTY_MANAGER.valueForKeyWithDefault("icloud.ireporter.pass", "pLijzg2e2QNspdhOyNWdOSScPszmZBryJ0L8BcQ116BhkT6p0iHyNcwnlFIwhLun");
+    static final boolean RABBIT_CONSUMERS_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.rabbit.consumers", true);
 
-    static final boolean RABBIT_CONSUMERS_ENABLED = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault("smp.reporting.rabbit.consumers", true);
+    static final boolean PUBLISH_EVENTS_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.publish.events", true);
+    static final boolean EMAIL_EVENTS_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.events", true);
 
-    static final boolean PUBLISH_EVENTS_ENABLED = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault("smp.reporting.publish.events", true);
-    static final boolean EMAIL_EVENTS_ENABLED = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault("smp.reporting.email.events", true);
+    static final boolean PROVISION_EMAIL_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.provision", true);
+    static final boolean SUSPEND_EMAIL_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.suspend", true);
+    static final boolean UNLINK_EMAIL_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.unlink", true);
+    static final boolean DEFAULT_EMAIL_LOCALE_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.default.locale", true);
 
-    static final boolean PROVISION_EMAIL_ENABLED = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault("smp.reporting.email.provision", true);
-    static final boolean SUSPEND_EMAIL_ENABLED = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault("smp.reporting.email.suspend", true);
-    static final boolean UNLINK_EMAIL_ENABLED = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault("smp.reporting.email.unlink", true);
-    static final boolean DEFAULT_EMAIL_LOCALE_ENABLED = PROPERTY_MANAGER.getBooleanValueForKeyWithDefault("smp.reporting.email.default.locale", true);
-
-    static final String FMIP_CERTIFICATE = PROPERTY_MANAGER.valueForKeyWithDefault("com.apple.iossystems.internal.fmip.app.cert", "0");
-    static final String FMIP_REMOTE_CERTIFICATE = PROPERTY_MANAGER.valueForKeyWithDefault("com.apple.iossystems.internal.fmip.setup.cert", "0");
+    static final String FMIP_CERTIFICATE = PropertyManager.getInstance().valueForKeyWithDefault("com.apple.iossystems.internal.fmip.app.cert", "0");
+    static final String FMIP_REMOTE_CERTIFICATE = PropertyManager.getInstance().valueForKeyWithDefault("com.apple.iossystems.internal.fmip.setup.cert", "0");
 
     private ApplicationConfiguration()
     {
@@ -51,92 +49,92 @@ public class ApplicationConfiguration
 
     public static String getKeystoneRabbitHost()
     {
-        return ApplicationConfiguration.KEYSTONE_RABBIT_HOST;
+        return KEYSTONE_RABBIT_HOST;
     }
 
     public static String getKeystoneRabbitPort()
     {
-        return ApplicationConfiguration.KEYSTONE_RABBIT_PORT;
+        return KEYSTONE_RABBIT_PORT;
     }
 
     public static String getKeystoneRabbitUser()
     {
-        return ApplicationConfiguration.KEYSTONE_RABBIT_USER;
+        return KEYSTONE_RABBIT_USER;
     }
 
     public static String getKeystoneRabbitPassword()
     {
-        return ApplicationConfiguration.KEYSTONE_RABBIT_PASSWORD;
+        return KEYSTONE_RABBIT_PASSWORD;
     }
 
     public static String getKeystoneRabbitVirtualHost()
     {
-        return ApplicationConfiguration.KEYSTONE_RABBIT_VIRTUAL_HOST;
+        return KEYSTONE_RABBIT_VIRTUAL_HOST;
     }
 
     public static int getRabbitConsumerThreadsCount()
     {
-        return ApplicationConfiguration.RABBIT_CONSUMER_THREADS_COUNT;
+        return RABBIT_CONSUMER_THREADS_COUNT;
     }
 
     public static int getRabbitConsumerThreadsPrefetchCount()
     {
-        return ApplicationConfiguration.RABBIT_CONSUMER_THREADS_PREFETCH_COUNT;
+        return RABBIT_CONSUMER_THREADS_PREFETCH_COUNT;
     }
 
     public static String getSMPEventsExchangeName()
     {
-        return ApplicationConfiguration.SMP_EVENTS_EXCHANGE;
+        return SMP_EVENTS_EXCHANGE;
     }
 
     public static String getLogServiceOwner()
     {
-        return ApplicationConfiguration.LOG_SERVICE_OWNER;
+        return LOG_SERVICE_OWNER;
     }
 
     public static String getLogServicePath()
     {
-        return ApplicationConfiguration.LOG_SERVICE_PATH;
+        return LOG_SERVICE_PATH;
     }
 
     public static String getLogServiceCategory()
     {
-        return ApplicationConfiguration.LOG_SERVICE_CATEGORY;
+        return LOG_SERVICE_CATEGORY;
     }
 
     public static String getLogServiceStore()
     {
-        return ApplicationConfiguration.LOG_SERVICE_STORE;
+        return LOG_SERVICE_STORE;
     }
 
     public static String getLogServiceClass()
     {
-        return ApplicationConfiguration.LOG_SERVICE_CLASS;
+        return LOG_SERVICE_CLASS;
     }
 
     public static int getLogServiceBdbBatchSize()
     {
-        return ApplicationConfiguration.LOG_SERVICE_BDB_BATCH_SIZE;
+        return LOG_SERVICE_BDB_BATCH_SIZE;
     }
 
     public static int getLogServiceBdbInterval()
     {
-        return ApplicationConfiguration.LOG_SERVICE_BDB_INTERVAL;
+        return LOG_SERVICE_BDB_INTERVAL;
     }
 
     public static String getIReporterUrl()
     {
-        return ApplicationConfiguration.IREPORTER_URL;
+        return IREPORTER_URL;
     }
 
     public static String getHashPassword()
     {
-        return ApplicationConfiguration.HASH_PASSWORD;
+        return HASH_PASSWORD;
     }
 
-    public static boolean isRabbitConsumersEnabled()
+    public static boolean rabbitConsumersEnabled()
     {
-        return ApplicationConfiguration.RABBIT_CONSUMERS_ENABLED;
+        return RABBIT_CONSUMERS_ENABLED;
     }
 
     public static boolean publishEventsEnabled()
@@ -149,33 +147,33 @@ public class ApplicationConfiguration
         return EMAIL_EVENTS_ENABLED;
     }
 
-    public static boolean isProvisionEmailEnabled()
+    public static boolean provisionEmailEnabled()
     {
-        return ApplicationConfiguration.PROVISION_EMAIL_ENABLED;
+        return PROVISION_EMAIL_ENABLED;
     }
 
-    public static boolean isSuspendEmailEnabled()
+    public static boolean suspendEmailEnabled()
     {
-        return ApplicationConfiguration.SUSPEND_EMAIL_ENABLED;
+        return SUSPEND_EMAIL_ENABLED;
     }
 
-    public static boolean isUnlinkEmailEnabled()
+    public static boolean unlinkEmailEnabled()
     {
-        return ApplicationConfiguration.UNLINK_EMAIL_ENABLED;
+        return UNLINK_EMAIL_ENABLED;
     }
 
-    public static boolean isDefaultEmailLocaleEnabled()
+    public static boolean defaultEmailLocaleEnabled()
     {
-        return ApplicationConfiguration.DEFAULT_EMAIL_LOCALE_ENABLED;
+        return DEFAULT_EMAIL_LOCALE_ENABLED;
     }
 
     public static String getFmipCertificate()
     {
-        return ApplicationConfiguration.FMIP_CERTIFICATE;
+        return FMIP_CERTIFICATE;
     }
 
     public static String getFmipRemoteCertificate()
     {
-        return ApplicationConfiguration.FMIP_REMOTE_CERTIFICATE;
+        return FMIP_REMOTE_CERTIFICATE;
     }
 }

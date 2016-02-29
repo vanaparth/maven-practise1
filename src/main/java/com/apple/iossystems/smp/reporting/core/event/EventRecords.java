@@ -50,4 +50,16 @@ public class EventRecords
     {
         return list.size();
     }
+
+    public EventRecords getCopy()
+    {
+        EventRecords copy = new EventRecords();
+
+        for (EventRecord record : list)
+        {
+            copy.add(record.getCopy());
+        }
+
+        return copy;
+    }
 }

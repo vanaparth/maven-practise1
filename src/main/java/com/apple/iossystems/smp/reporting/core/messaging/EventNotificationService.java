@@ -2,6 +2,7 @@ package com.apple.iossystems.smp.reporting.core.messaging;
 
 import com.apple.iossystems.logging.LogService;
 import com.apple.iossystems.logging.LogServiceFactory2;
+import com.apple.iossystems.smp.reporting.core.analytics.Metric;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import com.apple.iossystems.smp.reporting.core.email.EmailEventService;
 import com.apple.iossystems.smp.reporting.core.email.EmailServiceFactory;
@@ -12,8 +13,11 @@ import com.apple.iossystems.smp.reporting.core.event.EventType;
 import com.apple.iossystems.smp.reporting.core.eventhandler.EventListener;
 import com.apple.iossystems.smp.reporting.core.eventhandler.EventListenerFactory;
 import com.apple.iossystems.smp.reporting.core.util.MapToPair;
+import com.apple.iossystems.smp.reporting.ireporter.publish.ResultMetric;
 import org.apache.log4j.Logger;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.Callable;
 
 /**
@@ -23,15 +27,14 @@ class EventNotificationService implements NotificationService
 {
     private static final Logger LOGGER = Logger.getLogger(EventNotificationService.class);
 
-    private EventNotificationServiceThreadPool threadPool = EventNotificationServiceThreadPool.getInstance();
+    private final EventNotificationServiceThreadPool threadPool = EventNotificationServiceThreadPool.getInstance();
 
-    private EmailEventService emailService = EmailServiceFactory.getInstance().getEmailService();
+    private final EmailEventService emailService = EmailServiceFactory.getInstance().getEmailService();
+    private final EventListener eventListener = EventListenerFactory.getInstance().getSMPPublishEventListener();
+    private final EventListener kistaEventListener = EventListenerFactory.getInstance().getSMPKistaEventListener();
+    private final EventHubblePublisher eventHubblePublisher = EventHubblePublisher.getInstance(getMetricMap());
 
-    private EventListener eventListener = EventListenerFactory.getInstance().getSMPPublishEventListener();
-
-    private EventListener kistaEventListener = EventListenerFactory.getInstance().getSMPKistaEventListener();
-
-    private LogService logService = getLogService();
+    private final LogService logService = getLogService();
 
     private final boolean publishEventsEnabled = ApplicationConfiguration.publishEventsEnabled();
 
@@ -42,6 +45,17 @@ class EventNotificationService implements NotificationService
     public static EventNotificationService getInstance()
     {
         return new EventNotificationService();
+    }
+
+    private Map<EventType, ResultMetric> getMetricMap()
+    {
+        Map<EventType, ResultMetric> map = new HashMap<>();
+
+        map.put(EventType.REPORTS, new ResultMetric(Metric.PUBLISH_REPORTS_EVENT_QUEUE, Metric.PUBLISH_REPORTS_EVENT_QUEUE_FAILED));
+        map.put(EventType.PAYMENT, new ResultMetric(Metric.PUBLISH_PAYMENT_EVENT_QUEUE, Metric.PUBLISH_PAYMENT_EVENT_QUEUE_FAILED));
+        map.put(EventType.LOYALTY, new ResultMetric(Metric.PUBLISH_LOYALTY_EVENT_QUEUE, Metric.PUBLISH_LOYALTY_EVENT_QUEUE_FAILED));
+
+        return map;
     }
 
     private LogService getLogService()
@@ -65,10 +79,14 @@ class EventNotificationService implements NotificationService
         try
         {
             logService.logEvent("event", EventType.getLogLevel(record), MapToPair.toPairs(record.getData()));
+
+            eventHubblePublisher.incrementCountForSuccessEvent(EventType.getEventType(record));
         }
         catch (Exception e)
         {
             LOGGER.error(e.getMessage(), e);
+
+            eventHubblePublisher.incrementCountForFailedEvent(EventType.getEventType(record));
         }
     }
 
@@ -116,6 +134,13 @@ class EventNotificationService implements NotificationService
         }
     }
 
+    private void notifyListeners(EventRecords records)
+    {
+        notifyEventListener(records);
+
+        notifyKista(records);
+    }
+
     private void doPublishEventRecords(EventRecords records)
     {
         try
@@ -125,9 +150,7 @@ class EventNotificationService implements NotificationService
                 publishEventRecord(record);
             }
 
-            notifyEventListener(records);
-
-            notifyKista(records);
+            notifyListeners(records);
         }
         catch (Exception e)
         {

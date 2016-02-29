@@ -2,6 +2,9 @@ package com.apple.iossystems.smp.reporting.core.http;
 
 import com.apple.iossystems.smp.StockholmHTTPResponse;
 import com.apple.iossystems.smp.interactor.impl.HTTPClient;
+import com.apple.iossystems.smp.reporting.core.analytics.Metric;
+import com.apple.iossystems.smp.reporting.core.hubble.HubblePublisher;
+import com.apple.iossystems.smp.reporting.ireporter.http.IReporterHttpResponse;
 import org.apache.log4j.Logger;
 
 /**
@@ -10,6 +13,8 @@ import org.apache.log4j.Logger;
 public class SMPHttpClient
 {
     private static final Logger LOGGER = Logger.getLogger(SMPHttpClient.class);
+
+    private final HubblePublisher hubblePublisher = HubblePublisher.getInstance();
 
     private SMPHttpClient()
     {
@@ -25,41 +30,45 @@ public class SMPHttpClient
         return new HTTPClient().postData(httpRequest.getUrl(), httpRequest.getQueryString(), httpRequest.getData(), httpRequest.getContentType(), httpRequest.getHttpMethod(), httpRequest.getHeaders());
     }
 
-    private StockholmHTTPResponse requestWithRetries(HttpRequest httpRequest, int maxRetryCount)
+    public StockholmHTTPResponse request(HttpRequest httpRequest)
     {
         StockholmHTTPResponse response = null;
-        int retryCount = 0;
-        int sleepTimeMillis = 3 * 1000;
 
-        while (retryCount <= maxRetryCount)
+        try
         {
-            try
-            {
-                response = sendRequest(httpRequest);
-
-                if ((response != null) && response.isSuccessful())
-                {
-                    return response;
-                }
-
-                if (retryCount < maxRetryCount)
-                {
-                    Thread.sleep(retryCount * sleepTimeMillis);
-                }
-            }
-            catch (Exception e)
-            {
-                LOGGER.error(e.getMessage(), e);
-            }
-
-            retryCount++;
+            response = sendRequest(httpRequest);
         }
+        catch (Exception e)
+        {
+            LOGGER.error(e.getMessage(), e);
+        }
+
+        notifyListeners(httpRequest, response);
 
         return response;
     }
 
-    public StockholmHTTPResponse request(HttpRequest httpRequest) throws Exception
+    private void notifyListeners(HttpRequest httpRequest, StockholmHTTPResponse response)
     {
-        return requestWithRetries(httpRequest, 0);
+        int responseCode;
+        boolean success;
+
+        if (response != null)
+        {
+            responseCode = response.getStatus();
+            success = response.isSuccessful();
+        }
+        else
+        {
+            responseCode = IReporterHttpResponse.NO_RESPONSE.getCode();
+            success = false;
+        }
+
+        if (!success)
+        {
+            LOGGER.error("Http request failed url=" + httpRequest.getUrl() + " responseCode=" + responseCode);
+
+            hubblePublisher.incrementCountForEvent(Metric.HTTP_REQUEST_FAILED);
+        }
     }
 }

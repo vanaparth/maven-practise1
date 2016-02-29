@@ -1,9 +1,8 @@
 package com.apple.iossystems.smp.reporting.ireporter.http;
 
 import com.apple.iossystems.smp.StockholmHTTPResponse;
-import com.apple.iossystems.smp.reporting.core.http.HttpResponseAction;
 import com.apple.iossystems.smp.reporting.core.http.HttpResponseHandler;
-import org.apache.log4j.Logger;
+import com.apple.iossystems.smp.reporting.core.http.SMPHttpResponse;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -13,9 +12,7 @@ import java.util.Map;
  */
 public class IReporterResponseHandler implements HttpResponseHandler
 {
-    private static final Logger LOGGER = Logger.getLogger(IReporterResponseHandler.class);
-
-    private static final Map<Integer, IReporterResponseAction> ACTION_MAP = getActionMap();
+    private static final Map<Integer, IReporterHttpResponse> ACTION_MAP = getActionMap();
 
     private IReporterResponseHandler()
     {
@@ -26,43 +23,45 @@ public class IReporterResponseHandler implements HttpResponseHandler
         return new IReporterResponseHandler();
     }
 
-    private static Map<Integer, IReporterResponseAction> getActionMap()
+    private static Map<Integer, IReporterHttpResponse> getActionMap()
     {
-        Map<Integer, IReporterResponseAction> map = new HashMap<>();
+        Map<Integer, IReporterHttpResponse> map = new HashMap<>();
 
-        map.put(200, IReporterResponseAction.SUCCESS);
-        map.put(400, IReporterResponseAction.INVALID_CONTENT_TYPE);
-        map.put(403, IReporterResponseAction.INVALID_PLIST);
-        map.put(404, IReporterResponseAction.INVALID_REQUEST_URL);
-        map.put(405, IReporterResponseAction.INVALID_REQUEST_METHOD);
-        map.put(415, IReporterResponseAction.INVALID_CONTENT_ENCODING);
+        addToMap(map, IReporterHttpResponse.SUCCESS);
+        addToMap(map, IReporterHttpResponse.INVALID_CONTENT_TYPE);
+        addToMap(map, IReporterHttpResponse.INVALID_PLIST);
+        addToMap(map, IReporterHttpResponse.INVALID_REQUEST_URL);
+        addToMap(map, IReporterHttpResponse.INVALID_REQUEST_METHOD);
+        addToMap(map, IReporterHttpResponse.INVALID_CONTENT_ENCODING);
+        addToMap(map, IReporterHttpResponse.NO_RESPONSE);
+        addToMap(map, IReporterHttpResponse.UNKNOWN);
 
         return map;
     }
 
-    @Override
-    public HttpResponseAction getAction(StockholmHTTPResponse response)
+    private static void addToMap(Map<Integer, IReporterHttpResponse> map, IReporterHttpResponse response)
     {
-        int responseCode = (response != null) ? response.getStatus() : 200;
+        map.put(response.getCode(), response);
+    }
 
-        IReporterResponseAction iReporterResponseAction = ACTION_MAP.get(responseCode);
+    @Override
+    public SMPHttpResponse getSMPHttpResponse(StockholmHTTPResponse response)
+    {
+        int responseCode = (response != null) ? response.getStatus() : IReporterHttpResponse.NO_RESPONSE.getCode();
+
+        IReporterHttpResponse iReporterHttpResponse = ACTION_MAP.get(responseCode);
         String message;
 
-        if (iReporterResponseAction != null)
+        if (iReporterHttpResponse != null)
         {
-            message = iReporterResponseAction.getMessage();
+            message = iReporterHttpResponse.getMessage();
         }
         else
         {
-            iReporterResponseAction = IReporterResponseAction.UNKNOWN;
-            message = iReporterResponseAction.getMessage() + " " + responseCode;
+            iReporterHttpResponse = IReporterHttpResponse.UNKNOWN;
+            message = iReporterHttpResponse.getMessage() + " " + responseCode;
         }
 
-        if (iReporterResponseAction != IReporterResponseAction.SUCCESS)
-        {
-            LOGGER.error(message);
-        }
-
-        return iReporterResponseAction.getAction();
+        return new SMPHttpResponse(iReporterHttpResponse.getAction(), message);
     }
 }

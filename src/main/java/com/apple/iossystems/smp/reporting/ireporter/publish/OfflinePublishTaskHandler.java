@@ -22,8 +22,7 @@ class OfflinePublishTaskHandler implements EventTaskHandler
     }
 
     @Override
-    public final boolean add(EventRecord record)
+    public void processEventRecord(EventRecord record)
     {
-        return true;
     }
 }

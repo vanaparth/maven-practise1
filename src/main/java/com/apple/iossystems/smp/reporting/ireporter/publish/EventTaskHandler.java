@@ -8,5 +8,5 @@ import com.apple.iossystems.smp.reporting.core.event.EventRecord;
  */
 public interface EventTaskHandler extends ScheduledTaskHandler
 {
-    boolean add(EventRecord record);
+    void processEventRecord(EventRecord record);
 }

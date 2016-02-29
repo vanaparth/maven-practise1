@@ -314,7 +314,7 @@ public class IReporterConfiguration
         private void validate()
         {
             int validMinBatchSize = 1;
-            int validMaxBatchSize = 1000;
+            int validMaxBatchSize = 100;
             int defaultBatchSize = 100;
 
             int minPublishFrequency = 60 * 1000;

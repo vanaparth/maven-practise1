@@ -12,7 +12,7 @@ class IReporterConfigurationFactory
 {
     private static final Logger LOGGER = Logger.getLogger(IReporterConfigurationFactory.class);
 
-    private SMPHttpClient smpHttpClient = SMPHttpClient.getInstance();
+    private final SMPHttpClient smpHttpClient = SMPHttpClient.getInstance();
 
     private IReporterConfigurationFactory()
     {

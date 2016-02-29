@@ -3,21 +3,26 @@ package com.apple.iossystems.smp.reporting.ireporter.configuration;
 /**
  * Created by scottblakesley on 12/15/15.
  */
-public class LoyaltyAuditConfigurationService extends IReporterConfigurationService {
-    private LoyaltyAuditConfigurationService() {
+public class LoyaltyAuditConfigurationService extends IReporterConfigurationService
+{
+    private LoyaltyAuditConfigurationService()
+    {
     }
 
-    public static LoyaltyAuditConfigurationService getInstance() {
+    public static LoyaltyAuditConfigurationService getInstance()
+    {
         return new LoyaltyAuditConfigurationService();
     }
 
     @Override
-    IReporterConfiguration loadConfiguration() {
+    IReporterConfiguration loadConfiguration()
+    {
         return getIReporterConfigurationFactory().loadLoyaltyAuditConfiguration();
     }
 
     @Override
-    ConfigurationMetric getConfigurationMetric() {
+    ConfigurationMetric getConfigurationMetric()
+    {
         return ConfigurationMetric.LOYALTY_AUDIT;
     }
 }

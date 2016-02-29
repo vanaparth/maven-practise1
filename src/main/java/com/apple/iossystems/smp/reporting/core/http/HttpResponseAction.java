@@ -5,5 +5,5 @@ package com.apple.iossystems.smp.reporting.core.http;
  */
 public enum HttpResponseAction
 {
-    NO_ACTION_SUCCESS, NO_ACTION_ERROR, RETRY, RELOAD_CONFIGURATION
+    NO_ACTION_SUCCESS, NO_ACTION_ERROR, RELOAD_CONFIGURATION
 }

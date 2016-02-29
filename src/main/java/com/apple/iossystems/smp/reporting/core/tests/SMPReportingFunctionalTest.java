@@ -7,9 +7,10 @@ import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 import com.apple.iossystems.smp.reporting.core.http.HttpRequest;
 import com.apple.iossystems.smp.reporting.core.http.SMPHttpClient;
-import com.apple.iossystems.smp.reporting.core.messaging.SMPReportingService;
 import com.apple.iossystems.smp.reporting.ireporter.configuration.IReporterConfiguration;
+import com.apple.iossystems.smp.reporting.ireporter.publish.EventTaskHandler;
 import com.apple.iossystems.smp.reporting.ireporter.publish.IReporterJsonBuilder;
+import com.apple.iossystems.smp.reporting.ireporter.publish.PublishTaskHandlerFactory;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -189,16 +190,16 @@ public class SMPReportingFunctionalTest
 
     private void postRecords(EventRecords records)
     {
-        postRecords(SMPReportingService.getInstance(), records);
+        postRecords(PublishTaskHandlerFactory.getInstance().getReportsPublishTaskHandler(), records);
     }
 
-    private void postRecords(SMPReportingService smpReportingService, EventRecords records)
+    private void postRecords(EventTaskHandler eventTaskHandler, EventRecords records)
     {
         List<EventRecord> list = records.getList();
 
         for (EventRecord record : list)
         {
-            smpReportingService.postSMPEvent(record);
+            eventTaskHandler.processEventRecord(record);
         }
     }
 

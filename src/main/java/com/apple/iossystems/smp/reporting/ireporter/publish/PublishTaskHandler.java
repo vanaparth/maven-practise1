@@ -3,14 +3,14 @@ package com.apple.iossystems.smp.reporting.ireporter.publish;
 import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
 import com.apple.iossystems.smp.reporting.core.analytics.Statistics;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledNotification;
-import com.apple.iossystems.smp.reporting.core.email.EmailEventService;
-import com.apple.iossystems.smp.reporting.core.email.EmailServiceFactory;
 import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 import com.apple.iossystems.smp.reporting.core.event.EventType;
 import com.apple.iossystems.smp.reporting.core.hubble.HubblePublisher;
+import com.apple.iossystems.smp.reporting.core.messaging.BacklogEventPublisher;
 import com.apple.iossystems.smp.reporting.core.timer.StopWatch;
+import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,46 +20,30 @@ import java.util.concurrent.LinkedBlockingQueue;
 /**
  * @author Toch
  */
-class PublishTaskHandler implements EventTaskHandler
+abstract class PublishTaskHandler implements EventTaskHandler
 {
-    private IReporterPublishService reportsPublishService = ReportsPublishService.getInstance();
-    private IReporterPublishService auditPublishService = AuditPublishService.getInstance();
-    private IReporterPublishService paymentReportsPublishService = PaymentReportsPublishService.getInstance();
-    private IReporterPublishService paymentAuditPublishService = PaymentAuditPublishService.getInstance();
-    private IReporterPublishService loyaltyReportsPublishService = LoyaltyReportsPublishService.getInstance();
-    private IReporterPublishService loyaltyAuditPublishService = LoyaltyAuditPublishService.getInstance();
+    private static final Logger LOGGER = Logger.getLogger(PublishTaskHandler.class);
 
-    private HubblePublisher hubblePublisher = HubblePublisher.getInstance();
+    private final EventType publishEventType;
+    private final PublishMetric publishMetric;
+    private final IReporterPublishService reportsPublishService;
+    private final IReporterPublishService auditPublishService;
 
-    private EmailEventService emailService = EmailServiceFactory.getInstance().getEmailService();
+    private final Statistics statistics = Statistics.getInstance();
+    private final StopWatch stopWatch = StopWatch.getInstance();
 
-    private Statistics statistics = Statistics.getInstance();
-    private StopWatch stopWatch = StopWatch.getInstance();
+    private final BacklogEventPublisher backlogEventPublisher = BacklogEventPublisher.getInstance();
+    private final HubblePublisher hubblePublisher = HubblePublisher.getInstance();
 
-    private BlockingQueue<EventRecord> reportsQueue = new LinkedBlockingQueue<>(1000);
-    private BlockingQueue<EventRecord> paymentReportsQueue = new LinkedBlockingQueue<>(1000);
-    private BlockingQueue<EventRecord> emailReportsQueue = new LinkedBlockingQueue<>(1000);
-    private BlockingQueue<EventRecord> loyaltyReportsQueue = new LinkedBlockingQueue<>(1000);
+    private BlockingQueue<EventRecord> reportsQueue = new LinkedBlockingQueue<>();
 
-    private PublishMetric reportsMetrics = PublishMetric.getReportsMetrics();
-    private PublishMetric paymentReportsMetrics = PublishMetric.getPaymentReportsMetrics();
-    private PublishMetric loyaltyReportsMetrics = PublishMetric.getLoyaltyReportsMetrics();
-
-    private PublishTaskHandler()
+    public PublishTaskHandler(EventType publishEventType, PublishMetric publishMetric, IReporterPublishService reportsPublishService, IReporterPublishService auditPublishService)
     {
-    }
+        this.publishEventType = publishEventType;
+        this.publishMetric = publishMetric;
+        this.reportsPublishService = reportsPublishService;
+        this.auditPublishService = auditPublishService;
 
-    public static PublishTaskHandler getInstance()
-    {
-        PublishTaskHandler publishTaskHandler = new PublishTaskHandler();
-
-        publishTaskHandler.init();
-
-        return publishTaskHandler;
-    }
-
-    private void init()
-    {
         startScheduledTasks();
     }
 
@@ -71,17 +55,13 @@ class PublishTaskHandler implements EventTaskHandler
     @Override
     public final void handleEvent()
     {
-        handleEmailEvent();
         handlePublishEvent();
         handleAuditEvent();
     }
 
-    private boolean reportsReady(IReporterPublishService service, BlockingQueue<EventRecord> queue)
+    private boolean reportsReady(int available)
     {
-        int available = queue.size();
-
-        return ((service.isEnabled() && (available >= service.getConfiguration().getMaxBatchSize())) ||
-                ((available > 0) && service.publishReady()));
+        return ((reportsPublishService.isEnabled() && (available >= reportsPublishService.getConfiguration().getMaxBatchSize())) || ((available > 0) && reportsPublishService.publishReady()));
     }
 
     private EventRecords emptyQueue(BlockingQueue<EventRecord> queue)
@@ -102,24 +82,27 @@ class PublishTaskHandler implements EventTaskHandler
         return records;
     }
 
-    private int publish(IReporterPublishService service, BlockingQueue<EventRecord> queue)
+    private int publish()
     {
         int count = 0;
 
-        if (reportsReady(service, queue))
+        if (reportsReady(reportsQueue.size()))
         {
-            EventRecords records = emptyQueue(queue);
+            EventRecords records = emptyQueue(reportsQueue);
+
             count = records.size();
 
             if (count > 0)
             {
-                List<EventRecord> list = records.getList();
+                EventRecords copy = records.getCopy();
 
-                if (!service.sendRequest(IReporterJsonBuilder.toJson(list)))
+                records = processEventRecords(records);
+
+                if (!reportsPublishService.sendRequest(IReporterJsonBuilder.toJson(records.getList())))
                 {
-                    queue.addAll(list);
-
                     count = -count;
+
+                    handleFailedPublishEvent(copy);
                 }
             }
         }
@@ -127,25 +110,41 @@ class PublishTaskHandler implements EventTaskHandler
         return count;
     }
 
+    private void handleFailedPublishEvent(EventRecords records)
+    {
+        backlogEventPublisher.publishEvents(records);
+    }
+
+    private EventRecords processEventRecords(EventRecords records)
+    {
+        EventRecords result = EventRecords.getInstance();
+
+        for (EventRecord record : records.getList())
+        {
+            String value = record.removeAttribute(EventAttribute.EVENT_TYPE.key());
+            EventType eventType = EventType.getEventType(value);
+
+            if (eventType != EventType.LOYALTY)
+            {
+                record = IReporterEvent.processEventRecord(record);
+            }
+
+            if (eventType != publishEventType)
+            {
+                LOGGER.warn("Expected publishEventType=" + publishEventType + " received eventType=" + eventType);
+            }
+
+            result.add(record);
+        }
+
+        return result;
+    }
+
     private void handlePublishEvent()
-    {
-        handlePublishEvent(reportsPublishService, reportsQueue, reportsMetrics);
-        handlePublishEvent(paymentReportsPublishService, paymentReportsQueue, paymentReportsMetrics);
-        handlePublishEvent(loyaltyReportsPublishService, loyaltyReportsQueue, loyaltyReportsMetrics);
-    }
-
-    private void handleAuditEvent()
-    {
-        handleAuditEvent(auditPublishService, reportsMetrics);
-        handleAuditEvent(paymentAuditPublishService, paymentReportsMetrics);
-        handleAuditEvent(loyaltyAuditPublishService, loyaltyReportsMetrics);
-    }
-
-    private void handlePublishEvent(IReporterPublishService publishService, BlockingQueue<EventRecord> queue, PublishMetric publishMetric)
     {
         stopWatch.start();
 
-        int count = publish(publishService, queue);
+        int count = publish();
 
         stopWatch.stop();
 
@@ -162,7 +161,7 @@ class PublishTaskHandler implements EventTaskHandler
         else if (count < 0)
         {
             count = -count;
-            // Hubble
+            // Hubble for IReporter
             hubblePublisher.incrementCountForEvent(publishMetric.getMessagesFailedMetric());
             hubblePublisher.incrementCountForEvent(publishMetric.getRecordsFailedMetric(), count);
             // Hubble for SMP
@@ -172,9 +171,9 @@ class PublishTaskHandler implements EventTaskHandler
         }
     }
 
-    private void handleAuditEvent(IReporterPublishService auditService, PublishMetric publishMetric)
+    private void handleAuditEvent()
     {
-        if (auditService.publishReady())
+        if (auditPublishService.publishReady())
         {
             int sent = statistics.getIntValue(publishMetric.getIReporterRecordsSent());
             int failed = statistics.getIntValue(publishMetric.getIReporterRecordsFailed());
@@ -186,7 +185,7 @@ class PublishTaskHandler implements EventTaskHandler
 
             AuditRequest auditRequest = new AuditRequest(auditRecords);
 
-            if (auditService.sendRequest(GsonBuilderFactory.getInstance().toJson(auditRequest, AuditRequest.class)))
+            if (auditPublishService.sendRequest(GsonBuilderFactory.getInstance().toJson(auditRequest, AuditRequest.class)))
             {
                 hubblePublisher.incrementCountForEvent(publishMetric.getAuditRecordsSent());
 
@@ -199,45 +198,11 @@ class PublishTaskHandler implements EventTaskHandler
         }
     }
 
-    private void handleEmailEvent()
-    {
-        EventRecords records = emptyQueue(emailReportsQueue);
-
-        if (records.size() > 0)
-        {
-            emailService.send(records);
-        }
-    }
-
     @Override
-    public boolean add(EventRecord record)
+    public void processEventRecord(EventRecord record)
     {
-        String value = record.removeAttribute(EventAttribute.EVENT_TYPE.key());
-        EventType eventType = EventType.getEventType(value);
+        reportsQueue.offer(record);
 
-        if( null == eventType ) {
-            return false;
-        }
-
-        if (eventType == EventType.REPORTS)
-        {
-            return reportsQueue.offer(IReporterEvent.processEventRecord(record));
-        }
-        else if (eventType == EventType.PAYMENT)
-        {
-            return paymentReportsQueue.offer(IReporterEvent.processEventRecord(record));
-        }
-        else if (eventType == EventType.EMAIL)
-        {
-            return emailReportsQueue.offer(record);
-        }
-        else if (eventType == EventType.LOYALTY)
-        {
-            return loyaltyReportsQueue.offer(record);
-        }
-        else
-        {
-            return true;
-        }
+        hubblePublisher.incrementCountForEvent(publishMetric.getIReporterRecordsPending(), reportsQueue.size());
     }
 }

@@ -25,15 +25,15 @@ class EmailService implements EmailEventService
 {
     private static final Logger LOGGER = Logger.getLogger(EmailService.class);
 
-    private static final boolean PROVISION_EMAIL_ENABLED = ApplicationConfiguration.isProvisionEmailEnabled();
-    private static final boolean SUSPEND_EMAIL_ENABLED = ApplicationConfiguration.isSuspendEmailEnabled();
-    private static final boolean UNLINK_EMAIL_ENABLED = ApplicationConfiguration.isUnlinkEmailEnabled();
-    private static final boolean DEFAULT_EMAIL_LOCALE_ENABLED = ApplicationConfiguration.isDefaultEmailLocaleEnabled();
+    private static final boolean PROVISION_EMAIL_ENABLED = ApplicationConfiguration.provisionEmailEnabled();
+    private static final boolean SUSPEND_EMAIL_ENABLED = ApplicationConfiguration.suspendEmailEnabled();
+    private static final boolean UNLINK_EMAIL_ENABLED = ApplicationConfiguration.unlinkEmailEnabled();
+    private static final boolean DEFAULT_EMAIL_LOCALE_ENABLED = ApplicationConfiguration.defaultEmailLocaleEnabled();
 
-    private XmlProcessor xmlProcessor = XmlProcessor.getInstance();
+    private final XmlProcessor xmlProcessor = XmlProcessor.getInstance();
 
-    private EventListener eventListener = EventListenerFactory.getInstance().getEmailEventListener();
-    private EventListener kistaEventListener = EventListenerFactory.getInstance().getSMPKistaEventListener();
+    private final EventListener eventListener = EventListenerFactory.getInstance().getEmailEventListener();
+    private final EventListener kistaEventListener = EventListenerFactory.getInstance().getSMPKistaEventListener();
 
     private EmailService()
     {

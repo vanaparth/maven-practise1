@@ -16,15 +16,18 @@ public class PublishTaskHandlerFactory
         return new PublishTaskHandlerFactory();
     }
 
-    public EventTaskHandler getPublishTaskHandler()
+    public EventTaskHandler getReportsPublishTaskHandler()
     {
-        if (ApplicationConfiguration.publishEventsEnabled())
-        {
-            return PublishTaskHandler.getInstance();
-        }
-        else
-        {
-            return OfflinePublishTaskHandler.getInstance();
-        }
+        return ApplicationConfiguration.publishEventsEnabled() ? ReportsPublishTaskHandler.getInstance() : OfflinePublishTaskHandler.getInstance();
+    }
+
+    public EventTaskHandler getPaymentPublishTaskHandler()
+    {
+        return ApplicationConfiguration.publishEventsEnabled() ? PaymentPublishTaskHandler.getInstance() : OfflinePublishTaskHandler.getInstance();
+    }
+
+    public EventTaskHandler getLoyaltyPublishTaskHandler()
+    {
+        return ApplicationConfiguration.publishEventsEnabled() ? LoyaltyPublishTaskHandler.getInstance() : OfflinePublishTaskHandler.getInstance();
     }
 }

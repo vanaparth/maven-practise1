@@ -4,6 +4,7 @@ import com.apple.iossystems.smp.StockholmHTTPResponse;
 import com.apple.iossystems.smp.reporting.core.http.HttpRequest;
 import com.apple.iossystems.smp.reporting.core.http.HttpResponseAction;
 import com.apple.iossystems.smp.reporting.core.http.SMPHttpClient;
+import com.apple.iossystems.smp.reporting.core.http.SMPHttpResponse;
 import com.apple.iossystems.smp.reporting.core.timer.Timer;
 import com.apple.iossystems.smp.reporting.ireporter.configuration.IReporterConfiguration;
 import com.apple.iossystems.smp.reporting.ireporter.configuration.IReporterConfigurationService;
@@ -17,11 +18,9 @@ public abstract class IReporterPublishService
 {
     private static final Logger LOGGER = Logger.getLogger(IReporterPublishService.class);
 
-    private IReporterConfigurationService configurationService = getConfigurationService();
-
-    private SMPHttpClient smpHttpClient = SMPHttpClient.getInstance();
-
-    private IReporterResponseHandler iReporterResponseHandler = IReporterResponseHandler.getInstance();
+    private final IReporterConfigurationService configurationService = getConfigurationService();
+    private final SMPHttpClient smpHttpClient = SMPHttpClient.getInstance();
+    private final IReporterResponseHandler iReporterResponseHandler = IReporterResponseHandler.getInstance();
 
     private long lastRequestTime;
 
@@ -38,9 +37,9 @@ public abstract class IReporterPublishService
         return HttpRequest.getInstance(configuration.getPublishUrl(), "POST", null, configuration.getContentType(), data, configuration.getRequestHeaders());
     }
 
-    private boolean isRequestSuccessful(HttpResponseAction action)
+    private boolean isRequestSuccessful(SMPHttpResponse response)
     {
-        return (action == HttpResponseAction.NO_ACTION_SUCCESS);
+        return ((response != null) && (response.getAction() == HttpResponseAction.NO_ACTION_SUCCESS));
     }
 
     public final IReporterConfiguration getConfiguration()
@@ -71,10 +70,7 @@ public abstract class IReporterPublishService
         {
             StockholmHTTPResponse response = smpHttpClient.request(getHTTPRequest(data));
 
-            if (response != null)
-            {
-                success = isRequestSuccessful(iReporterResponseHandler.getAction(response));
-            }
+            success = isRequestSuccessful(iReporterResponseHandler.getSMPHttpResponse(response));
         }
         catch (Exception e)
         {

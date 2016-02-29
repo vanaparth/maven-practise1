@@ -1,12 +1,18 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
 import com.apple.cds.messaging.client.impl.SMPEventSubscriberService;
-import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledEventTaskHandler;
+import com.apple.iossystems.smp.reporting.core.analytics.Metric;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
+import com.apple.iossystems.smp.reporting.core.event.EventType;
 import com.apple.iossystems.smp.reporting.core.eventhandler.EventListener;
 import com.apple.iossystems.smp.reporting.core.eventhandler.EventListenerFactory;
+import com.apple.iossystems.smp.reporting.core.hubble.HubblePublisher;
+import com.apple.iossystems.smp.reporting.ireporter.publish.EventTaskHandler;
 import org.apache.log4j.Logger;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Toch
@@ -15,20 +21,34 @@ class SMPReportingSubscriberService<LogEvent> extends SMPEventSubscriberService<
 {
     private static final Logger LOGGER = Logger.getLogger(SMPReportingSubscriberService.class);
 
-    private EventListener eventListener = EventListenerFactory.getInstance().getSMPConsumeEventListener();
+    private final EventListener eventListener = EventListenerFactory.getInstance().getSMPConsumeEventListener();
+    private final HubblePublisher hubblePublisher = HubblePublisher.getInstance();
 
-    private SMPReportingService smpReportingService;
+    private final Map<EventType, Metric> metricMap = getMetricMap();
 
-    private SMPReportingSubscriberService(String queueName, SMPReportingService smpReportingService)
+    private final EventTaskHandler eventTaskHandler;
+
+    private SMPReportingSubscriberService(String queueName, EventTaskHandler eventTaskHandler)
     {
         super(queueName);
 
-        this.smpReportingService = smpReportingService;
+        this.eventTaskHandler = eventTaskHandler;
     }
 
-    static SMPReportingSubscriberService getInstance(String queueName, SMPReportingService smpReportingService)
+    public static SMPReportingSubscriberService getInstance(String queueName, EventTaskHandler eventTaskHandler)
     {
-        return new SMPReportingSubscriberService(queueName, smpReportingService);
+        return new SMPReportingSubscriberService(queueName, eventTaskHandler);
+    }
+
+    private Map<EventType, Metric> getMetricMap()
+    {
+        Map<EventType, Metric> map = new HashMap<>();
+
+        map.put(EventType.REPORTS, Metric.CONSUME_REPORTS_EVENT_QUEUE);
+        map.put(EventType.PAYMENT, Metric.CONSUME_PAYMENT_EVENT_QUEUE);
+        map.put(EventType.LOYALTY, Metric.CONSUME_LOYALTY_EVENT_QUEUE);
+
+        return map;
     }
 
     @Override
@@ -38,48 +58,21 @@ class SMPReportingSubscriberService<LogEvent> extends SMPEventSubscriberService<
 
         record.putAll(logEvent.getMetadata());
 
-        if (!sendEventRecord(record))
-        {
-            handleFailedRequest(record);
-        }
+        sendEventRecord(record);
+
+        notifyListeners(record);
     }
 
-    private boolean sendEventRecord(EventRecord record)
+    private void sendEventRecord(EventRecord record)
     {
-        boolean result = smpReportingService.postSMPEvent(record);
-
-        if (result)
-        {
-            notifyEventListener(record);
-        }
-
-        return result;
+        eventTaskHandler.processEventRecord(record);
     }
 
-    private void handleFailedRequest(EventRecord record)
+    private void notifyListeners(EventRecord record)
     {
-        try
-        {
-            pause();
+        notifyEventListener(record);
 
-            new TaskHandler(record);
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e.getMessage(), e);
-        }
-    }
-
-    private void resumeService()
-    {
-        try
-        {
-            resume();
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e.getMessage(), e);
-        }
+        notifyHubble(record);
     }
 
     private void notifyEventListener(EventRecord record)
@@ -98,24 +91,20 @@ class SMPReportingSubscriberService<LogEvent> extends SMPEventSubscriberService<
         }
     }
 
-    private class TaskHandler extends ScheduledEventTaskHandler
+    private void notifyHubble(EventRecord record)
     {
-        private final EventRecord record;
-
-        private TaskHandler(EventRecord record)
+        try
         {
-            this.record = record;
-        }
+            Metric metric = metricMap.get(EventType.getEventType(record));
 
-        @Override
-        public void handleEvent()
-        {
-            if (sendEventRecord(record))
+            if (metric != null)
             {
-                resumeService();
-
-                shutdown();
+                hubblePublisher.incrementCountForEvent(metric);
             }
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e.getMessage(), e);
         }
     }
 }

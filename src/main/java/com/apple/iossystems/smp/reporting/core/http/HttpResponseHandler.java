@@ -7,5 +7,5 @@ import com.apple.iossystems.smp.StockholmHTTPResponse;
  */
 public interface HttpResponseHandler
 {
-    HttpResponseAction getAction(StockholmHTTPResponse response);
+    SMPHttpResponse getSMPHttpResponse(StockholmHTTPResponse response);
 }

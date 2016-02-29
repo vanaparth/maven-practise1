@@ -20,7 +20,7 @@ public enum Metric
     // IReporter Reports Metrics for IReporter
     IREPORTER_REPORTS_RECORDS_SENT(""),
     IREPORTER_REPORTS_RECORDS_FAILED(""),
-    IREPORTER_REPORTS_RECORDS_PENDING(""),
+    IREPORTER_REPORTS_RECORDS_PENDING("kpi.ireporter.transactions.pending"),
     IREPORTER_REPORTS_RECORDS_LOST(""),
 
     // Oslo IReporter Reports Metrics for Hubble
@@ -38,7 +38,7 @@ public enum Metric
     // Oslo IReporter Reports Metrics for IReporter
     PAYMENT_IREPORTER_REPORTS_RECORDS_SENT(""),
     PAYMENT_IREPORTER_REPORTS_RECORDS_FAILED(""),
-    PAYMENT_IREPORTER_REPORTS_RECORDS_PENDING(""),
+    PAYMENT_IREPORTER_REPORTS_RECORDS_PENDING("kpi.ireporter.transactions.pending.oslo"),
     PAYMENT_IREPORTER_REPORTS_RECORDS_LOST(""),
 
     // Stockholm/Oslo Performance Monitoring
@@ -56,11 +56,28 @@ public enum Metric
     LOYALTY_AUDIT_CONFIGURATION_CHANGED("kpi.ireporter.configuration.changed.audit.loyalty"),
     LOYALTY_IREPORTER_REPORTS_RECORDS_SENT(""),
     LOYALTY_IREPORTER_REPORTS_RECORDS_FAILED(""),
-    LOYALTY_IREPORTER_REPORTS_RECORDS_PENDING(""),
+    LOYALTY_IREPORTER_REPORTS_RECORDS_PENDING("kpi.ireporter.transactions.pending.loyalty"),
     LOYALTY_IREPORTER_REPORTS_RECORDS_LOST(""),
     LOYALTY_IREPORTER_TIMING("kpi.smp.ireporter.timing.loyalty"),
     LOYALTY_REPORTS_CONFIGURATION_REQUESTED("kpi.ireporter.configuration.fetched.loyalty"),
-    LOYALTY_REPORTS_CONFIGURATION_CHANGED("kpi.ireporter.configuration.changed.loyalty");
+    LOYALTY_REPORTS_CONFIGURATION_CHANGED("kpi.ireporter.configuration.changed.loyalty"),
+
+    // Other
+    PUBLISH_REPORTS_EVENT_QUEUE("kpi.reporting.publish.reports.queue"),
+    PUBLISH_PAYMENT_EVENT_QUEUE("kpi.reporting.publish.payment.queue"),
+    PUBLISH_LOYALTY_EVENT_QUEUE("kpi.reporting.publish.loyalty.queue"),
+    PUBLISH_BACKLOG_EVENT_QUEUE("kpi.reporting.publish.backlog.queue"),
+
+    PUBLISH_REPORTS_EVENT_QUEUE_FAILED("kpi.reporting.publish.reports.queue.failed"),
+    PUBLISH_PAYMENT_EVENT_QUEUE_FAILED("kpi.reporting.publish.payment.queue.failed"),
+    PUBLISH_LOYALTY_EVENT_QUEUE_FAILED("kpi.reporting.publish.loyalty.queue.failed"),
+    PUBLISH_BACKLOG_EVENT_QUEUE_FAILED("kpi.reporting.publish.backlog.queue.failed"),
+
+    CONSUME_REPORTS_EVENT_QUEUE("kpi.reporting.consume.reports.queue"),
+    CONSUME_PAYMENT_EVENT_QUEUE("kpi.reporting.consume.payment.queue"),
+    CONSUME_LOYALTY_EVENT_QUEUE("kpi.reporting.consume.loyalty.queue"),
+
+    HTTP_REQUEST_FAILED("kpi.reporting.http.request.failed");
 
     private final String kpi;
 

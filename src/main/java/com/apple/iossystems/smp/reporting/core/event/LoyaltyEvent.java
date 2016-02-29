@@ -6,7 +6,6 @@ package com.apple.iossystems.smp.reporting.core.event;
  */
 public class LoyaltyEvent
 {
-
     private LoyaltyEventTypeEnum loyaltyEventType;
     private long eventTime;
     private String merchantId;

@@ -2,9 +2,7 @@ package com.apple.iossystems.smp.reporting.core.messaging;
 
 import com.apple.cds.messaging.client.impl.PubSubUtil;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
-import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventType;
-import com.apple.iossystems.smp.reporting.ireporter.publish.EventTaskHandler;
 import com.apple.iossystems.smp.reporting.ireporter.publish.PublishTaskHandlerFactory;
 import org.apache.log4j.Logger;
 
@@ -14,8 +12,6 @@ import org.apache.log4j.Logger;
 public class SMPReportingService
 {
     private static final Logger LOGGER = Logger.getLogger(SMPReportingService.class);
-
-    private EventTaskHandler publishTaskHandler = PublishTaskHandlerFactory.getInstance().getPublishTaskHandler();
 
     private SMPReportingService()
     {
@@ -42,7 +38,6 @@ public class SMPReportingService
 
         createPubSubQueue(exchangeName, EventType.REPORTS);
         createPubSubQueue(exchangeName, EventType.PAYMENT);
-        createPubSubQueue(exchangeName, EventType.EMAIL);
         createPubSubQueue(exchangeName, EventType.LOYALTY);
     }
 
@@ -79,21 +74,16 @@ public class SMPReportingService
 
     private void startSubscribers()
     {
-        if (ApplicationConfiguration.isRabbitConsumersEnabled())
+        if (ApplicationConfiguration.rabbitConsumersEnabled())
         {
-            SMPReportingSubscriberService.getInstance(EventType.REPORTS.getQueueName(), this).begin();
+            PublishTaskHandlerFactory publishTaskHandlerFactory = PublishTaskHandlerFactory.getInstance();
 
-            SMPReportingSubscriberService.getInstance(EventType.PAYMENT.getQueueName(), this).begin();
+            SMPReportingSubscriberService.getInstance(EventType.REPORTS.getQueueName(), publishTaskHandlerFactory.getReportsPublishTaskHandler()).begin();
 
-            SMPReportingSubscriberService.getInstance(EventType.EMAIL.getQueueName(), this).begin();
+            SMPReportingSubscriberService.getInstance(EventType.PAYMENT.getQueueName(), publishTaskHandlerFactory.getPaymentPublishTaskHandler()).begin();
 
-            SMPReportingSubscriberService.getInstance(EventType.LOYALTY.getQueueName(), this).begin();
+            SMPReportingSubscriberService.getInstance(EventType.LOYALTY.getQueueName(), publishTaskHandlerFactory.getLoyaltyPublishTaskHandler()).begin();
         }
-    }
-
-    public boolean postSMPEvent(EventRecord eventRecord)
-    {
-        return publishTaskHandler.add(eventRecord);
     }
 
     public void start()

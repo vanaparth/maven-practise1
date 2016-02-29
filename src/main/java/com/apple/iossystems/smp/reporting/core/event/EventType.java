@@ -49,7 +49,7 @@ public enum EventType
         return null;
     }
 
-    private static EventType getEventType(EventRecord record)
+    public static EventType getEventType(EventRecord record)
     {
         return getEventType(record.getAttributeValue(EventAttribute.EVENT_TYPE.key()));
     }

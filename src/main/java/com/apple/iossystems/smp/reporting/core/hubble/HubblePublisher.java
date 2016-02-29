@@ -23,9 +23,14 @@ public class HubblePublisher
         return new HubblePublisher();
     }
 
-    private void incrementCountForEvent(String kpi)
+    public void incrementCountForEvent(Metric metric)
     {
-        operationalAnalytics.incrementCountForEvent(kpi);
+        incrementCountForEvent(metric, 1);
+    }
+
+    public void logCountForEvent(Metric metric, int count)
+    {
+        logTimingForEvent(metric, count);
     }
 
     public void incrementCountForEvent(Metric metric, int count)
@@ -36,16 +41,11 @@ public class HubblePublisher
 
             for (int i = 0; i < count; i++)
             {
-                incrementCountForEvent(kpi);
+                operationalAnalytics.incrementCountForEvent(kpi);
             }
 
             LOGGER.info("Published to Hubble " + kpi + ": " + count);
         }
-    }
-
-    public void incrementCountForEvent(Metric metric)
-    {
-        incrementCountForEvent(metric, 1);
     }
 
     public void logTimingForEvent(Metric metric, long time)

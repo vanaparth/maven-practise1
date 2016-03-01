@@ -1,6 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
 import com.apple.cds.messaging.client.impl.SMPEventSubscriberService;
+import com.apple.iossystems.logging.pubsub.LogEvent;
 import com.apple.iossystems.smp.reporting.core.analytics.Metric;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
@@ -52,7 +53,7 @@ class SMPReportingSubscriberService extends SMPEventSubscriberService
     }
 
     @Override
-    public void handleEvent(com.apple.iossystems.logging.pubsub.LogEvent logEvent)
+    public void handleEvent(LogEvent logEvent)
     {
         EventRecord record = EventRecord.getInstance();
 

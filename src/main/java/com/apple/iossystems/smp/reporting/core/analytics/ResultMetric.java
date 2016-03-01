@@ -1,6 +1,4 @@
-package com.apple.iossystems.smp.reporting.ireporter.publish;
-
-import com.apple.iossystems.smp.reporting.core.analytics.Metric;
+package com.apple.iossystems.smp.reporting.core.analytics;
 
 /**
  * @author Toch

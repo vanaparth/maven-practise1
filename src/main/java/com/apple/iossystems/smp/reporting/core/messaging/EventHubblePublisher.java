@@ -1,9 +1,9 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
 import com.apple.iossystems.smp.reporting.core.analytics.Metric;
+import com.apple.iossystems.smp.reporting.core.analytics.ResultMetric;
 import com.apple.iossystems.smp.reporting.core.event.EventType;
 import com.apple.iossystems.smp.reporting.core.hubble.HubblePublisher;
-import com.apple.iossystems.smp.reporting.ireporter.publish.ResultMetric;
 
 import java.util.Collections;
 import java.util.Map;
@@ -42,19 +42,14 @@ public class EventHubblePublisher
         }
     }
 
-    private void incrementCountForEvent(EventType eventType, boolean isSuccessEvent)
+    private void incrementCountForEvent(EventType eventType, boolean success)
     {
-        incrementCountForEvent(eventType, isSuccessEvent, 1);
+        incrementCountForEvent(eventType, success, 1);
     }
 
     public void incrementCountForSuccessEvent(EventType eventType)
     {
         incrementCountForEvent(eventType, true);
-    }
-
-    public void incrementCountForSuccessEvent(EventType eventType, int count)
-    {
-        incrementCountForEvent(eventType, true, count);
     }
 
     public void incrementCountForFailedEvent(EventType eventType)

@@ -3,6 +3,7 @@ package com.apple.iossystems.smp.reporting.core.messaging;
 import com.apple.iossystems.logging.LogService;
 import com.apple.iossystems.logging.LogServiceFactory2;
 import com.apple.iossystems.smp.reporting.core.analytics.Metric;
+import com.apple.iossystems.smp.reporting.core.analytics.ResultMetric;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import com.apple.iossystems.smp.reporting.core.email.EmailEventService;
 import com.apple.iossystems.smp.reporting.core.email.EmailServiceFactory;
@@ -13,7 +14,6 @@ import com.apple.iossystems.smp.reporting.core.event.EventType;
 import com.apple.iossystems.smp.reporting.core.eventhandler.EventListener;
 import com.apple.iossystems.smp.reporting.core.eventhandler.EventListenerFactory;
 import com.apple.iossystems.smp.reporting.core.util.MapToPair;
-import com.apple.iossystems.smp.reporting.ireporter.publish.ResultMetric;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;

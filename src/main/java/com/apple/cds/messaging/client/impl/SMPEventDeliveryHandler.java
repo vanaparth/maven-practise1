@@ -10,6 +10,10 @@ class SMPEventDeliveryHandler<LogEvent> implements DeliveryHandler<LogEvent>
 {
     private SMPEventSubscriberService<LogEvent> smpEventSubscriberService;
 
+    public SMPEventDeliveryHandler()
+    {
+    }
+
     public void setEventHandler(SMPEventSubscriberService<LogEvent> smpEventSubscriberService)
     {
         this.smpEventSubscriberService = smpEventSubscriberService;

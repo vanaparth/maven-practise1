@@ -6,7 +6,6 @@ import com.apple.cds.messaging.client.events.AbstractConsumerServiceEventListene
 import com.apple.cds.messaging.client.exception.ServiceException;
 import com.apple.iossystems.logging.pubsub.LogEventSerializer;
 import com.apple.iossystems.logging.pubsub.LoggingSubscriberServiceBase;
-import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledEventTaskHandler;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import org.apache.log4j.Logger;
 
@@ -129,14 +128,7 @@ public abstract class SMPEventSubscriberService<LogEvent> extends LoggingSubscri
     public final void begin()
     {
         startConsumerService();
-
-        if (!isStarted())
-        {
-            new TaskHandler();
-        }
     }
-
-    public abstract void handleEvent(com.apple.iossystems.logging.pubsub.LogEvent logEvent);
 
     private void startConsumerService()
     {
@@ -150,21 +142,5 @@ public abstract class SMPEventSubscriberService<LogEvent> extends LoggingSubscri
         }
     }
 
-    private class TaskHandler extends ScheduledEventTaskHandler
-    {
-        private TaskHandler()
-        {
-        }
-
-        @Override
-        public void handleEvent()
-        {
-            startConsumerService();
-
-            if (isStarted())
-            {
-                shutdown();
-            }
-        }
-    }
+    public abstract void handleEvent(com.apple.iossystems.logging.pubsub.LogEvent logEvent);
 }

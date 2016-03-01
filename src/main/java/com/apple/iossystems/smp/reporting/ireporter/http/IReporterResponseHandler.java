@@ -12,7 +12,7 @@ import java.util.Map;
  */
 public class IReporterResponseHandler implements HttpResponseHandler
 {
-    private static final Map<Integer, IReporterHttpResponse> ACTION_MAP = getActionMap();
+    private static final Map<Integer, IReporterHttpResponse> HTTP_RESPONSE_MAP = getHttpResponseMap();
 
     private IReporterResponseHandler()
     {
@@ -23,25 +23,16 @@ public class IReporterResponseHandler implements HttpResponseHandler
         return new IReporterResponseHandler();
     }
 
-    private static Map<Integer, IReporterHttpResponse> getActionMap()
+    private static Map<Integer, IReporterHttpResponse> getHttpResponseMap()
     {
         Map<Integer, IReporterHttpResponse> map = new HashMap<>();
 
-        addToMap(map, IReporterHttpResponse.SUCCESS);
-        addToMap(map, IReporterHttpResponse.INVALID_CONTENT_TYPE);
-        addToMap(map, IReporterHttpResponse.INVALID_PLIST);
-        addToMap(map, IReporterHttpResponse.INVALID_REQUEST_URL);
-        addToMap(map, IReporterHttpResponse.INVALID_REQUEST_METHOD);
-        addToMap(map, IReporterHttpResponse.INVALID_CONTENT_ENCODING);
-        addToMap(map, IReporterHttpResponse.NO_RESPONSE);
-        addToMap(map, IReporterHttpResponse.UNKNOWN);
+        for (IReporterHttpResponse response : IReporterHttpResponse.values())
+        {
+            map.put(response.getCode(), response);
+        }
 
         return map;
-    }
-
-    private static void addToMap(Map<Integer, IReporterHttpResponse> map, IReporterHttpResponse response)
-    {
-        map.put(response.getCode(), response);
     }
 
     @Override
@@ -49,7 +40,7 @@ public class IReporterResponseHandler implements HttpResponseHandler
     {
         int responseCode = (response != null) ? response.getStatus() : IReporterHttpResponse.NO_RESPONSE.getCode();
 
-        IReporterHttpResponse iReporterHttpResponse = ACTION_MAP.get(responseCode);
+        IReporterHttpResponse iReporterHttpResponse = HTTP_RESPONSE_MAP.get(responseCode);
         String message;
 
         if (iReporterHttpResponse != null)

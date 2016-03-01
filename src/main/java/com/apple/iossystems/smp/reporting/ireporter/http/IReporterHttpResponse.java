@@ -9,7 +9,7 @@ public enum IReporterHttpResponse
 {
     SUCCESS(200, HttpResponseAction.NO_ACTION_SUCCESS, "Success"),
     INVALID_CONTENT_TYPE(400, HttpResponseAction.NO_ACTION_ERROR, "Invalid Content Type or URI"),
-    INVALID_PLIST(403, HttpResponseAction.RELOAD_CONFIGURATION, "No PList|ShouldPublish disabled|Invalid Publish Key"),
+    INVALID_PLIST(403, HttpResponseAction.RELOAD_CONFIGURATION, "No PList|Publish disabled|Invalid Publish Key"),
     INVALID_REQUEST_URL(404, HttpResponseAction.RELOAD_CONFIGURATION, "Invalid Request URL"),
     INVALID_REQUEST_METHOD(405, HttpResponseAction.NO_ACTION_ERROR, "Invalid Request Method"),
     INVALID_CONTENT_ENCODING(415, HttpResponseAction.NO_ACTION_ERROR, "Invalid Content Encoding"),

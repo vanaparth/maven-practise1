@@ -59,7 +59,7 @@ public class KistaEventLogger
         return smpJournal;
     }
 
-    private boolean loggerIsOnline()
+    private boolean loggerOnline()
     {
         return (loggingEnabled && (smpJournal != null));
     }
@@ -101,7 +101,7 @@ public class KistaEventLogger
 
     private void publishEvent(String conversationId, String seid, String request, EventType eventType)
     {
-        if (loggerIsOnline())
+        if (loggerOnline())
         {
             try
             {
@@ -119,6 +119,11 @@ public class KistaEventLogger
         if (StringUtils.isBlank(conversationId))
         {
             conversationId = UUID.randomUUID().toString();
+        }
+
+        if (StringUtils.isBlank(seid))
+        {
+            seid = UUID.randomUUID().toString();
         }
 
         request = KistaSanitizerFactory.getSanitizer().sanitize(request, SMPReportingKistaRequest.class);

@@ -1,7 +1,9 @@
 package com.apple.iossystems.smp.reporting.core.event;
 
 import com.apple.iossystems.smp.domain.Actor;
-import com.apple.iossystems.smp.domain.ProvisioningCardSource;
+import com.apple.iossystems.smp.domain.CardProvisioningSource;
+import com.apple.iossystems.smp.domain.SMPCardProvisioningSource;
+import com.apple.iossystems.smp.domain.WalletCardProvisioningSource;
 import com.apple.iossystems.smp.domain.clm.Card;
 import com.apple.iossystems.smp.domain.device.CardEligibilityStatus;
 import com.apple.iossystems.smp.pno.PNORepository;
@@ -80,10 +82,10 @@ public class SMPEventCode
         addToMap(cardStatusUpdateSourceMap, Actor.PNO.toString(), "2");
         addToMap(cardStatusUpdateSourceMap, Actor.FMIP.toString(), "3");
         //
-        addToMap(provisioningCardSourceMap, String.valueOf(ProvisioningCardSource.MANUAL.getId()), "1");
-        addToMap(provisioningCardSourceMap, String.valueOf(ProvisioningCardSource.ON_FILE.getId()), "2");
-        addToMap(provisioningCardSourceMap, String.valueOf(ProvisioningCardSource.BANKING_APP.getId()), "3");
-        addToMap(provisioningCardSourceMap, String.valueOf(ProvisioningCardSource.PASS.getId()), "4");
+        addToMap(provisioningCardSourceMap, String.valueOf(WalletCardProvisioningSource.MANUAL.getId()), "1");
+        addToMap(provisioningCardSourceMap, String.valueOf(SMPCardProvisioningSource.ON_FILE.getId()), "2");
+        addToMap(provisioningCardSourceMap, String.valueOf(WalletCardProvisioningSource.BANKING_APP.getId()), "3");
+        addToMap(provisioningCardSourceMap, String.valueOf(SMPCardProvisioningSource.PASS.getId()), "4");
     }
 
     private void addToMap(Map<String, String> map, String key, String value)
@@ -156,7 +158,7 @@ public class SMPEventCode
         writeCode(record, attribute, cardStatusMap, (cardEligibilityStatus != null) ? String.valueOf(cardEligibilityStatus.getId()) : "");
     }
 
-    public void writeProvisioningCardSource(EventRecord record, EventAttribute attribute, ProvisioningCardSource provisioningCardSource)
+    public void writeProvisioningCardSource(EventRecord record, EventAttribute attribute, CardProvisioningSource provisioningCardSource)
     {
         writeCode(record, attribute, provisioningCardSourceMap, (provisioningCardSource != null) ? String.valueOf(provisioningCardSource.getId()) : "");
     }

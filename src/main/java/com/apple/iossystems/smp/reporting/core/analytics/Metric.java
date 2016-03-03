@@ -66,12 +66,18 @@ public enum Metric
     PUBLISH_REPORTS_EVENT_QUEUE("kpi.reporting.publish.reports.queue"),
     PUBLISH_PAYMENT_EVENT_QUEUE("kpi.reporting.publish.payment.queue"),
     PUBLISH_LOYALTY_EVENT_QUEUE("kpi.reporting.publish.loyalty.queue"),
-    PUBLISH_BACKLOG_EVENT_QUEUE("kpi.reporting.publish.backlog.queue"),
 
     PUBLISH_REPORTS_EVENT_QUEUE_FAILED("kpi.reporting.publish.reports.queue.failed"),
     PUBLISH_PAYMENT_EVENT_QUEUE_FAILED("kpi.reporting.publish.payment.queue.failed"),
     PUBLISH_LOYALTY_EVENT_QUEUE_FAILED("kpi.reporting.publish.loyalty.queue.failed"),
-    PUBLISH_BACKLOG_EVENT_QUEUE_FAILED("kpi.reporting.publish.backlog.queue.failed"),
+
+    PUBLISH_REPORTS_BACKLOG_EVENT_QUEUE("kpi.reporting.publish.reports.backlog.queue"),
+    PUBLISH_PAYMENT_BACKLOG_EVENT_QUEUE("kpi.reporting.publish.payment.backlog.queue"),
+    PUBLISH_LOYALTY_BACKLOG_EVENT_QUEUE("kpi.reporting.publish.loyalty.backlog.queue"),
+
+    PUBLISH_REPORTS_BACKLOG_EVENT_QUEUE_FAILED("kpi.reporting.publish.reports.backlog.queue.failed"),
+    PUBLISH_PAYMENT_BACKLOG_EVENT_QUEUE_FAILED("kpi.reporting.publish.payment.backlog.queue.failed"),
+    PUBLISH_LOYALTY_BACKLOG_EVENT_QUEUE_FAILED("kpi.reporting.publish.loyalty.backlog.queue.failed"),
 
     CONSUME_REPORTS_EVENT_QUEUE("kpi.reporting.consume.reports.queue"),
     CONSUME_PAYMENT_EVENT_QUEUE("kpi.reporting.consume.payment.queue"),

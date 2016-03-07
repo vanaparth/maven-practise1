@@ -1,7 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
-import com.apple.cds.keystone.config.PropertyManager;
 import com.apple.iossystems.smp.reporting.core.analytics.PublishStatistics;
+import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 
 /**
@@ -9,7 +9,7 @@ import com.apple.iossystems.smp.reporting.core.event.EventRecords;
  */
 public class BacklogEventPublisher
 {
-    private final int MAX_PUBLISH_DOWN_TIME = PropertyManager.getInstance().getIntValueForKeyWithDefault("smp.reporting.maxPublishDownTime", 5 * 60 * 1000);
+    private final int MAX_PUBLISH_DOWN_TIME = ApplicationConfiguration.getMaxPublishDownTime();
 
     private final NotificationService notificationService = SMPEventNotificationService.getInstance().getPublisher();
     private final NotificationService backlogNotificationService = BacklogNotificationService.getInstance();
@@ -25,7 +25,7 @@ public class BacklogEventPublisher
 
     private boolean publishToEventQueue(PublishStatistics publishStatistics)
     {
-        return (System.currentTimeMillis() - publishStatistics.getPublishTime()) <= MAX_PUBLISH_DOWN_TIME;
+        return ((System.currentTimeMillis() - publishStatistics.getPublishTime()) <= MAX_PUBLISH_DOWN_TIME);
     }
 
     public void publishEvents(EventRecords records, PublishStatistics publishStatistics)

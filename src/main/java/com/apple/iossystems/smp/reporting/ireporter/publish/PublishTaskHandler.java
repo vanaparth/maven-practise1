@@ -46,6 +46,13 @@ abstract class PublishTaskHandler implements EventTaskHandler
         this.reportsPublishService = reportsPublishService;
         this.auditPublishService = auditPublishService;
 
+        init();
+    }
+
+    private void init()
+    {
+        publishStatistics.updatePublishTime();
+
         startScheduledTasks();
     }
 

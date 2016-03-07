@@ -27,6 +27,8 @@ public class ApplicationConfiguration
     static final int LOG_SERVICE_BDB_BATCH_SIZE = PropertyManager.getInstance().getIntValueForKeyWithDefault("smp.reporting.logging.bdb.batch.size", 50);
     static final int LOG_SERVICE_BDB_INTERVAL = PropertyManager.getInstance().getIntValueForKeyWithDefault("smp.reporting.logging.bdb.interval.ms", 500);
 
+    static final int MAX_PUBLISH_DOWN_TIME = PropertyManager.getInstance().getIntValueForKeyWithDefault("smp.reporting.maxPublishDownTime", 5 * 60 * 1000);
+
     static final String IREPORTER_URL = PropertyManager.getInstance().valueForKeyWithDefault("icloud.ireporter.url", "https://icloud4-e3.icloud.com");
     static final String HASH_PASSWORD = PropertyManager.getInstance().valueForKeyWithDefault("icloud.ireporter.pass", "pLijzg2e2QNspdhOyNWdOSScPszmZBryJ0L8BcQ116BhkT6p0iHyNcwnlFIwhLun");
 
@@ -120,6 +122,11 @@ public class ApplicationConfiguration
     public static int getLogServiceBdbInterval()
     {
         return LOG_SERVICE_BDB_INTERVAL;
+    }
+
+    public static int getMaxPublishDownTime()
+    {
+        return MAX_PUBLISH_DOWN_TIME;
     }
 
     public static String getIReporterUrl()

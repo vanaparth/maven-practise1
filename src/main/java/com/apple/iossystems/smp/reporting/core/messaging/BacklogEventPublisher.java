@@ -1,25 +1,18 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
-import com.apple.iossystems.smp.reporting.core.analytics.Metric;
-import com.apple.iossystems.smp.reporting.core.analytics.ResultMetric;
-import com.apple.iossystems.smp.reporting.core.event.EventRecord;
+import com.apple.cds.keystone.config.PropertyManager;
+import com.apple.iossystems.smp.reporting.core.analytics.PublishStatistics;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
-import com.apple.iossystems.smp.reporting.core.event.EventType;
-import org.apache.log4j.Logger;
-
-import java.util.HashMap;
-import java.util.Map;
 
 /**
  * @author Toch
  */
 public class BacklogEventPublisher
 {
-    private static final Logger LOGGER = Logger.getLogger(BacklogEventPublisher.class);
+    private final int MAX_PUBLISH_DOWN_TIME = PropertyManager.getInstance().getIntValueForKeyWithDefault("smp.reporting.maxPublishDownTime", 5 * 60 * 1000);
 
     private final NotificationService notificationService = SMPEventNotificationService.getInstance().getPublisher();
-
-    private final EventHubblePublisher eventHubblePublisher = EventHubblePublisher.getInstance(getMetricMap());
+    private final NotificationService backlogNotificationService = BacklogNotificationService.getInstance();
 
     private BacklogEventPublisher()
     {
@@ -30,61 +23,20 @@ public class BacklogEventPublisher
         return new BacklogEventPublisher();
     }
 
-    private Map<EventType, ResultMetric> getMetricMap()
+    private boolean publishToEventQueue(PublishStatistics publishStatistics)
     {
-        Map<EventType, ResultMetric> map = new HashMap<>();
-
-        map.put(EventType.REPORTS, new ResultMetric(Metric.PUBLISH_REPORTS_BACKLOG_EVENT_QUEUE, Metric.PUBLISH_REPORTS_BACKLOG_EVENT_QUEUE_FAILED));
-        map.put(EventType.PAYMENT, new ResultMetric(Metric.PUBLISH_PAYMENT_BACKLOG_EVENT_QUEUE, Metric.PUBLISH_PAYMENT_BACKLOG_EVENT_QUEUE_FAILED));
-        map.put(EventType.LOYALTY, new ResultMetric(Metric.PUBLISH_LOYALTY_BACKLOG_EVENT_QUEUE, Metric.PUBLISH_LOYALTY_BACKLOG_EVENT_QUEUE_FAILED));
-
-        return map;
+        return (System.currentTimeMillis() - publishStatistics.getPublishTime()) <= MAX_PUBLISH_DOWN_TIME;
     }
 
-    private void notifyHubbleForSuccessEvent(EventRecords records)
+    public void publishEvents(EventRecords records, PublishStatistics publishStatistics)
     {
-        try
-        {
-            for (EventRecord record : records.getList())
-            {
-                eventHubblePublisher.incrementCountForSuccessEvent(EventType.getEventType(record));
-            }
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e.getMessage(), e);
-        }
-    }
-
-    private void notifyHubbleForFailedEvent(EventRecords records)
-    {
-        try
-        {
-            for (EventRecord record : records.getList())
-            {
-                eventHubblePublisher.incrementCountForFailedEvent(EventType.getEventType(record));
-            }
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e.getMessage(), e);
-        }
-    }
-
-    public void publishEvents(EventRecords records)
-    {
-        // Prevent any side effects
-        try
+        if (publishToEventQueue(publishStatistics))
         {
             notificationService.publishEvents(records);
-
-            notifyHubbleForSuccessEvent(records);
         }
-        catch (Exception e)
+        else
         {
-            LOGGER.error(e.getMessage(), e);
-
-            notifyHubbleForFailedEvent(records);
+            backlogNotificationService.publishEvents(records);
         }
     }
 }

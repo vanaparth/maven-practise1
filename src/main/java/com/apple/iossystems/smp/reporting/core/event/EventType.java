@@ -9,8 +9,9 @@ public enum EventType
 {
     REPORTS("reports", LogLevel.EVENT1),
     PAYMENT("payment", LogLevel.EVENT2),
-    EMAIL("email", LogLevel.EVENT3),
-    LOYALTY("loyalty", LogLevel.EVENT);
+    BACKLOG("backlog", LogLevel.EVENT3),
+    LOYALTY("loyalty", LogLevel.EVENT),
+    EMAIL("email", null);
 
     private final String key;
     private final LogLevel logLevel;
@@ -24,6 +25,11 @@ public enum EventType
     public String getKey()
     {
         return key;
+    }
+
+    public LogLevel getLogLevel()
+    {
+        return logLevel;
     }
 
     public String getQueueName()

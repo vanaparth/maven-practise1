@@ -1,14 +1,10 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
-import com.apple.iossystems.logging.LogService;
-import com.apple.iossystems.logging.LogServiceFactory2;
 import com.apple.iossystems.smp.reporting.core.analytics.Metric;
 import com.apple.iossystems.smp.reporting.core.analytics.ResultMetric;
-import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 import com.apple.iossystems.smp.reporting.core.event.EventType;
-import com.apple.iossystems.smp.reporting.core.util.MapToPair;
 import org.apache.log4j.Logger;
 
 import java.util.HashMap;
@@ -18,24 +14,22 @@ import java.util.concurrent.Callable;
 /**
  * @author Toch
  */
-public class BacklogNotificationService implements NotificationService
+public class BacklogEventNotificationService
 {
     private static final Logger LOGGER = Logger.getLogger(EventNotificationService.class);
 
     private final EventNotificationServiceThreadPool threadPool = EventNotificationServiceThreadPool.getInstance();
     private final EventHubblePublisher eventHubblePublisher = EventHubblePublisher.getInstance(getMetricMap());
 
-    private final LogService logService = getLogService();
+    private final NotificationService notificationService = SMPEventNotificationService.getInstance().getPublisher();
 
-    private final boolean publishEventsEnabled = ApplicationConfiguration.publishEventsEnabled();
-
-    private BacklogNotificationService()
+    private BacklogEventNotificationService()
     {
     }
 
-    public static BacklogNotificationService getInstance()
+    public static BacklogEventNotificationService getInstance()
     {
-        return new BacklogNotificationService();
+        return new BacklogEventNotificationService();
     }
 
     private Map<EventType, ResultMetric> getMetricMap()
@@ -49,27 +43,11 @@ public class BacklogNotificationService implements NotificationService
         return map;
     }
 
-    private LogService getLogService()
-    {
-        LogService logService = null;
-
-        try
-        {
-            logService = LogServiceFactory2.getInstance().createLogService(new SMPEventLogServiceConfigurator(), new SMPEventLogServiceFactoryStrategy());
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e.getMessage(), e);
-        }
-
-        return logService;
-    }
-
     private void publishEventRecord(EventRecord record)
     {
         try
         {
-            logService.logEvent("event", EventType.BACKLOG.getLogLevel(), MapToPair.toPairs(record.getData()));
+            notificationService.publishEvent(record, EventType.BACKLOG.getLogLevel());
 
             eventHubblePublisher.incrementCountForSuccessEvent(EventType.getEventType(record));
         }
@@ -82,14 +60,6 @@ public class BacklogNotificationService implements NotificationService
     }
 
     private void publishEventRecords(EventRecords records)
-    {
-        if (publishEventsEnabled)
-        {
-            doPublishEventRecords(records);
-        }
-    }
-
-    private void doPublishEventRecords(EventRecords records)
     {
         try
         {
@@ -116,7 +86,6 @@ public class BacklogNotificationService implements NotificationService
         }
     }
 
-    @Override
     public void publishEvents(EventRecords records)
     {
         // Prevent any side effects
@@ -128,12 +97,6 @@ public class BacklogNotificationService implements NotificationService
         {
             LOGGER.error(e.getMessage(), e);
         }
-    }
-
-    @Override
-    public boolean isOnline()
-    {
-        return (logService != null);
     }
 
     private class Task implements Callable<Boolean>

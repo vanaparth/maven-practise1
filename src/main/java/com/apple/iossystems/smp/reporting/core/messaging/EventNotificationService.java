@@ -1,5 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
+import com.apple.iossystems.logging.LogLevel;
 import com.apple.iossystems.logging.LogService;
 import com.apple.iossystems.logging.LogServiceFactory2;
 import com.apple.iossystems.smp.reporting.core.analytics.Metric;
@@ -74,11 +75,11 @@ class EventNotificationService implements NotificationService
         return logService;
     }
 
-    private void publishEventRecord(EventRecord record)
+    private void publishEventRecord(EventRecord record, LogLevel logLevel)
     {
         try
         {
-            logService.logEvent("event", EventType.getLogLevel(record), MapToPair.toPairs(record.getData()));
+            logService.logEvent("event", logLevel, MapToPair.toPairs(record.getData()));
 
             eventHubblePublisher.incrementCountForSuccessEvent(EventType.getEventType(record));
         }
@@ -88,6 +89,17 @@ class EventNotificationService implements NotificationService
 
             eventHubblePublisher.incrementCountForFailedEvent(EventType.getEventType(record));
         }
+    }
+
+    private void publishEventRecord(EventRecord record)
+    {
+        publishEventRecord(record, EventType.getLogLevel(record));
+    }
+
+    @Override
+    public void publishEvent(EventRecord record, LogLevel logLevel)
+    {
+        publishEventRecord(record, logLevel);
     }
 
     private void notifyEventListener(EventRecords records)

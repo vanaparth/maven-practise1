@@ -99,7 +99,10 @@ class EventNotificationService implements NotificationService
     @Override
     public void publishEvent(EventRecord record, LogLevel logLevel)
     {
-        publishEventRecord(record, logLevel);
+        if (publishEventsEnabled)
+        {
+            publishEventRecord(record, logLevel);
+        }
     }
 
     private void notifyEventListener(EventRecords records)

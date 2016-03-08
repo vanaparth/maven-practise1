@@ -2,6 +2,7 @@ package com.apple.iossystems.smp.reporting.core.messaging;
 
 import com.apple.iossystems.smp.reporting.core.analytics.Metric;
 import com.apple.iossystems.smp.reporting.core.analytics.ResultMetric;
+import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 import com.apple.iossystems.smp.reporting.core.event.EventType;
@@ -18,10 +19,11 @@ public class BacklogEventNotificationService
 {
     private static final Logger LOGGER = Logger.getLogger(EventNotificationService.class);
 
+    private final NotificationService notificationService = SMPEventNotificationService.getInstance().getPublisher();
     private final EventNotificationServiceThreadPool threadPool = EventNotificationServiceThreadPool.getInstance();
     private final EventHubblePublisher eventHubblePublisher = EventHubblePublisher.getInstance(getMetricMap());
 
-    private final NotificationService notificationService = SMPEventNotificationService.getInstance().getPublisher();
+    private final boolean publishEventsEnabled = ApplicationConfiguration.publishEventsEnabled();
 
     private BacklogEventNotificationService()
     {
@@ -59,7 +61,7 @@ public class BacklogEventNotificationService
         }
     }
 
-    private void publishEventRecords(EventRecords records)
+    private void doPublishEventRecords(EventRecords records)
     {
         try
         {
@@ -71,6 +73,14 @@ public class BacklogEventNotificationService
         catch (Exception e)
         {
             LOGGER.error(e.getMessage(), e);
+        }
+    }
+
+    private void publishEventRecords(EventRecords records)
+    {
+        if (publishEventsEnabled)
+        {
+            doPublishEventRecords(records);
         }
     }
 

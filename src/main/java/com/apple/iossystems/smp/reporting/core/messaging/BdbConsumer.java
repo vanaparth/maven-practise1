@@ -71,7 +71,6 @@ class BdbConsumer implements ScheduledTaskHandler
     private void doHandleConsumeEvents()
     {
         int totalCount = 0;
-
         int maxBacklogRecords = 100000;
 
         while (totalCount < maxBacklogRecords)
@@ -101,7 +100,7 @@ class BdbConsumer implements ScheduledTaskHandler
         {
             records = doConsumeBdbEvents();
 
-            hubblePublisher.incrementCountForEvent(Metric.CONSUME_BACKLOG_EVENT_QUEUE, records.size());
+            hubblePublisher.incrementCountForEvent(Metric.CONSUME_BACKLOG_QUEUE, records.size());
         }
         catch (Exception e)
         {
@@ -109,7 +108,7 @@ class BdbConsumer implements ScheduledTaskHandler
 
             LOGGER.error(e.getMessage(), e);
 
-            hubblePublisher.incrementCountForEvent(Metric.CONSUME_BACKLOG_EVENT_QUEUE_FAILED);
+            hubblePublisher.incrementCountForEvent(Metric.CONSUME_BACKLOG_QUEUE_FAILED);
         }
 
         return records;

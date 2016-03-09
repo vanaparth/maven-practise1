@@ -12,7 +12,7 @@ public class BacklogEventPublisher
     private final int MAX_PUBLISH_DOWN_TIME = ApplicationConfiguration.getMaxPublishDownTime();
 
     private final NotificationService notificationService = SMPEventNotificationService.getInstance().getPublisher();
-    private final BacklogEventNotificationService backlogEventNotificationService = BacklogEventNotificationService.getInstance();
+    private final NotificationService backlogEventNotificationService = BacklogEventNotificationService.getInstance();
 
     private BacklogEventPublisher()
     {

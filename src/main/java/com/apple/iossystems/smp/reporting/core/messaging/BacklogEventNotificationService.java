@@ -8,7 +8,7 @@ import org.apache.log4j.Logger;
 /**
  * @author Toch
  */
-class BacklogEventNotificationService
+class BacklogEventNotificationService implements NotificationService
 {
     private static final Logger LOGGER = Logger.getLogger(BacklogEventNotificationService.class);
 
@@ -58,6 +58,7 @@ class BacklogEventNotificationService
         return bdbStorage;
     }
 
+    @Override
     public void publishEvents(EventRecords records)
     {
         try
@@ -68,5 +69,11 @@ class BacklogEventNotificationService
         {
             LOGGER.error(e.getMessage(), e);
         }
+    }
+
+    @Override
+    public boolean isOnline()
+    {
+        return (bdbPublisher != null);
     }
 }

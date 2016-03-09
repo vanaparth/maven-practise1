@@ -49,9 +49,9 @@ class EventNotificationService implements NotificationService
     {
         Map<EventType, ResultMetric> map = new HashMap<>();
 
-        map.put(EventType.REPORTS, new ResultMetric(Metric.PUBLISH_REPORTS_EVENT_QUEUE, Metric.PUBLISH_REPORTS_EVENT_QUEUE_FAILED));
-        map.put(EventType.PAYMENT, new ResultMetric(Metric.PUBLISH_PAYMENT_EVENT_QUEUE, Metric.PUBLISH_PAYMENT_EVENT_QUEUE_FAILED));
-        map.put(EventType.LOYALTY, new ResultMetric(Metric.PUBLISH_LOYALTY_EVENT_QUEUE, Metric.PUBLISH_LOYALTY_EVENT_QUEUE_FAILED));
+        map.put(EventType.REPORTS, new ResultMetric(Metric.PUBLISH_REPORTS_QUEUE, Metric.PUBLISH_REPORTS_QUEUE_FAILED));
+        map.put(EventType.PAYMENT, new ResultMetric(Metric.PUBLISH_PAYMENT_QUEUE, Metric.PUBLISH_PAYMENT_QUEUE_FAILED));
+        map.put(EventType.LOYALTY, new ResultMetric(Metric.PUBLISH_LOYALTY_QUEUE, Metric.PUBLISH_LOYALTY_QUEUE_FAILED));
 
         return map;
     }
@@ -88,6 +88,43 @@ class EventNotificationService implements NotificationService
         }
     }
 
+    private void publishEventRecords(EventRecords records)
+    {
+        if (publishEventsEnabled)
+        {
+            doPublishEventRecords(records);
+
+            notifyListeners(records);
+        }
+    }
+
+    private void doPublishEventRecords(EventRecords records)
+    {
+        for (EventRecord record : records.getList())
+        {
+            publishEventRecord(record);
+        }
+    }
+
+    private void publishEmailRecords(EventRecords records)
+    {
+        try
+        {
+            emailService.send(SMPEmailEvent.getEventRecords(records));
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+
+    private void notifyListeners(EventRecords records)
+    {
+        notifyEventListener(records);
+
+        notifyKista(records);
+    }
+
     private void notifyEventListener(EventRecords records)
     {
         try
@@ -112,50 +149,6 @@ class EventNotificationService implements NotificationService
         }
     }
 
-    private void publishEmailRecords(EventRecords records)
-    {
-        try
-        {
-            emailService.send(SMPEmailEvent.getEventRecords(records));
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e.getMessage(), e);
-        }
-    }
-
-    private void publishEventRecords(EventRecords records)
-    {
-        if (publishEventsEnabled)
-        {
-            doPublishEventRecords(records);
-        }
-    }
-
-    private void notifyListeners(EventRecords records)
-    {
-        notifyEventListener(records);
-
-        notifyKista(records);
-    }
-
-    private void doPublishEventRecords(EventRecords records)
-    {
-        try
-        {
-            for (EventRecord record : records.getList())
-            {
-                publishEventRecord(record);
-            }
-
-            notifyListeners(records);
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e.getMessage(), e);
-        }
-    }
-
     private void publishEventTask(EventRecords records)
     {
         try
@@ -173,7 +166,6 @@ class EventNotificationService implements NotificationService
     @Override
     public void publishEvents(EventRecords records)
     {
-        // Prevent any side effects
         try
         {
             threadPool.submit(new Task(records));

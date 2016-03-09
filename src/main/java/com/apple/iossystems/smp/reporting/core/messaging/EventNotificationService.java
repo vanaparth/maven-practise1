@@ -1,6 +1,5 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
-import com.apple.iossystems.logging.LogLevel;
 import com.apple.iossystems.logging.LogService;
 import com.apple.iossystems.logging.LogServiceFactory2;
 import com.apple.iossystems.smp.reporting.core.analytics.Metric;
@@ -29,12 +28,10 @@ class EventNotificationService implements NotificationService
     private static final Logger LOGGER = Logger.getLogger(EventNotificationService.class);
 
     private final EventNotificationServiceThreadPool threadPool = EventNotificationServiceThreadPool.getInstance();
-
     private final EmailEventService emailService = EmailServiceFactory.getInstance().getEmailService();
     private final EventListener eventListener = EventListenerFactory.getInstance().getSMPPublishEventListener();
     private final EventListener kistaEventListener = EventListenerFactory.getInstance().getSMPKistaEventListener();
     private final EventHubblePublisher eventHubblePublisher = EventHubblePublisher.getInstance(getMetricMap());
-
     private final LogService logService = getLogService();
 
     private final boolean publishEventsEnabled = ApplicationConfiguration.publishEventsEnabled();
@@ -75,11 +72,11 @@ class EventNotificationService implements NotificationService
         return logService;
     }
 
-    private void publishEventRecord(EventRecord record, LogLevel logLevel)
+    private void publishEventRecord(EventRecord record)
     {
         try
         {
-            logService.logEvent("event", logLevel, MapToPair.toPairs(record.getData()));
+            logService.logEvent("event", EventType.getLogLevel(record), MapToPair.toPairs(record.getData()));
 
             eventHubblePublisher.incrementCountForSuccessEvent(EventType.getEventType(record));
         }
@@ -88,20 +85,6 @@ class EventNotificationService implements NotificationService
             LOGGER.error(e.getMessage(), e);
 
             eventHubblePublisher.incrementCountForFailedEvent(EventType.getEventType(record));
-        }
-    }
-
-    private void publishEventRecord(EventRecord record)
-    {
-        publishEventRecord(record, EventType.getLogLevel(record));
-    }
-
-    @Override
-    public void publishEvent(EventRecord record, LogLevel logLevel)
-    {
-        if (publishEventsEnabled)
-        {
-            publishEventRecord(record, logLevel);
         }
     }
 

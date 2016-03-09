@@ -83,6 +83,9 @@ public enum Metric
     CONSUME_PAYMENT_EVENT_QUEUE("kpi.reporting.consume.payment.queue"),
     CONSUME_LOYALTY_EVENT_QUEUE("kpi.reporting.consume.loyalty.queue"),
 
+    CONSUME_BACKLOG_EVENT_QUEUE("kpi.reporting.consume.backlog.queue"),
+    CONSUME_BACKLOG_EVENT_QUEUE_FAILED("kpi.reporting.consume.backlog.queue.failed"),
+
     HTTP_REQUEST_FAILED("kpi.reporting.http.request.failed");
 
     private final String kpi;

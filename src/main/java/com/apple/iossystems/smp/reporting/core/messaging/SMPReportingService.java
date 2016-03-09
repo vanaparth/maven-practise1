@@ -39,7 +39,6 @@ public class SMPReportingService
         createPubSubQueue(exchangeName, EventType.REPORTS);
         createPubSubQueue(exchangeName, EventType.PAYMENT);
         createPubSubQueue(exchangeName, EventType.LOYALTY);
-        createPubSubQueue(exchangeName, EventType.BACKLOG);
     }
 
     private void createExchange(String exchangeName)

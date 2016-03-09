@@ -1,129 +1,72 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
-import com.apple.iossystems.smp.reporting.core.analytics.Metric;
-import com.apple.iossystems.smp.reporting.core.analytics.ResultMetric;
+import com.apple.iossystems.logging.local.BDBStorage;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
-import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
-import com.apple.iossystems.smp.reporting.core.event.EventType;
 import org.apache.log4j.Logger;
-
-import java.util.HashMap;
-import java.util.Map;
-import java.util.concurrent.Callable;
 
 /**
  * @author Toch
  */
-public class BacklogEventNotificationService
+class BacklogEventNotificationService
 {
-    private static final Logger LOGGER = Logger.getLogger(EventNotificationService.class);
+    private static final Logger LOGGER = Logger.getLogger(BacklogEventNotificationService.class);
 
-    private final NotificationService notificationService = SMPEventNotificationService.getInstance().getPublisher();
-    private final EventNotificationServiceThreadPool threadPool = EventNotificationServiceThreadPool.getInstance();
-    private final EventHubblePublisher eventHubblePublisher = EventHubblePublisher.getInstance(getMetricMap());
+    private static final BacklogEventNotificationService INSTANCE = new BacklogEventNotificationService();
 
-    private final boolean publishEventsEnabled = ApplicationConfiguration.publishEventsEnabled();
+    private BdbPublisher bdbPublisher;
 
     private BacklogEventNotificationService()
     {
+        init();
     }
 
     public static BacklogEventNotificationService getInstance()
     {
-        return new BacklogEventNotificationService();
+        return INSTANCE;
     }
 
-    private Map<EventType, ResultMetric> getMetricMap()
+    private void init()
     {
-        Map<EventType, ResultMetric> map = new HashMap<>();
+        BDBStorage bdbStorage = getBdbStorage();
 
-        map.put(EventType.REPORTS, new ResultMetric(Metric.PUBLISH_REPORTS_BACKLOG_EVENT_QUEUE, Metric.PUBLISH_REPORTS_BACKLOG_EVENT_QUEUE_FAILED));
-        map.put(EventType.PAYMENT, new ResultMetric(Metric.PUBLISH_PAYMENT_BACKLOG_EVENT_QUEUE, Metric.PUBLISH_PAYMENT_BACKLOG_EVENT_QUEUE_FAILED));
-        map.put(EventType.LOYALTY, new ResultMetric(Metric.PUBLISH_LOYALTY_BACKLOG_EVENT_QUEUE, Metric.PUBLISH_LOYALTY_BACKLOG_EVENT_QUEUE_FAILED));
-
-        return map;
-    }
-
-    private void publishEventRecord(EventRecord record)
-    {
-        try
+        if (bdbStorage != null)
         {
-            notificationService.publishEvent(record, EventType.BACKLOG.getLogLevel());
+            bdbPublisher = BdbPublisher.getInstance(bdbStorage);
 
-            eventHubblePublisher.incrementCountForSuccessEvent(EventType.getEventType(record));
+            BdbConsumer.getInstance(bdbStorage).start();
         }
-        catch (Exception e)
+        else
         {
-            LOGGER.error(e.getMessage(), e);
-
-            eventHubblePublisher.incrementCountForFailedEvent(EventType.getEventType(record));
+            LOGGER.warn("Unable to start BDB publisher and consumer");
         }
     }
 
-    private void doPublishEventRecords(EventRecords records)
+    private BDBStorage getBdbStorage()
     {
+        BDBStorage bdbStorage = null;
+
         try
         {
-            for (EventRecord record : records.getList())
-            {
-                publishEventRecord(record);
-            }
+            bdbStorage = new BDBStorage(ApplicationConfiguration.getBacklogBdbStore());
         }
         catch (Exception e)
         {
             LOGGER.error(e.getMessage(), e);
         }
-    }
 
-    private void publishEventRecords(EventRecords records)
-    {
-        if (publishEventsEnabled)
-        {
-            doPublishEventRecords(records);
-        }
-    }
-
-    private void publishEventTask(EventRecords records)
-    {
-        try
-        {
-            publishEventRecords(records);
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e.getMessage(), e);
-        }
+        return bdbStorage;
     }
 
     public void publishEvents(EventRecords records)
     {
-        // Prevent any side effects
         try
         {
-            threadPool.submit(new Task(records));
+            bdbPublisher.publishEvents(records);
         }
         catch (Exception e)
         {
             LOGGER.error(e.getMessage(), e);
-        }
-    }
-
-    private class Task implements Callable<Boolean>
-    {
-        private final EventRecords records;
-
-        private Task(EventRecords records)
-        {
-            this.records = records;
-        }
-
-        @Override
-        public Boolean call() throws Exception
-        {
-            publishEventTask(records);
-
-            return true;
         }
     }
 }

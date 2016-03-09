@@ -11,7 +11,7 @@ import java.util.Map;
 /**
  * @author Toch
  */
-public class EventHubblePublisher
+class EventHubblePublisher
 {
     private final HubblePublisher hubblePublisher = HubblePublisher.getInstance();
 

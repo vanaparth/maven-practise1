@@ -44,7 +44,10 @@ public class HubblePublisher
                 operationalAnalytics.incrementCountForEvent(kpi);
             }
 
-            LOGGER.info("Published to Hubble " + kpi + ": " + count);
+            if (count > 0)
+            {
+                LOGGER.info("Published to Hubble " + kpi + ": " + count);
+            }
         }
     }
 

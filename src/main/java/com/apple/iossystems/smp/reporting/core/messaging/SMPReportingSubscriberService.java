@@ -45,9 +45,9 @@ class SMPReportingSubscriberService extends SMPEventSubscriberService
     {
         Map<EventType, Metric> map = new HashMap<>();
 
-        map.put(EventType.REPORTS, Metric.CONSUME_REPORTS_EVENT_QUEUE);
-        map.put(EventType.PAYMENT, Metric.CONSUME_PAYMENT_EVENT_QUEUE);
-        map.put(EventType.LOYALTY, Metric.CONSUME_LOYALTY_EVENT_QUEUE);
+        map.put(EventType.REPORTS, Metric.CONSUME_REPORTS_QUEUE);
+        map.put(EventType.PAYMENT, Metric.CONSUME_PAYMENT_QUEUE);
+        map.put(EventType.LOYALTY, Metric.CONSUME_LOYALTY_QUEUE);
 
         return map;
     }

@@ -17,13 +17,8 @@ public abstract class ScheduledEventTaskHandler implements ScheduledTaskHandler
         scheduledNotification = ScheduledNotification.getInstance(this, 60 * 1000);
     }
 
-    public void shutdown()
+    protected final void shutdown()
     {
         scheduledNotification.shutdown();
-    }
-
-    public boolean isShutdown()
-    {
-        return scheduledNotification.isShutdown();
     }
 }

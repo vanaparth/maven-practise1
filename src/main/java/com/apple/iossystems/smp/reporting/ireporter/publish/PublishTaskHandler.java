@@ -1,6 +1,7 @@
 package com.apple.iossystems.smp.reporting.ireporter.publish;
 
 import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
+import com.apple.iossystems.smp.reporting.core.analytics.PublishStatistics;
 import com.apple.iossystems.smp.reporting.core.analytics.Statistics;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledNotification;
 import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
@@ -30,6 +31,7 @@ class PublishTaskHandler implements EventTaskHandler
     private final IReporterPublishService auditPublishService;
 
     private final Statistics statistics = Statistics.getInstance();
+    private final PublishStatistics publishStatistics = PublishStatistics.getInstance();
     private final StopWatch stopWatch = StopWatch.getInstance();
 
     private final BacklogEventPublisher backlogEventPublisher = BacklogEventPublisher.getInstance();
@@ -43,6 +45,13 @@ class PublishTaskHandler implements EventTaskHandler
         this.publishMetric = publishMetric;
         this.reportsPublishService = reportsPublishService;
         this.auditPublishService = auditPublishService;
+
+        init();
+    }
+
+    private void init()
+    {
+        publishStatistics.updatePublishTime();
 
         startScheduledTasks();
     }
@@ -86,6 +95,9 @@ class PublishTaskHandler implements EventTaskHandler
     {
         int count = 0;
 
+        long lastPublishTime = publishStatistics.getPublishTime();
+        publishStatistics.updatePublishTime();
+
         if (reportsReady(reportsQueue.size()))
         {
             EventRecords records = emptyQueue(reportsQueue);
@@ -100,6 +112,8 @@ class PublishTaskHandler implements EventTaskHandler
 
                 if (!reportsPublishService.sendRequest(IReporterJsonBuilder.toJson(records.getList())))
                 {
+                    publishStatistics.setPublishTime(lastPublishTime);
+
                     count = -count;
 
                     handleFailedPublishEvent(copy);
@@ -112,7 +126,7 @@ class PublishTaskHandler implements EventTaskHandler
 
     private void handleFailedPublishEvent(EventRecords records)
     {
-        backlogEventPublisher.publishEvents(records);
+        backlogEventPublisher.publishEvents(records, publishStatistics);
     }
 
     private EventRecords processEventRecords(EventRecords records)

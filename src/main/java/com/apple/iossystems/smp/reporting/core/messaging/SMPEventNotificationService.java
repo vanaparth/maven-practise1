@@ -1,7 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
 import com.apple.cds.keystone.config.PropertyManager;
-import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledEventTaskHandler;
+import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import org.apache.log4j.Logger;
 
 /**
@@ -9,15 +9,12 @@ import org.apache.log4j.Logger;
  */
 public class SMPEventNotificationService
 {
-    private static final Logger LOGGER = Logger.getLogger(SMPEventNotificationService.class);
-
     private static final SMPEventNotificationService INSTANCE = new SMPEventNotificationService();
 
-    private NotificationService publisher;
+    private NotificationService publisher = getEventNotificationService();
 
     private SMPEventNotificationService()
     {
-        initPublisher();
     }
 
     public static SMPEventNotificationService getInstance()
@@ -30,111 +27,48 @@ public class SMPEventNotificationService
         return publisher;
     }
 
-    private void initPublisher()
+    private NotificationService getEventNotificationService()
     {
+        NotificationService eventNotificationService = null;
+
         // Prevent any side effects
         try
         {
-            doInitPublisher();
+            eventNotificationService = doGetEventNotificationService();
         }
         catch (Exception e)
         {
-            LOGGER.error(e.getMessage(), e);
+            Logger.getLogger(SMPEventNotificationService.class).error(e.getMessage(), e);
         }
+
+        return eventNotificationService;
     }
 
-    private void doInitPublisher()
+    private NotificationService doGetEventNotificationService()
     {
-        String notificationServiceClassName = PropertyManager.getInstance().valueForKey("smp.reporting.eventNotificationService.classname");
+        String eventNotificationServiceClassName = PropertyManager.getInstance().valueForKey("smp.reporting.eventNotificationService.classname");
 
-        NotificationService notificationService = getEventNotificationService(notificationServiceClassName);
+        NotificationServiceFactory notificationServiceFactory = NotificationServiceFactory.getInstance();
 
-        if (!isOnline(notificationService))
+        NotificationService eventNotificationService = (eventNotificationServiceClassName != null) ? notificationServiceFactory.getNotificationService(eventNotificationServiceClassName) : notificationServiceFactory.getEventNotificationService();
+
+        if (!isOnline(eventNotificationService))
         {
-            notificationService = getEventNotificationService();
+            eventNotificationService = OfflineNotificationService.getInstance();
+
+            Logger.getLogger(SMPEventNotificationService.class).warn("Using offline notification service");
         }
 
-        if (!isOnline(notificationService))
+        if (!ApplicationConfiguration.publishEventsEnabled())
         {
-            notificationService = OfflineNotificationService.getInstance();
-
-            LOGGER.warn("Using offline notification service");
-
-            new TaskHandler(notificationServiceClassName);
+            Logger.getLogger(SMPEventNotificationService.class).warn("Publish events is disabled");
         }
 
-        publisher = notificationService;
-    }
-
-    private NotificationService getEventNotificationService()
-    {
-        NotificationService notificationService = null;
-
-        try
-        {
-            notificationService = EventNotificationService.getInstance();
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e.getMessage(), e);
-        }
-
-        return notificationService;
-    }
-
-    private NotificationService getEventNotificationService(String className)
-    {
-        NotificationService notificationService = null;
-
-        if (className != null)
-        {
-            try
-            {
-                notificationService = (NotificationService) Class.forName(className).newInstance();
-            }
-            catch (Exception e)
-            {
-                LOGGER.error(e.getMessage(), e);
-            }
-        }
-
-        return notificationService;
+        return eventNotificationService;
     }
 
     private boolean isOnline(NotificationService notificationService)
     {
         return ((notificationService != null) && notificationService.isOnline());
-    }
-
-    private class TaskHandler extends ScheduledEventTaskHandler
-    {
-        private final String notificationServiceClassName;
-
-        private TaskHandler(String notificationServiceClassName)
-        {
-            this.notificationServiceClassName = notificationServiceClassName;
-        }
-
-        @Override
-        public void handleEvent()
-        {
-            if (isOnline(publisher))
-            {
-                shutdown();
-            }
-            else
-            {
-                LOGGER.info("Attempting to restart notification service");
-
-                NotificationService notificationService = (notificationServiceClassName != null) ? getEventNotificationService(notificationServiceClassName) : getEventNotificationService();
-
-                if (isOnline(notificationService))
-                {
-                    publisher = notificationService;
-
-                    shutdown();
-                }
-            }
-        }
     }
 }

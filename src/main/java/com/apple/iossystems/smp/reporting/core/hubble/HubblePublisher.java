@@ -12,7 +12,7 @@ public class HubblePublisher
 {
     private static final Logger LOGGER = Logger.getLogger(HubblePublisher.class);
 
-    private OperationalAnalytics operationalAnalytics = OperationalAnalyticsManager.getInstance().getOperationalAnalytics();
+    private final OperationalAnalytics operationalAnalytics = OperationalAnalyticsManager.getInstance().getOperationalAnalytics();
 
     private HubblePublisher()
     {
@@ -26,11 +26,6 @@ public class HubblePublisher
     public void incrementCountForEvent(Metric metric)
     {
         incrementCountForEvent(metric, 1);
-    }
-
-    public void logCountForEvent(Metric metric, int count)
-    {
-        logTimingForEvent(metric, count);
     }
 
     public void incrementCountForEvent(Metric metric, int count)

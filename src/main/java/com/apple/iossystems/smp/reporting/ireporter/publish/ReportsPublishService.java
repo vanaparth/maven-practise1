@@ -6,13 +6,13 @@ import com.apple.iossystems.smp.reporting.ireporter.configuration.ReportsConfigu
 /**
  * @author Toch
  */
-public class ReportsPublishService extends IReporterPublishService
+class ReportsPublishService extends IReporterPublishService
 {
     private ReportsPublishService()
     {
     }
 
-    public static ReportsPublishService getInstance()
+    static ReportsPublishService getInstance()
     {
         return new ReportsPublishService();
     }

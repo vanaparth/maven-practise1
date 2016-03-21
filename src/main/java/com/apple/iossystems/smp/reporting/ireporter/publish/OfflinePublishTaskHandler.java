@@ -11,18 +11,23 @@ class OfflinePublishTaskHandler implements EventTaskHandler
     {
     }
 
-    public static OfflinePublishTaskHandler getInstance()
+    static OfflinePublishTaskHandler getInstance()
     {
         return new OfflinePublishTaskHandler();
     }
 
     @Override
-    public final void handleEvent()
+    public void handleEvent()
     {
     }
 
     @Override
     public void processEventRecord(EventRecord record)
+    {
+    }
+
+    @Override
+    public void shutdown()
     {
     }
 }

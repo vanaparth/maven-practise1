@@ -9,11 +9,11 @@ import com.apple.iossystems.smp.reporting.core.logging.KistaEventLogger;
 /**
  * @author Toch
  */
-public class SMPKistaEventListener extends SMPEventListener
+class SMPKistaEventListener extends SMPEventListener
 {
-    private KistaEventLogger kistaEventLogger = new KistaEventLogger(PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.kista.event.log", false));
+    private final KistaEventLogger kistaEventLogger = new KistaEventLogger(PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.kista.event.log", false));
 
-    public SMPKistaEventListener()
+    SMPKistaEventListener()
     {
     }
 

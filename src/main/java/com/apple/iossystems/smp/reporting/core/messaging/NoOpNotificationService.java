@@ -5,13 +5,13 @@ import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 /**
  * @author Toch
  */
-public class NoOpNotificationService implements NotificationService
+class NoOpNotificationService implements NotificationService
 {
     private NoOpNotificationService()
     {
     }
 
-    public static NoOpNotificationService getInstance()
+    static NoOpNotificationService getInstance()
     {
         return new NoOpNotificationService();
     }

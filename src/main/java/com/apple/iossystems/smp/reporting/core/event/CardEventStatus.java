@@ -8,9 +8,7 @@ import com.apple.iossystems.smp.domain.clm.Card;
 public class CardEventStatus
 {
     private static final Card.CardStatus[] VALID_SUSPEND_STATUS = {Card.CardStatus.SUSPENDED, Card.CardStatus.SUSPENDED_ISSUER, Card.CardStatus.SUSPENDED_OTP, Card.CardStatus.SUSPENDED_WALLET};
-
     private static final Card.CardStatus[] VALID_UNLINKED_STATUS = {Card.CardStatus.UNLINKED};
-
     private static final Card.CardStatus[] VALID_RESUME_STATUS = {Card.CardStatus.ACTIVE};
 
     private CardEventStatus()

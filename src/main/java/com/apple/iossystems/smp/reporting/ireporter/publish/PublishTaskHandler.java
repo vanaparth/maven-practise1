@@ -3,7 +3,7 @@ package com.apple.iossystems.smp.reporting.ireporter.publish;
 import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
 import com.apple.iossystems.smp.reporting.core.analytics.PublishStatistics;
 import com.apple.iossystems.smp.reporting.core.analytics.Statistics;
-import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledNotification;
+import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledTask;
 import com.apple.iossystems.smp.reporting.core.event.EventAttribute;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
@@ -30,6 +30,8 @@ class PublishTaskHandler implements EventTaskHandler
     private final IReporterPublishService reportsPublishService;
     private final IReporterPublishService auditPublishService;
 
+    private final ScheduledTask scheduledTask;
+
     private final Statistics statistics = Statistics.getInstance();
     private final PublishStatistics publishStatistics = PublishStatistics.getInstance();
     private final StopWatch stopWatch = StopWatch.getInstance();
@@ -39,33 +41,38 @@ class PublishTaskHandler implements EventTaskHandler
 
     private BlockingQueue<EventRecord> reportsQueue = new LinkedBlockingQueue<>();
 
-    public PublishTaskHandler(EventType publishEventType, PublishMetric publishMetric, IReporterPublishService reportsPublishService, IReporterPublishService auditPublishService)
+    PublishTaskHandler(EventType publishEventType, PublishMetric publishMetric, IReporterPublishService reportsPublishService, IReporterPublishService auditPublishService)
     {
         this.publishEventType = publishEventType;
         this.publishMetric = publishMetric;
         this.reportsPublishService = reportsPublishService;
         this.auditPublishService = auditPublishService;
 
-        init();
-    }
-
-    private void init()
-    {
         publishStatistics.updatePublishTime();
 
-        startScheduledTasks();
+        scheduledTask = getScheduledTask();
     }
 
-    private void startScheduledTasks()
+    private ScheduledTask getScheduledTask()
     {
-        ScheduledNotification.getInstance(this, 60 * 1000);
+        return ScheduledTask.getInstance(this, 60 * 1000);
     }
 
     @Override
-    public final void handleEvent()
+    public void handleEvent()
     {
         handlePublishEvent();
         handleAuditEvent();
+    }
+
+    @Override
+    public void shutdown()
+    {
+        LOGGER.info("Shutting down PublishTaskHandler");
+
+        scheduledTask.shutdown();
+
+        handleShutdownEvent();
     }
 
     private boolean reportsReady(int available)
@@ -89,6 +96,16 @@ class PublishTaskHandler implements EventTaskHandler
         }
 
         return records;
+    }
+
+    private void handleShutdownEvent()
+    {
+        EventRecords records = emptyQueue(reportsQueue);
+
+        if (records.size() > 0)
+        {
+            backlogEventPublisher.handleShutdownEvent(records);
+        }
     }
 
     private int publish()
@@ -191,11 +208,9 @@ class PublishTaskHandler implements EventTaskHandler
         {
             int sent = statistics.getIntValue(publishMetric.getIReporterRecordsSent());
             int failed = statistics.getIntValue(publishMetric.getIReporterRecordsFailed());
-            int pending = statistics.getIntValue(publishMetric.getIReporterRecordsPending());
-            int lost = statistics.getIntValue(publishMetric.getIReporterRecordsLost());
 
             List<AuditRecord> auditRecords = new ArrayList<>();
-            auditRecords.add(new AuditRecord(sent, failed, pending, lost));
+            auditRecords.add(new AuditRecord(sent, failed, 0, 0));
 
             AuditRequest auditRequest = new AuditRequest(auditRecords);
 
@@ -216,7 +231,5 @@ class PublishTaskHandler implements EventTaskHandler
     public void processEventRecord(EventRecord record)
     {
         reportsQueue.offer(record);
-
-        hubblePublisher.logCountForEvent(publishMetric.getIReporterRecordsPending(), reportsQueue.size());
     }
 }

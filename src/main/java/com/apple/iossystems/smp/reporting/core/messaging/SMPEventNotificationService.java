@@ -1,7 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
 import com.apple.cds.keystone.config.PropertyManager;
-import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import org.apache.log4j.Logger;
 
 /**
@@ -11,7 +10,7 @@ public class SMPEventNotificationService
 {
     private static final SMPEventNotificationService INSTANCE = new SMPEventNotificationService();
 
-    private NotificationService publisher = getEventNotificationService();
+    private final NotificationService publisher = getEventNotificationService();
 
     private SMPEventNotificationService()
     {
@@ -57,11 +56,6 @@ public class SMPEventNotificationService
             eventNotificationService = OfflineNotificationService.getInstance();
 
             Logger.getLogger(SMPEventNotificationService.class).warn("Using offline notification service");
-        }
-
-        if (!ApplicationConfiguration.publishEventsEnabled())
-        {
-            Logger.getLogger(SMPEventNotificationService.class).warn("Publish events is disabled");
         }
 
         return eventNotificationService;

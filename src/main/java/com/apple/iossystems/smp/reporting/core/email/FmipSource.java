@@ -42,11 +42,11 @@ public enum FmipSource
 
     public static FmipSource fromCode(String code)
     {
-        for (FmipSource e : values())
+        for (FmipSource fmipSource : values())
         {
-            if (e.code.equals(code))
+            if (fmipSource.code.equals(code))
             {
-                return e;
+                return fmipSource;
             }
         }
 
@@ -55,11 +55,11 @@ public enum FmipSource
 
     public static FmipSource fromCertificate(BigInteger certificate)
     {
-        for (FmipSource e : values())
+        for (FmipSource fmipSource : values())
         {
-            if (e.certificate.equals(certificate))
+            if (fmipSource.certificate.equals(certificate))
             {
-                return e;
+                return fmipSource;
             }
         }
 

@@ -20,8 +20,6 @@ public enum Metric
     // IReporter Reports Metrics for IReporter
     IREPORTER_REPORTS_RECORDS_SENT(""),
     IREPORTER_REPORTS_RECORDS_FAILED(""),
-    IREPORTER_REPORTS_RECORDS_PENDING("kpi.ireporter.transactions.pending"),
-    IREPORTER_REPORTS_RECORDS_LOST(""),
 
     // Oslo IReporter Reports Metrics for Hubble
     PAYMENT_REPORTS_RECORDS_SENT("kpi.ireporter.transactions.published.oslo"),
@@ -38,8 +36,6 @@ public enum Metric
     // Oslo IReporter Reports Metrics for IReporter
     PAYMENT_IREPORTER_REPORTS_RECORDS_SENT(""),
     PAYMENT_IREPORTER_REPORTS_RECORDS_FAILED(""),
-    PAYMENT_IREPORTER_REPORTS_RECORDS_PENDING("kpi.ireporter.transactions.pending.oslo"),
-    PAYMENT_IREPORTER_REPORTS_RECORDS_LOST(""),
 
     // Stockholm/Oslo Performance Monitoring
     IREPORTER_TIMING("kpi.smp.ireporter.timing"),
@@ -56,8 +52,6 @@ public enum Metric
     LOYALTY_AUDIT_CONFIGURATION_CHANGED("kpi.ireporter.configuration.changed.audit.loyalty"),
     LOYALTY_IREPORTER_REPORTS_RECORDS_SENT(""),
     LOYALTY_IREPORTER_REPORTS_RECORDS_FAILED(""),
-    LOYALTY_IREPORTER_REPORTS_RECORDS_PENDING("kpi.ireporter.transactions.pending.loyalty"),
-    LOYALTY_IREPORTER_REPORTS_RECORDS_LOST(""),
     LOYALTY_IREPORTER_TIMING("kpi.smp.ireporter.timing.loyalty"),
     LOYALTY_REPORTS_CONFIGURATION_REQUESTED("kpi.ireporter.configuration.fetched.loyalty"),
     LOYALTY_REPORTS_CONFIGURATION_CHANGED("kpi.ireporter.configuration.changed.loyalty"),

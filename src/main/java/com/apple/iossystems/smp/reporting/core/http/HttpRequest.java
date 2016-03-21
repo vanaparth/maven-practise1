@@ -11,8 +11,8 @@ public class HttpRequest
     private final String httpMethod;
     private final String queryString;
     private final String contentType;
-    public final String data;
-    private Map<String, String> headers;
+    private final String data;
+    private final Map<String, String> headers;
 
     private HttpRequest(String url, String httpMethod, String queryString, String contentType, String data, Map<String, String> headers)
     {
@@ -29,32 +29,32 @@ public class HttpRequest
         return new HttpRequest(url, httpMethod, queryString, contentType, data, headers);
     }
 
-    public String getUrl()
+    String getUrl()
     {
         return url;
     }
 
-    public String getHttpMethod()
+    String getHttpMethod()
     {
         return httpMethod;
     }
 
-    public String getQueryString()
+    String getQueryString()
     {
         return queryString;
     }
 
-    public String getContentType()
+    String getContentType()
     {
         return contentType;
     }
 
-    public String getData()
+    String getData()
     {
         return data;
     }
 
-    public Map<String, String> getHeaders()
+    Map<String, String> getHeaders()
     {
         return headers;
     }

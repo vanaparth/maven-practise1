@@ -9,9 +9,9 @@ public class SMPEventCache
 {
     private static final long DEFAULT_CACHE_TIMEOUT_MILLISECONDS = 72 * 60 * 60 * 1000;
 
-    private CacheService cacheService = CacheService.getInstance();
-
     private static final SMPEventCache INSTANCE = new SMPEventCache();
+
+    private final CacheService cacheService = CacheService.getInstance();
 
     private SMPEventCache()
     {

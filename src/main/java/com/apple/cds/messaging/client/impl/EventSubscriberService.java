@@ -16,11 +16,11 @@ import java.net.InetAddress;
 /**
  * @author Toch
  */
-public abstract class SMPEventSubscriberService extends LoggingSubscriberServiceBase<LogEvent>
+public abstract class EventSubscriberService extends LoggingSubscriberServiceBase<LogEvent>
 {
-    private SMPEventConsumerService consumerService;
+    private EventConsumerService consumerService;
 
-    protected SMPEventSubscriberService(String queueName)
+    protected EventSubscriberService(String queueName)
     {
         init(queueName);
     }
@@ -29,7 +29,7 @@ public abstract class SMPEventSubscriberService extends LoggingSubscriberService
     {
         SMPEventDeliveryHandler smpEventDeliveryHandler = new SMPEventDeliveryHandler();
 
-        consumerService = new SMPEventConsumerService(getProperties("LoggingSubscriberService", queueName), smpEventDeliveryHandler, SMPLogEventSerializer.getInstance());
+        consumerService = new EventConsumerService(getProperties("LoggingSubscriberService", queueName), smpEventDeliveryHandler, SMPLogEventSerializer.getInstance());
 
         smpEventDeliveryHandler.setEventHandler(this);
     }
@@ -48,7 +48,7 @@ public abstract class SMPEventSubscriberService extends LoggingSubscriberService
 
         properties.setServiceConsumerQueue(queueName);
         properties.setServiceName(serviceName);
-        properties.setServiceConsumerTransactional(false);
+        properties.setServiceConsumerTransactional(true);
 
         try
         {
@@ -56,7 +56,7 @@ public abstract class SMPEventSubscriberService extends LoggingSubscriberService
         }
         catch (Exception e)
         {
-            Logger.getLogger(SMPEventSubscriberService.class).error(e.getMessage(), e);
+            Logger.getLogger(EventSubscriberService.class).error(e.getMessage(), e);
         }
 
         return properties;
@@ -127,12 +127,7 @@ public abstract class SMPEventSubscriberService extends LoggingSubscriberService
         return consumerService.isQuiescent();
     }
 
-    public final void begin()
-    {
-        startConsumerService();
-    }
-
-    private void startConsumerService()
+    public final void startConsumerService()
     {
         try
         {
@@ -140,9 +135,11 @@ public abstract class SMPEventSubscriberService extends LoggingSubscriberService
         }
         catch (Exception e)
         {
-            Logger.getLogger(SMPEventSubscriberService.class).error(e.getMessage(), e);
+            Logger.getLogger(EventSubscriberService.class).error(e.getMessage(), e);
         }
     }
 
     public abstract void handleEvent(LogEvent logEvent);
+
+    public abstract void shutdown();
 }

@@ -7,7 +7,7 @@ import java.util.List;
  */
 public class AuditRequest
 {
-    private List<AuditRecord> auditRecords;
+    private final List<AuditRecord> auditRecords;
 
     public AuditRequest(List<AuditRecord> auditRecords)
     {

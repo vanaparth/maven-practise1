@@ -1,10 +1,11 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
+import com.apple.cds.keystone.spring.AppContext;
 import com.apple.iossystems.logging.LogService;
 import com.apple.iossystems.logging.LogServiceFactory2;
 import com.apple.iossystems.smp.reporting.core.analytics.Metric;
 import com.apple.iossystems.smp.reporting.core.analytics.ResultMetric;
-import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
+import com.apple.iossystems.smp.reporting.core.concurrent.TaskExecutorService;
 import com.apple.iossystems.smp.reporting.core.email.EmailEventService;
 import com.apple.iossystems.smp.reporting.core.email.EmailServiceFactory;
 import com.apple.iossystems.smp.reporting.core.email.SMPEmailEvent;
@@ -27,20 +28,18 @@ class EventNotificationService implements NotificationService
 {
     private static final Logger LOGGER = Logger.getLogger(EventNotificationService.class);
 
-    private final EventNotificationServiceThreadPool threadPool = EventNotificationServiceThreadPool.getInstance();
     private final EmailEventService emailService = EmailServiceFactory.getInstance().getEmailService();
     private final EventListener eventListener = EventListenerFactory.getInstance().getSMPPublishEventListener();
     private final EventListener kistaEventListener = EventListenerFactory.getInstance().getSMPKistaEventListener();
     private final EventHubblePublisher eventHubblePublisher = EventHubblePublisher.getInstance(getMetricMap());
     private final LogService logService = getLogService();
-
-    private final boolean publishEventsEnabled = ApplicationConfiguration.publishEventsEnabled();
+    private final TaskExecutorService taskExecutorService = AppContext.getApplicationContext().getBean(TaskExecutorService.class);
 
     private EventNotificationService()
     {
     }
 
-    public static EventNotificationService getInstance()
+    static EventNotificationService getInstance()
     {
         return new EventNotificationService();
     }
@@ -90,12 +89,9 @@ class EventNotificationService implements NotificationService
 
     private void publishEventRecords(EventRecords records)
     {
-        if (publishEventsEnabled)
-        {
-            doPublishEventRecords(records);
+        doPublishEventRecords(records);
 
-            notifyListeners(records);
-        }
+        notifyListeners(records);
     }
 
     private void doPublishEventRecords(EventRecords records)
@@ -168,7 +164,7 @@ class EventNotificationService implements NotificationService
     {
         try
         {
-            threadPool.submit(new Task(records));
+            taskExecutorService.submit(new Task(records));
         }
         catch (Exception e)
         {

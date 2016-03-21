@@ -9,24 +9,24 @@ import java.util.concurrent.TimeUnit;
 /**
  * @author Toch
  */
-public class ScheduledNotification
+public class ScheduledTask
 {
-    private static final Logger LOGGER = Logger.getLogger(ScheduledNotification.class);
+    private static final Logger LOGGER = Logger.getLogger(ScheduledTask.class);
 
-    private ScheduledTaskHandler scheduledTaskHandler;
+    private final ScheduledTaskHandler scheduledTaskHandler;
 
     private ScheduledExecutorService scheduledExecutorService;
 
-    private ScheduledNotification(ScheduledTaskHandler scheduledTaskHandler, long period)
+    private ScheduledTask(ScheduledTaskHandler scheduledTaskHandler, long period)
     {
         this.scheduledTaskHandler = scheduledTaskHandler;
 
         startTask(period);
     }
 
-    public static ScheduledNotification getInstance(ScheduledTaskHandler scheduledTaskHandler, long period)
+    public static ScheduledTask getInstance(ScheduledTaskHandler scheduledTaskHandler, long period)
     {
-        return new ScheduledNotification(scheduledTaskHandler, period);
+        return new ScheduledTask(scheduledTaskHandler, period);
     }
 
     private void startTask(long period)
@@ -55,10 +55,5 @@ public class ScheduledNotification
     public void shutdown()
     {
         scheduledExecutorService.shutdown();
-    }
-
-    public boolean isShutdown()
-    {
-        return scheduledExecutorService.isShutdown();
     }
 }

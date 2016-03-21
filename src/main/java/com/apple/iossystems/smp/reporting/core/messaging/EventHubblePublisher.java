@@ -22,7 +22,7 @@ class EventHubblePublisher
         this.metricMap = (metricMap != null) ? metricMap : Collections.<EventType, ResultMetric>emptyMap();
     }
 
-    public static EventHubblePublisher getInstance(Map<EventType, ResultMetric> metricMap)
+    static EventHubblePublisher getInstance(Map<EventType, ResultMetric> metricMap)
     {
         return new EventHubblePublisher(metricMap);
     }
@@ -47,12 +47,12 @@ class EventHubblePublisher
         incrementCountForEvent(eventType, success, 1);
     }
 
-    public void incrementCountForSuccessEvent(EventType eventType)
+    void incrementCountForSuccessEvent(EventType eventType)
     {
         incrementCountForEvent(eventType, true);
     }
 
-    public void incrementCountForFailedEvent(EventType eventType)
+    void incrementCountForFailedEvent(EventType eventType)
     {
         incrementCountForEvent(eventType, false);
     }

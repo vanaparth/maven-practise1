@@ -12,22 +12,22 @@ class NotificationServiceFactory
     {
     }
 
-    public static NotificationServiceFactory getInstance()
+    static NotificationServiceFactory getInstance()
     {
         return new NotificationServiceFactory();
     }
 
-    public NotificationService getEventNotificationService()
+    NotificationService getEventNotificationService()
     {
         return ApplicationConfiguration.publishEventsEnabled() ? EventNotificationService.getInstance() : NoOpNotificationService.getInstance();
     }
 
-    public NotificationService getBacklogEventNotificationService()
+    NotificationService getBacklogEventNotificationService()
     {
         return ApplicationConfiguration.publishEventsEnabled() ? BacklogEventNotificationService.getInstance() : NoOpNotificationService.getInstance();
     }
 
-    public NotificationService getNotificationService(String className)
+    NotificationService getNotificationService(String className)
     {
         return ApplicationConfiguration.publishEventsEnabled() ? doGetNotificationService(className) : NoOpNotificationService.getInstance();
     }

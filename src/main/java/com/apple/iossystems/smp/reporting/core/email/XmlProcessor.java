@@ -11,12 +11,12 @@ class XmlProcessor
     {
     }
 
-    public static XmlProcessor getInstance()
+    static XmlProcessor getInstance()
     {
         return new XmlProcessor();
     }
 
-    public String getValidXmlString(String str)
+    String getValidXmlString(String str)
     {
         StringBuilder stringBuilder = new StringBuilder();
 

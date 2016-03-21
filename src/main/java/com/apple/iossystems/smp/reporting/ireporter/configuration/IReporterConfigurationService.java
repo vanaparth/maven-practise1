@@ -8,12 +8,10 @@ import com.apple.iossystems.smp.reporting.core.timer.Timer;
  */
 public abstract class IReporterConfigurationService
 {
+    private final IReporterConfigurationFactory iReporterConfigurationFactory = IReporterConfigurationFactory.getInstance();
+    private final HubblePublisher hubblePublisher = HubblePublisher.getInstance();
+
     private IReporterConfiguration configuration;
-
-    private IReporterConfigurationFactory iReporterConfigurationFactory = IReporterConfigurationFactory.getInstance();
-
-    private HubblePublisher hubblePublisher = HubblePublisher.getInstance();
-
     private long timestamp;
 
     IReporterConfigurationService()
@@ -25,7 +23,7 @@ public abstract class IReporterConfigurationService
 
     abstract ConfigurationMetric getConfigurationMetric();
 
-    protected IReporterConfigurationFactory getIReporterConfigurationFactory()
+    IReporterConfigurationFactory getIReporterConfigurationFactory()
     {
         return iReporterConfigurationFactory;
     }

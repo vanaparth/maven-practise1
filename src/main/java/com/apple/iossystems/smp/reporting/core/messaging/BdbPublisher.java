@@ -1,10 +1,11 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
+import com.apple.cds.keystone.spring.AppContext;
 import com.apple.iossystems.logging.local.BDBStorage;
 import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
 import com.apple.iossystems.smp.reporting.core.analytics.Metric;
 import com.apple.iossystems.smp.reporting.core.analytics.ResultMetric;
-import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
+import com.apple.iossystems.smp.reporting.core.concurrent.TaskExecutorService;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 import com.apple.iossystems.smp.reporting.core.event.EventType;
@@ -22,18 +23,16 @@ class BdbPublisher
 {
     private static final Logger LOGGER = Logger.getLogger(BdbPublisher.class);
 
-    private final EventNotificationServiceThreadPool threadPool = EventNotificationServiceThreadPool.getInstance();
+    private final TaskExecutorService taskExecutorService = AppContext.getApplicationContext().getBean(TaskExecutorService.class);
     private final EventHubblePublisher eventHubblePublisher = EventHubblePublisher.getInstance(getMetricMap());
     private final BDBStorage bdbStorage;
-
-    private final boolean publishEventsEnabled = ApplicationConfiguration.publishEventsEnabled();
 
     private BdbPublisher(BDBStorage bdbStorage)
     {
         this.bdbStorage = bdbStorage;
     }
 
-    public static BdbPublisher getInstance(BDBStorage bdbStorage)
+    static BdbPublisher getInstance(BDBStorage bdbStorage)
     {
         return new BdbPublisher(bdbStorage);
     }
@@ -67,14 +66,6 @@ class BdbPublisher
 
     private void publishEventRecords(EventRecords records)
     {
-        if (publishEventsEnabled)
-        {
-            doPublishEventRecords(records);
-        }
-    }
-
-    private void doPublishEventRecords(EventRecords records)
-    {
         for (EventRecord record : records.getList())
         {
             publishEventRecord(record);
@@ -93,11 +84,11 @@ class BdbPublisher
         }
     }
 
-    public void publishEvents(EventRecords records)
+    void publishEvents(EventRecords records)
     {
         try
         {
-            threadPool.submit(new Task(records));
+            taskExecutorService.submit(new Task(records));
         }
         catch (Exception e)
         {

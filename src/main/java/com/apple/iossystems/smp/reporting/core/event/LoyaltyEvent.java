@@ -12,7 +12,7 @@ public class LoyaltyEvent
     private String token;
     private String source;
 
-    public LoyaltyEvent(Builder builder)
+    private LoyaltyEvent(Builder builder)
     {
         this.loyaltyEventType = builder.loyaltyEventType;
         this.eventTime = builder.eventTime;

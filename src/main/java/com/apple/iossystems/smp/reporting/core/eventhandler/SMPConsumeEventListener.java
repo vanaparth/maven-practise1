@@ -9,9 +9,9 @@ import com.apple.iossystems.smp.reporting.core.logging.SMPEventLogger;
  */
 class SMPConsumeEventListener extends SMPEventListener
 {
-    private SMPEventLogger smpEventLogger = new SMPEventLogger(PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.consume.event.log", false));
+    private final SMPEventLogger smpEventLogger = new SMPEventLogger(PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.consume.event.log", false));
 
-    public SMPConsumeEventListener()
+    SMPConsumeEventListener()
     {
     }
 

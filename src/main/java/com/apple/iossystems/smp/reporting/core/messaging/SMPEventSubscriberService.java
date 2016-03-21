@@ -1,6 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
-import com.apple.cds.messaging.client.impl.SMPEventSubscriberService;
+import com.apple.cds.messaging.client.impl.EventSubscriberService;
 import com.apple.iossystems.logging.pubsub.LogEvent;
 import com.apple.iossystems.smp.reporting.core.analytics.Metric;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
@@ -18,9 +18,9 @@ import java.util.Map;
 /**
  * @author Toch
  */
-class SMPReportingSubscriberService extends SMPEventSubscriberService
+class SMPEventSubscriberService extends EventSubscriberService
 {
-    private static final Logger LOGGER = Logger.getLogger(SMPReportingSubscriberService.class);
+    private static final Logger LOGGER = Logger.getLogger(SMPEventSubscriberService.class);
 
     private final EventListener eventListener = EventListenerFactory.getInstance().getSMPConsumeEventListener();
     private final HubblePublisher hubblePublisher = HubblePublisher.getInstance();
@@ -29,16 +29,16 @@ class SMPReportingSubscriberService extends SMPEventSubscriberService
 
     private final EventTaskHandler eventTaskHandler;
 
-    private SMPReportingSubscriberService(String queueName, EventTaskHandler eventTaskHandler)
+    private SMPEventSubscriberService(String queueName, EventTaskHandler eventTaskHandler)
     {
         super(queueName);
 
         this.eventTaskHandler = eventTaskHandler;
     }
 
-    public static SMPReportingSubscriberService getInstance(String queueName, EventTaskHandler eventTaskHandler)
+    static SMPEventSubscriberService getInstance(String queueName, EventTaskHandler eventTaskHandler)
     {
-        return new SMPReportingSubscriberService(queueName, eventTaskHandler);
+        return new SMPEventSubscriberService(queueName, eventTaskHandler);
     }
 
     private Map<EventType, Metric> getMetricMap()
@@ -62,6 +62,16 @@ class SMPReportingSubscriberService extends SMPEventSubscriberService
         sendEventRecord(record);
 
         notifyListeners(record);
+    }
+
+    @Override
+    public void shutdown()
+    {
+        LOGGER.info("Shutting down SMPEventSubscriberService");
+
+        stopConsumer();
+
+        eventTaskHandler.shutdown();
     }
 
     private void sendEventRecord(EventRecord record)
@@ -102,6 +112,18 @@ class SMPReportingSubscriberService extends SMPEventSubscriberService
             {
                 hubblePublisher.incrementCountForEvent(metric);
             }
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+
+    private void stopConsumer()
+    {
+        try
+        {
+            stop();
         }
         catch (Exception e)
         {

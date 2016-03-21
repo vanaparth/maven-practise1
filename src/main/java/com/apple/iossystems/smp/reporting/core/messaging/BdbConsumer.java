@@ -4,7 +4,7 @@ import com.apple.cds.keystone.spring.AppContext;
 import com.apple.iossystems.logging.local.BDBStorage;
 import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
 import com.apple.iossystems.smp.reporting.core.analytics.Metric;
-import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledNotification;
+import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledTask;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledTaskHandler;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
@@ -26,11 +26,10 @@ class BdbConsumer implements ScheduledTaskHandler
 
     private final NotificationService notificationService = SMPEventNotificationService.getInstance().getPublisher();
     private final HubblePublisher hubblePublisher = HubblePublisher.getInstance();
-    private final BDBStorage bdbStorage;
+    private final StoreManagementService storeManagementService = AppContext.getApplicationContext().getBean(StoreManagementService.class);
 
     private final int bdbBatchSize = ApplicationConfiguration.getLogServiceBdbBatchSize();
-
-    private StoreManagementService storeManagementService = AppContext.getApplicationContext().getBean(StoreManagementService.class);
+    private final BDBStorage bdbStorage;
 
     private BdbConsumer(BDBStorage bdbStorage)
     {
@@ -39,7 +38,7 @@ class BdbConsumer implements ScheduledTaskHandler
         init();
     }
 
-    public static BdbConsumer getInstance(BDBStorage bdbStorage)
+    static BdbConsumer getInstance(BDBStorage bdbStorage)
     {
         return new BdbConsumer(bdbStorage);
     }
@@ -51,11 +50,11 @@ class BdbConsumer implements ScheduledTaskHandler
 
     private void startScheduledTasks()
     {
-        ScheduledNotification.getInstance(this, 5 * 60 * 1000);
+        ScheduledTask.getInstance(this, 5 * 60 * 1000);
     }
 
     @Override
-    public final void handleEvent()
+    public void handleEvent()
     {
         handleConsumeEvents();
     }
@@ -156,7 +155,7 @@ class BdbConsumer implements ScheduledTaskHandler
         return (map != null);
     }
 
-    public void start()
+    void start()
     {
     }
 }

@@ -6,13 +6,13 @@ import com.apple.iossystems.smp.reporting.ireporter.configuration.PaymentAuditCo
 /**
  * @author Toch
  */
-public class PaymentAuditPublishService extends IReporterPublishService
+class PaymentAuditPublishService extends IReporterPublishService
 {
     private PaymentAuditPublishService()
     {
     }
 
-    public static PaymentAuditPublishService getInstance()
+    static PaymentAuditPublishService getInstance()
     {
         return new PaymentAuditPublishService();
     }

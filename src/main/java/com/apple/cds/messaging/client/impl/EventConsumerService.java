@@ -11,9 +11,9 @@ import com.apple.iossystems.smp.reporting.core.messaging.SMPLogEventSerializer;
 /**
  * @author Toch
  */
-class SMPEventConsumerService extends BasicConsumerService<LogEvent>
+class EventConsumerService extends BasicConsumerService<LogEvent>
 {
-    public SMPEventConsumerService(ConsumerServiceProperties properties, SMPEventDeliveryHandler deliveryHandler, SMPLogEventSerializer serializer)
+    EventConsumerService(ConsumerServiceProperties properties, SMPEventDeliveryHandler deliveryHandler, SMPLogEventSerializer serializer)
     {
         super(properties, deliveryHandler, serializer);
 

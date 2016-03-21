@@ -6,13 +6,13 @@ import com.apple.iossystems.smp.reporting.ireporter.configuration.IReporterConfi
 /**
  * @author Toch
  */
-public class AuditPublishService extends IReporterPublishService
+class AuditPublishService extends IReporterPublishService
 {
     private AuditPublishService()
     {
     }
 
-    public static AuditPublishService getInstance()
+    static AuditPublishService getInstance()
     {
         return new AuditPublishService();
     }

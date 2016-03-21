@@ -2,7 +2,6 @@ package com.apple.iossystems.smp.reporting.core.persistence;
 
 import com.apple.cds.cache.Cache;
 import com.apple.iossystems.persistence.cache.StockholmCacheFactory;
-import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledEventTaskHandler;
 import org.apache.log4j.Logger;
 
 /**
@@ -12,11 +11,10 @@ class CacheService
 {
     private static final Logger LOGGER = Logger.getLogger(CacheService.class);
 
-    private Cache cache;
+    private final Cache cache = getCacheInstance();
 
     private CacheService()
     {
-        initCache();
     }
 
     public static CacheService getInstance()
@@ -24,17 +22,7 @@ class CacheService
         return new CacheService();
     }
 
-    private void initCache()
-    {
-        cache = createCache();
-
-        if (cache == null)
-        {
-            new TaskHandler();
-        }
-    }
-
-    private Cache createCache()
+    private Cache getCacheInstance()
     {
         Cache cache = null;
 
@@ -50,13 +38,18 @@ class CacheService
         return cache;
     }
 
-    public void put(String key, String value, long timeoutInMilliseconds)
+    private Cache getCache()
+    {
+        return (cache != null) ? cache : getCacheInstance();
+    }
+
+    void put(String key, String value, long timeoutInMilliseconds)
     {
         try
         {
             if ((key != null) && (value != null))
             {
-                cache.setValueForKeyWithTimeout(value, key, timeoutInMilliseconds);
+                getCache().setValueForKeyWithTimeout(value, key, timeoutInMilliseconds);
             }
         }
         catch (Exception e)
@@ -65,7 +58,7 @@ class CacheService
         }
     }
 
-    public String get(String key)
+    String get(String key)
     {
         String value = null;
 
@@ -73,7 +66,7 @@ class CacheService
         {
             if (key != null)
             {
-                Object cacheValue = cache.valueForKey(key);
+                Object cacheValue = getCache().valueForKey(key);
 
                 if (cacheValue != null)
                 {
@@ -89,7 +82,7 @@ class CacheService
         return value;
     }
 
-    public String remove(String key)
+    String remove(String key)
     {
         String value = null;
 
@@ -99,7 +92,7 @@ class CacheService
             {
                 value = get(key);
 
-                cache.removeValueForKey(key);
+                getCache().removeValueForKey(key);
             }
         }
         catch (Exception e)
@@ -108,34 +101,5 @@ class CacheService
         }
 
         return value;
-    }
-
-    private class TaskHandler extends ScheduledEventTaskHandler
-    {
-        private TaskHandler()
-        {
-        }
-
-        @Override
-        public void handleEvent()
-        {
-            if (cache != null)
-            {
-                shutdown();
-            }
-            else
-            {
-                LOGGER.info("Attempting to recreate cache");
-
-                Cache c = createCache();
-
-                if (c != null)
-                {
-                    cache = c;
-
-                    shutdown();
-                }
-            }
-        }
     }
 }

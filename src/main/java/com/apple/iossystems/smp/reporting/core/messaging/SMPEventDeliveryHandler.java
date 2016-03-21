@@ -2,7 +2,7 @@ package com.apple.iossystems.smp.reporting.core.messaging;
 
 import com.apple.cds.messaging.client.Delivery;
 import com.apple.cds.messaging.client.DeliveryHandler;
-import com.apple.cds.messaging.client.impl.SMPEventSubscriberService;
+import com.apple.cds.messaging.client.impl.EventSubscriberService;
 import com.apple.iossystems.logging.pubsub.LogEvent;
 
 /**
@@ -10,20 +10,20 @@ import com.apple.iossystems.logging.pubsub.LogEvent;
  */
 public class SMPEventDeliveryHandler implements DeliveryHandler<LogEvent>
 {
-    private SMPEventSubscriberService smpEventSubscriberService;
+    private EventSubscriberService eventSubscriberService;
 
     public SMPEventDeliveryHandler()
     {
     }
 
-    public void setEventHandler(SMPEventSubscriberService smpEventSubscriberService)
+    public void setEventHandler(EventSubscriberService eventSubscriberService)
     {
-        this.smpEventSubscriberService = smpEventSubscriberService;
+        this.eventSubscriberService = eventSubscriberService;
     }
 
     @Override
     public void handleDelivery(Delivery<LogEvent> delivery)
     {
-        smpEventSubscriberService.handleEvent(delivery.getMessage());
+        eventSubscriberService.handleEvent(delivery.getMessage());
     }
 }

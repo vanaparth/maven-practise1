@@ -11,7 +11,7 @@ class OfflineNotificationService implements NotificationService
     {
     }
 
-    public static OfflineNotificationService getInstance()
+    static OfflineNotificationService getInstance()
     {
         return new OfflineNotificationService();
     }

@@ -33,12 +33,12 @@ class SMPEventValidationMap
         return map;
     }
 
-    public static SMPEventValidationMap getInstance()
+    static SMPEventValidationMap getInstance()
     {
         return new SMPEventValidationMap();
     }
 
-    public boolean isValid(EventRecord record)
+    boolean isValid(EventRecord record)
     {
         boolean result = true;
 

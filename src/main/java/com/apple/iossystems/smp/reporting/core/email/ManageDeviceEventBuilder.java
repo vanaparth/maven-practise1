@@ -2,14 +2,12 @@ package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.iossystems.smp.domain.Actor;
 import com.apple.iossystems.smp.persistence.entity.SecureElement;
+import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import com.apple.iossystems.smp.reporting.core.event.SMPEventDataServiceClient;
 import org.apache.commons.lang.StringUtils;
 
 import java.math.BigInteger;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author Toch
@@ -23,6 +21,8 @@ public class ManageDeviceEventBuilder
     private static final String TIMEZONE = "customerTZ";
     private static final String DEVICE_NAME = "deviceName";
     private static final String DEVICE_IMAGE_URL = "deviceImageURL";
+
+
 
     private String eventType;
     private String conversationId;
@@ -121,7 +121,7 @@ public class ManageDeviceEventBuilder
         String lastName = cardData.get(LAST_NAME);
         String cardHolderEmail = cardData.get(EMAIL);
         String timezone = cardData.get(TIMEZONE);
-        String locale = cardData.get(LOCALE);
+        String locale = getLocale(cardData.get(LOCALE));
         String deviceName = cardData.get(DEVICE_NAME);
         String deviceImageUrl = cardData.get(DEVICE_IMAGE_URL);
 
@@ -142,6 +142,36 @@ public class ManageDeviceEventBuilder
                 fmipSource(fmipSource).
                 cardEvents(cardEvents).build();
     }
+
+    public String getLocale ( String customerLocale ) {
+        String  locale="";
+        boolean matchFound = false;
+         // Algorithm - Check in the defaults map, if there is a default define for the locale
+        // use it, otherwise everything else will be defaulted to a language
+        Map<String, String> manageDeviceDefaultsList = ApplicationConfiguration.getManageDeviceCountryDefaults();
+
+
+        if( StringUtils.isBlank( customerLocale ) || !customerLocale.contains("_")) {
+           locale = ApplicationConfiguration.getManageDeviceDefaultLocale();
+        } else {
+            if (manageDeviceDefaultsList.containsKey(customerLocale.toUpperCase())) {
+                locale = manageDeviceDefaultsList.get(customerLocale.toUpperCase());
+                matchFound = true;
+            }
+            if (!matchFound) {
+                // Check if the locale is present in the en_US exclusion list,
+                if (ApplicationConfiguration.getManageDeviceUSExclusionList().contains(customerLocale)) {
+                    locale = customerLocale;
+                } else {
+                    locale = ApplicationConfiguration.getManageDeviceDefaultLocale();
+                }
+            }
+        }
+        return locale;
+
+    }
+
+
 
     private String getCardHolderName(String firstName, String lastName)
     {

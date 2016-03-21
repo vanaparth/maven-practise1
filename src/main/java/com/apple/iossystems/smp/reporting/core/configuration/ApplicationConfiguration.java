@@ -1,6 +1,8 @@
 package com.apple.iossystems.smp.reporting.core.configuration;
 
 import com.apple.cds.keystone.config.PropertyManager;
+import org.apache.commons.lang.StringUtils;
+import java.util.*;
 
 /**
  * @author Toch
@@ -47,8 +49,26 @@ public class ApplicationConfiguration
     static final String FMIP_CERTIFICATE = PropertyManager.getInstance().valueForKeyWithDefault("com.apple.iossystems.internal.fmip.app.cert", "0");
     static final String FMIP_REMOTE_CERTIFICATE = PropertyManager.getInstance().valueForKeyWithDefault("com.apple.iossystems.internal.fmip.setup.cert", "0");
 
-    private ApplicationConfiguration()
-    {
+    static final Map<String,String> MANAGE_DEVICE_COUNTRY_DEFAULTS = PropertyManager.getInstance().getDictionaryForKey("com.apple.iossystems.manage.device.country.defaults");
+    static final Map<String, String> MANAGE_DEVICE_COUNTRY_DEFAULT_MAP = new HashMap<String, String>();
+    static final Set<String> DEFAULT_MANAGE_DEVICE_EN_US_LOCALE_EXCLUSION_LIST = new HashSet(PropertyManager.getInstance().getListForKeyWithDefault("com.apple.iossystems.manage.device.us.exclusionlist", Collections.<String>emptyList()));
+    static final String MANAGE_DEVICE_DEFAULT_LOCALE = PropertyManager.getInstance().valueForKeyWithDefault("com.apple.iossystems.manage.device.default.locale", "en_US");
+
+    static {
+        if (MANAGE_DEVICE_COUNTRY_DEFAULTS  != null && !MANAGE_DEVICE_COUNTRY_DEFAULTS.isEmpty()) // There are filters defined {
+        {
+            //Entries in the map are defined as "zh_CN=zh_TW, zh_HK"
+            for (String key : MANAGE_DEVICE_COUNTRY_DEFAULTS.keySet()) {
+                String value = MANAGE_DEVICE_COUNTRY_DEFAULTS.get(key);
+                String[] list = StringUtils.split(value, ",");
+                for( String locale: list ) {
+                    MANAGE_DEVICE_COUNTRY_DEFAULT_MAP.put( locale.toUpperCase(), key );
+                }
+            }
+        }
+    }
+
+    private ApplicationConfiguration(){
     }
 
     public static String getKeystoneRabbitHost()
@@ -190,4 +210,12 @@ public class ApplicationConfiguration
     {
         return FMIP_REMOTE_CERTIFICATE;
     }
+
+
+    public static Map<String , String> getManageDeviceCountryDefaults(){ return ApplicationConfiguration.MANAGE_DEVICE_COUNTRY_DEFAULT_MAP; }
+
+    public static Set<String> getManageDeviceUSExclusionList() { return ApplicationConfiguration.DEFAULT_MANAGE_DEVICE_EN_US_LOCALE_EXCLUSION_LIST; }
+
+    public static String getManageDeviceDefaultLocale() { return ApplicationConfiguration.MANAGE_DEVICE_DEFAULT_LOCALE;}
+
 }

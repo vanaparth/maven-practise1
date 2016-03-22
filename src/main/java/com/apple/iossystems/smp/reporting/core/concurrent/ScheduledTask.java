@@ -54,6 +54,6 @@ public class ScheduledTask
 
     public void shutdown()
     {
-        scheduledExecutorService.shutdown();
+        ExecutorServiceShutdownManager.getInstance().shutdownExecutorService(scheduledExecutorService);
     }
 }

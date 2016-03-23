@@ -16,6 +16,7 @@ import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 import com.apple.iossystems.smp.reporting.core.event.EventType;
 import com.apple.iossystems.smp.reporting.ireporter.publish.IReporterEvent;
+import com.apple.iossystems.smp.utils.JSONUtils;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -76,7 +77,7 @@ public class KistaEventLogger
     {
         String conversationId = record.getAttributeValue(EventAttribute.CONVERSATION_ID.key());
         String seid = record.getAttributeValue(EventAttribute.SEID.key());
-        String request = GsonBuilderFactory.getInstance().toJson(IReporterEvent.processEventRecord(record).getData(), Map.class);
+        String request = GsonBuilderFactory.getInstance().toJson(IReporterEvent.processEventRecord(record).getData(), JSONUtils.MAPTYPE);
 
         publishEvent(conversationId, seid, request, EventType.getEventType(record.getAttributeValue(EventAttribute.EVENT_TYPE.key())));
     }

@@ -48,7 +48,7 @@ public class ApplicationConfiguration
     private static final boolean UNLINK_EMAIL_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.unlink", true);
     private static final boolean DEFAULT_EMAIL_LOCALE_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.default.locale", true);
 
-    private static final List<String> EMAIL_LOCALES = PropertyManager.getInstance().getListForKeyWithDefault("smp.reporting.email.locales", Collections.<String>emptyList());
+    private static final List<String> EMAIL_LOCALES_MAPPING = PropertyManager.getInstance().getListForKeyWithDefault("smp.reporting.email.locales.mapping", Collections.<String>emptyList());
     private static final List<String> SUPPORTED_EMAIL_LOCALES = PropertyManager.getInstance().getListForKeyWithDefault("smp.reporting.email.supported.locales", Collections.<String>emptyList());
 
     private static final String FMIP_CERTIFICATE = PropertyManager.getInstance().valueForKeyWithDefault("com.apple.iossystems.internal.fmip.app.cert", "0");
@@ -193,9 +193,9 @@ public class ApplicationConfiguration
         return DEFAULT_EMAIL_LOCALE_ENABLED;
     }
 
-    public static List<String> getEmailLocales()
+    public static List<String> getEmailLocalesMapping()
     {
-        return EMAIL_LOCALES;
+        return EMAIL_LOCALES_MAPPING;
     }
 
     public static List<String> getSupportedEmailLocales()

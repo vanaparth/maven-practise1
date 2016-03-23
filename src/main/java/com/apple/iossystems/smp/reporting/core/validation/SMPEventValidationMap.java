@@ -16,6 +16,11 @@ class SMPEventValidationMap
     {
     }
 
+    static SMPEventValidationMap getInstance()
+    {
+        return new SMPEventValidationMap();
+    }
+
     private Map<SMPDeviceEvent, Set<String>> getValidationMap()
     {
         Map<SMPDeviceEvent, Set<String>> map = new HashMap<>();
@@ -31,11 +36,6 @@ class SMPEventValidationMap
         map.put(SMPDeviceEvent.SEND_OTP, new HashSet<>(Arrays.asList("con", "dpn", "evt", "otp", "pno", "tim")));
 
         return map;
-    }
-
-    static SMPEventValidationMap getInstance()
-    {
-        return new SMPEventValidationMap();
     }
 
     boolean isValid(EventRecord record)

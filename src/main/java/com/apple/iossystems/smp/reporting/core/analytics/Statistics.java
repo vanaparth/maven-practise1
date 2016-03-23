@@ -21,9 +21,22 @@ public class Statistics
         return new Statistics();
     }
 
-    public void set(Metric key, String value)
+    private void set(Metric key, String value)
     {
         data.put(key, value);
+    }
+
+    private void clear(Metric metric)
+    {
+        set(metric, "0");
+    }
+
+    public void clear(Metric[] metrics)
+    {
+        for (Metric metric : metrics)
+        {
+            clear(metric);
+        }
     }
 
     public void increment(Metric key, int amount)
@@ -36,18 +49,5 @@ public class Statistics
     public int getIntValue(Metric key)
     {
         return ValidValue.getIntValueWithDefault(data.get(key), 0);
-    }
-
-    public void clear(Metric metric)
-    {
-        set(metric, "0");
-    }
-
-    public void clear(Metric[] metrics)
-    {
-        for (Metric metric : metrics)
-        {
-            clear(metric);
-        }
     }
 }

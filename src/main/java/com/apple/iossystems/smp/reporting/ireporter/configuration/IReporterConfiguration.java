@@ -164,7 +164,8 @@ public class IReporterConfiguration
 
     public static IReporterConfiguration getDefaultConfiguration(Type configurationType)
     {
-        return new Builder().publishUrl(configurationType.getPublishUrl()).
+        return new Builder().
+                publishUrl(configurationType.getPublishUrl()).
                 publishKey(DEFAULT_PUBLISH_KEY).
                 contentType(DEFAULT_CONTENT_TYPE).
                 publishEnabled(DEFAULT_PUBLISH_ENABLED).
@@ -237,7 +238,7 @@ public class IReporterConfiguration
             return this;
         }
 
-        Builder publishUrl(String value)
+        private Builder publishUrl(String value)
         {
             publishUrl = value;
             return this;
@@ -288,9 +289,9 @@ public class IReporterConfiguration
             return new IReporterConfiguration(this);
         }
 
-        void completeBuild()
+        private void completeBuild()
         {
-            if (publishUrl == null)
+            if (StringUtils.isBlank(publishUrl))
             {
                 publishUrl = getUrl(protocol, hostname, uri);
             }

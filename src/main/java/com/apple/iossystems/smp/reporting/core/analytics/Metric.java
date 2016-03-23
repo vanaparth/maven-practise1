@@ -1,5 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.analytics;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * @author Toch
  */
@@ -96,6 +98,6 @@ public enum Metric
 
     public boolean hasKpi()
     {
-        return (!kpi.isEmpty());
+        return StringUtils.isNotBlank(kpi);
     }
 }

@@ -17,7 +17,7 @@ class CacheService
     {
     }
 
-    public static CacheService getInstance()
+    static CacheService getInstance()
     {
         return new CacheService();
     }

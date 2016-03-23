@@ -57,11 +57,11 @@ public class SMPEventSubscriberServiceManager
         createQueue(pubSubService, exchange, EventType.LOYALTY);
     }
 
-    private void createExchange(PubSubService pubSubService, String exchangeName)
+    private void createExchange(PubSubService pubSubService, String exchange)
     {
         try
         {
-            pubSubService.createExchange(exchangeName, "topic", true);
+            pubSubService.createExchange(exchange, "topic", true);
         }
         catch (Exception e)
         {

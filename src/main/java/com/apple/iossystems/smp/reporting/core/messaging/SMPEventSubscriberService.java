@@ -24,7 +24,6 @@ class SMPEventSubscriberService extends EventSubscriberService
 
     private final EventListener eventListener = EventListenerFactory.getInstance().getSMPConsumeEventListener();
     private final HubblePublisher hubblePublisher = HubblePublisher.getInstance();
-
     private final Map<EventType, Metric> metricMap = getMetricMap();
 
     private final EventTaskHandler eventTaskHandler;

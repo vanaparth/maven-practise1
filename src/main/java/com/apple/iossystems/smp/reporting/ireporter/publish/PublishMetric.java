@@ -15,15 +15,11 @@ class PublishMetric
     private final Metric recordsSent;
     private final Metric messagesFailed;
     private final Metric recordsFailed;
-
     private final Metric iReporterRecordsSent;
     private final Metric iReporterRecordsFailed;
-
     private final Metric auditRecordsSent;
     private final Metric auditRecordsFailed;
-
     private final Metric iReporterTiming;
-
     private final Metric[] auditMetrics;
 
     private PublishMetric(Builder builder)
@@ -32,15 +28,11 @@ class PublishMetric
         recordsSent = builder.recordsSent;
         messagesFailed = builder.messagesFailed;
         recordsFailed = builder.recordsFailed;
-
         iReporterRecordsSent = builder.iReporterRecordsSent;
         iReporterRecordsFailed = builder.iReporterRecordsFailed;
-
         auditRecordsSent = builder.auditRecordsSent;
         auditRecordsFailed = builder.auditRecordsFailed;
-
         iReporterTiming = builder.iReporterTiming;
-
         auditMetrics = builder.auditMetrics;
     }
 
@@ -111,7 +103,8 @@ class PublishMetric
 
     private static PublishMetric getReportsPublishMetrics()
     {
-        return new Builder().messagesSent(Metric.REPORTS_MESSAGES_SENT).
+        return new Builder().
+                messagesSent(Metric.REPORTS_MESSAGES_SENT).
                 recordsSent(Metric.REPORTS_RECORDS_SENT).
                 messagesFailed(Metric.REPORTS_MESSAGES_FAILED).
                 recordsFailed(Metric.REPORTS_RECORDS_FAILED).
@@ -120,15 +113,14 @@ class PublishMetric
                 auditRecordsSent(Metric.AUDIT_RECORDS_SENT).
                 auditRecordsFailed(Metric.AUDIT_RECORDS_FAILED).
                 iReporterTiming(Metric.IREPORTER_TIMING).
-                auditMetrics(new Metric[]{
-                        Metric.IREPORTER_REPORTS_RECORDS_SENT,
-                        Metric.IREPORTER_REPORTS_RECORDS_FAILED
-                }).build();
+                auditMetrics(new Metric[]{Metric.IREPORTER_REPORTS_RECORDS_SENT, Metric.IREPORTER_REPORTS_RECORDS_FAILED}).
+                build();
     }
 
     private static PublishMetric getPaymentReportsPublishMetrics()
     {
-        return new Builder().messagesSent(Metric.PAYMENT_REPORTS_MESSAGES_SENT).
+        return new Builder().
+                messagesSent(Metric.PAYMENT_REPORTS_MESSAGES_SENT).
                 recordsSent(Metric.PAYMENT_REPORTS_RECORDS_SENT).
                 messagesFailed(Metric.PAYMENT_REPORTS_MESSAGES_FAILED).
                 recordsFailed(Metric.PAYMENT_REPORTS_RECORDS_FAILED).
@@ -137,15 +129,14 @@ class PublishMetric
                 auditRecordsSent(Metric.PAYMENT_AUDIT_RECORDS_SENT).
                 auditRecordsFailed(Metric.PAYMENT_AUDIT_RECORDS_FAILED).
                 iReporterTiming(Metric.PAYMENT_IREPORTER_TIMING).
-                auditMetrics(new Metric[]{
-                        Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_SENT,
-                        Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_FAILED
-                }).build();
+                auditMetrics(new Metric[]{Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_SENT, Metric.PAYMENT_IREPORTER_REPORTS_RECORDS_FAILED}).
+                build();
     }
 
     private static PublishMetric getLoyaltyReportsPublishMetrics()
     {
-        return new Builder().messagesSent(Metric.LOYALTY_REPORTS_MESSAGES_SENT).
+        return new Builder().
+                messagesSent(Metric.LOYALTY_REPORTS_MESSAGES_SENT).
                 recordsSent(Metric.LOYALTY_REPORTS_RECORDS_SENT).
                 messagesFailed(Metric.LOYALTY_REPORTS_MESSAGES_FAILED).
                 recordsFailed(Metric.LOYALTY_REPORTS_RECORDS_FAILED).
@@ -154,10 +145,8 @@ class PublishMetric
                 auditRecordsSent(Metric.LOYALTY_AUDIT_RECORDS_SENT).
                 auditRecordsFailed(Metric.LOYALTY_AUDIT_RECORDS_FAILED).
                 iReporterTiming(Metric.LOYALTY_IREPORTER_TIMING).
-                auditMetrics(new Metric[]{
-                        Metric.LOYALTY_IREPORTER_REPORTS_RECORDS_SENT,
-                        Metric.LOYALTY_IREPORTER_REPORTS_RECORDS_FAILED
-                }).build();
+                auditMetrics(new Metric[]{Metric.LOYALTY_IREPORTER_REPORTS_RECORDS_SENT, Metric.LOYALTY_IREPORTER_REPORTS_RECORDS_FAILED}).
+                build();
     }
 
     private static class Builder
@@ -166,15 +155,11 @@ class PublishMetric
         private Metric recordsSent;
         private Metric messagesFailed;
         private Metric recordsFailed;
-
         private Metric iReporterRecordsSent;
         private Metric iReporterRecordsFailed;
-
         private Metric auditRecordsSent;
         private Metric auditRecordsFailed;
-
         private Metric iReporterTiming;
-
         private Metric[] auditMetrics;
 
         private Builder()

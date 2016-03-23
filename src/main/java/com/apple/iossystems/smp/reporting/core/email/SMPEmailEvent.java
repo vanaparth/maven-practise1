@@ -22,7 +22,7 @@ public class SMPEmailEvent
 
     public static EventRecords getEventRecords(EventRecords records)
     {
-        EventRecords outputRecords = EventRecords.getInstance();
+        EventRecords result = EventRecords.getInstance();
 
         List<EventRecord> list = records.getList();
 
@@ -36,10 +36,10 @@ public class SMPEmailEvent
 
                 copy.setAttributeValue(EventAttribute.EVENT_TYPE.key(), EventType.EMAIL.getKey());
 
-                outputRecords.add(copy);
+                result.add(copy);
             }
         }
 
-        return outputRecords;
+        return result;
     }
 }

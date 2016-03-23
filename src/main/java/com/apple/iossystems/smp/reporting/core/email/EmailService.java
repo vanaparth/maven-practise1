@@ -49,11 +49,11 @@ class EmailService implements EmailEventService
     {
         Map<String, String> map = new HashMap<>();
 
-        List<String> list = ApplicationConfiguration.getEmailLocales();
+        List<String> list = ApplicationConfiguration.getEmailLocalesMapping();
 
         for (String str : list)
         {
-            String[] array = StringUtils.split(str, ":");
+            String[] array = StringUtils.split(str, ':');
 
             if ((array != null) && (array.length == 2))
             {
@@ -62,7 +62,7 @@ class EmailService implements EmailEventService
 
                 if (StringUtils.isNotBlank(mappedLocale) && StringUtils.isNotBlank(values))
                 {
-                    array = StringUtils.split(values, ";");
+                    array = StringUtils.split(values, ';');
 
                     if (array != null)
                     {

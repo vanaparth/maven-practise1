@@ -18,20 +18,19 @@ import java.net.InetAddress;
  */
 public abstract class EventSubscriberService extends LoggingSubscriberServiceBase<LogEvent>
 {
-    private EventConsumerService consumerService;
+    private final EventConsumerService consumerService;
 
     protected EventSubscriberService(String queueName)
     {
-        init(queueName);
+        consumerService = getEventConsumerService(queueName);
     }
 
-    private void init(String queueName)
+    private EventConsumerService getEventConsumerService(String queueName)
     {
         SMPEventDeliveryHandler smpEventDeliveryHandler = new SMPEventDeliveryHandler();
-
-        consumerService = new EventConsumerService(getProperties("LoggingSubscriberService", queueName), smpEventDeliveryHandler, SMPLogEventSerializer.getInstance());
-
         smpEventDeliveryHandler.setEventHandler(this);
+
+        return new EventConsumerService(getProperties("EventSubscriberService", queueName), smpEventDeliveryHandler, SMPLogEventSerializer.getInstance());
     }
 
     private ConsumerServiceProperties getProperties(String serviceName, String queueName)
@@ -45,7 +44,6 @@ public abstract class EventSubscriberService extends LoggingSubscriberServiceBas
         properties.setRabbitmqVirtualhost(ApplicationConfiguration.getKeystoneRabbitVirtualHost());
         properties.setRabbitConnectionCount(ApplicationConfiguration.getRabbitConsumerThreadsCount());
         properties.setServiceConsumerPrefetchCount(ApplicationConfiguration.getRabbitConsumerThreadsPrefetchCount());
-
         properties.setServiceConsumerQueue(queueName);
         properties.setServiceName(serviceName);
         properties.setServiceConsumerTransactional(true);
@@ -63,66 +61,66 @@ public abstract class EventSubscriberService extends LoggingSubscriberServiceBas
     }
 
     @Override
-    public <V extends AbstractConsumerServiceEventListener<LogEvent>> void setEventListener(V eventListener)
+    public final <V extends AbstractConsumerServiceEventListener<LogEvent>> void setEventListener(V eventListener)
     {
         consumerService.setEventListener(eventListener);
     }
 
     @Override
-    public OperationalAnalytics getMonitor()
+    public final OperationalAnalytics getMonitor()
     {
         return null;
     }
 
     @Override
-    public void setMonitor(OperationalAnalytics analytics)
+    public final void setMonitor(OperationalAnalytics analytics)
     {
     }
 
     @Override
-    public void start() throws ServiceException
+    public final void start() throws ServiceException
     {
         consumerService.start();
     }
 
     @Override
-    public void stop() throws ServiceException
+    public final void stop() throws ServiceException
     {
         consumerService.stop();
     }
 
     @Override
-    public void pause() throws ServiceException
+    public final void pause() throws ServiceException
     {
         consumerService.pause();
     }
 
     @Override
-    public void resume() throws ServiceException
+    public final void resume() throws ServiceException
     {
         consumerService.resume();
     }
 
     @Override
-    public boolean isStarted()
+    public final boolean isStarted()
     {
         return consumerService.isStarted();
     }
 
     @Override
-    public boolean isStopped()
+    public final boolean isStopped()
     {
         return consumerService.isStopped();
     }
 
     @Override
-    public boolean isPaused()
+    public final boolean isPaused()
     {
         return consumerService.isPaused();
     }
 
     @Override
-    public boolean isQuiescent()
+    public final boolean isQuiescent()
     {
         return consumerService.isQuiescent();
     }

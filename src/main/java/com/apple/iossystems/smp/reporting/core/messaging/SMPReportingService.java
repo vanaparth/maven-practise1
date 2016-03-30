@@ -6,6 +6,8 @@ import com.apple.iossystems.smp.reporting.core.event.EventType;
 import com.apple.iossystems.smp.reporting.ireporter.publish.PublishTaskHandlerFactory;
 import org.apache.log4j.Logger;
 
+import java.util.concurrent.Callable;
+
 /**
  * @author Toch
  */
@@ -15,7 +17,6 @@ public class SMPReportingService
 
     private SMPReportingService()
     {
-        init();
     }
 
     public static SMPReportingService getInstance()
@@ -23,7 +24,7 @@ public class SMPReportingService
         return new SMPReportingService();
     }
 
-    private void init()
+    private void startService()
     {
         createSMPEventExchange();
 
@@ -88,5 +89,32 @@ public class SMPReportingService
 
     public void start()
     {
+        EventNotificationServiceThreadPool.getInstance().submit(new Task(Action.START));
+    }
+
+    private enum Action
+    {
+        START
+    }
+
+    private class Task implements Callable<Boolean>
+    {
+        private final Action action;
+
+        private Task(Action action)
+        {
+            this.action = action;
+        }
+
+        @Override
+        public Boolean call() throws Exception
+        {
+            if (action == Action.START)
+            {
+                startService();
+            }
+
+            return true;
+        }
     }
 }

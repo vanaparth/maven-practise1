@@ -1,6 +1,8 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
+import com.apple.cds.keystone.spring.AppContext;
 import com.apple.cds.messaging.client.impl.EventSubscriberService;
+import com.apple.iossystems.smp.reporting.core.concurrent.TaskExecutorService;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import com.apple.iossystems.smp.reporting.core.event.EventType;
 import com.apple.iossystems.smp.reporting.ireporter.publish.EventTaskHandler;
@@ -9,6 +11,7 @@ import org.apache.log4j.Logger;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.Callable;
 
 /**
  * @author Toch
@@ -19,9 +22,10 @@ public class SMPEventSubscriberServiceManager
 
     private final List<EventSubscriberService> eventSubscriberServices = new ArrayList<>();
 
+    private boolean started = false;
+
     private SMPEventSubscriberServiceManager()
     {
-        init();
     }
 
     public static SMPEventSubscriberServiceManager getInstance()
@@ -29,11 +33,40 @@ public class SMPEventSubscriberServiceManager
         return new SMPEventSubscriberServiceManager();
     }
 
-    private void init()
+    private void startService()
+    {
+        doStartService();
+
+        started = true;
+    }
+
+    private void doStartService()
     {
         createEventExchange();
 
         startConsumers();
+    }
+
+    private void stopService()
+    {
+        if (started)
+        {
+            doStopService();
+
+            started = false;
+        }
+        else
+        {
+            LOGGER.error("Cannot stop service. Service is not started");
+        }
+    }
+
+    private void doStopService()
+    {
+        for (EventSubscriberService eventSubscriberService : eventSubscriberServices)
+        {
+            eventSubscriberService.shutdown();
+        }
     }
 
     private void createEventExchange()
@@ -104,13 +137,45 @@ public class SMPEventSubscriberServiceManager
 
     public void start()
     {
+        TaskExecutorService taskExecutorService = AppContext.getApplicationContext().getBean(TaskExecutorService.class);
+
+        taskExecutorService.submit(new Task(Action.START));
     }
 
     public void shutdown()
     {
-        for (EventSubscriberService eventSubscriberService : eventSubscriberServices)
+        TaskExecutorService taskExecutorService = AppContext.getApplicationContext().getBean(TaskExecutorService.class);
+
+        taskExecutorService.submit(new Task(Action.STOP));
+    }
+
+    private enum Action
+    {
+        START, STOP
+    }
+
+    private class Task implements Callable<Boolean>
+    {
+        private final Action action;
+
+        private Task(Action action)
         {
-            eventSubscriberService.shutdown();
+            this.action = action;
+        }
+
+        @Override
+        public Boolean call() throws Exception
+        {
+            if (action == Action.START)
+            {
+                startService();
+            }
+            else if (action == Action.STOP)
+            {
+                stopService();
+            }
+
+            return true;
         }
     }
 }

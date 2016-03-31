@@ -125,18 +125,6 @@ public abstract class EventSubscriberService extends LoggingSubscriberServiceBas
         return consumerService.isQuiescent();
     }
 
-    public final void startConsumerService()
-    {
-        try
-        {
-            start();
-        }
-        catch (Exception e)
-        {
-            Logger.getLogger(EventSubscriberService.class).error(e.getMessage(), e);
-        }
-    }
-
     public abstract void handleEvent(LogEvent logEvent);
 
     public abstract void shutdown();

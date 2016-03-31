@@ -9,9 +9,9 @@ import com.apple.iossystems.smp.reporting.ireporter.publish.EventTaskHandler;
 import com.apple.iossystems.smp.reporting.ireporter.publish.PublishTaskHandlerFactory;
 import org.apache.log4j.Logger;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.concurrent.BlockingQueue;
 import java.util.concurrent.Callable;
+import java.util.concurrent.LinkedBlockingQueue;
 
 /**
  * @author Toch
@@ -20,12 +20,11 @@ public class SMPEventSubscriberServiceManager
 {
     private static final Logger LOGGER = Logger.getLogger(SMPEventSubscriberServiceManager.class);
 
-    private final List<EventSubscriberService> eventSubscriberServices = new ArrayList<>();
-
-    private boolean started = false;
+    private final BlockingQueue<EventSubscriberService> eventSubscriberServices = new LinkedBlockingQueue<>();
 
     private SMPEventSubscriberServiceManager()
     {
+        startServiceManager();
     }
 
     public static SMPEventSubscriberServiceManager getInstance()
@@ -33,39 +32,27 @@ public class SMPEventSubscriberServiceManager
         return new SMPEventSubscriberServiceManager();
     }
 
-    private void startService()
+    private void startServiceManager()
     {
-        doStartService();
+        TaskExecutorService taskExecutorService = AppContext.getApplicationContext().getBean(TaskExecutorService.class);
 
-        started = true;
+        taskExecutorService.submit(new StartServiceManagerTask());
     }
 
-    private void doStartService()
+    private void doStartServiceManager()
     {
         createEventExchange();
 
-        startConsumers();
+        startEventSubscribers();
     }
 
-    private void stopService()
+    private void shutdownServiceManager()
     {
-        if (started)
-        {
-            doStopService();
+        TaskExecutorService taskExecutorService = AppContext.getApplicationContext().getBean(TaskExecutorService.class);
 
-            started = false;
-        }
-        else
-        {
-            LOGGER.error("Cannot stop service. Service is not started");
-        }
-    }
-
-    private void doStopService()
-    {
         for (EventSubscriberService eventSubscriberService : eventSubscriberServices)
         {
-            eventSubscriberService.shutdown();
+            taskExecutorService.submit(new ShutdownEventSubscriberTask(eventSubscriberService));
         }
     }
 
@@ -114,66 +101,91 @@ public class SMPEventSubscriberServiceManager
         }
     }
 
-    private void startConsumers()
+    private void startEventSubscribers()
     {
         if (ApplicationConfiguration.rabbitConsumersEnabled())
         {
+            TaskExecutorService taskExecutorService = AppContext.getApplicationContext().getBean(TaskExecutorService.class);
+
             PublishTaskHandlerFactory publishTaskHandlerFactory = PublishTaskHandlerFactory.getInstance();
 
-            eventSubscriberServices.add(startConsumer(EventType.REPORTS, publishTaskHandlerFactory.getReportsPublishTaskHandler()));
-            eventSubscriberServices.add(startConsumer(EventType.PAYMENT, publishTaskHandlerFactory.getPaymentPublishTaskHandler()));
-            eventSubscriberServices.add(startConsumer(EventType.LOYALTY, publishTaskHandlerFactory.getLoyaltyPublishTaskHandler()));
+            taskExecutorService.submit(new StartEventSubscriberTask(publishTaskHandlerFactory, EventType.REPORTS));
+            taskExecutorService.submit(new StartEventSubscriberTask(publishTaskHandlerFactory, EventType.PAYMENT));
+            taskExecutorService.submit(new StartEventSubscriberTask(publishTaskHandlerFactory, EventType.LOYALTY));
         }
-    }
-
-    private EventSubscriberService startConsumer(EventType eventType, EventTaskHandler eventTaskHandler)
-    {
-        EventSubscriberService eventSubscriberService = SMPEventSubscriberService.getInstance(eventType.getQueueName(), eventTaskHandler);
-
-        eventSubscriberService.startConsumerService();
-
-        return eventSubscriberService;
-    }
-
-    public void start()
-    {
-        TaskExecutorService taskExecutorService = AppContext.getApplicationContext().getBean(TaskExecutorService.class);
-
-        taskExecutorService.submit(new Task(Action.START));
     }
 
     public void shutdown()
     {
-        TaskExecutorService taskExecutorService = AppContext.getApplicationContext().getBean(TaskExecutorService.class);
-
-        taskExecutorService.submit(new Task(Action.STOP));
+        shutdownServiceManager();
     }
 
-    private enum Action
+    private class StartServiceManagerTask implements Callable<Boolean>
     {
-        START, STOP
-    }
-
-    private class Task implements Callable<Boolean>
-    {
-        private final Action action;
-
-        private Task(Action action)
+        private StartServiceManagerTask()
         {
-            this.action = action;
         }
 
         @Override
         public Boolean call() throws Exception
         {
-            if (action == Action.START)
+            doStartServiceManager();
+
+            return true;
+        }
+    }
+
+    private class StartEventSubscriberTask implements Callable<Boolean>
+    {
+        private final PublishTaskHandlerFactory publishTaskHandlerFactory;
+        private final EventType eventType;
+
+        private StartEventSubscriberTask(PublishTaskHandlerFactory publishTaskHandlerFactory, EventType eventType)
+        {
+            this.publishTaskHandlerFactory = publishTaskHandlerFactory;
+            this.eventType = eventType;
+        }
+
+        @Override
+        public Boolean call() throws Exception
+        {
+            EventTaskHandler eventTaskHandler = null;
+
+            if (eventType == EventType.REPORTS)
             {
-                startService();
+                eventTaskHandler = publishTaskHandlerFactory.getReportsPublishTaskHandler();
             }
-            else if (action == Action.STOP)
+            else if (eventType == EventType.PAYMENT)
             {
-                stopService();
+                eventTaskHandler = publishTaskHandlerFactory.getPaymentPublishTaskHandler();
             }
+            else if (eventType == EventType.LOYALTY)
+            {
+                eventTaskHandler = publishTaskHandlerFactory.getLoyaltyPublishTaskHandler();
+            }
+
+            if (eventTaskHandler != null)
+            {
+                eventSubscriberServices.offer(SMPEventSubscriberService.getInstance(eventType.getQueueName(), eventTaskHandler));
+            }
+
+            return true;
+        }
+    }
+
+    private class ShutdownEventSubscriberTask implements Callable<Boolean>
+    {
+        private final EventSubscriberService eventSubscriberService;
+
+        private ShutdownEventSubscriberTask(EventSubscriberService eventSubscriberService)
+        {
+            this.eventSubscriberService = eventSubscriberService;
+        }
+
+        @Override
+        public Boolean call() throws Exception
+        {
+            eventSubscriberService.shutdown();
 
             return true;
         }

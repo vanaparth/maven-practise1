@@ -33,6 +33,8 @@ class SMPEventSubscriberService extends EventSubscriberService
         super(queueName);
 
         this.eventTaskHandler = eventTaskHandler;
+
+        startConsumer();
     }
 
     static SMPEventSubscriberService getInstance(String queueName, EventTaskHandler eventTaskHandler)
@@ -111,6 +113,18 @@ class SMPEventSubscriberService extends EventSubscriberService
             {
                 hubblePublisher.incrementCountForEvent(metric);
             }
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e.getMessage(), e);
+        }
+    }
+
+    private void startConsumer()
+    {
+        try
+        {
+            start();
         }
         catch (Exception e)
         {

@@ -22,7 +22,6 @@ public class SMPReportingApplication
 
     public void start()
     {
-        smpEventSubscriberServiceManager.start();
     }
 
     public void shutdown()

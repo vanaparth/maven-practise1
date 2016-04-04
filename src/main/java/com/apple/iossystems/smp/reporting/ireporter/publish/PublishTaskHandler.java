@@ -30,8 +30,6 @@ class PublishTaskHandler implements EventTaskHandler
     private final IReporterPublishService reportsPublishService;
     private final IReporterPublishService auditPublishService;
 
-    private final ScheduledTask scheduledTask;
-
     private final Statistics statistics = Statistics.getInstance();
     private final PublishStatistics publishStatistics = PublishStatistics.getInstance();
     private final StopWatch stopWatch = StopWatch.getInstance();
@@ -39,7 +37,8 @@ class PublishTaskHandler implements EventTaskHandler
     private final BacklogEventPublisher backlogEventPublisher = BacklogEventPublisher.getInstance();
     private final HubblePublisher hubblePublisher = HubblePublisher.getInstance();
 
-    private BlockingQueue<EventRecord> reportsQueue = new LinkedBlockingQueue<>();
+    private final BlockingQueue<EventRecord> reportsQueue = new LinkedBlockingQueue<>();
+    private final ScheduledTask scheduledTask;
 
     PublishTaskHandler(EventType publishEventType, PublishMetric publishMetric, IReporterPublishService reportsPublishService, IReporterPublishService auditPublishService)
     {

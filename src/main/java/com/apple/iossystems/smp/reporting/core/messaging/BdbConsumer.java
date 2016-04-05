@@ -10,10 +10,12 @@ import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigur
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 import com.apple.iossystems.smp.reporting.core.hubble.HubblePublisher;
+import com.apple.iossystems.smp.reporting.core.timer.Timer;
 import com.apple.iossystems.smp.service.StoreManagementService;
 import com.apple.iossystems.smp.utils.JSONUtils;
 import org.apache.log4j.Logger;
 
+import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
@@ -29,6 +31,9 @@ class BdbConsumer implements ScheduledTaskHandler
     private final StoreManagementService storeManagementService = AppContext.getApplicationContext().getBean(StoreManagementService.class);
 
     private final int bdbBatchSize = ApplicationConfiguration.getLogServiceBdbBatchSize();
+    private final int consumeBdbEventsInterval = ApplicationConfiguration.getConsumeBacklogBdbInterval();
+    private long lastConsumeBdbEventsTime = System.currentTimeMillis();
+
     private final BDBStorage bdbStorage;
 
     private BdbConsumer(BDBStorage bdbStorage)
@@ -61,17 +66,25 @@ class BdbConsumer implements ScheduledTaskHandler
 
     private void handleConsumeEvents()
     {
-        if (consumerEnabled())
+        Map<String, String> configuration = getBdbConsumerConfiguration();
+
+        if (consumerEnabled(configuration))
         {
-            doHandleConsumeEvents();
+            handleConsumeBdbEvents();
         }
         else
         {
-            notifyBdbRecordCount();
+            handleAutoConsumeEvents(configuration);
         }
     }
 
-    private void doHandleConsumeEvents()
+    private void handleConsumeBdbEvents()
+    {
+        doHandleConsumeBdbEvents();
+        lastConsumeBdbEventsTime = System.currentTimeMillis();
+    }
+
+    private void doHandleConsumeBdbEvents()
     {
         int totalCount = 0;
         int maxBacklogRecords = 100000;
@@ -143,7 +156,7 @@ class BdbConsumer implements ScheduledTaskHandler
         return records;
     }
 
-    private boolean consumerEnabled()
+    private Map<String, String> getBdbConsumerConfiguration()
     {
         Map<String, String> map = null;
 
@@ -156,7 +169,39 @@ class BdbConsumer implements ScheduledTaskHandler
             LOGGER.error(e.getMessage(), e);
         }
 
-        return (map != null);
+        return (map != null) ? map : Collections.<String, String>emptyMap();
+    }
+
+    private boolean getBooleanValue(Map<String, String> map, String key, boolean defaultValue)
+    {
+        String value = (map != null) ? map.get(key) : null;
+
+        return (value != null) ? Boolean.parseBoolean(value) : defaultValue;
+    }
+
+    private boolean consumerEnabled(Map<String, String> map)
+    {
+        return getBooleanValue(map, "enabled", false);
+    }
+
+    private void handleAutoConsumeEvents(Map<String, String> map)
+    {
+        if (getBooleanValue(map, "autoConsume", true))
+        {
+            doHandleAutoConsumeEvents();
+        }
+        else
+        {
+            notifyBdbRecordCount();
+        }
+    }
+
+    private void doHandleAutoConsumeEvents()
+    {
+        if (Timer.delayExpired(lastConsumeBdbEventsTime, consumeBdbEventsInterval))
+        {
+            handleConsumeBdbEvents();
+        }
     }
 
     private void notifyBdbRecordCount()

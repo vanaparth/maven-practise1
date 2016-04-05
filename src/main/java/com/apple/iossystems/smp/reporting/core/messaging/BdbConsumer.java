@@ -65,6 +65,10 @@ class BdbConsumer implements ScheduledTaskHandler
         {
             doHandleConsumeEvents();
         }
+        else
+        {
+            notifyBdbRecordCount();
+        }
     }
 
     private void doHandleConsumeEvents()
@@ -153,6 +157,32 @@ class BdbConsumer implements ScheduledTaskHandler
         }
 
         return (map != null);
+    }
+
+    private void notifyBdbRecordCount()
+    {
+        long count = getBdbRecordCount();
+
+        if (count > 0)
+        {
+            LOGGER.warn("Bdb backlog records " + count);
+        }
+    }
+
+    private long getBdbRecordCount()
+    {
+        long count = 0;
+
+        try
+        {
+            count = bdbStorage.size();
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e.getMessage(), e);
+        }
+
+        return count;
     }
 
     void start()

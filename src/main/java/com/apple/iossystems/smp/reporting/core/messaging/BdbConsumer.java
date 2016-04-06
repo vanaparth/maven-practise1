@@ -74,7 +74,7 @@ class BdbConsumer implements ScheduledTaskHandler
         }
         else
         {
-            handleAutoConsumeEvents(configuration);
+            handleAutoConsumeBdbEvents(configuration);
         }
     }
 
@@ -181,14 +181,14 @@ class BdbConsumer implements ScheduledTaskHandler
 
     private boolean consumerEnabled(Map<String, String> map)
     {
-        return getBooleanValue(map, "enabled", false);
+        return getBooleanValue(map, "enable", false);
     }
 
-    private void handleAutoConsumeEvents(Map<String, String> map)
+    private void handleAutoConsumeBdbEvents(Map<String, String> map)
     {
         if (getBooleanValue(map, "autoConsume", true))
         {
-            doHandleAutoConsumeEvents();
+            doHandleAutoConsumeBdbEvents();
         }
         else
         {
@@ -196,7 +196,7 @@ class BdbConsumer implements ScheduledTaskHandler
         }
     }
 
-    private void doHandleAutoConsumeEvents()
+    private void doHandleAutoConsumeBdbEvents()
     {
         if (Timer.delayExpired(lastConsumeBdbEventsTime, consumeBdbEventsInterval))
         {

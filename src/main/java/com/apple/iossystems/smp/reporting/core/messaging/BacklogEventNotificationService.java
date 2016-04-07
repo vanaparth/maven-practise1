@@ -38,7 +38,7 @@ class BacklogEventNotificationService implements NotificationService
 
         if (bdbStorage != null)
         {
-            bdbPublisher = BdbPublisher.getInstance(bdbStorage, getMetricMap());
+            bdbPublisher = BdbPublisher.getInstance(bdbStorage, getBdbPublisherMetricMap());
 
             BacklogBdbConsumer.getInstance(bdbStorage).start();
         }
@@ -64,7 +64,7 @@ class BacklogEventNotificationService implements NotificationService
         return bdbStorage;
     }
 
-    private Map<EventType, ResultMetric> getMetricMap()
+    private Map<EventType, ResultMetric> getBdbPublisherMetricMap()
     {
         Map<EventType, ResultMetric> map = new HashMap<>();
 

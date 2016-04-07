@@ -1,51 +1,36 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
-import com.apple.cds.keystone.spring.AppContext;
 import com.apple.iossystems.logging.local.BDBStorage;
 import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
-import com.apple.iossystems.smp.reporting.core.analytics.Metric;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledTask;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledTaskHandler;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
-import com.apple.iossystems.smp.reporting.core.hubble.HubblePublisher;
-import com.apple.iossystems.smp.reporting.core.timer.Timer;
-import com.apple.iossystems.smp.service.StoreManagementService;
 import com.apple.iossystems.smp.utils.JSONUtils;
 import org.apache.log4j.Logger;
 
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 
 /**
  * @author Toch
  */
-class BdbConsumer implements ScheduledTaskHandler
+abstract class BdbConsumer implements ScheduledTaskHandler
 {
     private static final Logger LOGGER = Logger.getLogger(BdbConsumer.class);
 
     private final NotificationService notificationService = SMPEventNotificationService.getInstance().getPublisher();
-    private final HubblePublisher hubblePublisher = HubblePublisher.getInstance();
-    private final StoreManagementService storeManagementService = AppContext.getApplicationContext().getBean(StoreManagementService.class);
-
     private final int bdbBatchSize = ApplicationConfiguration.getLogServiceBdbBatchSize();
-    private final int consumeBdbEventsInterval = ApplicationConfiguration.getConsumeBacklogBdbInterval();
     private long lastConsumeBdbEventsTime = System.currentTimeMillis();
 
     private final BDBStorage bdbStorage;
 
-    private BdbConsumer(BDBStorage bdbStorage)
+    BdbConsumer(BDBStorage bdbStorage)
     {
         this.bdbStorage = bdbStorage;
 
         init();
-    }
-
-    static BdbConsumer getInstance(BDBStorage bdbStorage)
-    {
-        return new BdbConsumer(bdbStorage);
     }
 
     private void init()
@@ -66,19 +51,17 @@ class BdbConsumer implements ScheduledTaskHandler
 
     private void handleConsumeEvents()
     {
-        Map<String, String> configuration = getBdbConsumerConfiguration();
-
-        if (consumerEnabled(configuration))
+        if (consumerEnabled())
         {
             handleConsumeBdbEvents();
         }
         else
         {
-            handleAutoConsumeBdbEvents(configuration);
+            handleAutoConsumeBdbEvents();
         }
     }
 
-    private void handleConsumeBdbEvents()
+    final void handleConsumeBdbEvents()
     {
         doHandleConsumeBdbEvents();
         lastConsumeBdbEventsTime = System.currentTimeMillis();
@@ -116,15 +99,15 @@ class BdbConsumer implements ScheduledTaskHandler
         {
             records = doConsumeBdbEvents();
 
-            hubblePublisher.incrementCountForEvent(Metric.CONSUME_BACKLOG_QUEUE, records.size());
+            notifySuccessEvent(records.size());
         }
         catch (Exception e)
         {
-            records = EventRecords.getInstance();
-
             LOGGER.error(e.getMessage(), e);
 
-            hubblePublisher.incrementCountForEvent(Metric.CONSUME_BACKLOG_QUEUE_FAILED);
+            records = EventRecords.getInstance();
+
+            notifyFailedEvent(1);
         }
 
         return records;
@@ -156,65 +139,12 @@ class BdbConsumer implements ScheduledTaskHandler
         return records;
     }
 
-    private Map<String, String> getBdbConsumerConfiguration()
+    final long getLastConsumeBdbEventsTime()
     {
-        Map<String, String> map = null;
-
-        try
-        {
-            map = storeManagementService.getGlobalStoreValue("SMP_REPORTING_BACKLOG_BDB_CONSUMERS");
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e.getMessage(), e);
-        }
-
-        return (map != null) ? map : Collections.<String, String>emptyMap();
+        return lastConsumeBdbEventsTime;
     }
 
-    private boolean getBooleanValue(Map<String, String> map, String key, boolean defaultValue)
-    {
-        String value = (map != null) ? map.get(key) : null;
-
-        return (value != null) ? Boolean.parseBoolean(value) : defaultValue;
-    }
-
-    private boolean consumerEnabled(Map<String, String> map)
-    {
-        return getBooleanValue(map, "enable", false);
-    }
-
-    private void handleAutoConsumeBdbEvents(Map<String, String> map)
-    {
-        if (getBooleanValue(map, "autoConsume", true))
-        {
-            doHandleAutoConsumeBdbEvents();
-        }
-        else
-        {
-            notifyBdbRecordCount();
-        }
-    }
-
-    private void doHandleAutoConsumeBdbEvents()
-    {
-        if (Timer.delayExpired(lastConsumeBdbEventsTime, consumeBdbEventsInterval))
-        {
-            handleConsumeBdbEvents();
-        }
-    }
-
-    private void notifyBdbRecordCount()
-    {
-        long count = getBdbRecordCount();
-
-        if (count > 0)
-        {
-            LOGGER.warn("Bdb backlog records " + count);
-        }
-    }
-
-    private long getBdbRecordCount()
+    final long getBdbRecordCount()
     {
         long count = 0;
 
@@ -230,7 +160,15 @@ class BdbConsumer implements ScheduledTaskHandler
         return count;
     }
 
-    void start()
+    final void start()
     {
     }
+
+    abstract boolean consumerEnabled();
+
+    abstract void handleAutoConsumeBdbEvents();
+
+    abstract void notifySuccessEvent(int count);
+
+    abstract void notifyFailedEvent(int count);
 }

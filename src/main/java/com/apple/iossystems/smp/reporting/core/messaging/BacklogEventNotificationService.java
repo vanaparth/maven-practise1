@@ -1,9 +1,15 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
 import com.apple.iossystems.logging.local.BDBStorage;
+import com.apple.iossystems.smp.reporting.core.analytics.Metric;
+import com.apple.iossystems.smp.reporting.core.analytics.ResultMetric;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
+import com.apple.iossystems.smp.reporting.core.event.EventType;
 import org.apache.log4j.Logger;
+
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Toch
@@ -32,9 +38,9 @@ class BacklogEventNotificationService implements NotificationService
 
         if (bdbStorage != null)
         {
-            bdbPublisher = BdbPublisher.getInstance(bdbStorage);
+            bdbPublisher = BdbPublisher.getInstance(bdbStorage, getMetricMap());
 
-            BdbConsumer.getInstance(bdbStorage).start();
+            BacklogBdbConsumer.getInstance(bdbStorage).start();
         }
         else
         {
@@ -56,6 +62,17 @@ class BacklogEventNotificationService implements NotificationService
         }
 
         return bdbStorage;
+    }
+
+    private Map<EventType, ResultMetric> getMetricMap()
+    {
+        Map<EventType, ResultMetric> map = new HashMap<>();
+
+        map.put(EventType.REPORTS, new ResultMetric(Metric.PUBLISH_REPORTS_BACKLOG_QUEUE, Metric.PUBLISH_REPORTS_BACKLOG_QUEUE_FAILED));
+        map.put(EventType.PAYMENT, new ResultMetric(Metric.PUBLISH_PAYMENT_BACKLOG_QUEUE, Metric.PUBLISH_PAYMENT_BACKLOG_QUEUE_FAILED));
+        map.put(EventType.LOYALTY, new ResultMetric(Metric.PUBLISH_LOYALTY_BACKLOG_QUEUE, Metric.PUBLISH_LOYALTY_BACKLOG_QUEUE_FAILED));
+
+        return map;
     }
 
     @Override

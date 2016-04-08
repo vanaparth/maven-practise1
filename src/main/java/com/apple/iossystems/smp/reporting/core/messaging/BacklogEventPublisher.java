@@ -3,6 +3,7 @@ package com.apple.iossystems.smp.reporting.core.messaging;
 import com.apple.iossystems.smp.reporting.core.analytics.PublishStatistics;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
+import com.apple.iossystems.smp.reporting.core.timer.Timer;
 
 /**
  * @author Toch
@@ -23,9 +24,9 @@ public class BacklogEventPublisher
         return new BacklogEventPublisher();
     }
 
-    private boolean publishToEventQueue(PublishStatistics publishStatistics)
+    private boolean publishToBacklogQueue(PublishStatistics publishStatistics)
     {
-        return ((System.currentTimeMillis() - publishStatistics.getPublishTime()) <= maxPublishDownTime);
+        return ((!publishStatistics.getPublishStatus()) && Timer.delayExpired(publishStatistics.getPublishTime(), maxPublishDownTime) && (publishStatistics.getPublishCount() >= 5));
     }
 
     public void handleShutdownEvent(EventRecords records)
@@ -35,13 +36,13 @@ public class BacklogEventPublisher
 
     public void publishEvents(EventRecords records, PublishStatistics publishStatistics)
     {
-        if (publishToEventQueue(publishStatistics))
+        if (publishToBacklogQueue(publishStatistics))
         {
-            eventNotificationService.publishEvents(records);
+            backlogEventNotificationService.publishEvents(records);
         }
         else
         {
-            backlogEventNotificationService.publishEvents(records);
+            eventNotificationService.publishEvents(records);
         }
     }
 }

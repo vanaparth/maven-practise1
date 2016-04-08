@@ -106,7 +106,7 @@ class BacklogBdbConsumer extends BdbConsumer
 
         if (count > 0)
         {
-            LOGGER.warn("Bdb backlog records " + count);
+            LOGGER.warn("Bdb backlog records: " + count);
         }
     }
 }

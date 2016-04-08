@@ -34,7 +34,7 @@ public class IReporterConfiguration
     private static final String DEFAULT_CONTENT_TYPE = "application/json";
     private static final boolean DEFAULT_PUBLISH_ENABLED = true;
 
-    private static final int DEFAULT_MAX_BATCH_SIZE = 100;
+    private static final int DEFAULT_MAX_BATCH_SIZE = 10;
     private static final int DEFAULT_PUBLISH_FREQUENCY = 60 * 1000;
     private static final int DEFAULT_CONFIGURATION_RELOAD_FREQUENCY = 60 * 60 * 1000;
 
@@ -300,8 +300,8 @@ public class IReporterConfiguration
         private void validate()
         {
             int validMinBatchSize = 1;
-            int validMaxBatchSize = 100;
-            int defaultBatchSize = 100;
+            int validMaxBatchSize = 10;
+            int defaultBatchSize = 10;
 
             int minPublishFrequency = 60 * 1000;
             int maxPublishFrequency = 60 * 60 * 1000;

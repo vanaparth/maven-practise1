@@ -43,7 +43,7 @@ public class PublishStatistics
         }
     }
 
-    public long getPublishTime()
+    public long getPublishStatusDuration()
     {
         return (endPublishTime - startPublishTime);
     }

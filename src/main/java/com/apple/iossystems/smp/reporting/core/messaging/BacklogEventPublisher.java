@@ -3,7 +3,6 @@ package com.apple.iossystems.smp.reporting.core.messaging;
 import com.apple.iossystems.smp.reporting.core.analytics.PublishStatistics;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
-import com.apple.iossystems.smp.reporting.core.timer.Timer;
 
 /**
  * @author Toch
@@ -26,7 +25,7 @@ public class BacklogEventPublisher
 
     private boolean publishToBacklogQueue(PublishStatistics publishStatistics)
     {
-        return ((!publishStatistics.getPublishStatus()) && Timer.delayExpired(publishStatistics.getPublishTime(), maxPublishDownTime) && (publishStatistics.getPublishCount() >= 5));
+        return ((!publishStatistics.getPublishStatus()) && (publishStatistics.getPublishStatusDuration() >= maxPublishDownTime) && (publishStatistics.getPublishCount() >= 5));
     }
 
     public void handleShutdownEvent(EventRecords records)

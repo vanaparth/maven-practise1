@@ -125,9 +125,9 @@ abstract class BdbConsumer implements ScheduledTaskHandler
             {
                 if (bdbRecord != null)
                 {
-                    EventRecord record = EventRecord.getInstance();
-
                     Map<String, String> data = GsonBuilderFactory.getInstance().fromJson(new String(bdbRecord), JSONUtils.MAPTYPE);
+
+                    EventRecord record = EventRecord.getInstance();
 
                     record.putAll(data);
 

@@ -5,7 +5,8 @@ package com.apple.iossystems.smp.reporting.core.analytics;
  */
 public class PublishStatistics
 {
-    private long publishTime = 0;
+    private long startPublishTime = 0;
+    private long endPublishTime = 0;
     private int publishCount = 0;
     private boolean publishStatus = true;
 
@@ -20,14 +21,18 @@ public class PublishStatistics
 
     private void updateForEvent(boolean status)
     {
-        publishTime = System.currentTimeMillis();
+        long time = System.currentTimeMillis();
 
         if (publishStatus == status)
         {
+            endPublishTime = time;
             publishCount++;
         }
         else
         {
+            startPublishTime = time;
+            endPublishTime = time;
+
             publishStatus = status;
             publishCount = 1;
         }
@@ -35,7 +40,7 @@ public class PublishStatistics
 
     public long getPublishTime()
     {
-        return publishTime;
+        return (endPublishTime - startPublishTime);
     }
 
     public int getPublishCount()

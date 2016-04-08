@@ -25,6 +25,11 @@ public class PublishStatistics
 
         if (publishStatus == status)
         {
+            if (startPublishTime == 0)
+            {
+                startPublishTime = time;
+            }
+
             endPublishTime = time;
             publishCount++;
         }

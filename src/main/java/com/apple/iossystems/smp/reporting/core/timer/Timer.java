@@ -9,7 +9,7 @@ public class Timer
     {
     }
 
-    public static boolean delayExpired(long timeInMilliseconds, int delay)
+    public static boolean delayExpired(long timeInMilliseconds, long delay)
     {
         return ((System.currentTimeMillis() - timeInMilliseconds) >= delay);
     }

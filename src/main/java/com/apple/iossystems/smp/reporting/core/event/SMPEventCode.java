@@ -60,6 +60,7 @@ public class SMPEventCode
         addToMap(fpanTypeMap, "Debit", "2");
         addToMap(fpanTypeMap, "PrePaid", "3");
         addToMap(fpanTypeMap, "PrivateLabel", "4");
+        addToMap(fpanTypeMap, "Transit", "5");
         //
         addToMap(cardStatusMap, Card.CardStatus.UNKNOWN.toString(), "0");
         addToMap(cardStatusMap, Card.CardStatus.ACTIVE.toString(), "1");
@@ -86,6 +87,7 @@ public class SMPEventCode
         addToMap(cardProvisioningSourceMap, SMPCardProvisioningSource.ON_FILE.getSource(), "2");
         addToMap(cardProvisioningSourceMap, WalletCardProvisioningSource.BANKING_APP.getSource(), "3");
         addToMap(cardProvisioningSourceMap, SMPCardProvisioningSource.PASS.getSource(), "4");
+        addToMap(cardProvisioningSourceMap, WalletCardProvisioningSource.READER.getSource(), "5");
     }
 
     private void addToMap(Map<String, String> map, String key, String value)

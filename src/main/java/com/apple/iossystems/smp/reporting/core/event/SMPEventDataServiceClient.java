@@ -1,6 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.event;
 
-import com.apple.iossystems.smp.domain.device.AbstractPass;
+import com.apple.iossystems.smp.domain.device.pass.AbstractPass;
 import com.apple.iossystems.smp.domain.product.ProductId;
 import com.apple.iossystems.smp.persistence.entity.PassPan;
 import com.apple.iossystems.smp.persistence.entity.PassPaymentType;

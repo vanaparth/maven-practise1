@@ -20,7 +20,6 @@ class BacklogBdbConsumer extends BdbConsumer
     private static final Logger LOGGER = Logger.getLogger(BdbConsumer.class);
 
     private final HubblePublisher hubblePublisher = HubblePublisher.getInstance();
-    private final StoreManagementService storeManagementService = AppContext.getApplicationContext().getBean(StoreManagementService.class);
     private final int consumeBdbEventsInterval = ApplicationConfiguration.getConsumeBacklogBdbInterval();
 
     private BacklogBdbConsumer(BDBStorage bdbStorage)
@@ -82,6 +81,8 @@ class BacklogBdbConsumer extends BdbConsumer
 
         try
         {
+            StoreManagementService storeManagementService = AppContext.getApplicationContext().getBean(StoreManagementService.class);
+
             map = storeManagementService.getGlobalStoreValue("SMP_REPORTING_BACKLOG_BDB_CONSUMERS");
         }
         catch (Exception e)

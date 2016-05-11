@@ -26,8 +26,6 @@ class BdbConsumer implements ScheduledTaskHandler
 
     private final NotificationService notificationService = SMPEventNotificationService.getInstance().getPublisher();
     private final HubblePublisher hubblePublisher = HubblePublisher.getInstance();
-    private final StoreManagementService storeManagementService = AppContext.getApplicationContext().getBean(StoreManagementService.class);
-
     private final int bdbBatchSize = ApplicationConfiguration.getLogServiceBdbBatchSize();
     private final BDBStorage bdbStorage;
 
@@ -149,6 +147,8 @@ class BdbConsumer implements ScheduledTaskHandler
 
         try
         {
+            StoreManagementService storeManagementService = AppContext.getApplicationContext().getBean(StoreManagementService.class);
+
             map = storeManagementService.getGlobalStoreValue("SMP_REPORTING_BACKLOG_BDB_CONSUMERS");
         }
         catch (Exception e)

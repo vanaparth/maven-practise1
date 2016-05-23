@@ -34,7 +34,7 @@ class EmailService implements EmailEventService
 
     private final String defaultEmailLocale = "en_US";
     private final Set<String> supportedEmailLocales = new HashSet<>(ApplicationConfiguration.getSupportedEmailLocales());
-    private final Map<String, String> emailLocaleMap = getEmailLocaleMap();
+    private final Map<String, String> emailLocaleMap = EmailConfiguration.getEmailLocaleMap();
 
     private EmailService()
     {
@@ -43,42 +43,6 @@ class EmailService implements EmailEventService
     static EmailService getInstance()
     {
         return new EmailService();
-    }
-
-    private Map<String, String> getEmailLocaleMap()
-    {
-        Map<String, String> map = new HashMap<>();
-
-        List<String> list = ApplicationConfiguration.getEmailLocalesMapping();
-
-        for (String str : list)
-        {
-            String[] array = StringUtils.split(str, ':');
-
-            if ((array != null) && (array.length == 2))
-            {
-                String mappedLocale = array[0];
-                String values = array[1];
-
-                if (StringUtils.isNotBlank(mappedLocale) && StringUtils.isNotBlank(values))
-                {
-                    array = StringUtils.split(values, ';');
-
-                    if (array != null)
-                    {
-                        for (String locale : array)
-                        {
-                            if (StringUtils.isNotBlank(locale))
-                            {
-                                map.put(locale, mappedLocale);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return map;
     }
 
     @Override
@@ -215,6 +179,7 @@ class EmailService implements EmailEventService
         CardEventRecord cardEventRecord = CardEventRecord.getCardEventRecord(manageDeviceEvent);
         List<SMPEmailCardData> successCards = cardEventRecord.getSuccessCards();
         List<SMPEmailCardData> failedCards = cardEventRecord.getFailedCards();
+        List<SMPEmailCardData> truthOnCards = cardEventRecord.getTruthOnCards();
 
         String conversationId = format(record.getAttributeValue(EventAttribute.CONVERSATION_ID.key()));
         String deviceName = format(xmlProcessor.getValidXmlString(manageDeviceEvent.getDeviceName()));

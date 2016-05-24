@@ -200,15 +200,15 @@ class EmailService implements EmailEventService
             {
                 if (cardEventRecord.isSuccessful())
                 {
-                    new SMPSuccessSuspendMailHandler(new SuspendEmailRequest(deviceName, successCards, calendar, cardHolderName, conversationId, cardHolderEmail, dsid, locale, deviceType, deviceImageUrl)).sendEmail();
+                    new SMPSuccessSuspendMailHandler(new SuspendEmailRequest(deviceName, successCards, truthOnCards, calendar, cardHolderName, conversationId, cardHolderEmail, dsid, locale, deviceType, deviceImageUrl)).sendEmail();
                 }
                 else if (cardEventRecord.hasPartialSuccess())
                 {
-                    new SMPPartialSuspendMailHandler(new PartialSuspendEmailRequest(deviceName, successCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, dsid, deviceType, failedCards, deviceImageUrl)).sendEmail();
+                    new SMPPartialSuspendMailHandler(new PartialSuspendEmailRequest(deviceName, successCards, truthOnCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, dsid, deviceType, failedCards, deviceImageUrl)).sendEmail();
                 }
                 else if (cardEventRecord.isFailed())
                 {
-                    new SMPFailSuspendMailHandler(new SuspendEmailRequest(deviceName, failedCards, calendar, cardHolderName, conversationId, cardHolderEmail, dsid, locale, deviceType, deviceImageUrl)).sendEmail();
+                    new SMPFailSuspendMailHandler(new SuspendEmailRequest(deviceName, failedCards, truthOnCards, calendar, cardHolderName, conversationId, cardHolderEmail, dsid, locale, deviceType, deviceImageUrl)).sendEmail();
                 }
             }
         }
@@ -218,15 +218,15 @@ class EmailService implements EmailEventService
             {
                 if (cardEventRecord.isSuccessful())
                 {
-                    new SMPSuccessRemoveMailHandler(new RemoveEmailRequest(deviceName, successCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, deviceType, dsid, deviceImageUrl, fmipSourceDescription)).sendEmail();
+                    new SMPSuccessRemoveMailHandler(new RemoveEmailRequest(deviceName, successCards, truthOnCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, deviceType, dsid, deviceImageUrl, fmipSourceDescription)).sendEmail();
                 }
                 else if (cardEventRecord.hasPartialSuccess())
                 {
-                    new SMPPartialRemoveMailHandler(new PartialRemoveEmailRequest(deviceName, successCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, dsid, deviceType, failedCards, deviceImageUrl, fmipSourceDescription)).sendEmail();
+                    new SMPPartialRemoveMailHandler(new PartialRemoveEmailRequest(deviceName, successCards, truthOnCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, dsid, deviceType, failedCards, deviceImageUrl, fmipSourceDescription)).sendEmail();
                 }
                 else if (cardEventRecord.isFailed())
                 {
-                    new SMPFailRemoveMailHandler(new RemoveEmailRequest(deviceName, failedCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, deviceType, dsid, deviceImageUrl, fmipSourceDescription)).sendEmail();
+                    new SMPFailRemoveMailHandler(new RemoveEmailRequest(deviceName, failedCards, truthOnCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, deviceType, dsid, deviceImageUrl, fmipSourceDescription)).sendEmail();
                 }
             }
         }

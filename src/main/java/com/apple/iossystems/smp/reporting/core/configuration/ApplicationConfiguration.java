@@ -47,6 +47,7 @@ public class ApplicationConfiguration
     private static final boolean PROVISION_EMAIL_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.provision", true);
     private static final boolean SUSPEND_EMAIL_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.suspend", true);
     private static final boolean UNLINK_EMAIL_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.unlink", true);
+    private static final boolean TRUTH_ON_CARD_EMAIL_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.truthOnCard", true);
     private static final boolean DEFAULT_EMAIL_LOCALE_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.default.locale", true);
 
     private static final List<String> EMAIL_LOCALES_MAPPING = PropertyManager.getInstance().getListForKeyWithDefault("smp.reporting.email.locales.mapping", Collections.<String>emptyList());
@@ -192,6 +193,11 @@ public class ApplicationConfiguration
     public static boolean unlinkEmailEnabled()
     {
         return UNLINK_EMAIL_ENABLED;
+    }
+
+    public static boolean truthOnCardEmailEnabled()
+    {
+        return TRUTH_ON_CARD_EMAIL_ENABLED;
     }
 
     public static boolean defaultEmailLocaleEnabled()

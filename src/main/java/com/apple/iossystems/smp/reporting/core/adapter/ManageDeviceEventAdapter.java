@@ -55,6 +55,8 @@ public class ManageDeviceEventAdapter implements JsonSerializer<ManageDeviceEven
         JSONUtils.setAttributeValue(root, DEVICE_TYPE, src.getDeviceType());
         JSONUtils.setAttributeValue(root, DEVICE_IMAGE_URL, src.getDeviceImageUrl());
 
+        root.add(CARD_EVENTS, context.serialize(src.getCardEvents(), List.class));
+
         ManageDeviceEventSource manageDeviceEventSource = src.getManageDeviceEventSource();
 
         if (manageDeviceEventSource != null)
@@ -67,13 +69,6 @@ public class ManageDeviceEventAdapter implements JsonSerializer<ManageDeviceEven
         if (fmipSource != null)
         {
             JSONUtils.setAttributeValue(root, FMIP_SOURCE, fmipSource.getCode());
-        }
-
-        List<CardEvent> cardEvents = src.getCardEvents();
-
-        if ((cardEvents != null) && (!cardEvents.isEmpty()))
-        {
-            root.add(CARD_EVENTS, context.serialize(cardEvents, List.class));
         }
 
         return root;

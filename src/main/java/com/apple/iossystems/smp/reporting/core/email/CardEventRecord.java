@@ -1,6 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.iossystems.smp.email.service.impl.ssp.domain.SMPEmailCardData;
+import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,6 +11,8 @@ import java.util.List;
  */
 class CardEventRecord
 {
+    private static final boolean TRUTH_ON_CARD_EMAIL_ENABLED = ApplicationConfiguration.truthOnCardEmailEnabled();
+
     private final List<SMPEmailCardData> successCards = new ArrayList<>();
     private final List<SMPEmailCardData> failedCards = new ArrayList<>();
     private final List<SMPEmailCardData> truthOnCards = new ArrayList<>();
@@ -85,7 +88,7 @@ class CardEventRecord
             {
                 SMPEmailCardData card = new SMPEmailCardData(cardEvent.getCardDisplayNumber(), cardEvent.getCardDescription());
 
-                if (cardEvent.isTruthOnCard())
+                if (cardEvent.isTruthOnCard() && TRUTH_ON_CARD_EMAIL_ENABLED)
                 {
                     cardEventRecord.addTruthOnCard(card);
                 }

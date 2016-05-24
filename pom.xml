@@ -1,13 +1,11 @@
 <?xml version="1.0"?>
-<project
-        xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd"
-        xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
     <artifactId>SMPReporting</artifactId>
     <parent>
         <groupId>com.apple.pay</groupId>
         <artifactId>SecureMobilePlatform-base</artifactId>
-        <version>1C02-SNAPSHOT</version>
+        <version>1C02</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <dependencies>
@@ -27,17 +25,17 @@
         <dependency>
             <groupId>com.apple.pay</groupId>
             <artifactId>SMPBase</artifactId>
-            <version>1C02-SNAPSHOT</version>
+            <version>1C02</version>
         </dependency>
         <dependency>
             <groupId>com.apple.pay</groupId>
             <artifactId>SMPBusinessLogicBase</artifactId>
-            <version>1C02-SNAPSHOT</version>
+            <version>1C02</version>
         </dependency>
         <dependency>
             <groupId>com.apple.pay</groupId>
             <artifactId>SMPPersistenceServices</artifactId>
-            <version>1C02-SNAPSHOT</version>
+            <version>1C02</version>
         </dependency>
     </dependencies>
 </project>

@@ -21,7 +21,7 @@ class BacklogEventNotificationService implements NotificationService
         init();
     }
 
-    public static BacklogEventNotificationService getInstance()
+    static BacklogEventNotificationService getInstance()
     {
         return INSTANCE;
     }

@@ -9,4 +9,6 @@ import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 public interface EventTaskHandler extends ScheduledTaskHandler
 {
     void processEventRecord(EventRecord record);
+
+    void shutdown();
 }

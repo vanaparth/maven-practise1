@@ -15,6 +15,7 @@ public class SMPHttpClient
     private static final Logger LOGGER = Logger.getLogger(SMPHttpClient.class);
 
     private final HubblePublisher hubblePublisher = HubblePublisher.getInstance();
+    private final HTTPClient httpClient = getHttpClientInstance();
 
     private SMPHttpClient()
     {
@@ -25,9 +26,30 @@ public class SMPHttpClient
         return new SMPHttpClient();
     }
 
+    private HTTPClient getHttpClientInstance()
+    {
+        HTTPClient httpClient = null;
+
+        try
+        {
+            httpClient = new HTTPClient();
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e.getMessage(), e);
+        }
+
+        return httpClient;
+    }
+
+    private HTTPClient getHttpClient()
+    {
+        return (httpClient != null) ? httpClient : getHttpClientInstance();
+    }
+
     private StockholmHTTPResponse sendRequest(HttpRequest httpRequest) throws Exception
     {
-        return new HTTPClient().postData(httpRequest.getUrl(), httpRequest.getQueryString(), httpRequest.getData(), httpRequest.getContentType(), httpRequest.getHttpMethod(), httpRequest.getHeaders());
+        return getHttpClient().postData(httpRequest.getUrl(), httpRequest.getQueryString(), httpRequest.getData(), httpRequest.getContentType(), httpRequest.getHttpMethod(), httpRequest.getHeaders());
     }
 
     public StockholmHTTPResponse request(HttpRequest httpRequest)

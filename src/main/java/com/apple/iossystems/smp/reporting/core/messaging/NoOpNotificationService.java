@@ -5,15 +5,15 @@ import com.apple.iossystems.smp.reporting.core.event.EventRecords;
 /**
  * @author Toch
  */
-class OfflineNotificationService implements NotificationService
+class NoOpNotificationService implements NotificationService
 {
-    private OfflineNotificationService()
+    private NoOpNotificationService()
     {
     }
 
-    static OfflineNotificationService getInstance()
+    static NoOpNotificationService getInstance()
     {
-        return new OfflineNotificationService();
+        return new NoOpNotificationService();
     }
 
     @Override
@@ -24,6 +24,6 @@ class OfflineNotificationService implements NotificationService
     @Override
     public boolean isOnline()
     {
-        return false;
+        return true;
     }
 }

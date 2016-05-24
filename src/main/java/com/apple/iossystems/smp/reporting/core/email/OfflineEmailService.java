@@ -11,7 +11,7 @@ class OfflineEmailService implements EmailEventService
     {
     }
 
-    public static OfflineEmailService getInstance()
+    static OfflineEmailService getInstance()
     {
         return new OfflineEmailService();
     }
@@ -22,7 +22,7 @@ class OfflineEmailService implements EmailEventService
     }
 
     @Override
-    public void publishProvisionEvent(ProvisionCardEvent provisionCardEvent)
+    public void processProvisionEvent(ProvisionCardEvent provisionCardEvent)
     {
     }
 }

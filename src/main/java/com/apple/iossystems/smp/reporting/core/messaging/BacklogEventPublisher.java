@@ -9,10 +9,10 @@ import com.apple.iossystems.smp.reporting.core.event.EventRecords;
  */
 public class BacklogEventPublisher
 {
-    private final int MAX_PUBLISH_DOWN_TIME = ApplicationConfiguration.getMaxPublishDownTime();
+    private final NotificationService eventNotificationService = SMPEventNotificationService.getInstance().getPublisher();
+    private final NotificationService backlogEventNotificationService = NotificationServiceFactory.getInstance().getBacklogEventNotificationService();
 
-    private final NotificationService notificationService = SMPEventNotificationService.getInstance().getPublisher();
-    private final NotificationService backlogEventNotificationService = BacklogEventNotificationService.getInstance();
+    private final int maxPublishDownTime = ApplicationConfiguration.getMaxPublishDownTime();
 
     private BacklogEventPublisher()
     {
@@ -25,14 +25,19 @@ public class BacklogEventPublisher
 
     private boolean publishToEventQueue(PublishStatistics publishStatistics)
     {
-        return ((System.currentTimeMillis() - publishStatistics.getPublishTime()) <= MAX_PUBLISH_DOWN_TIME);
+        return ((System.currentTimeMillis() - publishStatistics.getPublishTime()) <= maxPublishDownTime);
+    }
+
+    public void handleShutdownEvent(EventRecords records)
+    {
+        eventNotificationService.publishEvents(records);
     }
 
     public void publishEvents(EventRecords records, PublishStatistics publishStatistics)
     {
         if (publishToEventQueue(publishStatistics))
         {
-            notificationService.publishEvents(records);
+            eventNotificationService.publishEvents(records);
         }
         else
         {

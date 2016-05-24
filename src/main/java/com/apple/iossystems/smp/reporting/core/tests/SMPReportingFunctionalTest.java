@@ -58,8 +58,7 @@ public class SMPReportingFunctionalTest
     {
         try
         {
-            PropertyManager propertyManager = PropertyManager.getInstance();
-            propertyManager.initializeProperties(true);
+            PropertyManager.getInstance().initializeProperties(true);
         }
         catch (Exception e)
         {

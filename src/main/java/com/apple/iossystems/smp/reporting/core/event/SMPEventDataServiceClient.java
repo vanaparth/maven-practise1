@@ -12,7 +12,7 @@ import com.apple.iossystems.smp.persistence.entity.SecureElement;
  */
 public class SMPEventDataServiceClient
 {
-    private SMPEventDataService smpEventDataService = SMPEventDataService.getInstance();
+    private final SMPEventDataService smpEventDataService = SMPEventDataService.getInstance();
 
     private SMPEventDataServiceClient()
     {
@@ -60,7 +60,7 @@ public class SMPEventDataServiceClient
         return value;
     }
 
-    public PassPan getPassPanByPassSerialAndSeid(String passSerial, String seid)
+    private PassPan getPassPanByPassSerialAndSeid(String passSerial, String seid)
     {
         return ((passSerial != null) && (seid != null)) ? smpEventDataService.getPassPanByPassSerialAndSeid(passSerial, seid) : null;
     }

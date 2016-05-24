@@ -12,7 +12,7 @@ class ReportsPublishTaskHandler extends PublishTaskHandler
         super(EventType.REPORTS, PublishMetric.getReportsMetrics(), ReportsPublishService.getInstance(), AuditPublishService.getInstance());
     }
 
-    public static ReportsPublishTaskHandler getInstance()
+    static ReportsPublishTaskHandler getInstance()
     {
         return new ReportsPublishTaskHandler();
     }

@@ -6,13 +6,13 @@ import com.apple.iossystems.smp.reporting.ireporter.configuration.LoyaltyReports
 /**
  * Created by scottblakesley on 12/15/15.
  */
-public class LoyaltyReportsPublishService extends IReporterPublishService
+class LoyaltyReportsPublishService extends IReporterPublishService
 {
     private LoyaltyReportsPublishService()
     {
     }
 
-    public static LoyaltyReportsPublishService getInstance()
+    static LoyaltyReportsPublishService getInstance()
     {
         return new LoyaltyReportsPublishService();
     }

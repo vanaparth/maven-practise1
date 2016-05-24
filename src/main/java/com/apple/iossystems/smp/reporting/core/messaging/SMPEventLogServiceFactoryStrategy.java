@@ -6,13 +6,13 @@ import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfigur
 /**
  * @author Toch
  */
-public class SMPEventLogServiceFactoryStrategy implements LogServiceFactoryStrategy
+class SMPEventLogServiceFactoryStrategy implements LogServiceFactoryStrategy
 {
     private SMPEventLogServiceFactoryStrategy()
     {
     }
 
-    public static SMPEventLogServiceFactoryStrategy getInstance()
+    static SMPEventLogServiceFactoryStrategy getInstance()
     {
         return new SMPEventLogServiceFactoryStrategy();
     }

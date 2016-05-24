@@ -1,5 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.persistence;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  * @author Toch
  */
@@ -7,9 +9,9 @@ public class SMPEventCache
 {
     private static final long DEFAULT_CACHE_TIMEOUT_MILLISECONDS = 72 * 60 * 60 * 1000;
 
-    private CacheService cacheService = CacheService.getInstance();
-
     private static final SMPEventCache INSTANCE = new SMPEventCache();
+
+    private final CacheService cacheService = CacheService.getInstance();
 
     private SMPEventCache()
     {
@@ -24,7 +26,7 @@ public class SMPEventCache
     {
         String cacheKey = null;
 
-        if (key != null)
+        if (StringUtils.isNotBlank(key))
         {
             cacheKey = "SMPReporting_" + attribute.key + "_" + key;
         }

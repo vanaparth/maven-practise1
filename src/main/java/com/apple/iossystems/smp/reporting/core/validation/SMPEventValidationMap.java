@@ -16,6 +16,11 @@ class SMPEventValidationMap
     {
     }
 
+    static SMPEventValidationMap getInstance()
+    {
+        return new SMPEventValidationMap();
+    }
+
     private Map<SMPDeviceEvent, Set<String>> getValidationMap()
     {
         Map<SMPDeviceEvent, Set<String>> map = new HashMap<>();
@@ -33,12 +38,7 @@ class SMPEventValidationMap
         return map;
     }
 
-    public static SMPEventValidationMap getInstance()
-    {
-        return new SMPEventValidationMap();
-    }
-
-    public boolean isValid(EventRecord record)
+    boolean isValid(EventRecord record)
     {
         boolean result = true;
 

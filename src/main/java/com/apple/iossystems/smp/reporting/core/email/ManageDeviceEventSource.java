@@ -33,11 +33,11 @@ public enum ManageDeviceEventSource
 
     public static ManageDeviceEventSource fromActor(Actor actor)
     {
-        for (ManageDeviceEventSource e : values())
+        for (ManageDeviceEventSource manageDeviceEventSource : values())
         {
-            if (e.actor.equals(actor))
+            if (manageDeviceEventSource.actor.equals(actor))
             {
-                return e;
+                return manageDeviceEventSource;
             }
         }
 
@@ -46,11 +46,11 @@ public enum ManageDeviceEventSource
 
     public static ManageDeviceEventSource fromCode(String code)
     {
-        for (ManageDeviceEventSource e : values())
+        for (ManageDeviceEventSource manageDeviceEventSource : values())
         {
-            if (e.code.equals(code))
+            if (manageDeviceEventSource.code.equals(code))
             {
-                return e;
+                return manageDeviceEventSource;
             }
         }
 

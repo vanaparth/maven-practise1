@@ -12,7 +12,7 @@ public class HubblePublisher
 {
     private static final Logger LOGGER = Logger.getLogger(HubblePublisher.class);
 
-    private OperationalAnalytics operationalAnalytics = OperationalAnalyticsManager.getInstance().getOperationalAnalytics();
+    private final OperationalAnalytics operationalAnalytics = OperationalAnalyticsManager.getInstance().getOperationalAnalytics();
 
     private HubblePublisher()
     {
@@ -23,19 +23,19 @@ public class HubblePublisher
         return new HubblePublisher();
     }
 
+    private boolean isValidMetric(Metric metric)
+    {
+        return ((metric != null) && metric.hasKpi());
+    }
+
     public void incrementCountForEvent(Metric metric)
     {
         incrementCountForEvent(metric, 1);
     }
 
-    public void logCountForEvent(Metric metric, int count)
-    {
-        logTimingForEvent(metric, count);
-    }
-
     public void incrementCountForEvent(Metric metric, int count)
     {
-        if (metric.hasKpi())
+        if (isValidMetric(metric))
         {
             String kpi = metric.getKpi();
 
@@ -53,7 +53,7 @@ public class HubblePublisher
 
     public void logTimingForEvent(Metric metric, long time)
     {
-        if (metric.hasKpi())
+        if (isValidMetric(metric))
         {
             String kpi = metric.getKpi();
 

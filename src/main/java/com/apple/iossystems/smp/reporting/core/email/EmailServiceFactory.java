@@ -18,13 +18,6 @@ public class EmailServiceFactory
 
     public EmailEventService getEmailService()
     {
-        if (ApplicationConfiguration.emailEventsEnabled())
-        {
-            return EmailService.getInstance();
-        }
-        else
-        {
-            return OfflineEmailService.getInstance();
-        }
+        return ApplicationConfiguration.emailEventsEnabled() ? EmailService.getInstance() : OfflineEmailService.getInstance();
     }
 }

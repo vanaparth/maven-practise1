@@ -18,39 +18,24 @@ public class IReporterConfiguration
     private static final String BASE_URL = ApplicationConfiguration.getIReporterUrl();
 
     private static final String DEFAULT_REPORTS_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/stockholm";
-
     private static final String DEFAULT_AUDIT_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/stockholm_audit";
-
     private static final String DEFAULT_PAYMENT_REPORTS_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/oslo";
-
     private static final String DEFAULT_PAYMENT_AUDIT_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/oslo_audit";
-
     private static final String DEFAULT_REPORTS_URL = BASE_URL + "/e3/rest/1/stockholm";
-
     private static final String DEFAULT_AUDIT_URL = BASE_URL + "/e3/rest/1/stockholm_audit";
-
     private static final String DEFAULT_PAYMENT_REPORTS_URL = BASE_URL + "/e3/rest/1/oslo";
-
     private static final String DEFAULT_PAYMENT_AUDIT_URL = BASE_URL + "/e3/rest/1/oslo_audit";
-
     private static final String DEFAULT_LOYALTY_REPORTS_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/vas";
-
     private static final String DEFAULT_LOYALTY_REPORTS_URL = BASE_URL + "/e3/rest/1/vas";
-
     private static final String DEFAULT_LOYALTY_AUDIT_CONFIGURATION_URL = BASE_URL + "/e3/rest/1/config/vas_audit";
-
     private static final String DEFAULT_LOYALTY_AUDIT_URL = BASE_URL + "/e3/rest/1/vas_audit";
 
     private static final String DEFAULT_PUBLISH_KEY = "QWERTYUIOPASDF12";
-
     private static final String DEFAULT_CONTENT_TYPE = "application/json";
-
     private static final boolean DEFAULT_PUBLISH_ENABLED = true;
 
     private static final int DEFAULT_MAX_BATCH_SIZE = 100;
-
     private static final int DEFAULT_PUBLISH_FREQUENCY = 60 * 1000;
-
     private static final int DEFAULT_CONFIGURATION_RELOAD_FREQUENCY = 60 * 60 * 1000;
 
     private final String protocol;
@@ -144,9 +129,9 @@ public class IReporterConfiguration
         return headers;
     }
 
-    public boolean isEquals(IReporterConfiguration configuration)
+    boolean isEquals(IReporterConfiguration configuration)
     {
-        return ((this == configuration) || (configurationEquals(configuration)));
+        return ((this == configuration) || configurationEquals(configuration));
     }
 
     private boolean configurationEquals(IReporterConfiguration configuration)
@@ -161,7 +146,7 @@ public class IReporterConfiguration
                 (configurationReloadFrequency == configuration.configurationReloadFrequency));
     }
 
-    public static IReporterConfiguration getConfiguration(IReporterConfiguration.Type configurationType, String json)
+    static IReporterConfiguration getConfiguration(IReporterConfiguration.Type configurationType, String json)
     {
         IReporterConfiguration configuration = null;
 
@@ -179,7 +164,8 @@ public class IReporterConfiguration
 
     public static IReporterConfiguration getDefaultConfiguration(Type configurationType)
     {
-        return new Builder().publishUrl(configurationType.getPublishUrl()).
+        return new Builder().
+                publishUrl(configurationType.getPublishUrl()).
                 publishKey(DEFAULT_PUBLISH_KEY).
                 contentType(DEFAULT_CONTENT_TYPE).
                 publishEnabled(DEFAULT_PUBLISH_ENABLED).
@@ -252,7 +238,7 @@ public class IReporterConfiguration
             return this;
         }
 
-        public Builder publishUrl(String value)
+        private Builder publishUrl(String value)
         {
             publishUrl = value;
             return this;
@@ -303,9 +289,9 @@ public class IReporterConfiguration
             return new IReporterConfiguration(this);
         }
 
-        public void completeBuild()
+        private void completeBuild()
         {
-            if (publishUrl == null)
+            if (StringUtils.isBlank(publishUrl))
             {
                 publishUrl = getUrl(protocol, hostname, uri);
             }
@@ -323,7 +309,7 @@ public class IReporterConfiguration
 
             int minConfigurationReloadFrequency = 60 * 1000;
             int maxConfigurationReloadFrequency = 60 * 60 * 1000;
-            int defaultConfigurationReloadFrequency = 5 * 60 * 1000;
+            int defaultConfigurationReloadFrequency = 60 * 60 * 1000;
 
             if ((maxBatchSize < validMinBatchSize) || (maxBatchSize > validMaxBatchSize))
             {
@@ -348,7 +334,7 @@ public class IReporterConfiguration
                 protocol = "https";
             }
 
-            if (uri == null)
+            if (StringUtils.isBlank(uri))
             {
                 uri = "";
             }

@@ -10,9 +10,9 @@ import com.apple.iossystems.smp.reporting.core.logging.EmailEventLogger;
  */
 class EmailEventListener extends SMPEventListener
 {
-    private EmailEventLogger emailEventLogger = new EmailEventLogger(PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.event.log", false));
+    private final EmailEventLogger emailEventLogger = new EmailEventLogger(PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.event.log", false));
 
-    public EmailEventListener()
+    EmailEventListener()
     {
     }
 

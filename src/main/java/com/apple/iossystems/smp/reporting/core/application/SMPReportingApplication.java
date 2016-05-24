@@ -1,7 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.application;
 
-import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
-import com.apple.iossystems.smp.reporting.core.messaging.SMPReportingService;
+import com.apple.iossystems.smp.reporting.core.messaging.SMPEventSubscriberServiceManager;
 
 /**
  * @author Toch
@@ -10,9 +9,10 @@ public class SMPReportingApplication
 {
     private static final SMPReportingApplication INSTANCE = new SMPReportingApplication();
 
+    private final SMPEventSubscriberServiceManager smpEventSubscriberServiceManager = SMPEventSubscriberServiceManager.getInstance();
+
     private SMPReportingApplication()
     {
-        init();
     }
 
     public static SMPReportingApplication getInstance()
@@ -20,25 +20,12 @@ public class SMPReportingApplication
         return INSTANCE;
     }
 
-    private void init()
-    {
-        setSystemProperties();
-
-        SMPReportingService.getInstance().start();
-    }
-
-    private void setSystemProperties()
-    {
-        System.setProperty("rabbit.host", ApplicationConfiguration.getKeystoneRabbitHost());
-        System.setProperty("rabbit.port", ApplicationConfiguration.getKeystoneRabbitPort());
-        System.setProperty("rabbit.user", ApplicationConfiguration.getKeystoneRabbitUser());
-        System.setProperty("rabbit.pass", ApplicationConfiguration.getKeystoneRabbitPassword());
-        System.setProperty("rabbit.vhost", ApplicationConfiguration.getKeystoneRabbitVirtualHost());
-        System.setProperty("rabbit.consumerThreads", String.valueOf(ApplicationConfiguration.getRabbitConsumerThreadsCount()));
-        System.setProperty("rabbit.consumerThreads.prefetchCount", String.valueOf(ApplicationConfiguration.getRabbitConsumerThreadsPrefetchCount()));
-    }
-
     public void start()
     {
+    }
+
+    public void shutdown()
+    {
+        smpEventSubscriberServiceManager.shutdown();
     }
 }

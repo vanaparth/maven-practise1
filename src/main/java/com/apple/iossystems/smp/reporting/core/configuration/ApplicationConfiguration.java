@@ -1,74 +1,61 @@
 package com.apple.iossystems.smp.reporting.core.configuration;
 
 import com.apple.cds.keystone.config.PropertyManager;
-import org.apache.commons.lang.StringUtils;
-import java.util.*;
+
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Toch
  */
 public class ApplicationConfiguration
 {
-    static final String KEYSTONE_RABBIT_HOST = PropertyManager.getInstance().valueForKeyWithDefault("keystone.rabbit.host", "rabbit-np-amqp.corp.apple.com");
-    static final String KEYSTONE_RABBIT_PORT = PropertyManager.getInstance().valueForKeyWithDefault("keystone.rabbit.port", "5672");
-    static final String KEYSTONE_RABBIT_USER = PropertyManager.getInstance().valueForKeyWithDefault("keystone.rabbit.user", "SMPQA_User");
-    static final String KEYSTONE_RABBIT_PASSWORD = PropertyManager.getInstance().valueForKeyWithDefault("keystone.rabbit.pass", "SMPQA_User123");
-    static final String KEYSTONE_RABBIT_VIRTUAL_HOST = PropertyManager.getInstance().valueForKeyWithDefault("keystone.rabbit.virtualhost", "SMPQA1");
+    private static final String KEYSTONE_RABBIT_HOST = PropertyManager.getInstance().valueForKeyWithDefault("keystone.rabbit.host", "rabbit-np-amqp.corp.apple.com");
+    private static final String KEYSTONE_RABBIT_PORT = PropertyManager.getInstance().valueForKeyWithDefault("keystone.rabbit.port", "5672");
+    private static final String KEYSTONE_RABBIT_USER = PropertyManager.getInstance().valueForKeyWithDefault("keystone.rabbit.user", "SMPQA_User");
+    private static final String KEYSTONE_RABBIT_PASSWORD = PropertyManager.getInstance().valueForKeyWithDefault("keystone.rabbit.pass", "SMPQA_User123");
+    private static final String KEYSTONE_RABBIT_VIRTUAL_HOST = PropertyManager.getInstance().valueForKeyWithDefault("keystone.rabbit.virtualhost", "SMPQA1");
 
-    static final int RABBIT_CONSUMER_THREADS_COUNT = PropertyManager.getInstance().getIntValueForKeyWithDefault("rabbit.consumerThreads", 10);
-    static final int RABBIT_CONSUMER_THREADS_PREFETCH_COUNT = PropertyManager.getInstance().getIntValueForKeyWithDefault("rabbit.consumerThreads.prefetchCount", 1);
+    private static final int RABBIT_CONSUMER_THREADS_COUNT = PropertyManager.getInstance().getIntValueForKeyWithDefault("rabbit.consumerThreads", 10);
+    private static final int RABBIT_CONSUMER_THREADS_PREFETCH_COUNT = PropertyManager.getInstance().getIntValueForKeyWithDefault("rabbit.consumerThreads.prefetchCount", 1);
 
-    static final String SMP_EVENTS_EXCHANGE = PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.events.exchange", "iossystems.stockholm.events");
+    private static final String SMP_EVENTS_EXCHANGE = PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.events.exchange", "iossystems.stockholm.events");
 
-    static final String LOG_SERVICE_OWNER = PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.logging.owner", "iossystems");
-    static final String LOG_SERVICE_PATH = PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.logging.path", "stockholm");
-    static final String LOG_SERVICE_CATEGORY = PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.logging.category", "events");
-    static final String LOG_SERVICE_STORE = PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.logging.store", "reporting");
-    static final String LOG_SERVICE_CLASS = PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.logging.classname", "com.apple.iossystems.logging.impl.pubsub.BufferedPubSub");
+    private static final String LOG_SERVICE_OWNER = PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.logging.owner", "iossystems");
+    private static final String LOG_SERVICE_PATH = PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.logging.path", "stockholm");
+    private static final String LOG_SERVICE_CATEGORY = PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.logging.category", "events");
+    private static final String LOG_SERVICE_STORE = PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.logging.store", "reporting");
+    private static final String LOG_SERVICE_CLASS = PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.logging.classname", "com.apple.iossystems.logging.impl.pubsub.BufferedPubSub");
 
-    static final int LOG_SERVICE_BDB_BATCH_SIZE = PropertyManager.getInstance().getIntValueForKeyWithDefault("smp.reporting.logging.bdb.batch.size", 50);
-    static final int LOG_SERVICE_BDB_INTERVAL = PropertyManager.getInstance().getIntValueForKeyWithDefault("smp.reporting.logging.bdb.interval.ms", 500);
+    private static final int LOG_SERVICE_BDB_BATCH_SIZE = PropertyManager.getInstance().getIntValueForKeyWithDefault("smp.reporting.logging.bdb.batch.size", 50);
+    private static final int LOG_SERVICE_BDB_INTERVAL = PropertyManager.getInstance().getIntValueForKeyWithDefault("smp.reporting.logging.bdb.interval.ms", 500);
 
-    static final String BACKLOG_BDB_STORE = PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.backlog.bdb.store", "backlogReporting");
+    private static final String BACKLOG_BDB_STORE = PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.backlog.bdb.store", "backlogReporting");
 
-    static final int MAX_PUBLISH_DOWN_TIME = PropertyManager.getInstance().getIntValueForKeyWithDefault("smp.reporting.maxPublishDownTime", 5 * 60 * 1000);
+    private static final int MAX_PUBLISH_DOWN_TIME = PropertyManager.getInstance().getIntValueForKeyWithDefault("smp.reporting.maxPublishDownTime", 5 * 60 * 1000);
 
-    static final String IREPORTER_URL = PropertyManager.getInstance().valueForKeyWithDefault("icloud.ireporter.url", "https://icloud4-e3.icloud.com");
-    static final String HASH_PASSWORD = PropertyManager.getInstance().valueForKeyWithDefault("icloud.ireporter.pass", "pLijzg2e2QNspdhOyNWdOSScPszmZBryJ0L8BcQ116BhkT6p0iHyNcwnlFIwhLun");
+    private static final String IREPORTER_URL = PropertyManager.getInstance().valueForKeyWithDefault("icloud.ireporter.url", "https://icloud4-e3.icloud.com");
+    private static final String HASH_PASSWORD = PropertyManager.getInstance().valueForKeyWithDefault("icloud.ireporter.pass", "pLijzg2e2QNspdhOyNWdOSScPszmZBryJ0L8BcQ116BhkT6p0iHyNcwnlFIwhLun");
 
-    static final boolean RABBIT_CONSUMERS_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.rabbit.consumers", true);
+    private static final boolean RABBIT_CONSUMERS_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.rabbit.consumers", true);
 
-    static final boolean PUBLISH_EVENTS_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.publish.events", true);
-    static final boolean EMAIL_EVENTS_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.events", true);
+    private static final boolean PUBLISH_EVENTS_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.publish.events", true);
+    private static final boolean SUBSCRIBE_EVENTS_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.subscribe.events", true);
+    private static final boolean EMAIL_EVENTS_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.events", true);
 
-    static final boolean PROVISION_EMAIL_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.provision", true);
-    static final boolean SUSPEND_EMAIL_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.suspend", true);
-    static final boolean UNLINK_EMAIL_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.unlink", true);
-    static final boolean DEFAULT_EMAIL_LOCALE_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.default.locale", true);
+    private static final boolean PROVISION_EMAIL_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.provision", true);
+    private static final boolean SUSPEND_EMAIL_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.suspend", true);
+    private static final boolean UNLINK_EMAIL_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.unlink", true);
+    private static final boolean DEFAULT_EMAIL_LOCALE_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.default.locale", true);
 
-    static final String FMIP_CERTIFICATE = PropertyManager.getInstance().valueForKeyWithDefault("com.apple.iossystems.internal.fmip.app.cert", "0");
-    static final String FMIP_REMOTE_CERTIFICATE = PropertyManager.getInstance().valueForKeyWithDefault("com.apple.iossystems.internal.fmip.setup.cert", "0");
+    private static final List<String> EMAIL_LOCALES_MAPPING = PropertyManager.getInstance().getListForKeyWithDefault("smp.reporting.email.locales.mapping", Collections.<String>emptyList());
+    private static final List<String> SUPPORTED_EMAIL_LOCALES = PropertyManager.getInstance().getListForKeyWithDefault("smp.reporting.email.supported.locales", Collections.<String>emptyList());
 
-    static final Map<String,String> MANAGE_DEVICE_COUNTRY_DEFAULTS = PropertyManager.getInstance().getDictionaryForKey("com.apple.iossystems.manage.device.country.defaults");
-    static final Map<String, String> MANAGE_DEVICE_COUNTRY_DEFAULT_MAP = new HashMap<String, String>();
-    static final Set<String> DEFAULT_MANAGE_DEVICE_EN_US_LOCALE_EXCLUSION_LIST = new HashSet(PropertyManager.getInstance().getListForKeyWithDefault("com.apple.iossystems.manage.device.us.exclusionlist", Collections.<String>emptyList()));
-    static final String MANAGE_DEVICE_DEFAULT_LOCALE = PropertyManager.getInstance().valueForKeyWithDefault("com.apple.iossystems.manage.device.default.locale", "en_US");
+    private static final String FMIP_CERTIFICATE = PropertyManager.getInstance().valueForKeyWithDefault("com.apple.iossystems.internal.fmip.app.cert", "0");
+    private static final String FMIP_REMOTE_CERTIFICATE = PropertyManager.getInstance().valueForKeyWithDefault("com.apple.iossystems.internal.fmip.setup.cert", "0");
 
-    static {
-        if (MANAGE_DEVICE_COUNTRY_DEFAULTS  != null && !MANAGE_DEVICE_COUNTRY_DEFAULTS.isEmpty()) // There are filters defined {
-        {
-            //Entries in the map are defined as "zh_CN=zh_TW, zh_HK"
-            for (String key : MANAGE_DEVICE_COUNTRY_DEFAULTS.keySet()) {
-                String value = MANAGE_DEVICE_COUNTRY_DEFAULTS.get(key);
-                String[] list = StringUtils.split(value, ",");
-                for( String locale: list ) {
-                    MANAGE_DEVICE_COUNTRY_DEFAULT_MAP.put( locale.toUpperCase(), key );
-                }
-            }
-        }
-    }
-
-    private ApplicationConfiguration(){
+    private ApplicationConfiguration()
+    {
     }
 
     public static String getKeystoneRabbitHost()
@@ -176,6 +163,11 @@ public class ApplicationConfiguration
         return PUBLISH_EVENTS_ENABLED;
     }
 
+    public static boolean subscribeEventsEnabled()
+    {
+        return SUBSCRIBE_EVENTS_ENABLED;
+    }
+
     public static boolean emailEventsEnabled()
     {
         return EMAIL_EVENTS_ENABLED;
@@ -201,6 +193,16 @@ public class ApplicationConfiguration
         return DEFAULT_EMAIL_LOCALE_ENABLED;
     }
 
+    public static List<String> getEmailLocalesMapping()
+    {
+        return EMAIL_LOCALES_MAPPING;
+    }
+
+    public static List<String> getSupportedEmailLocales()
+    {
+        return SUPPORTED_EMAIL_LOCALES;
+    }
+
     public static String getFmipCertificate()
     {
         return FMIP_CERTIFICATE;
@@ -210,12 +212,4 @@ public class ApplicationConfiguration
     {
         return FMIP_REMOTE_CERTIFICATE;
     }
-
-
-    public static Map<String , String> getManageDeviceCountryDefaults(){ return ApplicationConfiguration.MANAGE_DEVICE_COUNTRY_DEFAULT_MAP; }
-
-    public static Set<String> getManageDeviceUSExclusionList() { return ApplicationConfiguration.DEFAULT_MANAGE_DEVICE_EN_US_LOCALE_EXCLUSION_LIST; }
-
-    public static String getManageDeviceDefaultLocale() { return ApplicationConfiguration.MANAGE_DEVICE_DEFAULT_LOCALE;}
-
 }

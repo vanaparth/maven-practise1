@@ -33,7 +33,7 @@ public class SMPEventRecord
 
         if (StringUtils.isNotBlank(value))
         {
-            record.setAttributeValue(key, Coordinates.parse(value).truncateToInteger().getReverseString());
+            record.setAttributeValue(key, Coordinates.getCoordinates(value).truncateToInteger().getReverseString());
         }
     }
 

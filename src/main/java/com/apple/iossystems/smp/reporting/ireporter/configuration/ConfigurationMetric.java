@@ -5,7 +5,7 @@ import com.apple.iossystems.smp.reporting.core.analytics.Metric;
 /**
  * @author Toch
  */
-public enum ConfigurationMetric
+enum ConfigurationMetric
 {
     REPORTS(Metric.REPORTS_CONFIGURATION_REQUESTED, Metric.REPORTS_CONFIGURATION_CHANGED),
     AUDIT(Metric.AUDIT_CONFIGURATION_REQUESTED, Metric.AUDIT_CONFIGURATION_CHANGED),
@@ -23,12 +23,12 @@ public enum ConfigurationMetric
         this.changedMetric = changedMetric;
     }
 
-    public Metric getRequestedMetric()
+    Metric getRequestedMetric()
     {
         return requestedMetric;
     }
 
-    public Metric getChangedMetric()
+    Metric getChangedMetric()
     {
         return changedMetric;
     }

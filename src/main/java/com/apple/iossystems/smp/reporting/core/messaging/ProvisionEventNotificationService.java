@@ -4,6 +4,7 @@ import com.apple.cds.keystone.spring.AppContext;
 import com.apple.iossystems.smp.domain.DSIDInfo;
 import com.apple.iossystems.smp.domain.ProvisionCount;
 import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
+import com.apple.iossystems.smp.reporting.core.concurrent.TaskExecutorService;
 import com.apple.iossystems.smp.reporting.core.email.EmailEventService;
 import com.apple.iossystems.smp.reporting.core.email.EmailServiceFactory;
 import com.apple.iossystems.smp.reporting.core.email.ProvisionCardEvent;
@@ -22,11 +23,11 @@ public class ProvisionEventNotificationService
 
     private static final ProvisionEventNotificationService INSTANCE = new ProvisionEventNotificationService();
 
-    private EventNotificationServiceThreadPool threadPool = EventNotificationServiceThreadPool.getInstance();
-
-    private EmailEventService emailService = EmailServiceFactory.getInstance().getEmailService();
-
     private static final SMPEventCache SMP_EVENT_CACHE = SMPEventCache.getInstance();
+
+    private final EmailEventService emailService = EmailServiceFactory.getInstance().getEmailService();
+    private final StoreManagementService storeManagementService = AppContext.getApplicationContext().getBean(StoreManagementService.class);
+    private final TaskExecutorService taskExecutorService = AppContext.getApplicationContext().getBean(TaskExecutorService.class);
 
     private ProvisionEventNotificationService()
     {
@@ -52,8 +53,6 @@ public class ProvisionEventNotificationService
 
     private void doProcessProvisionEvent(String dpanId, String dsid, String seid)
     {
-        StoreManagementService storeManagementService = AppContext.getApplicationContext().getBean(StoreManagementService.class);
-
         DSIDInfo dsidInfo = null;
 
         try
@@ -84,7 +83,7 @@ public class ProvisionEventNotificationService
     {
         try
         {
-            threadPool.submit(new Task(provisionCardEvent));
+            taskExecutorService.submit(new Task(provisionCardEvent));
         }
         catch (Exception e)
         {
@@ -104,7 +103,7 @@ public class ProvisionEventNotificationService
         @Override
         public Boolean call() throws Exception
         {
-            emailService.publishProvisionEvent(provisionCardEvent);
+            emailService.processProvisionEvent(provisionCardEvent);
 
             return true;
         }

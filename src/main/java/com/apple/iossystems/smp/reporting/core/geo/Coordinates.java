@@ -16,16 +16,6 @@ public class Coordinates
         this.latitude = latitude;
     }
 
-    public float getLongitude()
-    {
-        return longitude;
-    }
-
-    public float getLatitude()
-    {
-        return latitude;
-    }
-
     public String getReverseString()
     {
         return latitude + "," + longitude;
@@ -36,7 +26,7 @@ public class Coordinates
         return new Coordinates((int) longitude, (int) latitude);
     }
 
-    public static Coordinates parse(String value)
+    public static Coordinates getCoordinates(String value)
     {
         int index = value.indexOf('/');
 

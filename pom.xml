@@ -5,7 +5,7 @@
     <parent>
         <groupId>com.apple.pay</groupId>
         <artifactId>SecureMobilePlatform-base</artifactId>
-        <version>1C02</version>
+        <version>1C03</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <dependencies>
@@ -20,22 +20,22 @@
         <dependency>
             <groupId>com.apple.cds</groupId>
             <artifactId>CDSMessaging</artifactId>
-            <version>1.8.3</version>
+            <version>1.8.4</version>
         </dependency>
         <dependency>
             <groupId>com.apple.pay</groupId>
             <artifactId>SMPBase</artifactId>
-            <version>1C02</version>
+            <version>1C03</version>
         </dependency>
         <dependency>
             <groupId>com.apple.pay</groupId>
             <artifactId>SMPBusinessLogicBase</artifactId>
-            <version>1C02</version>
+            <version>1C03</version>
         </dependency>
         <dependency>
             <groupId>com.apple.pay</groupId>
             <artifactId>SMPPersistenceServices</artifactId>
-            <version>1C02</version>
+            <version>1C03</version>
         </dependency>
     </dependencies>
 </project>

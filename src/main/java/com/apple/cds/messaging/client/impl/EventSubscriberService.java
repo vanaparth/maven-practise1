@@ -16,22 +16,21 @@ import java.net.InetAddress;
 /**
  * @author Toch
  */
-public abstract class SMPEventSubscriberService extends LoggingSubscriberServiceBase<LogEvent>
+public abstract class EventSubscriberService extends LoggingSubscriberServiceBase<LogEvent>
 {
-    private SMPEventConsumerService consumerService;
+    private final EventConsumerService consumerService;
 
-    protected SMPEventSubscriberService(String queueName)
+    protected EventSubscriberService(String queueName)
     {
-        init(queueName);
+        consumerService = getEventConsumerService(queueName);
     }
 
-    private void init(String queueName)
+    private EventConsumerService getEventConsumerService(String queueName)
     {
         SMPEventDeliveryHandler smpEventDeliveryHandler = new SMPEventDeliveryHandler();
-
-        consumerService = new SMPEventConsumerService(getProperties("LoggingSubscriberService", queueName), smpEventDeliveryHandler, SMPLogEventSerializer.getInstance());
-
         smpEventDeliveryHandler.setEventHandler(this);
+
+        return new EventConsumerService(getProperties("EventSubscriberService", queueName), smpEventDeliveryHandler, SMPLogEventSerializer.getInstance());
     }
 
     private ConsumerServiceProperties getProperties(String serviceName, String queueName)
@@ -45,10 +44,9 @@ public abstract class SMPEventSubscriberService extends LoggingSubscriberService
         properties.setRabbitmqVirtualhost(ApplicationConfiguration.getKeystoneRabbitVirtualHost());
         properties.setRabbitConnectionCount(ApplicationConfiguration.getRabbitConsumerThreadsCount());
         properties.setServiceConsumerPrefetchCount(ApplicationConfiguration.getRabbitConsumerThreadsPrefetchCount());
-
         properties.setServiceConsumerQueue(queueName);
         properties.setServiceName(serviceName);
-        properties.setServiceConsumerTransactional(false);
+        properties.setServiceConsumerTransactional(true);
 
         try
         {
@@ -56,93 +54,78 @@ public abstract class SMPEventSubscriberService extends LoggingSubscriberService
         }
         catch (Exception e)
         {
-            Logger.getLogger(SMPEventSubscriberService.class).error(e.getMessage(), e);
+            Logger.getLogger(EventSubscriberService.class).error(e.getMessage(), e);
         }
 
         return properties;
     }
 
     @Override
-    public <V extends AbstractConsumerServiceEventListener<LogEvent>> void setEventListener(V eventListener)
+    public final <V extends AbstractConsumerServiceEventListener<LogEvent>> void setEventListener(V eventListener)
     {
         consumerService.setEventListener(eventListener);
     }
 
     @Override
-    public OperationalAnalytics getMonitor()
+    public final OperationalAnalytics getMonitor()
     {
         return null;
     }
 
     @Override
-    public void setMonitor(OperationalAnalytics analytics)
+    public final void setMonitor(OperationalAnalytics analytics)
     {
     }
 
     @Override
-    public void start() throws ServiceException
+    public final void start() throws ServiceException
     {
         consumerService.start();
     }
 
     @Override
-    public void stop() throws ServiceException
+    public final void stop() throws ServiceException
     {
         consumerService.stop();
     }
 
     @Override
-    public void pause() throws ServiceException
+    public final void pause() throws ServiceException
     {
         consumerService.pause();
     }
 
     @Override
-    public void resume() throws ServiceException
+    public final void resume() throws ServiceException
     {
         consumerService.resume();
     }
 
     @Override
-    public boolean isStarted()
+    public final boolean isStarted()
     {
         return consumerService.isStarted();
     }
 
     @Override
-    public boolean isStopped()
+    public final boolean isStopped()
     {
         return consumerService.isStopped();
     }
 
     @Override
-    public boolean isPaused()
+    public final boolean isPaused()
     {
         return consumerService.isPaused();
     }
 
     @Override
-    public boolean isQuiescent()
+    public final boolean isQuiescent()
     {
         return consumerService.isQuiescent();
     }
 
-    public final void begin()
-    {
-        startConsumerService();
-    }
-
-    private void startConsumerService()
-    {
-        try
-        {
-            start();
-        }
-        catch (Exception e)
-        {
-            Logger.getLogger(SMPEventSubscriberService.class).error(e.getMessage(), e);
-        }
-    }
-
     public abstract void handleEvent(LogEvent logEvent);
+
+    public abstract void shutdown();
 }

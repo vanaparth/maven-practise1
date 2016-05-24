@@ -12,7 +12,7 @@ class PaymentPublishTaskHandler extends PublishTaskHandler
         super(EventType.PAYMENT, PublishMetric.getPaymentReportsMetrics(), PaymentReportsPublishService.getInstance(), PaymentAuditPublishService.getInstance());
     }
 
-    public static PaymentPublishTaskHandler getInstance()
+    static PaymentPublishTaskHandler getInstance()
     {
         return new PaymentPublishTaskHandler();
     }

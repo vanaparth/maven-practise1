@@ -4,7 +4,7 @@ import com.apple.cds.keystone.spring.AppContext;
 import com.apple.iossystems.logging.local.BDBStorage;
 import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
 import com.apple.iossystems.smp.reporting.core.analytics.Metric;
-import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledNotification;
+import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledTask;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledTaskHandler;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
@@ -26,11 +26,8 @@ class BdbConsumer implements ScheduledTaskHandler
 
     private final NotificationService notificationService = SMPEventNotificationService.getInstance().getPublisher();
     private final HubblePublisher hubblePublisher = HubblePublisher.getInstance();
-    private final BDBStorage bdbStorage;
-
     private final int bdbBatchSize = ApplicationConfiguration.getLogServiceBdbBatchSize();
-
-    private StoreManagementService storeManagementService = AppContext.getApplicationContext().getBean(StoreManagementService.class);
+    private final BDBStorage bdbStorage;
 
     private BdbConsumer(BDBStorage bdbStorage)
     {
@@ -39,7 +36,7 @@ class BdbConsumer implements ScheduledTaskHandler
         init();
     }
 
-    public static BdbConsumer getInstance(BDBStorage bdbStorage)
+    static BdbConsumer getInstance(BDBStorage bdbStorage)
     {
         return new BdbConsumer(bdbStorage);
     }
@@ -51,11 +48,11 @@ class BdbConsumer implements ScheduledTaskHandler
 
     private void startScheduledTasks()
     {
-        ScheduledNotification.getInstance(this, 5 * 60 * 1000);
+        ScheduledTask.getInstance(this, 5 * 60 * 1000);
     }
 
     @Override
-    public final void handleEvent()
+    public void handleEvent()
     {
         handleConsumeEvents();
     }
@@ -65,6 +62,10 @@ class BdbConsumer implements ScheduledTaskHandler
         if (consumerEnabled())
         {
             doHandleConsumeEvents();
+        }
+        else
+        {
+            notifyBdbRecordCount();
         }
     }
 
@@ -146,6 +147,8 @@ class BdbConsumer implements ScheduledTaskHandler
 
         try
         {
+            StoreManagementService storeManagementService = AppContext.getApplicationContext().getBean(StoreManagementService.class);
+
             map = storeManagementService.getGlobalStoreValue("SMP_REPORTING_BACKLOG_BDB_CONSUMERS");
         }
         catch (Exception e)
@@ -156,7 +159,33 @@ class BdbConsumer implements ScheduledTaskHandler
         return (map != null);
     }
 
-    public void start()
+    private void notifyBdbRecordCount()
+    {
+        long count = getBdbRecordCount();
+
+        if (count > 0)
+        {
+            LOGGER.warn("Bdb backlog records " + count);
+        }
+    }
+
+    private long getBdbRecordCount()
+    {
+        long count = 0;
+
+        try
+        {
+            count = bdbStorage.size();
+        }
+        catch (Exception e)
+        {
+            LOGGER.error(e.getMessage(), e);
+        }
+
+        return count;
+    }
+
+    void start()
     {
     }
 }

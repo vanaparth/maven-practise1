@@ -18,37 +18,37 @@ class IReporterConfigurationFactory
     {
     }
 
-    public static IReporterConfigurationFactory getInstance()
+    static IReporterConfigurationFactory getInstance()
     {
         return new IReporterConfigurationFactory();
     }
 
-    public IReporterConfiguration loadReportsConfiguration()
+    IReporterConfiguration loadReportsConfiguration()
     {
         return load(IReporterConfiguration.Type.REPORTS);
     }
 
-    public IReporterConfiguration loadAuditConfiguration()
+    IReporterConfiguration loadAuditConfiguration()
     {
         return load(IReporterConfiguration.Type.AUDIT);
     }
 
-    public IReporterConfiguration loadPaymentReportsConfiguration()
+    IReporterConfiguration loadPaymentReportsConfiguration()
     {
         return load(IReporterConfiguration.Type.PAYMENT_REPORTS);
     }
 
-    public IReporterConfiguration loadPaymentAuditConfiguration()
+    IReporterConfiguration loadPaymentAuditConfiguration()
     {
         return load(IReporterConfiguration.Type.PAYMENT_AUDIT);
     }
 
-    public IReporterConfiguration loadLoyaltyReportsConfiguration()
+    IReporterConfiguration loadLoyaltyReportsConfiguration()
     {
         return load(IReporterConfiguration.Type.LOYALTY_REPORTS);
     }
 
-    public IReporterConfiguration loadLoyaltyAuditConfiguration()
+    IReporterConfiguration loadLoyaltyAuditConfiguration()
     {
         return load(IReporterConfiguration.Type.LOYALTY_AUDIT);
     }

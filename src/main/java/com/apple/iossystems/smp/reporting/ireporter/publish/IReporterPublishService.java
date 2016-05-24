@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 /**
  * @author Toch
  */
-public abstract class IReporterPublishService
+abstract class IReporterPublishService
 {
     private static final Logger LOGGER = Logger.getLogger(IReporterPublishService.class);
 
@@ -42,27 +42,27 @@ public abstract class IReporterPublishService
         return ((response != null) && (response.getAction() == HttpResponseAction.NO_ACTION_SUCCESS));
     }
 
-    public final IReporterConfiguration getConfiguration()
-    {
-        return configurationService.getConfiguration();
-    }
-
     private boolean publishDelayExpired()
     {
         return Timer.delayExpired(lastRequestTime, getConfiguration().getPublishFrequency());
     }
 
-    public final boolean isEnabled()
+    final IReporterConfiguration getConfiguration()
+    {
+        return configurationService.getConfiguration();
+    }
+
+    final boolean isEnabled()
     {
         return (getConfiguration().isPublishEnabled());
     }
 
-    public final boolean publishReady()
+    final boolean publishReady()
     {
         return (isEnabled() && publishDelayExpired());
     }
 
-    public final boolean sendRequest(String data)
+    final boolean sendRequest(String data)
     {
         boolean success = false;
 

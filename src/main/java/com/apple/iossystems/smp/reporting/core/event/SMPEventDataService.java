@@ -14,39 +14,39 @@ import java.util.Collection;
  */
 class SMPEventDataService
 {
-    private PassManagementService passManagementService = AppContext.getApplicationContext().getBean(PassManagementService.class);
-    private SecureElementService secureElementService = AppContext.getApplicationContext().getBean(SecureElementService.class);
-    private PaymentProductRepository paymentProductRepository = AppContext.getApplicationContext().getBean(PaymentProductRepository.class);
+    private final PassManagementService passManagementService = AppContext.getApplicationContext().getBean(PassManagementService.class);
+    private final SecureElementService secureElementService = AppContext.getApplicationContext().getBean(SecureElementService.class);
+    private final PaymentProductRepository paymentProductRepository = AppContext.getApplicationContext().getBean(PaymentProductRepository.class);
 
     private SMPEventDataService()
     {
     }
 
-    public static SMPEventDataService getInstance()
+    static SMPEventDataService getInstance()
     {
         return new SMPEventDataService();
     }
 
-    public String getDeviceType(SecureElement secureElement)
+    String getDeviceType(SecureElement secureElement)
     {
         DeviceType deviceType = (secureElement != null) ? secureElement.getDeviceType() : null;
 
         return (deviceType != null) ? deviceType.getDeviceTypeName() : null;
     }
 
-    public PassbookPass getPassByDpanId(String dpanId)
+    PassbookPass getPassByDpanId(String dpanId)
     {
         return passManagementService.getPassByDpanId(dpanId);
     }
 
-    public SecureElement getSecureElementByDpanId(String dpanId)
+    SecureElement getSecureElementByDpanId(String dpanId)
     {
         PassPan passPan = passManagementService.getPassPanByDpanId(dpanId);
 
         return (passPan != null) ? passPan.getSecureElementId() : null;
     }
 
-    public String getValueFromPassbookPass(PassbookPass passbookPass, String key)
+    String getValueFromPassbookPass(PassbookPass passbookPass, String key)
     {
         String value = null;
 
@@ -68,19 +68,19 @@ class SMPEventDataService
         return value;
     }
 
-    public PassPan getPassPanByPassSerialAndSeid(String passSerial, String seid)
+    PassPan getPassPanByPassSerialAndSeid(String passSerial, String seid)
     {
         return passManagementService.getPrimaryPassPanByPassSerialAndSeid(seid, passSerial);
     }
 
-    public String getCompanionDeviceSerialNumber(String serialNumber)
+    String getCompanionDeviceSerialNumber(String serialNumber)
     {
         SecureElement secureElement = secureElementService.findSecureElementBySerialNumber(serialNumber);
 
         return (secureElement != null) ? secureElement.getCompanionDeviceSerialNumber() : null;
     }
 
-    public PassPaymentType getPassPaymentType(ProductId productId)
+    PassPaymentType getPassPaymentType(ProductId productId)
     {
         PaymentProduct paymentProduct = (productId != null) ? paymentProductRepository.findByPnoAndName(productId.getPnoName(), productId.getName()) : null;
 

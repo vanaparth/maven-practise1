@@ -12,7 +12,7 @@ class LoyaltyPublishTaskHandler extends PublishTaskHandler
         super(EventType.LOYALTY, PublishMetric.getLoyaltyReportsMetrics(), LoyaltyReportsPublishService.getInstance(), LoyaltyAuditPublishService.getInstance());
     }
 
-    public static LoyaltyPublishTaskHandler getInstance()
+    static LoyaltyPublishTaskHandler getInstance()
     {
         return new LoyaltyPublishTaskHandler();
     }

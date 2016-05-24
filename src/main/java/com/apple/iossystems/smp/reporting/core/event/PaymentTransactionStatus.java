@@ -3,7 +3,7 @@ package com.apple.iossystems.smp.reporting.core.event;
 /**
  * @author Toch
  */
-public enum PaymentTransactionStatus
+enum PaymentTransactionStatus
 {
     FAILED("0"),
     SUCCESS("1");
@@ -15,7 +15,7 @@ public enum PaymentTransactionStatus
         this.code = code;
     }
 
-    public String getCode()
+    String getCode()
     {
         return code;
     }

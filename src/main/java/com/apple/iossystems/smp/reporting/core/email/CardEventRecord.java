@@ -8,10 +8,10 @@ import java.util.List;
 /**
  * @author Toch
  */
-public class CardEventRecord
+class CardEventRecord
 {
-    private List<SMPEmailCardData> successCards = new ArrayList<>();
-    private List<SMPEmailCardData> failedCards = new ArrayList<>();
+    private final List<SMPEmailCardData> successCards = new ArrayList<>();
+    private final List<SMPEmailCardData> failedCards = new ArrayList<>();
 
     private CardEventRecord()
     {
@@ -27,32 +27,32 @@ public class CardEventRecord
         failedCards.add(card);
     }
 
-    public List<SMPEmailCardData> getSuccessCards()
+    List<SMPEmailCardData> getSuccessCards()
     {
         return successCards;
     }
 
-    public List<SMPEmailCardData> getFailedCards()
+    List<SMPEmailCardData> getFailedCards()
     {
         return failedCards;
     }
 
-    public boolean isSuccessful()
+    boolean isSuccessful()
     {
         return (!successCards.isEmpty() && failedCards.isEmpty());
     }
 
-    public boolean hasPartialSuccess()
+    boolean hasPartialSuccess()
     {
         return (!successCards.isEmpty() && !failedCards.isEmpty());
     }
 
-    public boolean isFailed()
+    boolean isFailed()
     {
         return (successCards.isEmpty() && !failedCards.isEmpty());
     }
 
-    public static CardEventRecord getCardEventRecord(ManageDeviceEvent manageDeviceEvent)
+    static CardEventRecord getCardEventRecord(ManageDeviceEvent manageDeviceEvent)
     {
         List<CardEvent> cardEvents = null;
 

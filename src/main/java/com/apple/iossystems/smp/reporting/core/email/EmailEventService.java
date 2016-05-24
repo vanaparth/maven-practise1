@@ -9,5 +9,5 @@ public interface EmailEventService
 {
     void send(EventRecords records);
 
-    void publishProvisionEvent(ProvisionCardEvent provisionCardEvent);
+    void processProvisionEvent(ProvisionCardEvent provisionCardEvent);
 }

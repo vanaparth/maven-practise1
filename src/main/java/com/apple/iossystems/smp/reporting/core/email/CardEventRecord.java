@@ -1,6 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.email;
 
 import com.apple.iossystems.smp.email.service.impl.ssp.domain.SMPEmailCardData;
+import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,8 +11,11 @@ import java.util.List;
  */
 class CardEventRecord
 {
+    private static final boolean TRUTH_ON_CARD_EMAIL_ENABLED = ApplicationConfiguration.truthOnCardEmailEnabled();
+
     private final List<SMPEmailCardData> successCards = new ArrayList<>();
     private final List<SMPEmailCardData> failedCards = new ArrayList<>();
+    private final List<SMPEmailCardData> truthOnCards = new ArrayList<>();
 
     private CardEventRecord()
     {
@@ -27,6 +31,11 @@ class CardEventRecord
         failedCards.add(card);
     }
 
+    private void addTruthOnCard(SMPEmailCardData card)
+    {
+        truthOnCards.add(card);
+    }
+
     List<SMPEmailCardData> getSuccessCards()
     {
         return successCards;
@@ -35,6 +44,11 @@ class CardEventRecord
     List<SMPEmailCardData> getFailedCards()
     {
         return failedCards;
+    }
+
+    List<SMPEmailCardData> getTruthOnCards()
+    {
+        return truthOnCards;
     }
 
     boolean isSuccessful()
@@ -72,13 +86,19 @@ class CardEventRecord
         {
             for (CardEvent cardEvent : cardEvents)
             {
-                if (cardEvent.isSuccessful())
+                SMPEmailCardData card = new SMPEmailCardData(cardEvent.getCardDisplayNumber(), cardEvent.getCardDescription());
+
+                if (cardEvent.isTruthOnCard() && TRUTH_ON_CARD_EMAIL_ENABLED)
                 {
-                    cardEventRecord.addSuccessCard(new SMPEmailCardData(cardEvent.getCardDisplayNumber(), cardEvent.getCardDescription()));
+                    cardEventRecord.addTruthOnCard(card);
+                }
+                else if (cardEvent.isSuccessful())
+                {
+                    cardEventRecord.addSuccessCard(card);
                 }
                 else
                 {
-                    cardEventRecord.addFailedCard(new SMPEmailCardData(cardEvent.getCardDisplayNumber(), cardEvent.getCardDescription()));
+                    cardEventRecord.addFailedCard(card);
                 }
             }
         }

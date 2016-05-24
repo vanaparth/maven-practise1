@@ -11,6 +11,7 @@ public class SMPEventNotificationService
     private static final SMPEventNotificationService INSTANCE = new SMPEventNotificationService();
 
     private final NotificationService publisher = getEventNotificationService();
+    private final NotificationService emailPublisher = EmailEventNotificationService.getInstance();
 
     private SMPEventNotificationService()
     {
@@ -24,6 +25,11 @@ public class SMPEventNotificationService
     public NotificationService getPublisher()
     {
         return publisher;
+    }
+
+    public NotificationService getEmailPublisher()
+    {
+        return emailPublisher;
     }
 
     private NotificationService getEventNotificationService()

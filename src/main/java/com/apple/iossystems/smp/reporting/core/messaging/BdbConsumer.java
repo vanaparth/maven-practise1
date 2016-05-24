@@ -1,16 +1,12 @@
 package com.apple.iossystems.smp.reporting.core.messaging;
 
-import com.apple.cds.keystone.spring.AppContext;
 import com.apple.iossystems.logging.local.BDBStorage;
 import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
-import com.apple.iossystems.smp.reporting.core.analytics.Metric;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledTask;
 import com.apple.iossystems.smp.reporting.core.concurrent.ScheduledTaskHandler;
 import com.apple.iossystems.smp.reporting.core.configuration.ApplicationConfiguration;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
 import com.apple.iossystems.smp.reporting.core.event.EventRecords;
-import com.apple.iossystems.smp.reporting.core.hubble.HubblePublisher;
-import com.apple.iossystems.smp.service.StoreManagementService;
 import com.apple.iossystems.smp.utils.JSONUtils;
 import org.apache.log4j.Logger;
 
@@ -20,25 +16,21 @@ import java.util.Map;
 /**
  * @author Toch
  */
-class BdbConsumer implements ScheduledTaskHandler
+abstract class BdbConsumer implements ScheduledTaskHandler
 {
     private static final Logger LOGGER = Logger.getLogger(BdbConsumer.class);
 
     private final NotificationService notificationService = SMPEventNotificationService.getInstance().getPublisher();
-    private final HubblePublisher hubblePublisher = HubblePublisher.getInstance();
     private final int bdbBatchSize = ApplicationConfiguration.getLogServiceBdbBatchSize();
+    private long lastConsumeBdbEventsTime = System.currentTimeMillis();
+
     private final BDBStorage bdbStorage;
 
-    private BdbConsumer(BDBStorage bdbStorage)
+    BdbConsumer(BDBStorage bdbStorage)
     {
         this.bdbStorage = bdbStorage;
 
         init();
-    }
-
-    static BdbConsumer getInstance(BDBStorage bdbStorage)
-    {
-        return new BdbConsumer(bdbStorage);
     }
 
     private void init()
@@ -61,15 +53,21 @@ class BdbConsumer implements ScheduledTaskHandler
     {
         if (consumerEnabled())
         {
-            doHandleConsumeEvents();
+            handleConsumeBdbEvents();
         }
         else
         {
-            notifyBdbRecordCount();
+            handleAutoConsumeBdbEvents();
         }
     }
 
-    private void doHandleConsumeEvents()
+    final void handleConsumeBdbEvents()
+    {
+        doHandleConsumeBdbEvents();
+        lastConsumeBdbEventsTime = System.currentTimeMillis();
+    }
+
+    private void doHandleConsumeBdbEvents()
     {
         int totalCount = 0;
         int maxBacklogRecords = 100000;
@@ -101,15 +99,15 @@ class BdbConsumer implements ScheduledTaskHandler
         {
             records = doConsumeBdbEvents();
 
-            hubblePublisher.incrementCountForEvent(Metric.CONSUME_BACKLOG_QUEUE, records.size());
+            notifySuccessEvent(records.size());
         }
         catch (Exception e)
         {
-            records = EventRecords.getInstance();
-
             LOGGER.error(e.getMessage(), e);
 
-            hubblePublisher.incrementCountForEvent(Metric.CONSUME_BACKLOG_QUEUE_FAILED);
+            records = EventRecords.getInstance();
+
+            notifyFailedEvent(1);
         }
 
         return records;
@@ -127,9 +125,9 @@ class BdbConsumer implements ScheduledTaskHandler
             {
                 if (bdbRecord != null)
                 {
-                    EventRecord record = EventRecord.getInstance();
-
                     Map<String, String> data = GsonBuilderFactory.getInstance().fromJson(new String(bdbRecord), JSONUtils.MAPTYPE);
+
+                    EventRecord record = EventRecord.getInstance();
 
                     record.putAll(data);
 
@@ -141,35 +139,12 @@ class BdbConsumer implements ScheduledTaskHandler
         return records;
     }
 
-    private boolean consumerEnabled()
+    final long getLastConsumeBdbEventsTime()
     {
-        Map<String, String> map = null;
-
-        try
-        {
-            StoreManagementService storeManagementService = AppContext.getApplicationContext().getBean(StoreManagementService.class);
-
-            map = storeManagementService.getGlobalStoreValue("SMP_REPORTING_BACKLOG_BDB_CONSUMERS");
-        }
-        catch (Exception e)
-        {
-            LOGGER.error(e.getMessage(), e);
-        }
-
-        return (map != null);
+        return lastConsumeBdbEventsTime;
     }
 
-    private void notifyBdbRecordCount()
-    {
-        long count = getBdbRecordCount();
-
-        if (count > 0)
-        {
-            LOGGER.warn("Bdb backlog records " + count);
-        }
-    }
-
-    private long getBdbRecordCount()
+    final long getBdbRecordCount()
     {
         long count = 0;
 
@@ -185,7 +160,15 @@ class BdbConsumer implements ScheduledTaskHandler
         return count;
     }
 
-    void start()
+    final void start()
     {
     }
+
+    abstract boolean consumerEnabled();
+
+    abstract void handleAutoConsumeBdbEvents();
+
+    abstract void notifySuccessEvent(int count);
+
+    abstract void notifyFailedEvent(int count);
 }

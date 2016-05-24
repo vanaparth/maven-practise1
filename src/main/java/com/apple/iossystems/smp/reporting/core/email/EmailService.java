@@ -34,7 +34,7 @@ class EmailService implements EmailEventService
 
     private final String defaultEmailLocale = "en_US";
     private final Set<String> supportedEmailLocales = new HashSet<>(ApplicationConfiguration.getSupportedEmailLocales());
-    private final Map<String, String> emailLocaleMap = getEmailLocaleMap();
+    private final Map<String, String> emailLocaleMap = EmailConfiguration.getEmailLocaleMap();
 
     private EmailService()
     {
@@ -43,42 +43,6 @@ class EmailService implements EmailEventService
     static EmailService getInstance()
     {
         return new EmailService();
-    }
-
-    private Map<String, String> getEmailLocaleMap()
-    {
-        Map<String, String> map = new HashMap<>();
-
-        List<String> list = ApplicationConfiguration.getEmailLocalesMapping();
-
-        for (String str : list)
-        {
-            String[] array = StringUtils.split(str, ':');
-
-            if ((array != null) && (array.length == 2))
-            {
-                String mappedLocale = array[0];
-                String values = array[1];
-
-                if (StringUtils.isNotBlank(mappedLocale) && StringUtils.isNotBlank(values))
-                {
-                    array = StringUtils.split(values, ';');
-
-                    if (array != null)
-                    {
-                        for (String locale : array)
-                        {
-                            if (StringUtils.isNotBlank(locale))
-                            {
-                                map.put(locale, mappedLocale);
-                            }
-                        }
-                    }
-                }
-            }
-        }
-
-        return map;
     }
 
     @Override
@@ -215,6 +179,7 @@ class EmailService implements EmailEventService
         CardEventRecord cardEventRecord = CardEventRecord.getCardEventRecord(manageDeviceEvent);
         List<SMPEmailCardData> successCards = cardEventRecord.getSuccessCards();
         List<SMPEmailCardData> failedCards = cardEventRecord.getFailedCards();
+        List<SMPEmailCardData> truthOnCards = cardEventRecord.getTruthOnCards();
 
         String conversationId = format(record.getAttributeValue(EventAttribute.CONVERSATION_ID.key()));
         String deviceName = format(xmlProcessor.getValidXmlString(manageDeviceEvent.getDeviceName()));
@@ -235,15 +200,15 @@ class EmailService implements EmailEventService
             {
                 if (cardEventRecord.isSuccessful())
                 {
-                    new SMPSuccessSuspendMailHandler(new SuspendEmailRequest(deviceName, successCards, calendar, cardHolderName, conversationId, cardHolderEmail, dsid, locale, deviceType, deviceImageUrl)).sendEmail();
+                    new SMPSuccessSuspendMailHandler(new SuspendEmailRequest(deviceName, successCards, truthOnCards, calendar, cardHolderName, conversationId, cardHolderEmail, dsid, locale, deviceType, deviceImageUrl)).sendEmail();
                 }
                 else if (cardEventRecord.hasPartialSuccess())
                 {
-                    new SMPPartialSuspendMailHandler(new PartialSuspendEmailRequest(deviceName, successCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, dsid, deviceType, failedCards, deviceImageUrl)).sendEmail();
+                    new SMPPartialSuspendMailHandler(new PartialSuspendEmailRequest(deviceName, successCards, truthOnCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, dsid, deviceType, failedCards, deviceImageUrl)).sendEmail();
                 }
                 else if (cardEventRecord.isFailed())
                 {
-                    new SMPFailSuspendMailHandler(new SuspendEmailRequest(deviceName, failedCards, calendar, cardHolderName, conversationId, cardHolderEmail, dsid, locale, deviceType, deviceImageUrl)).sendEmail();
+                    new SMPFailSuspendMailHandler(new SuspendEmailRequest(deviceName, failedCards, truthOnCards, calendar, cardHolderName, conversationId, cardHolderEmail, dsid, locale, deviceType, deviceImageUrl)).sendEmail();
                 }
             }
         }
@@ -253,15 +218,15 @@ class EmailService implements EmailEventService
             {
                 if (cardEventRecord.isSuccessful())
                 {
-                    new SMPSuccessRemoveMailHandler(new RemoveEmailRequest(deviceName, successCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, deviceType, dsid, deviceImageUrl, fmipSourceDescription)).sendEmail();
+                    new SMPSuccessRemoveMailHandler(new RemoveEmailRequest(deviceName, successCards, truthOnCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, deviceType, dsid, deviceImageUrl, fmipSourceDescription)).sendEmail();
                 }
                 else if (cardEventRecord.hasPartialSuccess())
                 {
-                    new SMPPartialRemoveMailHandler(new PartialRemoveEmailRequest(deviceName, successCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, dsid, deviceType, failedCards, deviceImageUrl, fmipSourceDescription)).sendEmail();
+                    new SMPPartialRemoveMailHandler(new PartialRemoveEmailRequest(deviceName, successCards, truthOnCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, dsid, deviceType, failedCards, deviceImageUrl, fmipSourceDescription)).sendEmail();
                 }
                 else if (cardEventRecord.isFailed())
                 {
-                    new SMPFailRemoveMailHandler(new RemoveEmailRequest(deviceName, failedCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, deviceType, dsid, deviceImageUrl, fmipSourceDescription)).sendEmail();
+                    new SMPFailRemoveMailHandler(new RemoveEmailRequest(deviceName, failedCards, truthOnCards, calendar, cardHolderName, conversationId, cardHolderEmail, locale, deviceType, dsid, deviceImageUrl, fmipSourceDescription)).sendEmail();
                 }
             }
         }

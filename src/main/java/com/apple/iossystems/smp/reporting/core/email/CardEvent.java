@@ -9,13 +9,15 @@ public class CardEvent
     private final String cardDisplayNumber;
     private final String cardDescription;
     private final boolean isSuccessful;
+    private final boolean isTruthOnCard;
 
-    public CardEvent(String dpanId, String cardDisplayNumber, String cardDescription, boolean isSuccessful)
+    public CardEvent(String dpanId, String cardDisplayNumber, String cardDescription, boolean isSuccessful, boolean isTruthOnCard)
     {
         this.dpanId = dpanId;
         this.cardDisplayNumber = cardDisplayNumber;
         this.cardDescription = cardDescription;
         this.isSuccessful = isSuccessful;
+        this.isTruthOnCard = isTruthOnCard;
     }
 
     public String getDpanId()
@@ -36,5 +38,10 @@ public class CardEvent
     public boolean isSuccessful()
     {
         return isSuccessful;
+    }
+
+    public boolean isTruthOnCard()
+    {
+        return isTruthOnCard;
     }
 }

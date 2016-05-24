@@ -28,11 +28,12 @@ public class ApplicationConfiguration
     private static final String LOG_SERVICE_CLASS = PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.logging.classname", "com.apple.iossystems.logging.impl.pubsub.BufferedPubSub");
 
     private static final int LOG_SERVICE_BDB_BATCH_SIZE = PropertyManager.getInstance().getIntValueForKeyWithDefault("smp.reporting.logging.bdb.batch.size", 50);
-    private static final int LOG_SERVICE_BDB_INTERVAL = PropertyManager.getInstance().getIntValueForKeyWithDefault("smp.reporting.logging.bdb.interval.ms", 500);
+    private static final int LOG_SERVICE_BDB_INTERVAL = PropertyManager.getInstance().getIntValueForKeyWithDefault("smp.reporting.logging.bdb.interval", 500);
 
     private static final String BACKLOG_BDB_STORE = PropertyManager.getInstance().valueForKeyWithDefault("smp.reporting.backlog.bdb.store", "backlogReporting");
 
     private static final int MAX_PUBLISH_DOWN_TIME = PropertyManager.getInstance().getIntValueForKeyWithDefault("smp.reporting.maxPublishDownTime", 5 * 60 * 1000);
+    private static final int CONSUME_BACKLOG_BDB_INTERVAL = PropertyManager.getInstance().getIntValueForKeyWithDefault("smp.reporting.consume.backlog.bdb.interval", 24 * 60 * 60 * 1000);
 
     private static final String IREPORTER_URL = PropertyManager.getInstance().valueForKeyWithDefault("icloud.ireporter.url", "https://icloud4-e3.icloud.com");
     private static final String HASH_PASSWORD = PropertyManager.getInstance().valueForKeyWithDefault("icloud.ireporter.pass", "pLijzg2e2QNspdhOyNWdOSScPszmZBryJ0L8BcQ116BhkT6p0iHyNcwnlFIwhLun");
@@ -46,6 +47,7 @@ public class ApplicationConfiguration
     private static final boolean PROVISION_EMAIL_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.provision", true);
     private static final boolean SUSPEND_EMAIL_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.suspend", true);
     private static final boolean UNLINK_EMAIL_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.unlink", true);
+    private static final boolean TRUTH_ON_CARD_EMAIL_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.truthOnCard", true);
     private static final boolean DEFAULT_EMAIL_LOCALE_ENABLED = PropertyManager.getInstance().getBooleanValueForKeyWithDefault("smp.reporting.email.default.locale", true);
 
     private static final List<String> EMAIL_LOCALES_MAPPING = PropertyManager.getInstance().getListForKeyWithDefault("smp.reporting.email.locales.mapping", Collections.<String>emptyList());
@@ -143,6 +145,11 @@ public class ApplicationConfiguration
         return MAX_PUBLISH_DOWN_TIME;
     }
 
+    public static int getConsumeBacklogBdbInterval()
+    {
+        return CONSUME_BACKLOG_BDB_INTERVAL;
+    }
+
     public static String getIReporterUrl()
     {
         return IREPORTER_URL;
@@ -186,6 +193,11 @@ public class ApplicationConfiguration
     public static boolean unlinkEmailEnabled()
     {
         return UNLINK_EMAIL_ENABLED;
+    }
+
+    public static boolean truthOnCardEmailEnabled()
+    {
+        return TRUTH_ON_CARD_EMAIL_ENABLED;
     }
 
     public static boolean defaultEmailLocaleEnabled()

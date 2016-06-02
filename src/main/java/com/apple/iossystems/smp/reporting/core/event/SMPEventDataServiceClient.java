@@ -1,6 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.event;
 
-import com.apple.iossystems.smp.domain.device.pass.AbstractPass;
+import com.apple.iossystems.smp.domain.device.pass.PassConstants;
 import com.apple.iossystems.smp.domain.product.ProductId;
 import com.apple.iossystems.smp.persistence.entity.PassPan;
 import com.apple.iossystems.smp.persistence.entity.PassPaymentType;
@@ -49,11 +49,11 @@ public class SMPEventDataServiceClient
 
         if (passbookPass != null)
         {
-            value = smpEventDataService.getValueFromPassbookPass(passbookPass, AbstractPass.PAYMENT_PASS_LONG_DESC_KEY);
+            value = smpEventDataService.getValueFromPassbookPass(passbookPass, PassConstants.PAYMENT_PASS_LONG_DESC_KEY);
 
             if (value == null)
             {
-                value = smpEventDataService.getValueFromPassbookPass(passbookPass, AbstractPass.PAYMENT_PASS_SHORT_DESC_KEY);
+                value = smpEventDataService.getValueFromPassbookPass(passbookPass, PassConstants.PAYMENT_PASS_SHORT_DESC_KEY);
             }
         }
 

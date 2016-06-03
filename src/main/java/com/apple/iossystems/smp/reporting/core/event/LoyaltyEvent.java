@@ -1,5 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.event;
 
+import com.apple.iossystems.smp.reporting.core.common.SMPEnvironmentConfiguration;
 
 /**
  * Created by scottblakesley on 12/15/15.
@@ -34,6 +35,7 @@ public class LoyaltyEvent
 
         record.setAttributeValue(EventAttribute.EVENT.key(), loyaltyEventType.getEventType());
         record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(eventTime));
+        record.setAttributeValue(EventAttribute.ENVIRONMENT.key(), SMPEnvironmentConfiguration.getEnvironmentName());
         record.setAttributeValue(EventAttribute.MERCHANT_ID.key(), merchantId);
         record.setAttributeValue(EventAttribute.TOKEN_ID.key(), token);
         record.setAttributeValue(EventAttribute.SOURCE.key(), source);

@@ -28,6 +28,7 @@ public enum EventAttribute
     DEVICE_TYPE("dty"),
     DPAN_ID("dpn"),
     DSID("did"),
+    ENVIRONMENT("env"),
     EVENT("evt"),
     FPAN_ID("fpn"),
     MERCHANT_ID("mid"),

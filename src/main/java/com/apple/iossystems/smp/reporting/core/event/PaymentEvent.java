@@ -1,5 +1,6 @@
 package com.apple.iossystems.smp.reporting.core.event;
 
+import com.apple.iossystems.smp.reporting.core.common.SMPEnvironmentConfiguration;
 import com.apple.iossystems.smp.reporting.core.util.Calendar;
 import org.apache.log4j.Logger;
 
@@ -48,6 +49,7 @@ public class PaymentEvent
         record.setAttributeValue(EventAttribute.EVENT_TYPE.key(), EventType.PAYMENT.getKey());
 
         record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(Calendar.getCurrentHourInMilliseconds()));
+        record.setAttributeValue(EventAttribute.ENVIRONMENT.key(), SMPEnvironmentConfiguration.getEnvironmentName());
         record.setAttributeValue(EventAttribute.CURRENCY.key(), currency);
         record.setAttributeValue(EventAttribute.MERCHANT_ID.key(), getMerchantInfo());
         record.setAttributeValue(EventAttribute.SEID.key(), seid);

@@ -43,6 +43,7 @@ public class IReporterEvent
         eventAttributes.add(EventAttribute.DEVICE_TYPE.key());
         eventAttributes.add(EventAttribute.DPAN_ID.key());
         eventAttributes.add(EventAttribute.DSID.key());
+        eventAttributes.add(EventAttribute.ENVIRONMENT.key());
         eventAttributes.add(EventAttribute.FPAN_ID.key());
         eventAttributes.add(EventAttribute.OTP.key());
         eventAttributes.add(EventAttribute.PNO.key());

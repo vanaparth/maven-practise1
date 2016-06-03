@@ -1,6 +1,7 @@
 package com.apple.iossystems.smp.reporting.core.event;
 
 import com.apple.iossystems.smp.pno.PNO;
+import com.apple.iossystems.smp.reporting.core.common.SMPEnvironmentConfiguration;
 import org.apache.log4j.Logger;
 
 /**
@@ -33,6 +34,7 @@ public class PutPendingCommandSMPEvent
 
         record.setAttributeValue(EventAttribute.EVENT_TYPE.key(), EventType.REPORTS.getKey());
         record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(System.currentTimeMillis()));
+        record.setAttributeValue(EventAttribute.ENVIRONMENT.key(), SMPEnvironmentConfiguration.getEnvironmentName());
         record.setAttributeValue(EventAttribute.CONVERSATION_ID.key(), conversationId);
         record.setAttributeValue(EventAttribute.SEID.key(), seid);
 

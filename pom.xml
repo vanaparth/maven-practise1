@@ -6,7 +6,7 @@
     <parent>
         <groupId>com.apple.pay</groupId>
         <artifactId>SecureMobilePlatform-base</artifactId>
-        <version>1C03_01-SNAPSHOT</version>
+        <version>1C03_HF1</version>
         <relativePath>../pom.xml</relativePath>
     </parent>
     <dependencies>
@@ -26,17 +26,17 @@
         <dependency>
             <groupId>com.apple.pay</groupId>
             <artifactId>SMPBase</artifactId>
-            <version>1C03_01-SNAPSHOT</version>
+            <version>1C03_HF1</version>
         </dependency>
         <dependency>
             <groupId>com.apple.pay</groupId>
             <artifactId>SMPBusinessLogicBase</artifactId>
-            <version>1C03_01-SNAPSHOT</version>
+            <version>1C03_HF1</version>
         </dependency>
         <dependency>
             <groupId>com.apple.pay</groupId>
             <artifactId>SMPPersistenceServices</artifactId>
-            <version>1C03_01-SNAPSHOT</version>
+            <version>1C03_HF1</version>
         </dependency>
     </dependencies>
 </project>

@@ -14,8 +14,8 @@ enum SMPEnvironment
     QA("qa", Arrays.asList(".qa", ".dev", ".perf")),
     PRODUCTION("production", Collections.singletonList(".prod")),
     CERTIFICATION("certification", Collections.singletonList(".prod.cert")),
-    STAGING("staging", Collections.singletonList(".prod.stg")),
-    UNKNOWN("unknown", Collections.<String>emptyList());
+    STAGE("stage", Collections.singletonList(".prod.stg")),
+    UNKNOWN("", Collections.<String>emptyList());
 
     private final String name;
     private final List<String> podNameValues;

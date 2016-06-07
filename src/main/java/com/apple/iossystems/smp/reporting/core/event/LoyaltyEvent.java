@@ -35,7 +35,7 @@ public class LoyaltyEvent
 
         record.setAttributeValue(EventAttribute.EVENT.key(), loyaltyEventType.getEventType());
         record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(eventTime));
-        record.setAttributeValue(EventAttribute.ENVIRONMENT.key(), SMPEnvironmentConfiguration.getEnvironmentName());
+        record.setAttributeValue(EventAttribute.ENVIRONMENT.key(), SMPEnvironmentConfiguration.getEnvironmentCode());
         record.setAttributeValue(EventAttribute.MERCHANT_ID.key(), merchantId);
         record.setAttributeValue(EventAttribute.TOKEN_ID.key(), token);
         record.setAttributeValue(EventAttribute.SOURCE.key(), source);

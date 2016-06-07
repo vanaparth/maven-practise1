@@ -238,5 +238,25 @@ public class ManageDeviceEvent
         {
             return new ManageDeviceEvent(this);
         }
+
+        public Builder copy(ManageDeviceEvent manageDeviceEvent)
+        {
+            return ManageDeviceEvent.getBuilder().
+                    eventType(manageDeviceEvent.eventType).
+                    cardHolderName(manageDeviceEvent.cardHolderName).
+                    cardHolderEmail(manageDeviceEvent.cardHolderEmail).
+                    conversationId(manageDeviceEvent.conversationId).
+                    dsid(manageDeviceEvent.dsid).
+                    seid(manageDeviceEvent.seid).
+                    timestamp(manageDeviceEvent.timestamp).
+                    timezone(manageDeviceEvent.timezone).
+                    locale(manageDeviceEvent.locale).
+                    deviceName(manageDeviceEvent.deviceName).
+                    deviceType(manageDeviceEvent.deviceType).
+                    deviceImageUrl(manageDeviceEvent.deviceImageUrl).
+                    manageDeviceEventSource(manageDeviceEvent.manageDeviceEventSource).
+                    fmipSource(manageDeviceEvent.fmipSource).
+                    cardEvents(manageDeviceEvent.cardEvents);
+        }
     }
 }

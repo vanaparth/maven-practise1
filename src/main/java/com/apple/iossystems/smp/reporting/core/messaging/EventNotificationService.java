@@ -151,7 +151,7 @@ class EventNotificationService implements NotificationService
         {
             publishEventRecords(records);
 
-            publishEmailRecords(records);
+            //publishEmailRecords(records);
         }
         catch (Exception e)
         {

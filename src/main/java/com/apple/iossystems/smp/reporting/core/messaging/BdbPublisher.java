@@ -3,7 +3,6 @@ package com.apple.iossystems.smp.reporting.core.messaging;
 import com.apple.cds.keystone.spring.AppContext;
 import com.apple.iossystems.logging.local.BDBStorage;
 import com.apple.iossystems.smp.domain.jsonAdapter.GsonBuilderFactory;
-import com.apple.iossystems.smp.reporting.core.analytics.Metric;
 import com.apple.iossystems.smp.reporting.core.analytics.ResultMetric;
 import com.apple.iossystems.smp.reporting.core.concurrent.TaskExecutorService;
 import com.apple.iossystems.smp.reporting.core.event.EventRecord;
@@ -12,7 +11,6 @@ import com.apple.iossystems.smp.reporting.core.event.EventType;
 import com.apple.iossystems.smp.utils.JSONUtils;
 import org.apache.log4j.Logger;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Callable;
 
@@ -24,28 +22,18 @@ class BdbPublisher
     private static final Logger LOGGER = Logger.getLogger(BdbPublisher.class);
 
     private final TaskExecutorService taskExecutorService = AppContext.getApplicationContext().getBean(TaskExecutorService.class);
-    private final EventHubblePublisher eventHubblePublisher = EventHubblePublisher.getInstance(getMetricMap());
+    private final EventHubblePublisher eventHubblePublisher;
     private final BDBStorage bdbStorage;
 
-    private BdbPublisher(BDBStorage bdbStorage)
+    private BdbPublisher(BDBStorage bdbStorage, Map<EventType, ResultMetric> metricMap)
     {
         this.bdbStorage = bdbStorage;
+        eventHubblePublisher = EventHubblePublisher.getInstance(metricMap);
     }
 
-    static BdbPublisher getInstance(BDBStorage bdbStorage)
+    static BdbPublisher getInstance(BDBStorage bdbStorage, Map<EventType, ResultMetric> metricMap)
     {
-        return new BdbPublisher(bdbStorage);
-    }
-
-    private Map<EventType, ResultMetric> getMetricMap()
-    {
-        Map<EventType, ResultMetric> map = new HashMap<>();
-
-        map.put(EventType.REPORTS, new ResultMetric(Metric.PUBLISH_REPORTS_BACKLOG_QUEUE, Metric.PUBLISH_REPORTS_BACKLOG_QUEUE_FAILED));
-        map.put(EventType.PAYMENT, new ResultMetric(Metric.PUBLISH_PAYMENT_BACKLOG_QUEUE, Metric.PUBLISH_PAYMENT_BACKLOG_QUEUE_FAILED));
-        map.put(EventType.LOYALTY, new ResultMetric(Metric.PUBLISH_LOYALTY_BACKLOG_QUEUE, Metric.PUBLISH_LOYALTY_BACKLOG_QUEUE_FAILED));
-
-        return map;
+        return new BdbPublisher(bdbStorage, metricMap);
     }
 
     private void publishEventRecord(EventRecord record)

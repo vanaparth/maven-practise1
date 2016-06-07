@@ -47,14 +47,12 @@ class PublishTaskHandler implements EventTaskHandler
         this.reportsPublishService = reportsPublishService;
         this.auditPublishService = auditPublishService;
 
-        publishStatistics.updatePublishTime();
-
         scheduledTask = getScheduledTask();
     }
 
     private ScheduledTask getScheduledTask()
     {
-        return ScheduledTask.getInstance(this, 60 * 1000);
+        return ScheduledTask.getInstance(this, 1000);
     }
 
     @Override
@@ -111,9 +109,6 @@ class PublishTaskHandler implements EventTaskHandler
     {
         int count = 0;
 
-        long lastPublishTime = publishStatistics.getPublishTime();
-        publishStatistics.updatePublishTime();
-
         if (reportsReady(reportsQueue.size()))
         {
             EventRecords records = emptyQueue(reportsQueue);
@@ -126,11 +121,15 @@ class PublishTaskHandler implements EventTaskHandler
 
                 records = processEventRecords(records);
 
-                if (!reportsPublishService.sendRequest(IReporterJsonBuilder.toJson(records.getList())))
+                if (reportsPublishService.sendRequest(IReporterJsonBuilder.toJson(records.getList())))
                 {
-                    publishStatistics.setPublishTime(lastPublishTime);
-
+                    publishStatistics.updateForSuccessEvent();
+                }
+                else
+                {
                     count = -count;
+
+                    publishStatistics.updateForFailedEvent();
 
                     handleFailedPublishEvent(copy);
                 }

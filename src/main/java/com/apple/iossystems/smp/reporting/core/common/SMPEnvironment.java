@@ -11,24 +11,24 @@ import java.util.List;
  */
 enum SMPEnvironment
 {
-    QA("qa", Arrays.asList(".qa", ".dev", ".perf")),
-    PRODUCTION("production", Collections.singletonList(".prod")),
-    CERTIFICATION("certification", Collections.singletonList(".prod.cert")),
-    STAGE("stage", Collections.singletonList(".prod.stg")),
+    PRODUCTION("1", Collections.singletonList(".prod")),
+    STAGE("2", Collections.singletonList(".prod.stg")),
+    CERTIFICATION("3", Collections.singletonList(".prod.cert")),
+    QA("4", Arrays.asList(".qa", ".dev", ".perf")),
     UNKNOWN("", Collections.<String>emptyList());
 
-    private final String name;
+    private final String code;
     private final List<String> podNameValues;
 
-    SMPEnvironment(String name, List<String> podNameValues)
+    SMPEnvironment(String code, List<String> podNameValues)
     {
-        this.name = name;
+        this.code = code;
         this.podNameValues = podNameValues;
     }
 
-    String getName()
+    String getCode()
     {
-        return name;
+        return code;
     }
 
     static SMPEnvironment fromPodName(String podName)

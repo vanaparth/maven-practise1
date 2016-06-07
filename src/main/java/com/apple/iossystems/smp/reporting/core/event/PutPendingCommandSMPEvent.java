@@ -34,7 +34,7 @@ public class PutPendingCommandSMPEvent
 
         record.setAttributeValue(EventAttribute.EVENT_TYPE.key(), EventType.REPORTS.getKey());
         record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(System.currentTimeMillis()));
-        record.setAttributeValue(EventAttribute.ENVIRONMENT.key(), SMPEnvironmentConfiguration.getEnvironmentName());
+        record.setAttributeValue(EventAttribute.ENVIRONMENT.key(), SMPEnvironmentConfiguration.getEnvironmentCode());
         record.setAttributeValue(EventAttribute.CONVERSATION_ID.key(), conversationId);
         record.setAttributeValue(EventAttribute.SEID.key(), seid);
 

@@ -20,8 +20,8 @@ public class SMPEnvironmentConfiguration
         return (smpEnvironment != null) ? smpEnvironment : SMPEnvironment.UNKNOWN;
     }
 
-    public static String getEnvironmentName()
+    public static String getEnvironmentCode()
     {
-        return SMP_ENVIRONMENT.getName();
+        return SMP_ENVIRONMENT.getCode();
     }
 }

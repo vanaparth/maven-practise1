@@ -49,7 +49,7 @@ public class PaymentEvent
         record.setAttributeValue(EventAttribute.EVENT_TYPE.key(), EventType.PAYMENT.getKey());
 
         record.setAttributeValue(EventAttribute.TIMESTAMP.key(), String.valueOf(Calendar.getCurrentHourInMilliseconds()));
-        record.setAttributeValue(EventAttribute.ENVIRONMENT.key(), SMPEnvironmentConfiguration.getEnvironmentName());
+        record.setAttributeValue(EventAttribute.ENVIRONMENT.key(), SMPEnvironmentConfiguration.getEnvironmentCode());
         record.setAttributeValue(EventAttribute.CURRENCY.key(), currency);
         record.setAttributeValue(EventAttribute.MERCHANT_ID.key(), getMerchantInfo());
         record.setAttributeValue(EventAttribute.SEID.key(), seid);

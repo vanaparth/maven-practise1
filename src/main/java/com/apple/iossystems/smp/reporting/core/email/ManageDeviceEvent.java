@@ -241,8 +241,7 @@ public class ManageDeviceEvent
 
         public Builder copy(ManageDeviceEvent manageDeviceEvent)
         {
-            return new Builder().
-                    eventType(manageDeviceEvent.eventType).
+            return eventType(manageDeviceEvent.eventType).
                     cardHolderName(manageDeviceEvent.cardHolderName).
                     cardHolderEmail(manageDeviceEvent.cardHolderEmail).
                     conversationId(manageDeviceEvent.conversationId).
